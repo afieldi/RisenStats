@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import logger from "./logger";
 
 dotenv.config({ path: ".env.local" });
 
@@ -15,5 +16,6 @@ import CodesRouter from "./api/codes";
 app.use("/api/codes", CodesRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  // console.log(`Example app listening on port ${port}`)
+  logger.debug(`Example app listening on port ${port}`);
 })

@@ -1,7 +1,8 @@
-import express, { Handler, Request, Response, Router } from "express";
+import express, { Request, Router } from "express";
 import { GetCodesResponse } from "../../Common/Interface/Internal/codes";
 import { TypedResponse } from "../../Common/Interface/Internal/responseUtil";
-import { getAllCodes } from '../src/business/codes';
+import { GetAllDbCodes } from '../src/business/codes';
+import logger from "../logger";
 
 const router: Router = express.Router();
 
@@ -11,12 +12,13 @@ router.post('/get/all', async (req: Request, res: TypedResponse<GetCodesResponse
   // Use a try catch to ensure a respone is always sent.
 
   try {
-    let codes = await getAllCodes();
+    logger.info("Codes get all");
+    let codes = await GetAllDbCodes();
     res.json({
       codes: codes
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     // .json is typed to GetCodesResponse here, so we use send.
     res.status(500).send("Something went wrong");
   }

@@ -1,6 +1,6 @@
 import ProviderModel from "../../models/provider.model";
 
-export interface GetProviderResponse {
+export interface GetProvidersResponse {
   proivders: ProviderModel[];
 }
 
