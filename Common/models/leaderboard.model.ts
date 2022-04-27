@@ -48,4 +48,10 @@ export default class LeaderboardModel extends BaseEntity
 
   @Column("real")
   avgDamagePerGold: number;
+
+  @Column("smallint")
+  games: number;
+
+  @Column("bigint")
+  updatedAt: number;
 }

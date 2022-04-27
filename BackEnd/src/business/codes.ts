@@ -1,5 +1,5 @@
 import { ensureConnection } from "../db/dbConnect";
-import CodeModel from "../../../models/code.model";
+import CodeModel from "../../../Common/models/code.model";
 
 export async function getAllCodes(): Promise<CodeModel[]>
 {

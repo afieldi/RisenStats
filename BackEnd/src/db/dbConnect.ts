@@ -1,13 +1,13 @@
 import { Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions, Repository } from 'typeorm'
-import PlayerModel from '../../../models/player.model'
-import CodeModel from '../../../models/code.model'
-import GameModel from '../../../models/game.model'
-import GameEventModel from '../../../models/gameevent.model'
-import PlayerGameModel from '../../../models/playergame.model'
-import ProviderModel from '../../../models/provider.model'
-import SeasonModel from '../../../models/season.model'
-import BanModel from '../../../models/ban.model'
-import LeaderboardModel from '../../../models/leaderboard.model'
+import PlayerModel from '../../../Common/models/player.model'
+import CodeModel from '../../../Common/models/code.model'
+import GameModel from '../../../Common/models/game.model'
+import GameEventModel from '../../../Common/models/gameevent.model'
+import PlayerGameModel from '../../../Common/models/playergame.model'
+import ProviderModel from '../../../Common/models/provider.model'
+import SeasonModel from '../../../Common/models/season.model'
+import BanModel from '../../../Common/models/ban.model'
+import LeaderboardModel from '../../../Common/models/leaderboard.model'
 
 const POSTGRES_URI = process.env.POSTGRES_URI
 

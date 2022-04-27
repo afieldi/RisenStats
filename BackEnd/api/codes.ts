@@ -16,7 +16,10 @@ router.post('/get/all', async (req: Request, res: TypedResponse<GetCodesResponse
       codes: codes
     });
   } catch (error) {
+    console.log(error);
     // .json is typed to GetCodesResponse here, so we use send.
     res.status(500).send("Something went wrong");
   }
 });
+
+export default router;
