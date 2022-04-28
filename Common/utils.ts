@@ -1,11 +1,11 @@
-import PlayerGameModel from "../models/playergame.model";
+import PlayerGameModel from "./models/playergame.model";
 import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
 
 export function toSearchName(name: string): string
 {
   name = name.toLowerCase();
-  name = name.replace(" ", "");
+  name = name.replace(new RegExp(" ", 'g'), "");
   return name;
 }
 

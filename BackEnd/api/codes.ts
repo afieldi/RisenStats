@@ -1,7 +1,7 @@
 import express, { Request, Router } from "express";
-import { GetCodesResponse } from "../../Common/Interface/Internal/codes";
-import { TypedResponse } from "../../Common/Interface/Internal/responseUtil";
-import { GetAllDbCodes } from '../src/business/codes';
+import { CreateCodesRequest, GetCodesResponse } from "../../Common/Interface/Internal/codes";
+import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
+import { CreateCodes, GetAllCodes } from '../src/business/codes';
 import logger from "../logger";
 
 const router: Router = express.Router();
@@ -13,13 +13,29 @@ router.post('/get/all', async (req: Request, res: TypedResponse<GetCodesResponse
 
   try {
     logger.info("Codes get all");
-    let codes = await GetAllDbCodes();
+    let codes = await GetAllCodes();
     res.json({
       codes: codes
     });
   } catch (error) {
     logger.error(error);
     // .json is typed to GetCodesResponse here, so we use send.
+    res.status(500).send("Something went wrong");
+  }
+});
+
+router.post('/create', async (req: TypedRequest<CreateCodesRequest>, res: TypedResponse<GetCodesResponse>) => {
+  const body = req.body;
+  logger.info(`Create codes ${JSON.stringify(body)}`);
+
+  try {
+    let newCodes = await CreateCodes(body.seasonId, body.count);
+    res.json({
+      codes: newCodes
+    });
+  }
+  catch (error) {
+    logger.error(error);
     res.status(500).send("Something went wrong");
   }
 });

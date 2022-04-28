@@ -17,9 +17,11 @@ app.get('/', (req, res) => {
 
 import CodesRouter from "./api/codes";
 import ProviderRouter from "./api/provider";
+import SeasonRouter from "./api/season";
 
 app.use("/api/codes", CodesRouter);
 app.use("/api/provider", ProviderRouter);
+app.use("/api/season", SeasonRouter);
 
 app.listen(port, () => {
   // console.log(`Example app listening on port ${port}`)
