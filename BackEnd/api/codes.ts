@@ -1,7 +1,7 @@
 import express, { Request, Router } from "express";
 import { CreateCodesRequest, GetCodesResponse } from "../../Common/Interface/Internal/codes";
 import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
-import { CreateCodes, GetAllCodes } from '../src/business/codes';
+import { CreateCodes, GetAllCodes, GetCodesBySeasonId } from '../src/business/codes';
 import logger from "../logger";
 
 const router: Router = express.Router();
@@ -35,6 +35,20 @@ router.post('/create', async (req: TypedRequest<CreateCodesRequest>, res: TypedR
     });
   }
   catch (error) {
+    logger.error(error);
+    res.status(500).send("Something went wrong");
+  }
+});
+
+router.post('/get/by-season/:seasonId', async (req: Request, res: TypedResponse<GetCodesResponse>) => {
+  const seasonId = Number(req.params.seasonId);
+  logger.info(`Codes get by season ${seasonId}`);
+  try {
+    let codes = await GetCodesBySeasonId(seasonId);
+    res.json({
+      codes: codes
+    });
+  } catch (error) {
     logger.error(error);
     res.status(500).send("Something went wrong");
   }

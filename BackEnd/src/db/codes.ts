@@ -2,8 +2,13 @@ import { ensureConnection } from "./dbConnect";
 import CodeModel from "../../../Common/models/code.model";
 import { getConnection } from "typeorm";
 
-export async function GetAllDbCodes(): Promise<CodeModel[]>
+export async function GetDbCodes(seasonId: number | null): Promise<CodeModel[]>
 {
+  await ensureConnection();
+  if (seasonId)
+  {
+    return await CodeModel.findBy({ seasonId: seasonId });
+  }
   return await CodeModel.find();
 }
 
