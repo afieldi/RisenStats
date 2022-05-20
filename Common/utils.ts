@@ -121,3 +121,7 @@ export function GameTypeToString(gameType: number, seasonId: number): string
   }
   return "Unknown";
 }
+
+export function GetCurrentEpcohMs() {
+  return new Date().getTime();
+}

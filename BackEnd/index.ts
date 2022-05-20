@@ -18,10 +18,12 @@ app.get('/', (req, res) => {
 import CodesRouter from "./api/codes";
 import ProviderRouter from "./api/provider";
 import SeasonRouter from "./api/season";
+import PlayerRouter from "./api/player";
 
 app.use("/api/codes", CodesRouter);
 app.use("/api/provider", ProviderRouter);
 app.use("/api/season", SeasonRouter);
+app.use("/api/player", PlayerRouter);
 
 app.listen(port, () => {
   // console.log(`Example app listening on port ${port}`)

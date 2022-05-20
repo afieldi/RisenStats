@@ -12,14 +12,17 @@ export default class PlayerModel extends BaseEntity
   @Column("varchar")
   name: string;
 
+  @Column("int")
+  summonerLevel: number;
+
   @Column("varchar")
   searchName: string;
 
-  @Column("varchar")
+  @Column("varchar", {nullable: true})
   notes: string;
 
   @Column("bigint")
-  refresedAt: number;
+  refreshedAt: number;
 
   @Column("varchar")
   league: string;

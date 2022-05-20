@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { GameSummaryPlayers } from "../Interface/Database/game";
 import PlayerGameModel from "./playergame.model";
 import SeasonModel from "./season.model";
 
@@ -35,4 +36,6 @@ export default class GameModel extends BaseEntity
   @Column("boolean")
   tournamentGame: boolean;
 
+  @Column("json")
+  playersSummary: GameSummaryPlayers;
 }
