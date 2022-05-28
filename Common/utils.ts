@@ -125,3 +125,8 @@ export function GameTypeToString(gameType: number, seasonId: number): string
 export function GetCurrentEpcohMs() {
   return new Date().getTime();
 }
+
+export function NonNone(value: number, def: number = 0) : number
+{
+  return value ? value : def;
+}

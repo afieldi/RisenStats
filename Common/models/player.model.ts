@@ -24,10 +24,10 @@ export default class PlayerModel extends BaseEntity
   @Column("bigint")
   refreshedAt: number;
 
-  @Column("varchar")
+  @Column("varchar", {nullable: true})
   league: string;
 
-  @Column("varchar")
+  @Column("varchar", {nullable: true})
   division: string;
 
   @Column("smallint")

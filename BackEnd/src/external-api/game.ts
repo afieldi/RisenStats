@@ -32,9 +32,8 @@ export async function GetRiotGameByMatchId(matchId: string): Promise<RiotMatchDt
   return await MakeRiotAPICall<RiotMatchDto>(url, "GET");
 }
 
-export async function GetRiotTimelineByGameId(gameId: number): Promise<RiotTimelineDto>
+export async function GetRiotTimelineByMatchId(matchId: string): Promise<RiotTimelineDto>
 {
-  const url = `/lol/match/v5/matches/${ToMatchId(gameId)}/timeline`;
-  console.log(url);
+  const url = `/lol/match/v5/matches/${matchId}/timeline`;
   return await MakeRiotAPICall<RiotTimelineDto>(url, "GET");
 }

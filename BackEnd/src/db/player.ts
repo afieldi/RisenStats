@@ -1,5 +1,6 @@
+import { ConnectionManager, getConnection, getConnectionManager } from "typeorm";
 import { DocumentNotFound } from "../../../Common/errors";
-import { RiotLeagueEntryDto, RiotSummonerDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
+import { RiotLeagueEntryDto, RiotParticipantDto, RiotSummonerDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
 import PlayerModel from "../../../Common/models/player.model";
 import { GetCurrentEpcohMs, toSearchName } from "../../../Common/utils";
 import { ensureConnection } from "./dbConnect";
@@ -28,4 +29,24 @@ export async function CreateDbPlayerWithRiotPlayer(player: RiotSummonerDto, solo
   });
   await playerDto.save();
   return playerDto;
+}
+
+export async function CreateDbPlayersWithParticipantData(participants: RiotParticipantDto[]): Promise<PlayerModel[]> {
+  await ensureConnection();
+  let playerObjs = [];
+  for (const participant of participants) {
+    playerObjs.push(PlayerModel.create({
+      puuid: participant.puuid,
+      name: participant.summonerName,
+      summonerId: participant.summonerId,
+      profileIconId: participant.profileIcon ? participant.profileIcon : 0,
+      summonerLevel: participant.summonerLevel ? participant.summonerLevel : 0,
+      searchName: toSearchName(participant.summonerName),
+      league: "UNRANKED",
+      division: "I",
+      refreshedAt: 0,
+    }));
+  }
+  await getConnection().manager.save(playerObjs);
+  return playerObjs;
 }

@@ -14,3 +14,8 @@ export interface PlayerDetailedGame {
   playerGame: PlayerGameModel;
   game: GameModel;
 }
+
+export interface UpdatePlayerGamesResponse {
+  updatedGames: GameModel[];
+  failedUpdateGameIds: string[];
+}
