@@ -32,4 +32,19 @@ export default class PlayerModel extends BaseEntity
 
   @Column("smallint")
   profileIconId: number;
+
+  @Column('real')
+  winRate: number;
+
+  @Column('real')
+  kda: number;
+
+  @Column('real')
+  killsPerGame: number;
+
+  @Column('real')
+  deathsPerGame: number;
+
+  @Column('real')
+  assistsPerGame: number;
 }

@@ -1,6 +1,7 @@
 import PlayerGameModel from "../../models/playergame.model";
 import PlayerModel from "../../models/player.model";
 import GameModel from "../../models/game.model";
+import PlayerChampionStatsModel from "models/playerchampionstats.model";
 
 export interface PlayerOverviewResponse {
   overview: PlayerModel
@@ -18,4 +19,8 @@ export interface PlayerDetailedGame {
 export interface UpdatePlayerGamesResponse {
   updatedGames: GameModel[];
   failedUpdateGameIds: string[];
+}
+
+export interface PlayerChampionStatsResponse {
+  champions: PlayerChampionStatsModel[];
 }

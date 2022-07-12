@@ -130,3 +130,34 @@ export function NonNone(value: number, def: number = 0) : number
 {
   return value ? value : def;
 }
+
+export function GetAveragesFromObjects(objects: any[], keys: string[]): {[key: string]: number}
+{
+  if (objects.length === 0) {
+    const rValues: {[key: string]: number} = {};
+    keys.forEach(key => {
+      rValues[key] = 0;
+    });
+    return rValues;
+  }
+
+  const handler = {
+    get: function(target: {[key: string]: number}, key: string) {
+      return target.hasOwnProperty(key) ? target[key] : 0;
+    }
+  }
+  let averages: {[key: string]: number} = {};
+  const proxy = new Proxy(averages, handler);
+
+  objects.map(o => {
+    for (const k of keys) {
+      proxy[k] += o[k];
+    }
+  });
+
+  for (const k of keys) {
+    proxy[k] /= objects.length;
+  }
+
+  return averages;
+}

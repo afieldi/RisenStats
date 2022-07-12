@@ -1,23 +1,27 @@
-import { DeepPartial } from "typeorm";
+import { DeepPartial, FindManyOptions, In } from "typeorm";
 import { GameSummaryPlayers, TeamSumStat } from "../../../Common/Interface/Database/game";
 import { TimelineParticipantStats } from "../../../Common/Interface/Database/timeline";
 import { CHALLENGE_COLUMNS, RiotMatchDto, RiotParticipantDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
 import GameModel from "../../../Common/models/game.model";
-import PlayerModel from "../../../Common/models/player.model";
 import PlayerGameModel from "../../../Common/models/playergame.model";
-import { NonNone } from "../../../Common/utils";
+import SeasonModel from "../../../Common/models/season.model";
+import { GetCurrentEpcohMs, NonNone } from "../../../Common/utils";
+import { ensureConnection } from "./dbConnect";
 
-export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto,
-  gameObj: GameModel, timelineStats: TimelineParticipantStats, teamStats: TeamSumStat): PlayerGameModel {
+export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj: GameModel,
+  timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number): PlayerGameModel {
 
   let shortPlayerData = {
     game: gameObj,
     timestamp: gameObj.gameStart,
+    timestampAdded: GetCurrentEpcohMs(),
 
     playerPuuid: riotPlayer.puuid,
 
     championId: riotPlayer.championId,
     teamId: riotPlayer.teamId,
+
+    seasonId: seasonId,
 
     championTransform: riotPlayer.championTransform,
 
@@ -157,4 +161,24 @@ export async function CreateDbGame(gameData: RiotMatchDto, seasonId: number, pla
 
 export async function GetDbGameByGameId(gameId: number): Promise<GameModel> {
   return await GameModel.findOne({where: {gameId: gameId}});
+}
+
+export async function GetDbPlayerGameByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerGameModel[]> {
+  await ensureConnection();
+  const searchFilter: FindManyOptions<PlayerGameModel> = {where: {playerPuuid: playerPuuid}};
+  if (pageSize > 0) {
+    if (pageNumber <= 0) {
+      throw new Error(`Invalid page number ${pageNumber}`);
+    }
+    searchFilter['take'] = pageSize;
+    searchFilter['skip'] = pageNumber;
+  }
+  return await PlayerGameModel.find(searchFilter);
+}
+
+export async function GetDbGamesByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<GameModel[]> {
+  await ensureConnection();
+  const playerGames = await GetDbPlayerGameByPlayerPuuid(playerPuuid, pageSize, pageNumber);
+  const gameIds = playerGames.map(game => game.gameGameId);
+  return await GameModel.find({where: {gameId: In(gameIds)}});
 }

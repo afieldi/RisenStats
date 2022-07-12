@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import GameModel from "./game.model";
 import PlayerModel from "./player.model";
+import SeasonModel from "./season.model";
 
 @Entity({ name: "player_game" })
 export default class PlayerGameModel extends BaseEntity
@@ -24,6 +25,17 @@ export default class PlayerGameModel extends BaseEntity
   // Duplicated from game for sorting
   @Column("bigint")
   timestamp: number;
+
+  // Duplicated from game for filtering
+  @Column('integer', {nullable: true})
+  seasonId: number;
+
+  @ManyToOne(() => SeasonModel)
+  season: SeasonModel;
+
+  // Time game is added to db. Used for updating champion and player stats
+  @Column("bigint")
+  timestampAdded: number;
 
   @Column("smallint")
   championId: number;

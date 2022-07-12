@@ -1,4 +1,4 @@
-import { Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions, Repository } from 'typeorm'
+import { BaseEntity, Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions, Repository } from 'typeorm'
 import PlayerModel from '../../../Common/models/player.model'
 import CodeModel from '../../../Common/models/code.model'
 import GameModel from '../../../Common/models/game.model'
@@ -8,6 +8,7 @@ import ProviderModel from '../../../Common/models/provider.model'
 import SeasonModel from '../../../Common/models/season.model'
 import BanModel from '../../../Common/models/ban.model'
 import LeaderboardModel from '../../../Common/models/leaderboard.model'
+import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model'
 
 const POSTGRES_URI = process.env.POSTGRES_URI
 
@@ -34,6 +35,7 @@ const options = {
       GameEventModel,
       PlayerGameModel,
       SeasonModel,
+      PlayerChampionStatsModel,
     ]
   },
 };
@@ -83,4 +85,10 @@ export async function ensureConnection(name: string = 'default'): Promise<Connec
 
   // @ts-ignore
   return await connectionManager.create({ name, ...options[name] }).connect();
+}
+
+export async function SaveObjects(items: BaseEntity[]): Promise<BaseEntity[]> {
+  await ensureConnection();
+  await getConnection().manager.save(items);
+  return items;
 }

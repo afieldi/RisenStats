@@ -1,6 +1,7 @@
 import { TimelineParticipantStats } from "../../../Common/Interface/Database/timeline";
 import { RiotTimelineDto, RiotTimelineParticipantFrameDataDto, RiotTimelineParticipantFrameDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
 import { RiotTimelineEvent, RiotTimelineEventChampionKillDto } from "../../../Common/Interface/RiotAPI/RiotApiTimelineEvents";
+import logger from "../../logger";
 import * as utils from '../../../Common/utils';
 
 function DefaultTimelineStats(): TimelineParticipantStats
@@ -56,7 +57,7 @@ function ProcessEvents(allParticipants: TimelineParticipantStats[], events: Riot
       let id = event.killerId-1;
       if (id < 0 || id >= 10)
       {
-        console.log("Invalid killer id: " + id);
+        logger.debug("Invalid killer id for ward kill: " + id);
         continue;
       }
       allParticipants[id].wardsKilled15 += 1;
@@ -66,7 +67,7 @@ function ProcessEvents(allParticipants: TimelineParticipantStats[], events: Riot
       let id = event.creatorId-1;
       if (id < 0 || id >= 10)
       {
-        console.log("Invalid killer id: " + id);
+        logger.debug("Invalid killer id for ward placed: " + id);
         continue;
       }
       allParticipants[id].wardsPlaced15 += 1;
@@ -84,7 +85,7 @@ function HandleChampionKill(allParticipants: TimelineParticipantStats[], event: 
   let id = event.killerId-1;
   if (id < 0 || id >= 10)
   {
-    console.log("Invalid killer id: " + id);
+    logger.debug("Invalid killer id for champion kill: " + id);
     return;
   }
   let pre15 = IsPre15(event.timestamp);
@@ -123,6 +124,7 @@ function ProcessParticipantFrames(allParticipants: TimelineParticipantStats[], p
 {
   if (allParticipants.length !== 10)
   {
+    logger.debug("Invalid participant count: " + allParticipants.length);
     throw new Error("Invalid participant count");
   }
   // Idk... how do I do this better with typing...

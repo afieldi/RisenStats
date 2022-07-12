@@ -1,6 +1,5 @@
 import { MAX_MATCH_HISTORY_GAMES } from "../../../Common/constants";
 import { RiotMatchDto, RiotSummonerDto, RiotTimelineDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
-import { ToMatchId } from "../../../Common/utils";
 import { MakeRiotAPICall } from "./_call";
 
 export async function GetRiotGamesByPlayerPuuid(playerPuuid: string, maxCount: number, tourney: boolean = true, start = 0): Promise<string[]>

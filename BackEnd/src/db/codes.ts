@@ -1,6 +1,5 @@
-import { ensureConnection } from "./dbConnect";
+import { ensureConnection, SaveObjects } from "./dbConnect";
 import CodeModel from "../../../Common/models/code.model";
-import { getConnection } from "typeorm";
 
 export async function GetDbCodes(seasonId: number | null): Promise<CodeModel[]>
 {
@@ -24,7 +23,12 @@ export async function CreateDbCodes(codes: string[], seasonId: number): Promise<
       })
     );
   }
-  await ensureConnection();
-  await getConnection().manager.save(codeModels);
+  await SaveObjects(codeModels);
   return codeModels;
+}
+
+export async function GetDbCode(code: string): Promise<CodeModel>
+{
+  await ensureConnection();
+  return await CodeModel.findOne({where: {code: code}});
 }

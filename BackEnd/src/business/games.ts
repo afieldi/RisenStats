@@ -7,8 +7,16 @@ import { GetRiotGameByMatchId, GetRiotTimelineByMatchId } from "../external-api/
 import { ProcessTimeline } from "./timeline";
 import { BaseEntity, getConnection } from "typeorm";
 import { CreateDbPlayersWithParticipantData } from "../db/player";
+import { SaveObjects } from "../db/dbConnect";
+import { GetDbCode } from "../db/codes";
 
-export async function SaveSingleMatchById(matchId: string, seasonId: number = null): Promise<GameModel> {
+export async function SaveSingleMatchById(matchId: string, tournamentCode: string = null): Promise<GameModel> {
+  let seasonId = null;
+
+  if (tournamentCode) {
+    seasonId = (await GetDbCode(tournamentCode))?.seasonId;
+  }
+
   const existingObj = await GetDbGameByGameId(ToGameId(matchId));
   if (existingObj) {
     return existingObj;
@@ -30,10 +38,9 @@ export async function SaveSingleMatchById(matchId: string, seasonId: number = nu
   for (let i = 0; i < gameData.info.participants.length; i++) {
     const participant = gameData.info.participants[i];
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats));
+    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId));
   }
-
-  getConnection().manager.save(objsToSave);
+  await SaveObjects(objsToSave);
   return gameObj;
 }
 
@@ -52,7 +59,7 @@ function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
       totalGold: participant.goldEarned,
       totalCS: participant.totalMinionsKilled + participant.neutralMinionsKilled,
       totalVision: participant.visionScore,
-      position: participant.lane
+      position: participant.role === "SUPPORT" ? participant.role : participant.lane,
     } as GameSummaryPlayer;
     if (participant.teamId === 100) {
       redPlayers.push(player);

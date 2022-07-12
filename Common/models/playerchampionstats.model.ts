@@ -1,0 +1,43 @@
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import PlayerModel from "./player.model";
+import SeasonModel from "./season.model";
+
+@Entity({name: "playerchampionstats"})
+export default class PlayerChampionStatsModel extends BaseEntity
+{
+  @PrimaryColumn('integer')
+  championId: number;
+
+  @PrimaryColumn('varchar')
+  playerPuuid: string;
+
+  @ManyToOne(() => PlayerModel)
+  player: PlayerModel;
+
+  @Column('integer', {nullable: true})
+  seasonId: number;
+
+  @ManyToOne(() => SeasonModel)
+  season: SeasonModel;
+
+  @Column('smallint')
+  totalGames: number;
+
+  @Column('smallint')
+  totalWins: number;
+
+  @Column('integer')
+  totalKills: number;
+
+  @Column('integer')
+  totalDeaths: number;
+
+  @Column('integer')
+  totalAssists: number;
+
+  @Column('integer')
+  totalMinionsKilled: number;
+
+  @Column('integer')
+  totalNeutralMinionsKilled: number;
+}

@@ -566,3 +566,23 @@ export interface RiotLeagueEntryDto
   hotStreak: boolean;
   miniSeries?: RiotMiniSeriesDto;
 }
+
+export interface RiotMatchCallbackSummonerDto
+{
+  summonerName: string;
+}
+
+export interface RiotMatchCallbackDto
+{
+  startTime: number;
+  winningTeam: RiotMatchCallbackSummonerDto[];
+  losingTeam: RiotMatchCallbackSummonerDto[];
+  shortCode: string; // This is the tournament code
+  metaData: string;
+  gameId: number;
+  gameName: string;
+  gameType: string;
+  gameMap: number;
+  gameMode: string;
+  region: string;
+}
