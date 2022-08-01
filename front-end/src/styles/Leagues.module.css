@@ -1,0 +1,22 @@
+
+.cardPricing {
+  display: 'flex';
+  justify-content: 'center';
+  align-items: 'baseline';
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.leagueLogo {
+  left: 50%;
+  position: relative;
+}
+
+.mainFeaturedPost {
+  margin-bottom: 20px;
+}
+
+.mainFeaturedPostContent {
+  padding: 15px
+}

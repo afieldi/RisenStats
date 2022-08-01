@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import logger from "./logger";
 
 dotenv.config({ path: ".env.local" });
@@ -10,6 +11,19 @@ const port = process.env.PORT || 3000;
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use(cors({
+  origin: (origin: any, callback: any) => {
+    callback(null, origin)
+      // if (process.env.WEBSITE_BASE.includes(origin))
+      //     callback(null, origin)
+      // else {
+      //     callback(null, "")
+      // }
+  },
+  credentials: true,
+  // allowedHeaders: 'Content-Type,Authorization,auth',
+}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

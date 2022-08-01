@@ -39,6 +39,7 @@ export function roundTo(r: number, decimals: number = 2): number
 
 export function calculateKDA(data: PlayerGameModel, decimals: number  = 2): number
 {
+  if (data.deaths === 0) return data.kills + data.assists;
   return roundTo((data.kills + data.assists) / data.deaths, decimals);
 }
 

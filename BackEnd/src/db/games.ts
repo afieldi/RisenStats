@@ -163,22 +163,37 @@ export async function GetDbGameByGameId(gameId: number): Promise<GameModel> {
   return await GameModel.findOne({where: {gameId: gameId}});
 }
 
-export async function GetDbPlayerGameByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerGameModel[]> {
+export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerGameModel[]> {
   await ensureConnection();
   const searchFilter: FindManyOptions<PlayerGameModel> = {where: {playerPuuid: playerPuuid}};
   if (pageSize > 0) {
     if (pageNumber <= 0) {
       throw new Error(`Invalid page number ${pageNumber}`);
     }
-    searchFilter['take'] = pageSize;
-    searchFilter['skip'] = pageNumber;
+  }
+  searchFilter['take'] = pageSize;
+  searchFilter['skip'] = pageSize * (pageNumber - 1);
+  searchFilter['order'] = {
+    timestamp: 'DESC',
   }
   return await PlayerGameModel.find(searchFilter);
 }
 
 export async function GetDbGamesByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<GameModel[]> {
   await ensureConnection();
-  const playerGames = await GetDbPlayerGameByPlayerPuuid(playerPuuid, pageSize, pageNumber);
+  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, pageSize, pageNumber);
   const gameIds = playerGames.map(game => game.gameGameId);
   return await GameModel.find({where: {gameId: In(gameIds)}});
+}
+
+export async function GetDbGamesByGameIds(gameIds: number[]): Promise<GameModel[]> {
+  await ensureConnection();
+  const searchFilter: FindManyOptions<GameModel> = {
+    where: {gameId: In(gameIds)},
+    order: {
+      gameStart: 'DESC'
+    }
+  };
+
+  return await GameModel.find(searchFilter);
 }

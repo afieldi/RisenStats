@@ -1,14 +1,14 @@
 import PlayerGameModel from "../../models/playergame.model";
 import PlayerModel from "../../models/player.model";
 import GameModel from "../../models/game.model";
-import PlayerChampionStatsModel from "models/playerchampionstats.model";
+import PlayerChampionStatsModel from "../../models/playerchampionstats.model";
 
 export interface PlayerOverviewResponse {
   overview: PlayerModel
 }
 
 export interface PlayerGamesResponse {
-  games: PlayerModel[]
+  games: PlayerDetailedGame[]
 }
 
 export interface PlayerDetailedGame {

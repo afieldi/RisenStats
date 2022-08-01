@@ -1,0 +1,41 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.hcenter
+{
+  left: 50%;
+  transform: translateX(-50%);
+  position: relative;
+}
+
+.clickable:hover
+{
+  cursor: pointer;
+}
+
+.clickable-bg:hover
+{
+  cursor: pointer;
+  filter: brightness(.7);
+  transition: .25s;
+  /* background-color: white; */
+}
+
+.no-overflow
+{
+  overflow: hidden;
+}

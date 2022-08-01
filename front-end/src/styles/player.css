@@ -1,0 +1,4 @@
+.player-names {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

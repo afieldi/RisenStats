@@ -6,9 +6,9 @@ import GameModel from "../../../Common/models/game.model";
 import { GetRiotGamesByPlayerPuuid } from "../external-api/game";
 import { SaveSingleMatchById } from "./games";
 import { RiotParticipantDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
-import { UpdatePlayerGamesResponse } from "../../../Common/Interface/Internal/player";
+import { PlayerDetailedGame, UpdatePlayerGamesResponse } from "../../../Common/Interface/Internal/player";
 import logger from "../../logger";
-import { GetDbPlayerGameByPlayerPuuid } from "../db/games";
+import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from "../db/games";
 import PlayerChampionStatsModel from "../../../Common/models/playerchampionstats.model";
 import { NonNone } from "../../../Common/utils";
 import { SaveObjects } from "../db/dbConnect";
@@ -63,7 +63,7 @@ async function UpdateGamesByPlayerObject(player: PlayerModel): Promise<UpdatePla
 }
 
 export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
-  const games = await GetDbPlayerGameByPlayerPuuid(playerPuuid);
+  const games = await GetDbPlayerGamesByPlayerPuuid(playerPuuid);
   const stats: {[key: string]: PlayerChampionStatsModel} = {};
   for (const game of games) {
     if (!stats[game.championId]) {
@@ -92,4 +92,17 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
   const objsToSave = Object.values(stats);
   await SaveObjects(objsToSave);
   return objsToSave;
+}
+
+export async function GetPlayerDetailedGames(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerDetailedGame[]> {
+  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, pageSize, pageNumber);
+  const gameIds = playerGames.map(game => game.gameGameId);
+  const gameSummaries = await GetDbGamesByGameIds(gameIds);
+  if (gameSummaries.length !== playerGames.length) {
+    throw new Error(`Game summary(${gameSummaries.length}) and player game(${playerGames.length}) arrays were different lengths.`);
+  }
+  return playerGames.map((game, i) => ({
+    playerGame: game,
+    game: gameSummaries[i],
+  }));
 }
