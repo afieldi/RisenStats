@@ -40,4 +40,25 @@ export default class PlayerChampionStatsModel extends BaseEntity
 
   @Column('integer')
   totalNeutralMinionsKilled: number;
+
+  @Column('integer')
+  averageDamageDealt: number;
+
+  @Column('integer')
+  averageDamageTaken: number;
+
+  @Column('smallint')
+  totalDoubleKills: number;
+
+  @Column('smallint')
+  totalTripleKills: number;
+
+  @Column('smallint')
+  totalQuadraKills: number;
+
+  @Column('smallint')
+  totalPentaKills: number;
+
+  @Column('integer')
+  averageGameDuration: number;
 }

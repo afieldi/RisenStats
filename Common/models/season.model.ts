@@ -22,6 +22,6 @@ export default class SeasonModel extends BaseEntity
   @ManyToOne(() => ProviderModel)
   provider: ProviderModel
 
-  @Column("smallint")
+  @Column("integer")
   tourneyId: number;
 }

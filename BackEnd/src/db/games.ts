@@ -1,4 +1,4 @@
-import { DeepPartial, FindManyOptions, In } from "typeorm";
+import { DeepPartial, FindManyOptions, In, IsNull, Not } from "typeorm";
 import { GameSummaryPlayers, TeamSumStat } from "../../../Common/Interface/Database/game";
 import { TimelineParticipantStats } from "../../../Common/Interface/Database/timeline";
 import { CHALLENGE_COLUMNS, RiotMatchDto, RiotParticipantDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
@@ -10,6 +10,12 @@ import { ensureConnection } from "./dbConnect";
 
 export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj: GameModel,
   timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number): PlayerGameModel {
+
+  if (!riotPlayer.challenges) {
+    const d = new Date(0);
+    d.setUTCMilliseconds(gameObj.gameStart);
+    throw Error(`Game has no challenge stats. Probably too old. Game start: ${d.toUTCString()}`)
+  }
 
   let shortPlayerData = {
     game: gameObj,
@@ -128,7 +134,8 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     damagePerGold: riotPlayer.totalDamageDealtToChampions / riotPlayer.goldEarned,
     goldShare: riotPlayer.goldEarned / teamStats.totalGold,
     damageShare: riotPlayer.challenges.teamDamagePercentage,
-    visionShare: riotPlayer.visionScore / teamStats.totalVision
+    visionShare: riotPlayer.visionScore / teamStats.totalVision,
+    killParticipation: riotPlayer.challenges.killParticipation,
   };
 
   let challenges = riotPlayer.challenges;
@@ -163,12 +170,12 @@ export async function GetDbGameByGameId(gameId: number): Promise<GameModel> {
   return await GameModel.findOne({where: {gameId: gameId}});
 }
 
-export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerGameModel[]> {
+export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, pageSize = 0, pageNumber = 0): Promise<PlayerGameModel[]> {
   await ensureConnection();
   const searchFilter: FindManyOptions<PlayerGameModel> = {where: {playerPuuid: playerPuuid}};
   if (pageSize > 0) {
     if (pageNumber <= 0) {
-      throw new Error(`Invalid page number ${pageNumber}`);
+      pageNumber = 1;
     }
   }
   searchFilter['take'] = pageSize;
@@ -176,12 +183,18 @@ export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, pageSiz
   searchFilter['order'] = {
     timestamp: 'DESC',
   }
+  if (risenOnly) {
+    searchFilter['where'] = {
+      ...searchFilter['where'],
+      seasonId: Not(IsNull())
+    };
+  }
   return await PlayerGameModel.find(searchFilter);
 }
 
-export async function GetDbGamesByPlayerPuuid(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<GameModel[]> {
+export async function GetDbGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, pageSize = 0, pageNumber = 0): Promise<GameModel[]> {
   await ensureConnection();
-  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, pageSize, pageNumber);
+  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, risenOnly, pageSize, pageNumber);
   const gameIds = playerGames.map(game => game.gameGameId);
   return await GameModel.find({where: {gameId: In(gameIds)}});
 }

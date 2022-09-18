@@ -5,10 +5,20 @@ import PlayerModel from "../../../Common/models/player.model";
 import PlayerChampionStatsModel from "../../../Common/models/playerchampionstats.model";
 import { GetAveragesFromObjects, GetCurrentEpcohMs, toSearchName } from "../../../Common/utils";
 import { ensureConnection, SaveObjects } from "./dbConnect";
+import log from "../../logger";
 
 export async function GetDbPlayerByPuuid(playerPuuid: string): Promise<PlayerModel> {
   await ensureConnection();
   const player = await PlayerModel.findOne({ where: { puuid: playerPuuid } });
+  if (!player) {
+    throw new DocumentNotFound("Player not found");
+  }
+  return player;
+}
+
+export async function getDbPlayerByname(playerName: string): Promise<PlayerModel> {
+  await ensureConnection();
+  const player = await PlayerModel.findOne({ where: { searchName: toSearchName(playerName) } });
   if (!player) {
     throw new DocumentNotFound("Player not found");
   }
@@ -68,6 +78,7 @@ export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDt
   if (!playerDto) {
     throw new DocumentNotFound("Player not found");
   }
+  log.debug(`Updating player with riot player: \n ${JSON.stringify(player, null, 2)}`)
   playerDto.name = player.name;
   playerDto.profileIconId = player.profileIconId ? player.profileIconId : 0;
   playerDto.summonerLevel = player.summonerLevel ? player.summonerLevel : 0;
@@ -87,7 +98,29 @@ export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDt
   return playerDto;
 }
 
-export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string): Promise<PlayerChampionStatsModel[]> {
+export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seasonId?: string): Promise<PlayerChampionStatsModel[]> {
   await ensureConnection();
-  return await PlayerChampionStatsModel.find({where: {playerPuuid}})
+  const sumCols = [
+    "totalKills",
+    "totalWins",
+    "totalGames",
+    "totalAssists",
+    "totalDeaths",
+    "totalMinionsKilled",
+    "totalNeutralMinionsKilled",
+    "averageDamageDealt",
+    "averageDamageTaken",
+    "totalDoubleKills",
+    "totalTripleKills",
+    "totalQuadraKills",
+    "totalPentaKills",
+    "averageGameDuration",
+  ];
+
+  const seasonFilter = seasonId ? `playerchampionstats."seasonId" = $2 AND ` : "";
+  const outerSelect = sumCols.map(col => col.includes("average") ? `AVG(champStat."${col}") as "${col}"` : `SUM(champStat."${col}") as "${col}"`).join(", ");
+  return await PlayerChampionStatsModel.query(
+    `SELECT ${outerSelect}, champStat."championId" FROM (SELECT * FROM playerchampionstats WHERE ${seasonFilter}"playerchampionstats".\"playerPuuid\" = $1) as champStat GROUP BY champStat."championId"`,
+    [playerPuuid, seasonId].filter(val => !!val)
+  ) as PlayerChampionStatsModel[];
 }

@@ -7,7 +7,7 @@ export async function CreateRiotTournament(name: string, providerId: number): Pr
   {
     throw new InvalidRequestError("Name must be longer than 3 characters and providerId must be greater than 0");
   }
-  return await MakeTournamentRiotAPICall<number>("/lol/tournament-stub/v4/tournaments", "POST", {
+  return await MakeTournamentRiotAPICall<number>("/lol/tournament/v4/tournaments", "POST", {
     "name": name,
     "providerId": providerId
   });

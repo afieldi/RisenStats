@@ -39,3 +39,34 @@ a {
 {
   overflow: hidden;
 }
+
+.full-height {
+  height: 100vh;
+}
+
+.full-width {
+  width: 100vw;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(../../public/fonts/Montserrat-Black.woff2) format('woff2'),
+      url(../../public/fonts/Montserrat-Black.woff) format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KDA';
+  src: url(../../public/fonts/KDA-Regular.woff2) format('woff2'),
+      url(../../public/fonts/KDA-Regular.woff) format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.text-overflow {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

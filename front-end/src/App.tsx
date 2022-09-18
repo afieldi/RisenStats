@@ -1,20 +1,33 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import logo from './logo.svg';
+import { ThemeProvider } from '@mui/material/styles';
 import './App.css';
 import './styles/globals.css';
 import darkTheme from './styles/theme/darkTheme';
 
 import Player from './pages/player/player';
+import HeaderBar from './components/header-bar/header-bar';
+import { SideBar } from './components/sidebar/sidebar';
+import Home from './pages/home/home';
+import Error404 from './pages/errors/404';
+import StatExport from './pages/statExport/statExport';
 
 function App() {
+  const [open, setOpen] = React.useState(false);
+  const handleDrawerClose = () => {
+    setOpen(false);
+  }
   return (
     <Router>
       <ThemeProvider theme={darkTheme}>
-        <div className="App">
+        <div className="App" style={{paddingLeft: '75px'}}>
+          <HeaderBar open={open} setOpen={setOpen}></HeaderBar>
+          <SideBar open={open} onClose={handleDrawerClose}></SideBar>
           <Routes>
+            <Route path="/" element={<Home />}></Route>
             <Route path="/player/:playerName" element={<Player />}></Route>
+            <Route path="/404" element={<Error404 />}></Route>
+            <Route path="/statexport" element={<StatExport />}></Route>
           </Routes>
         </div>
       </ThemeProvider>

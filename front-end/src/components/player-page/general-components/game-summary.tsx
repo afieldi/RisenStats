@@ -1,14 +1,16 @@
 import { useTheme } from "@emotion/react";
-import { Box, Theme, Typography } from "@mui/material";
+import { Box, Hidden, Theme, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { calculateCS, calculateKDA, GameTypeToString, riotTimestampToGameTime, toSearchName, trimStr } from "../../../../../Common/utils";
 import GameModel from "../../../../../Common/models/game.model";
 import PlayerGameModel from "../../../../../Common/models/playergame.model";
 import RisenBox1 from "../../risen-box/risen-box-1";
 import { GameSummaryPlayer } from "../../../../../Common/Interface/Database/game";
 import { PlayerDetailedGame } from "../../../../../Common/Interface/Internal/player";
+import ItemBox from "../../item-box/item-box";
+import PlayerRadar from "./player-radar";
 
 interface Props {
   gameData: PlayerDetailedGame
@@ -36,16 +38,25 @@ function _getPlayerFromGameData(playerName: string, gameData: GameModel): GameSu
 
 function GameSummary({gameData}: Props)
 {
+  console.log(gameData);
   const theme = useTheme() as Theme;
   const { playerName } = useParams();
   const mainPlayer = gameData.playerGame;
   const playerWin = mainPlayer.win;
   const bgColor = playerWin ? theme.palette.risenVictory.main : theme.palette.risenDefeat.main;
+  const timestamp = new Date();
+  timestamp.setUTCMilliseconds(+gameData.game.gameStart + (+gameData.game.gameDuration * 1000));
+  const radarOptions = {
+    height: 100,
+    width: 100,
+    size: 50,
+    hideLabels: true
+  };
 
   return (
     <RisenBox1 sx={{
       bgcolor: bgColor,
-      mb: 1
+      mb: 1,
     }}>
       <Box sx={{
         display: "inline-flex",
@@ -55,22 +66,29 @@ function GameSummary({gameData}: Props)
         alignItems: "center",
       }}>
         <Box sx={{
-        display: "inline-flex",
-        flexGrow: 1
+          display: "inline-flex",
+          justifyContent: "space-evenly",
+          flexGrow: 1,
+          flexWrap: 'wrap',
         }}>
           {/* W/L + Gametime */}
-          <Box  sx={{width: "40px"}}>
-            <Typography align="center">
-              {playerWin ? "Win" : "Loss"}
-            </Typography>
-            <hr></hr>
-            <Typography align="center" variant="body2">
-              {riotTimestampToGameTime(gameData.game.gameDuration)}
-            </Typography>
+          <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+            <Box sx={{width: "40px"}}>
+              <Typography align="center">
+                {playerWin ? "Win" : "Loss"}
+              </Typography>
+              <hr></hr>
+              <Typography align="center" variant="body2">
+                {/* {riotTimestampToGameTime(gameData.game.gameDuration)} */}
+                {timestamp.toLocaleString()}
+                {/* {+gameData.game.gameStart + (+gameData.game.gameDuration * 1000)} */}
+              </Typography>
+            </Box>
           </Box>
           {/* W/L + Gametime end */}
 
-          <Box>
+          {/* Champion pic + summs */}
+          <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
             <Box sx={{display: "inline-flex"}}>
               {/* Champion pfp */}
               <Box sx={{pl: 1, pr: 1}}>
@@ -83,6 +101,12 @@ function GameSummary({gameData}: Props)
                 <img src={`/images/summoner/${mainPlayer.summoner1Id}.png`} height="25px" width="25px"></img>
                 <img src={`/images/summoner/${mainPlayer.summoner2Id}.png`} height="25px" width="25px"></img>
               </Box>
+              {/* Rune Choices */}
+              <Box sx={{display: "flex", flexDirection: "column", pl: .4}}>
+                <img src={`/images/runes/${mainPlayer.primaryRunes[0]}.png`} height="25px" width="25px"></img>
+                <img src={`/images/runes/${mainPlayer.secondaryStyle}.png`} height="25px" width="25px"></img>
+              </Box>
+              {/* Rune Choices End */}
             </Box>
             <Box>
               <Typography variant="body2" align="center">{GameTypeToString(gameData.game.gameType, gameData.game.seasonId)}</Typography>
@@ -90,28 +114,21 @@ function GameSummary({gameData}: Props)
           </Box>
           {/* Summoner Spells end */}
 
-          {/* Rune Choices */}
-          <Box sx={{display: "flex", flexDirection: "column"}}>
-            <img src={`/images/runes/${mainPlayer.primaryRunes[0]}.png`} height="25px" width="25px"></img>
-            <Box sx={{width: "20px"}} className="hcenter">
-              <img src={`/images/runes/${mainPlayer.secondaryStyle}.png`} height="25px" width="25px"></img>
-            </Box>
-          </Box>
-          {/* Rune Choices End */}
 
           {/* Score */}
-          <Box sx={{pr: 1, pl: 1, pt: 1, width: '70px'}}>
-            <Typography align="center">
+          <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+            <Typography align="center" sx={{fontFamily: 'Montserrat'}}>
               {`${mainPlayer.kills}/${mainPlayer.deaths}/${mainPlayer.assists}`}
             </Typography>
-            <Typography align="center" variant="body2">
-              {calculateKDA(mainPlayer)}
-            </Typography>
+            <ItemBox items={mainPlayer.items}></ItemBox>
+            {/* <Typography align="center" variant="body2">
+              WHEEEE
+            </Typography> */}
           </Box>
           {/* Score End */}
 
           {/* High-level Numbers */}
-          <Box sx={{pr: 1}}>
+          <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
             <Typography variant="body2" align="center">
               {`Level ${mainPlayer.champLevel}`}
             </Typography>
@@ -123,53 +140,60 @@ function GameSummary({gameData}: Props)
             </Typography>
           </Box>
           {/* High Level Numbers End */}
-        </Box>
-        <Box sx={{display: 'flex', justifyContent: "flex-end"}}>
-          {/* Blue Team */}
-          <Box sx={{display: "flex", flexDirection: "column", width: '50%', pr: .5}}>
-            {
-              gameData.game.playersSummary.bluePlayers.map((player, i) => {
-                return (
-                  <Box key={`blue-${gameData.game.gameId}-${i}`} sx={{display: "inline-flex", height: '1.2em', fontStretch: 'condensed'}}>
-                    <Box sx={{width: '15px', flexShrink: '0'}}>
-                      <img src={`/images/champions/icons/${player.championId}_0.png`} height="15px" width="15px"></img>
-                    </Box>
-                    <Box sx={{overflow: 'hidden', width: '75px'}}>
-                      <Link to={`/player/${encodeURIComponent(player.playerName)}`}>
-                        <Typography variant="body2" align="left" className="clickable-bg no-overflow player-names">
-                          {player.playerName}
-                        </Typography>
-                      </Link>
-                    </Box>
-                  </Box>
-                )
-              })
-            }
-          </Box>
-          {/* Blue Team End */}
 
-          {/* Red Team */}
-          <Box sx={{display: "flex", flexDirection: "column", width: '50%', pl: .5}}>
-            {
-              gameData.game.playersSummary.redPlayers.map((player, i) => {
-                return (
-                  <Box key={`red-${gameData.game.gameId}-${i}`} sx={{display: "inline-flex", flexDirection: 'row-reverse', height: '1.2em', fontStretch: 'condensed'}}>
-                    <Box sx={{width: '15px'}} className="testclass">
-                      <img src={`/images/champions/icons/${player.championId}_0.png`} height="15px" width="15px"></img>
+          {/* Player Radar */}
+          <Hidden mdDown>
+            <Box sx={{pr: 1, flexGrow: 1, justifyContent: 'center', display: 'flex'}}>
+              <PlayerRadar games={[gameData]} options={radarOptions}></PlayerRadar>
+            </Box>
+          </Hidden>
+          <Box sx={{display: 'flex', justifyContent: "flex-end"}}>
+            {/* Blue Team */}
+            <Box sx={{display: "flex", flexDirection: "column", width: '50%', pr: .5}}>
+              {
+                gameData.game.playersSummary.bluePlayers.map((player, i) => {
+                  return (
+                    <Box key={`blue-${gameData.game.gameId}-${i}`} sx={{display: "inline-flex", height: '1.2em', fontStretch: 'condensed'}}>
+                      <Box sx={{width: '15px', flexShrink: '0'}}>
+                        <img src={`/images/champions/icons/${player.championId}_0.png`} height="15px" width="15px"></img>
+                      </Box>
+                      <Box sx={{overflow: 'hidden', width: '75px'}}>
+                        <Link to={`/player/${encodeURIComponent(player.playerName)}`}>
+                          <Typography variant="body2" align="left" className="clickable-bg no-overflow player-names">
+                            {player.playerName}
+                          </Typography>
+                        </Link>
+                      </Box>
                     </Box>
-                    <Box sx={{overflow: 'hidden', width: '75px', textAlign: 'right'}}>
-                      <Link to={`/player/${encodeURIComponent(player.playerName)}`}>
-                        <Typography variant="body2" align="right" className="clickable-bg player-names">
-                          {player.playerName}
-                        </Typography>
-                      </Link>
+                  )
+                })
+              }
+            </Box>
+            {/* Blue Team End */}
+
+            {/* Red Team */}
+            <Box sx={{display: "flex", flexDirection: "column", width: '50%', pl: .5}}>
+              {
+                gameData.game.playersSummary.redPlayers.map((player, i) => {
+                  return (
+                    <Box key={`red-${gameData.game.gameId}-${i}`} sx={{display: "inline-flex", flexDirection: 'row-reverse', height: '1.2em', fontStretch: 'condensed'}}>
+                      <Box sx={{width: '15px'}} className="testclass">
+                        <img src={`/images/champions/icons/${player.championId}_0.png`} height="15px" width="15px"></img>
+                      </Box>
+                      <Box sx={{overflow: 'hidden', width: '75px', textAlign: 'right'}}>
+                        <Link to={`/player/${encodeURIComponent(player.playerName)}`}>
+                          <Typography variant="body2" align="right" className="clickable-bg player-names">
+                            {player.playerName}
+                          </Typography>
+                        </Link>
+                      </Box>
                     </Box>
-                  </Box>
-                )
-              })
-            }
+                  )
+                })
+              }
+            </Box>
+            {/* Red Team Emd */}
           </Box>
-          {/* Red Team Emd */}
         </Box>
       </Box>
     </RisenBox1>

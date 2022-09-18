@@ -1,6 +1,7 @@
 import PlayerGameModel from "./models/playergame.model";
 import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
+import PlayerChampionStatsModel from "./models/playerchampionstats.model";
 
 export function toSearchName(name: string): string
 {
@@ -21,7 +22,6 @@ export function riotTimestampToMinutes(time: number): number
 
 export function riotTimestampToGameTime(time: number): string
 {
-  console.log(time);
   let s = riotTimestampToSeconds(time);
   let min = Math.floor(s / 60);
   s -= min * 60;
@@ -31,16 +31,26 @@ export function riotTimestampToGameTime(time: number): string
 
 export function roundTo(r: number, decimals: number = 2): number
 {
+  if (decimals == 0) {
+    return Math.round(r);
+  }
   let factor = 10 * decimals;
   r *= factor;
   r = Math.round(r);
   return r / factor;
 }
 
-export function calculateKDA(data: PlayerGameModel, decimals: number  = 2): number
+export function calculateKDA(data: PlayerGameModel, decimals: number = 2): number
 {
   if (data.deaths === 0) return data.kills + data.assists;
   return roundTo((data.kills + data.assists) / data.deaths, decimals);
+}
+
+export function calculateChampionKDA(data: PlayerChampionStatsModel, decimals: number = 2): number
+{
+  console.log(data);
+  if (+data.totalDeaths === 0) return +data.totalKills + +data.totalAssists;
+  return roundTo((+data.totalKills + +data.totalAssists) / +data.totalDeaths, decimals);
 }
 
 export function calculateCS(data: PlayerGameModel): number
@@ -127,7 +137,7 @@ export function GetCurrentEpcohMs() {
   return new Date().getTime();
 }
 
-export function NonNone(value: number, def: number = 0) : number
+export function NonNone(value: number | undefined, def: number = 0) : number
 {
   return value ? value : def;
 }
@@ -161,4 +171,21 @@ export function GetAveragesFromObjects(objects: any[], keys: string[]): {[key: s
   }
 
   return averages;
+}
+
+export function NestedArrayToCsv(objects: { [key: string]: any }[], headers?: string[]): string {
+  // let dataString = "";
+  // if (headers) {
+  //   dataString = headers.join(",") + "\n";
+  // }
+  // return dataString + objects.map(row => row.join(",")).join("\n");
+  const dictionaryKeys = Object.keys(objects[0]);
+  dictionaryKeys.splice(dictionaryKeys.indexOf("name"), 1);
+  dictionaryKeys.splice(0, 0, "name");
+
+  const dictValuesAsCsv = objects.map(dict => (
+    dictionaryKeys.map(key => dict[key]).join(',')
+  ));
+
+  return [dictionaryKeys.join(','), ...dictValuesAsCsv].join('\n');
 }

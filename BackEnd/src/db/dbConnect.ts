@@ -24,6 +24,7 @@ const options = {
     username: "postgres",
     password: "password",
     database: 'test',
+    bigNumberStrings: false,
     synchronize: process.env.NODE_ENV !== 'production',
     entities: [
       BanModel,

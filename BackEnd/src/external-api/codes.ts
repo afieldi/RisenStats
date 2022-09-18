@@ -7,7 +7,7 @@ export async function CreateRiotTournamentCodes(tournamentId: number, count: num
   {
     throw new InvalidRequestError(`Invalid tournamentId(${tournamentId}) or count(${count})`);
   }
-  return await MakeTournamentRiotAPICall<string[]>(`/lol/tournament-stub/v4/codes?count=${count}&tournamentId=${tournamentId}`, "POST", {
+  return await MakeTournamentRiotAPICall<string[]>(`/lol/tournament/v4/codes?count=${count}&tournamentId=${tournamentId}`, "POST", {
     "mapType": "SUMMONERS_RIFT",
     "metadata": `${tournamentId}`,
     "pickType": "TOURNAMENT_DRAFT",

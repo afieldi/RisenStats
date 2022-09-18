@@ -6,7 +6,7 @@ const fs = require('fs');
 // import fs from 'fs';
 
 const imagePath = "./public/images";
-const dataPath = './data';
+const dataPath = './src/data';
 
 const paths = [
     `${imagePath}/champions`,

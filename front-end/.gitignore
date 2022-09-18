@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+data
+public/images/champions
+public/images/items
+public/images/runes
+public/images/summoner

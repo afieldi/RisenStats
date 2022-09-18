@@ -4,127 +4,108 @@ import PlayerPageHeader from "../../components/player-page/header";
 import React from "react";
 import { tabLabelProps, TabPanel } from "../../components/tab-panel/tab-panel";
 import PlayerPageGeneral from "../../components/player-page/general";
-import { RiotSummonerDto } from "../../../../Common/Interface/RiotAPI/RiotApiDto";
-import GameModel from "../../../../Common/models/game.model";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { GetDetailedPlayerGames, GetPlayerGames, GetPlayerProfile } from "../../api/player";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { GetDetailedPlayerGames, GetPlayerChampionStats, GetPlayerGames, GetPlayerProfile } from "../../api/player";
+import { PlayerDetailedGame, PlayerOverviewResponse } from "../../../../Common/Interface/Internal/player";
 
 import '../../styles/player.css'
-
-interface Props {
-  profile: RiotSummonerDto | null;
-  error: number;
-  // initalGames: GameModel[];
-}
-
-export async function getServerSideProps(context: any): Promise<{props: Props}>
-{
-  const {params} = context;
-  const playerName: string = params.playerName;
-  const res = await fetch(`/api/${playerName}/profile`);
-  if (res.status !== 200)
-  {
-    return {
-      props: {
-        profile: null,
-        error: 404,
-        // initalGames: []
-      }
-    }
-  }
-  return {
-    props: {
-      profile: await res.json() as RiotSummonerDto,
-      error: 0
-    }
-  }
-  // const profile = await res.json() as RiotSummonerDto;
-
-  // try
-  // {
-  //   const games = await LoadNextGames(playerName);
-  //   return {
-  //     props: {
-  //       profile: profile,
-  //       error: 0,
-  //       initalGames: games
-  //     }
-  //   }
-  // }
-  // catch (e)
-  // {
-  //   return {
-  //     props: {
-  //       profile: profile,
-  //       error: 500,
-  //       initalGames: []
-  //     }
-  //   }
-  // }
-}
-
-async function LoadNextGames(playerName: string, page=1, setGames: (value: any) => void)
-{
-  const profile = await GetPlayerProfile(playerName);
-  const games = await GetDetailedPlayerGames(profile.overview.puuid);
-  console.log(games)
-  setGames(games.games);
-}
+import { ApiError } from "../../api/_call";
+import PlayerPageChampions from "../../components/player-page/champions";
+import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
 
 function PlayerPage()
 {
-  let error = false;
   let { playerName } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // if (error)
-  // {
-  //   // Why is this required, who knows. I just know that I need
-  //   // this timeout or it causes an error
-  //   setTimeout(() => {
-  //     navigate("/error/player");
-  //   }, 0);
-  //   // Just return something so we don't error
-  //   return (
-  //     <Container>
-  //       Oops
-  //     </Container>
-  //   )
-  // }
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState<PlayerDetailedGame[]>([]);
+  const [page, setPage] = useState(1);
   const theme = useTheme() as Theme;
   const [value, setValue] = React.useState(0);
+  const [loadingGames, setLoadingGames] = useState(false);
+  const [playerProfile, setPlayerProfile] = useState<PlayerOverviewResponse>();
 
-  // useEffect(() => {
-  //   console.log("Loading games");
-  //   setGames([]);
-  // }, [dynamicRoute]);
-  useEffect(() => {
-    console.log(`Getting data for ${playerName}`);
-    setGames([]);
+  const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
+
+  async function loadPlayerProfile() {
     if (playerName) {
-      LoadNextGames(playerName, 1, setGames);
+      try {
+        const profile = await GetPlayerProfile(playerName);
+        setPlayerProfile(profile);
+        return profile;
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
-  }, [])
-  // LoadNextGames(profile!.name, 1, setGames);
+    throw new Error("No Player found");
+  }
+
+  async function loadMoreGames(newPlayer=false, profile: PlayerOverviewResponse | undefined) {
+    profile = profile ? profile : playerProfile
+    if (profile) {
+      setLoadingGames(true);
+      const tmpPage = newPlayer ? 1 : page;
+      try {
+        const newGames = await GetDetailedPlayerGames(profile.overview.puuid, tmpPage);
+        if (newPlayer) {
+          setGames(newGames.games);
+        }
+        else {
+          setGames(games.concat(newGames.games));
+        }
+        setPage(tmpPage+1);
+        setLoadingGames(false);
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) {
+          navigate('/404');
+        }
+      }
+    }
+  }
+
+  async function loadChampionStats(profile: PlayerOverviewResponse | undefined) {
+    console.log(playerProfile);
+    profile = profile ? profile : playerProfile
+    if (profile) {
+      // setLoadingGames(true);
+      try {
+        const stats = await GetPlayerChampionStats(profile.overview.puuid);
+        setChampionStats(stats.champions);
+      }
+      catch (error) {
+
+      }
+    }
+  }
+
+  useEffect(() => {
+    loadPlayerProfile().then(profile => {
+      console.log(`Loading games for ${playerName}`);
+      loadMoreGames(true, profile);
+      loadChampionStats(profile);
+    }, (err: any) => {
+      console.log(err);
+    });
+  }, [location]);
+
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
       <CssBaseline />
       <main>
       <Box
           sx={{
             pt: 15,
             pb: 6,
-            bgcolor: theme.palette.background.paper
           }}
         >
-          {/* @ts-ignore */}
-          <PlayerPageHeader playerName={playerName}></PlayerPageHeader>
+          <PlayerPageHeader playerOverview={playerProfile}></PlayerPageHeader>
           <hr></hr>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs textColor="primary" indicatorColor="primary"  value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -134,13 +115,13 @@ function PlayerPage()
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <PlayerPageGeneral games={games}></PlayerPageGeneral>
+            <PlayerPageGeneral games={games} player={playerProfile?.overview} loadGamesConfig={{callback: loadMoreGames, status: loadingGames}}></PlayerPageGeneral>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Twos
+            <PlayerPageChampions championData={championStats}></PlayerPageChampions>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            Item Three
+            Coming Soon
           </TabPanel>
         </Box>
       </main>

@@ -5,6 +5,7 @@ import React from 'react';
 export interface Props {
   children?: React.ReactNode;
   sx?: {};
+  title?: string;
 }
 
 export default function RisenBox1(props: Props) {
@@ -14,10 +15,18 @@ export default function RisenBox1(props: Props) {
   let sxFinal = {...{
     p: 2,
     bgcolor: theme.palette.risenBoxBg.main,
-    borderRadius: 2
+    borderRadius: 1,
+    flexWrap: 'wrap'
   }, ...sx};
   return (
     <Box sx={sxFinal}>
+      {
+        props.title ?
+        <Box>
+          <Typography fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{props.title}</Typography>
+          <hr color={theme.palette.info.main}></hr>
+        </Box> : null
+      }
       {children}
     </Box>
   );

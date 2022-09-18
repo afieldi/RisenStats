@@ -27,7 +27,7 @@ export default class GameModel extends BaseEntity
   @Column("varchar")
   patch: string;
 
-  @Column("smallint")
+  @Column("integer")
   gameDuration: number;
 
   @OneToMany(() => PlayerGameModel, playerModel => playerModel.game)

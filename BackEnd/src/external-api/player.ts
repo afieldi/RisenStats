@@ -26,5 +26,5 @@ export async function GetRiotLeagueBySummonerId(summonerId: string, queueName: s
       return league;
     }
   }
-  throw new Error(`No league found for summonerId: ${summonerId} and queueName: ${queueName}`);
+  return null;
 }

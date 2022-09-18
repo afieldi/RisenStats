@@ -1,7 +1,7 @@
-import { GetRiotPlayerByName, GetRiotLeagueBySummonerId } from "../external-api/player";
+import { GetRiotPlayerByName, GetRiotLeagueBySummonerId, GetRiotPlayerByPuuid } from "../external-api/player";
 import PlayerModel from "../../../Common/models/player.model";
 import { DocumentNotFound } from "../../../Common/errors";
-import { CreateDbPlayerWithRiotPlayer, GetDbPlayerByPuuid } from "../db/player";
+import { CreateDbPlayerWithRiotPlayer, GetDbPlayerByPuuid, UpdateDbPlayer } from "../db/player";
 import GameModel from "../../../Common/models/game.model";
 import { GetRiotGamesByPlayerPuuid } from "../external-api/game";
 import { SaveSingleMatchById } from "./games";
@@ -10,21 +10,30 @@ import { PlayerDetailedGame, UpdatePlayerGamesResponse } from "../../../Common/I
 import logger from "../../logger";
 import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from "../db/games";
 import PlayerChampionStatsModel from "../../../Common/models/playerchampionstats.model";
-import { NonNone } from "../../../Common/utils";
+import { NonNone, roundTo } from "../../../Common/utils";
 import { SaveObjects } from "../db/dbConnect";
+import { ApiError } from "../external-api/_call";
 
 export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
-  const riotPlayer = await GetRiotPlayerByName(playerName);
-  if (!riotPlayer) {
-    throw new DocumentNotFound(`Player with name ${playerName} not found`);
-  }
-
   try {
-    return await GetDbPlayerByPuuid(riotPlayer.puuid);
-  } catch (error) {}
+    const riotPlayer = await GetRiotPlayerByName(playerName);
+    if (!riotPlayer) {
+      throw new DocumentNotFound(`Player with name ${playerName} not found`);
+    }
+    try {
+      return await GetDbPlayerByPuuid(riotPlayer.puuid);
+    } catch (error) {}
 
-  const riotLeague = await GetRiotLeagueBySummonerId(riotPlayer.id);
-  return await CreateDbPlayerWithRiotPlayer(riotPlayer, riotLeague);
+    const riotLeague = await GetRiotLeagueBySummonerId(riotPlayer.id);
+    return await CreateDbPlayerWithRiotPlayer(riotPlayer, riotLeague);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      if (error.status === 404) {
+        throw new DocumentNotFound(`Player with name ${playerName} not found`);
+      }
+    }
+    throw error;
+  }
 }
 
 export async function GetPlayerOverviewByPuuid(playerPuuid: string): Promise<PlayerModel> {
@@ -34,12 +43,26 @@ export async function GetPlayerOverviewByPuuid(playerPuuid: string): Promise<Pla
 
 export async function UpdateGamesByPlayerName(playerName: string): Promise<UpdatePlayerGamesResponse> {
   const player = await GetOrCreatePlayerOverviewByName(playerName);
-  return await UpdateGamesByPlayerObject(player);
+  const updatedGames = await UpdateGamesByPlayerObject(player);
+  await UpdatePlayerByPlayerPuuid(player.puuid, updatedGames.updatedGames);
+  return updatedGames;
 }
 
 export async function UpdateGamesByPlayerPuuid(playerPuuid: string): Promise<UpdatePlayerGamesResponse> {
   const player = await GetPlayerOverviewByPuuid(playerPuuid);
-  return await UpdateGamesByPlayerObject(player);
+  const updatedGames = await UpdateGamesByPlayerObject(player);
+  await UpdatePlayerByPlayerPuuid(player.puuid, updatedGames.updatedGames);
+  return updatedGames;
+}
+
+async function UpdatePlayerByPlayerPuuid(playerPuuid: string, games: GameModel[]): Promise<PlayerModel> {
+  const riotPlayer = await GetRiotPlayerByPuuid(playerPuuid);
+  return await UpdateDbPlayer(
+    playerPuuid,
+    riotPlayer,
+    await GetRiotLeagueBySummonerId(riotPlayer.id),
+    games
+  );
 }
 
 async function UpdateGamesByPlayerObject(player: PlayerModel): Promise<UpdatePlayerGamesResponse> {
@@ -78,6 +101,13 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
         totalNeutralMinionsKilled: 0,
         totalGames: 0,
         totalWins: 0,
+        averageDamageDealt: 0,
+        averageDamageTaken: 0,
+        totalDoubleKills: 0,
+        totalTripleKills: 0,
+        totalQuadraKills: 0,
+        totalPentaKills: 0,
+        averageGameDuration: 0
       });
     }
     let statGame = stats[game.championId];
@@ -88,18 +118,36 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
     statGame.totalNeutralMinionsKilled += NonNone(game.neutralMinionsKilled, 0);
     statGame.totalGames += 1;
     statGame.totalWins += game.win ? 1 : 0;
+    statGame.averageDamageDealt += NonNone(game.totalDamageDealtToChampions, 0);
+    statGame.averageDamageTaken += NonNone(game.totalDamageTaken, 0);
+    statGame.totalDoubleKills += NonNone(game.doubleKills, 0);
+    statGame.totalTripleKills += NonNone(game.tripleKills, 0);
+    statGame.totalQuadraKills += NonNone(game.quadraKills, 0);
+    statGame.totalPentaKills += NonNone(game.pentaKills, 0);
+    statGame.averageGameDuration += NonNone(game.gameLength);
   }
+
+  // average out the ones needed
+  for (const championStat of Object.values(stats)) {
+    Object.keys(championStat).map((key: keyof typeof championStat) => {
+      if (key.includes("average")) {
+        // @ts-ignore Typing is wayyy to much of a pain here
+        championStat[key] = roundTo(championStat[key] / championStat.totalGames, 0);
+      }
+    })
+  }
+
   const objsToSave = Object.values(stats);
   await SaveObjects(objsToSave);
   return objsToSave;
 }
 
 export async function GetPlayerDetailedGames(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerDetailedGame[]> {
-  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, pageSize, pageNumber);
+  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, false, pageSize, pageNumber);
   const gameIds = playerGames.map(game => game.gameGameId);
   const gameSummaries = await GetDbGamesByGameIds(gameIds);
   if (gameSummaries.length !== playerGames.length) {
-    throw new Error(`Game summary(${gameSummaries.length}) and player game(${playerGames.length}) arrays were different lengths.`);
+    throw new Error(`Game summary(${gameSummaries.length}) and player game(${playerGames.length}) arrays were different lengths`);
   }
   return playerGames.map((game, i) => ({
     playerGame: game,

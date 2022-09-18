@@ -31,6 +31,15 @@ const darkTheme = createTheme({
     },
     risenDefeat: {
       main: '#4b2222'
+    },
+    primary: {
+      main: '#f45f00'
+    },
+    secondary: {
+      main: '#00112e'
+    },
+    info: {
+      main: '#a3a3a3'
     }
   }
 });

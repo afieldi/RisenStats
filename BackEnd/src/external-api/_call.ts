@@ -1,6 +1,17 @@
 import fetch, { Headers } from "node-fetch";
 import logger from "../../logger";
 
+export class ApiError extends Error {
+  status: number;
+  message: string;
+
+  constructor(errorMsg: string, status: number, apiMessage: string) {
+    super(errorMsg);
+    this.status = status;
+    this.message = apiMessage;
+  }
+}
+
 async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise<T>
 {
   // const headers: HeadersInit = new Headers();
@@ -15,7 +26,7 @@ async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise
 
   return fetch(url, {
     method: method,
-    headers: headers,
+    headers,
     body: JSON.stringify(body)
   }).then(async (response: any) => {
     if (response.ok) {
@@ -27,7 +38,8 @@ async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise
         return await _MakeAPICall(url, method, body)
     }
     else {
-        throw new Error("API call failed. Input: " + JSON.stringify(body) + " Output: " + JSON.stringify(response.text()));
+      const responseText = await response.json();
+      throw new ApiError(`API call failed. Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)} Headers: ${JSON.stringify(headers)}`, response.status, responseText);
     }
   }, (err: any) => {
     throw new Error(err);
