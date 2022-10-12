@@ -16,7 +16,7 @@ export default function RankFlag({player}: Props)
   league = league[0].toUpperCase() + league.substring(1).toLocaleLowerCase();
   return (
     <RisenBox1 title="Rank">
-      <Box sx={{display: 'flex'}}>
+      <Box sx={{display: 'flex', flexDirection: 'column'}}>
         {
           league === "Unranked" ? null :
           <Box sx={{height: 100, pr: 2, pl: 2}}>
@@ -24,7 +24,7 @@ export default function RankFlag({player}: Props)
           </Box>
         }
         <Box sx={{flexGrow: 1, textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-          <Typography variant="h5" sx={{fontFamily: 'Montserrat'}}>{league} {player?.division}</Typography>
+          <Typography variant="h5" align="center" sx={{fontFamily: 'Montserrat'}}>{league} {player?.division}</Typography>
           {/* <Typography>Better than me</Typography> */}
         </Box>
       </Box>

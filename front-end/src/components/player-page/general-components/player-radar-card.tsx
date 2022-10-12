@@ -1,12 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, SxProps, Theme } from "@mui/material";
 import React from "react";
 import { PlayerDetailedGame } from "../../../../../Common/Interface/Internal/player";
 import RisenBox1 from "../../risen-box/risen-box-1";
 import PlayerRadar from "./player-radar";
 
 interface Props {
-  sx?: {},
-  games: PlayerDetailedGame[],
+  sx?: SxProps<Theme> | undefined;
+  games: PlayerDetailedGame[];
 }
 
 export default function PlayerRadarCard({sx, games}: Props) {

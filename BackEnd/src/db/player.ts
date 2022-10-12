@@ -110,6 +110,7 @@ export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seaso
     "totalNeutralMinionsKilled",
     "averageDamageDealt",
     "averageDamageTaken",
+    "averageGoldEarned",
     "totalDoubleKills",
     "totalTripleKills",
     "totalQuadraKills",

@@ -1,11 +1,13 @@
 import express, { Request, Router } from "express";
-import { TypedResponse } from "../../Common/Interface/Internal/responseUtil";
+import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
 import { PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, UpdatePlayerGamesResponse } from "../../Common/Interface/Internal/player";
 import { CreateChampionStatDataByPuuid, GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, UpdateGamesByPlayerPuuid } from "../src/business/player";
 import logger from "../logger";
 import { DocumentNotFound } from "../../Common/errors";
 import { GetDbChampionStatsByPlayerPuuid } from "../src/db/player";
 import { NonNone } from "../../Common/utils";
+import { GetGamesRequest } from "../../Common/Interface/Internal/games";
+import { GameRoles } from "../../Common/Interface/General/gameEnums";
 
 const router: Router = express.Router();
 
@@ -57,12 +59,12 @@ router.post("/champions/by-puuid/:playerPuuid", async (req, res: TypedResponse<P
   }
 });
 
-router.post("/games/by-puuid/:playerPuuid", async (req, res: TypedResponse<PlayerGamesResponse>) => {
+router.post("/games/by-puuid/:playerPuuid", async (req: TypedRequest<GetGamesRequest>, res: TypedResponse<PlayerGamesResponse>) => {
   logger.info(`Getting game history for player: ${req.params.playerPuuid}`);
   try {
-    const pageNumber = NonNone(parseInt(req.query.pageNumber as string), 0);
-    const pageSize = NonNone(parseInt(req.query.pageSize as string), 0);
-    const detailedGames = await GetPlayerDetailedGames(req.params.playerPuuid, pageSize, pageNumber);
+    const pageNumber = NonNone(req.body.pageNumber, 0);
+    const pageSize = NonNone(req.body.pageSize, 10);
+    const detailedGames = await GetPlayerDetailedGames(req.params.playerPuuid, pageSize, pageNumber, req.body.seasonId, req.body.risenOnly, GameRoles[req.body.roleId as keyof typeof GameRoles]);
     res.json({
       games: detailedGames
     })

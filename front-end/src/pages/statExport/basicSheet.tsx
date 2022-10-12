@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { GetBasicSheetForPlayers } from '../../api/statExport';
 import { SaveBlob } from '../../common/utils';
+import LoadingButton from '../../components/loading-button/LoadingButton';
 
 export default function BasicSheetExport() {
   const [value, setValue] = useState('');
   const [nGames, setNGames] = useState(10);
-
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -17,10 +18,12 @@ export default function BasicSheetExport() {
   };
 
   const handleClick = async () => {
+    setLoading(true);
     const playerNames = value.split(/\,|\n/);
     const data = await GetBasicSheetForPlayers(playerNames, nGames);
 
     SaveBlob(data, "text.csv");
+    setLoading(false);
   };
 
   return (
@@ -51,9 +54,9 @@ export default function BasicSheetExport() {
           sx={{width: '150px', pr: 3}}
         />
         <hr></hr>
-        <Button sx={{width: '250px', ml: 3}} variant="outlined" onClick={handleClick}>
+        <LoadingButton sx={{width: '250px', ml: 3}} variant="outlined" onClick={handleClick} loading={loading}>
           Download
-        </Button>
+        </LoadingButton>
       </Box>
     </Box>
   )

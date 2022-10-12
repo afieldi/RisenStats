@@ -1,9 +1,9 @@
-import { Button } from "@mui/material";
+import { Button, SxProps, Theme } from "@mui/material";
 import React from "react";
 
 interface Props
 {
-  sx?: React.CSSProperties;
+  sx?: SxProps<Theme> | undefined;
   children?: React.ReactNode;
   onClick?: () => void;
   loading?: boolean;

@@ -6,7 +6,7 @@ interface Props {
   height?: number,
   width?: number,
   wins: number,
-  losses: number
+  losses: number,
 }
 
 export default function WinRatePieChart({height, width, wins, losses}: Props) {

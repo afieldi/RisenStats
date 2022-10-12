@@ -38,7 +38,6 @@ function _getPlayerFromGameData(playerName: string, gameData: GameModel): GameSu
 
 function GameSummary({gameData}: Props)
 {
-  console.log(gameData);
   const theme = useTheme() as Theme;
   const { playerName } = useParams();
   const mainPlayer = gameData.playerGame;
@@ -79,8 +78,8 @@ function GameSummary({gameData}: Props)
               </Typography>
               <hr></hr>
               <Typography align="center" variant="body2">
-                {/* {riotTimestampToGameTime(gameData.game.gameDuration)} */}
-                {timestamp.toLocaleString()}
+                {riotTimestampToGameTime(gameData.game.gameDuration)}
+                {/* {timestamp.toLocaleString()} */}
                 {/* {+gameData.game.gameStart + (+gameData.game.gameDuration * 1000)} */}
               </Typography>
             </Box>

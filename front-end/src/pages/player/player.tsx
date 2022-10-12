@@ -6,13 +6,16 @@ import { tabLabelProps, TabPanel } from "../../components/tab-panel/tab-panel";
 import PlayerPageGeneral from "../../components/player-page/general";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { GetDetailedPlayerGames, GetPlayerChampionStats, GetPlayerGames, GetPlayerProfile } from "../../api/player";
+import { GetDetailedPlayerGames, GetPlayerChampionStats, GetPlayerProfile } from "../../api/player";
 import { PlayerDetailedGame, PlayerOverviewResponse } from "../../../../Common/Interface/Internal/player";
 
 import '../../styles/player.css'
 import { ApiError } from "../../api/_call";
 import PlayerPageChampions from "../../components/player-page/champions";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
+import SeasonModel from "../../../../Common/models/season.model";
+import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
+import { GetActiveSeasons } from "../../api/season";
 
 function PlayerPage()
 {
@@ -26,8 +29,10 @@ function PlayerPage()
   const [value, setValue] = React.useState(0);
   const [loadingGames, setLoadingGames] = useState(false);
   const [playerProfile, setPlayerProfile] = useState<PlayerOverviewResponse>();
-
+  const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
+  const [seasonId, setSeasonId] = useState<string>("ALL");
+  const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
   async function loadPlayerProfile() {
     if (playerName) {
@@ -43,13 +48,13 @@ function PlayerPage()
     throw new Error("No Player found");
   }
 
-  async function loadMoreGames(newPlayer=false, profile: PlayerOverviewResponse | undefined) {
-    profile = profile ? profile : playerProfile
+  async function loadMoreGames(newPlayer=false, profile?: PlayerOverviewResponse | undefined) {
+    profile = profile ? profile : playerProfile;
     if (profile) {
       setLoadingGames(true);
       const tmpPage = newPlayer ? 1 : page;
       try {
-        const newGames = await GetDetailedPlayerGames(profile.overview.puuid, tmpPage);
+        const newGames = await GetDetailedPlayerGames(profile.overview.puuid, tmpPage, 10, seasonId, roleId);
         if (newPlayer) {
           setGames(newGames.games);
         }
@@ -67,12 +72,12 @@ function PlayerPage()
   }
 
   async function loadChampionStats(profile: PlayerOverviewResponse | undefined) {
-    console.log(playerProfile);
     profile = profile ? profile : playerProfile
     if (profile) {
       // setLoadingGames(true);
       try {
         const stats = await GetPlayerChampionStats(profile.overview.puuid);
+        stats.champions.sort((a, b) => b.totalGames - a.totalGames);
         setChampionStats(stats.champions);
       }
       catch (error) {
@@ -81,9 +86,17 @@ function PlayerPage()
     }
   }
 
+  async function loadSeasons() {
+    try {
+      setSeasons((await GetActiveSeasons()).seasons);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     loadPlayerProfile().then(profile => {
-      console.log(`Loading games for ${playerName}`);
+      setPlayerProfile(profile)
       loadMoreGames(true, profile);
       loadChampionStats(profile);
     }, (err: any) => {
@@ -91,9 +104,30 @@ function PlayerPage()
     });
   }, [location]);
 
+  useEffect(() => {
+    loadMoreGames(true);
+  }, [seasonId, roleId]);
+
+  useEffect(() => {
+    loadSeasons();
+  }, []);
+
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const loadGamesConfig = {
+    callback: loadMoreGames,
+    status: loadingGames,
+    seasonConfig: {
+      seasonId,
+      setSeasonId,
+    },
+    roleConfig: {
+      roleId,
+      setRoleId,
+    }
   };
   return (
     <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
@@ -115,7 +149,7 @@ function PlayerPage()
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <PlayerPageGeneral games={games} player={playerProfile?.overview} loadGamesConfig={{callback: loadMoreGames, status: loadingGames}}></PlayerPageGeneral>
+            <PlayerPageGeneral player={playerProfile?.overview} seasons={seasons} games={games} loadGamesConfig={loadGamesConfig}></PlayerPageGeneral>
           </TabPanel>
           <TabPanel value={value} index={1}>
             <PlayerPageChampions championData={championStats}></PlayerPageChampions>

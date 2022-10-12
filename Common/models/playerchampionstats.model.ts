@@ -61,4 +61,7 @@ export default class PlayerChampionStatsModel extends BaseEntity
 
   @Column('integer')
   averageGameDuration: number;
+
+  @Column('integer', {nullable: true})
+  averageGoldEarned: number;
 }

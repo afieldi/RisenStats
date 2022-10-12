@@ -29,6 +29,11 @@ export function riotTimestampToGameTime(time: number): string
   return `${min}:${String(Math.round(s)).padStart(2, '0')}`;
 }
 
+export function toPerMinute(value: number, riotTimestamp: number, rounded: number = 2): number {
+  let m = riotTimestampToMinutes(riotTimestamp);
+  return roundTo(value / m, rounded);
+}
+
 export function roundTo(r: number, decimals: number = 2): number
 {
   if (decimals == 0) {
@@ -40,15 +45,33 @@ export function roundTo(r: number, decimals: number = 2): number
   return r / factor;
 }
 
-export function calculateKDA(data: PlayerGameModel, decimals: number = 2): number
+interface KDAProps {
+  kills: number;
+  assists: number;
+  deaths: number;
+}
+
+export function calculateKDA(data: KDAProps, decimals: number = 2): number
 {
   if (data.deaths === 0) return data.kills + data.assists;
   return roundTo((data.kills + data.assists) / data.deaths, decimals);
 }
 
+interface WRProps {
+  totalGames: number;
+  totalWins: number;
+}
+
+export function calculateWR(data: WRProps, rounded = 2): number
+{
+  if (data.totalGames === data.totalWins) {
+    return 100;
+  }
+  return roundTo(data.totalWins*100/data.totalGames, rounded);
+}
+
 export function calculateChampionKDA(data: PlayerChampionStatsModel, decimals: number = 2): number
 {
-  console.log(data);
   if (+data.totalDeaths === 0) return +data.totalKills + +data.totalAssists;
   return roundTo((+data.totalKills + +data.totalAssists) / +data.totalDeaths, decimals);
 }
@@ -173,7 +196,7 @@ export function GetAveragesFromObjects(objects: any[], keys: string[]): {[key: s
   return averages;
 }
 
-export function NestedArrayToCsv(objects: { [key: string]: any }[], headers?: string[]): string {
+export function ObjectArrayToCsv(objects: { [key: string]: any }[], headers?: string[]): string {
   // let dataString = "";
   // if (headers) {
   //   dataString = headers.join(",") + "\n";

@@ -11,7 +11,7 @@ const backgroundColour = 'white'; // Uses https://www.w3schools.com/tags/canvas_
 const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, backgroundColour});
 
 export async function CreatePlayerRadarWithPlayer(playerObject: PlayerModel, games: number = 20): Promise<String> {
-  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, games);
+  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, undefined, games);
   const averages = GetAveragesFromObjects(dbGames, [
     "kda", "damageShare", "damageTakenOnTeamPercentage",
     "visionScorePerMinute", "killParticipation"

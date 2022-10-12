@@ -1,6 +1,6 @@
 import express, { Router, Request } from "express";
 import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
-import { GetGamesResponse } from "../../Common/Interface/Internal/games";
+import { GetGamesRequest, GetGamesResponse } from "../../Common/Interface/Internal/games";
 import logger from "../logger";
 import { GetDbGamesByPlayerPuuid } from "../src/db/games";
 import { RiotMatchCallbackDto } from "../../Common/Interface/RiotAPI/RiotApiDto";
@@ -10,10 +10,11 @@ import { ToMatchId } from "../../Common/utils";
 
 const router: Router = express.Router();
 
-router.post('/by-puuid/:playerPuuid', async (req: Request, res: TypedResponse<GetGamesResponse>) => {
+router.post('/by-puuid/:playerPuuid', async (req: TypedRequest<GetGamesRequest>, res: TypedResponse<GetGamesResponse>) => {
   logger.info(`Get games by player name ${req.params.playerPuuid}`);
   try {
-    const games = await GetDbGamesByPlayerPuuid(req.params.playerPuuid);
+    const seasonId = req.body.seasonId;
+    const games = await GetDbGamesByPlayerPuuid(req.params.playerPuuid, false, seasonId);
     res.json({
       games
     });

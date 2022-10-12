@@ -13,6 +13,7 @@ import PlayerChampionStatsModel from "../../../Common/models/playerchampionstats
 import { NonNone, roundTo } from "../../../Common/utils";
 import { SaveObjects } from "../db/dbConnect";
 import { ApiError } from "../external-api/_call";
+import { GameRoles } from "../../../Common/Interface/General/gameEnums";
 
 export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
   try {
@@ -107,7 +108,8 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
         totalTripleKills: 0,
         totalQuadraKills: 0,
         totalPentaKills: 0,
-        averageGameDuration: 0
+        averageGameDuration: 0,
+        averageGoldEarned: 0,
       });
     }
     let statGame = stats[game.championId];
@@ -125,6 +127,7 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
     statGame.totalQuadraKills += NonNone(game.quadraKills, 0);
     statGame.totalPentaKills += NonNone(game.pentaKills, 0);
     statGame.averageGameDuration += NonNone(game.gameLength);
+    statGame.averageGoldEarned += NonNone(game.goldEarned, 0);
   }
 
   // average out the ones needed
@@ -142,8 +145,8 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string) {
   return objsToSave;
 }
 
-export async function GetPlayerDetailedGames(playerPuuid: string, pageSize = 0, pageNumber = 0): Promise<PlayerDetailedGame[]> {
-  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, false, pageSize, pageNumber);
+export async function GetPlayerDetailedGames(playerPuuid: string, pageSize = 0, pageNumber = 0, seasonId?: number, risenOnly?: boolean, roleId?: GameRoles): Promise<PlayerDetailedGame[]> {
+  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, !!risenOnly, seasonId, pageSize, pageNumber, roleId);
   const gameIds = playerGames.map(game => game.gameGameId);
   const gameSummaries = await GetDbGamesByGameIds(gameIds);
   if (gameSummaries.length !== playerGames.length) {

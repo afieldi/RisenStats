@@ -38,7 +38,7 @@ export async function SaveSingleMatchById(matchId: string, tournamentCode: strin
   for (let i = 0; i < gameData.info.participants.length; i++) {
     const participant = gameData.info.participants[i];
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId));
+    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i));
   }
   await SaveObjects(objsToSave);
   return gameObj;

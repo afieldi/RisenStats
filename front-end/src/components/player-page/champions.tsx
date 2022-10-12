@@ -1,7 +1,7 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import React from "react";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
-import { calculateChampionKDA, riotTimestampToGameTime } from "../../../../Common/utils";
+import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from "../../../../Common/utils";
 import { ChampionIdToName } from "../../common/utils";
 import WinRatePieChart from "../charts/winrate-pie";
 
@@ -10,22 +10,39 @@ interface Props {
 }
 
 export default function PlayerPageChampions({ championData }: Props) {
-  console.log(championData);
   return (
     <Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Champion</TableCell>
-              <TableCell>Winrate</TableCell>
-              <TableCell>KDA</TableCell>
-              <TableCell>Game Time</TableCell>
+              <TableCell>
+                <Typography>Champion</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography>Winrate</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography align="center">KDA</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography align="center">Game Time</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography align="center">Damage/Min</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography align="center">Gold/Min</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography align="center">Games</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {
               championData.map((champData: PlayerChampionStatsModel) => {
+                const gameTime = Number.parseInt(champData.averageGameDuration.toString());
                 return (
                   <TableRow key={champData.championId}>
                     <TableCell>
@@ -37,11 +54,27 @@ export default function PlayerPageChampions({ championData }: Props) {
                       </Box>
                     </TableCell>
                     <TableCell>
-                      In Progress
-                      {/* <WinRatePieChart wins={champData.totalWins} losses={champData.totalGames - champData.totalWins} height={50}></WinRatePieChart> */}
+                      <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <WinRatePieChart wins={champData.totalWins} losses={champData.totalGames - champData.totalWins} height={25}></WinRatePieChart>
+                        <Typography sx={{pl: 1}}>{calculateWR(champData)}%</Typography>
+                      </Box>
+                      {/* In Progress */}
                     </TableCell>
-                    <TableCell>{calculateChampionKDA(champData, 2)}</TableCell>
-                    <TableCell>{riotTimestampToGameTime(Number.parseInt(champData.averageGameDuration.toString()))}</TableCell>
+                    <TableCell>
+                      <Typography align="center">{calculateChampionKDA(champData, 2)}:1</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography align="center">{riotTimestampToGameTime(gameTime)}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography align="center">{toPerMinute(champData.averageDamageDealt, gameTime)}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography align="center">{toPerMinute(champData.averageGoldEarned, gameTime)}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography align="center">{champData.totalGames}</Typography>
+                    </TableCell>
                   </TableRow>
                 )
               })

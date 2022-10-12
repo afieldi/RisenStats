@@ -14,16 +14,16 @@ const POSTGRES_URI = process.env.POSTGRES_URI
 
 if (!POSTGRES_URI) {
   throw new Error(
-    'Please define the POSTGRES_URI environment variable inside .env.local'
+    'Please define the POSTGRES_URI environment variable inside .env.development'
   )
 }
 const options = {
   default: {
     type: 'postgres',
     host: POSTGRES_URI,
-    username: "postgres",
-    password: "password",
-    database: 'test',
+    username: process.env.POSTGRES_UN,
+    password: process.env.POSTGRES_PW,
+    database: process.env.POSTGRES_DB,
     bigNumberStrings: false,
     synchronize: process.env.NODE_ENV !== 'production',
     entities: [

@@ -1,4 +1,4 @@
-import { Box, Theme, Typography, useTheme } from '@mui/material';
+import { Box, Theme, Typography, useTheme, SxProps } from '@mui/material';
 import React from 'react';
 import { PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { PolarAngleAxis, PolarGrid, RadarChart } from 'recharts';
@@ -16,9 +16,9 @@ interface RadarOptions {
 }
 interface Props
 {
-  sx?: {},
-  games: PlayerDetailedGame[],
-  options: RadarOptions
+  sx?: SxProps<Theme> | undefined;
+  games: PlayerDetailedGame[];
+  options: RadarOptions;
 }
 
 function PlayerRadar({sx, games, options}: Props)
@@ -51,8 +51,8 @@ function PlayerRadar({sx, games, options}: Props)
   const data = [
     {
       "subject": "KDA",
-      "A": Math.min(((playerValues.kills + playerValues.deaths) / (playerValues.deaths ? playerValues.deaths : 1)) / 5, 1),
-      "trueValue": roundTo((playerValues.kills + playerValues.deaths) / (playerValues.deaths ? playerValues.deaths : 1), 2),
+      "A": Math.min(calculateKDA(playerValues) / 5, 1),
+      "trueValue": roundTo(calculateKDA(playerValues), 2),
       "fullMark": 5
     },
     {
@@ -99,7 +99,7 @@ function PlayerRadar({sx, games, options}: Props)
             x={x}
             y={y}
             className="recharts-text recharts-polar-angle-axis-tick-value"
-            text-anchor={textAnchor}
+            textAnchor={textAnchor}
             style={{ fill: 'white', fontSize: 20 }}
           >
             {payload.value}

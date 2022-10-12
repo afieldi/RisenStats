@@ -205,6 +205,12 @@ export default class PlayerGameModel extends BaseEntity
   @Column("text")
   lane: string;
 
+  @Column("text", {nullable: false})
+  position: string;
+
+  @Column("text", {nullable: false})
+  lobbyPosition: string;
+
   @Column("smallint", { array: true })
   primaryRunes: number[];
 

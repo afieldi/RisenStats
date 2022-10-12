@@ -1,5 +1,9 @@
 import { MakeBackendCall } from "./_call";
 
 export async function GetBasicSheetForPlayers(playerNames: string[], games: number) {
-  return await MakeBackendCall(`${process.env.REACT_APP_BACKEND_URL}/api/stats/player/table`, "POST", {playerNames, games}, false)
+  return await MakeBackendCall(`/api/stats/player/table`, "POST", {playerNames, games}, false);
+}
+
+export async function GetChampionStatsSheet(seasonId: string) {
+  return await MakeBackendCall('/api/stats/champions/by-season', "POST", {seasonId}, false);
 }

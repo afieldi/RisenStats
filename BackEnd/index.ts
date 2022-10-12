@@ -60,6 +60,7 @@ import AuthRouter from "./api/auth";
 import StreamRouter from "./api/stream";
 import ChartRouter from "./api/charts";
 import PlayerStatsRouter from "./api/playerstats";
+import ChampionStatsRouter from './api/championstats';
 
 app.use("/api/codes", CodesRouter);
 app.use("/api/provider", ProviderRouter);
@@ -70,6 +71,7 @@ app.use("/api/auth", AuthRouter);
 app.use("/api/stream", StreamRouter);
 app.use("/api/charts", ChartRouter);
 app.use("/api/stats/player", PlayerStatsRouter);
+app.use("/api/stats/champions", ChampionStatsRouter);
 
 app.listen(port, () => {
   // console.log(`Example app listening on port ${port}`)

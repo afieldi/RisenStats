@@ -3,6 +3,7 @@ import { Container } from "@mui/system";
 import React, { useState } from "react";
 import { TabPanel } from "../../components/tab-panel/tab-panel";
 import BasicSheetExport from "./basicSheet";
+import ChampionSheetExport from "./championSheet";
 
 export default function StatExport() {
   const theme = useTheme();
@@ -27,7 +28,12 @@ export default function StatExport() {
           <ol>
             <li>
               <Typography textAlign="left">
-                Basic Sheet: Exports a CSV of the specified Player's average game data.
+                Player Averages: Exports a CSV of the specified Player's average game data.
+              </Typography>
+            </li>
+            <li>
+              <Typography textAlign="left">
+                Champion Sheet: Exports a CSV champion data for the specified season.
               </Typography>
             </li>
           </ol>
@@ -44,6 +50,7 @@ export default function StatExport() {
               onChange={handleChange}
             >
               <MenuItem value={1}>Player Averages</MenuItem>
+              <MenuItem value={2}>Champion Sheet</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -51,6 +58,9 @@ export default function StatExport() {
       <hr></hr>
       <TabPanel value={exportItem} index={1}>
         <BasicSheetExport></BasicSheetExport>
+      </TabPanel>
+      <TabPanel value={exportItem} index={2}>
+        <ChampionSheetExport />
       </TabPanel>
     </Container>
   )

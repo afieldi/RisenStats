@@ -1,7 +1,7 @@
 import { getDbPlayerByname } from "../db/player";
 import PlayerModel from "../../../Common/models/player.model";
 import PlayerGameModel from "../../../Common/models/playergame.model";
-import { GetAveragesFromObjects, NestedArrayToCsv } from "../../../Common/utils";
+import { GetAveragesFromObjects, ObjectArrayToCsv } from "../../../Common/utils";
 import { GetDbPlayerGamesByPlayerPuuid } from "../db/games";
 
 const tableCombineCols = [
@@ -19,11 +19,11 @@ export async function GeneratePlayersCsv(playerNames: string[], games: number = 
     const playerObj = await getDbPlayerByname(playerName);
     items.push(await GeneratePlayerRow(playerObj, games));
   }
-  return NestedArrayToCsv(items, tableCombineCols);
+  return ObjectArrayToCsv(items, tableCombineCols);
 }
 
 export async function GeneratePlayerRow(playerObject: PlayerModel, games: number = 20): Promise<{ [key: string]: any }> {
-  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, games);
+  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, undefined, games);
   const averages: { [key: string]: any } = GetAveragesFromObjects(dbGames, tableCombineCols);
   averages["name"] = playerObject.name;
   averages["totalGames"] = dbGames.length;

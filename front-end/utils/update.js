@@ -7,6 +7,7 @@ const fs = require('fs');
 
 const imagePath = "./public/images";
 const dataPath = './src/data';
+const backendDataPath = '../BackEnd/data'
 
 const paths = [
     `${imagePath}/champions`,
@@ -17,6 +18,7 @@ const paths = [
     `${imagePath}/summoner`,
     `${imagePath}/runes`,
     `${dataPath}`,
+    backendDataPath,
 ]
 for (let path of paths) {
     if (!fs.existsSync(path)){
@@ -54,6 +56,7 @@ fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => 
                     }
                 }
                 fs.writeFileSync(`${dataPath}/champions_map.json`, JSON.stringify(newData, undefined, 2));
+                fs.writeFileSync(`${backendDataPath}/champions_map.json`, JSON.stringify(newData, undefined, 2))
             });
         });
 

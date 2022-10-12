@@ -9,7 +9,7 @@ interface Props
 {
   gameList: PlayerDetailedGame[];
   loadGamesConfig: {
-    callback: (newPlayer: boolean, profile: PlayerOverviewResponse | undefined) => void,
+    callback: (newPlayer: boolean) => void,
     status: boolean
   };
 }
@@ -25,7 +25,7 @@ function GameSummaryList({gameList, loadGamesConfig}: Props)
         );
       })}
       <Box>
-        <LoadingButton color="primary" onClick={() => {loadGamesConfig.callback(false, undefined)}} loading={loadGamesConfig.status}>Load More</LoadingButton>
+        <LoadingButton color="primary" onClick={() => {loadGamesConfig.callback(false)}} loading={loadGamesConfig.status}>Load More</LoadingButton>
       </Box>
     </Container>
   );
