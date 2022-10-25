@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { TabPanel } from "../../components/tab-panel/tab-panel";
 import BasicSheetExport from "./basicSheet";
 import ChampionSheetExport from "./championSheet";
+import SeasonPlayersSheet from "./seasonPlayersSheet";
 
 export default function StatExport() {
   const theme = useTheme();
@@ -36,6 +37,11 @@ export default function StatExport() {
                 Champion Sheet: Exports a CSV champion data for the specified season.
               </Typography>
             </li>
+            <li>
+              <Typography textAlign="left">
+                Season Players: Exports a CSV for player average game data filtered by season and optionally role.
+              </Typography>
+            </li>
           </ol>
         </Box>
         <hr></hr>
@@ -51,6 +57,7 @@ export default function StatExport() {
             >
               <MenuItem value={1}>Player Averages</MenuItem>
               <MenuItem value={2}>Champion Sheet</MenuItem>
+              <MenuItem value={3}>Season Players</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -61,6 +68,9 @@ export default function StatExport() {
       </TabPanel>
       <TabPanel value={exportItem} index={2}>
         <ChampionSheetExport />
+      </TabPanel>
+      <TabPanel value={exportItem} index={3}>
+        <SeasonPlayersSheet />
       </TabPanel>
     </Container>
   )

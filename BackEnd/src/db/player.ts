@@ -6,6 +6,7 @@ import PlayerChampionStatsModel from "../../../Common/models/playerchampionstats
 import { GetAveragesFromObjects, GetCurrentEpcohMs, toSearchName } from "../../../Common/utils";
 import { ensureConnection, SaveObjects } from "./dbConnect";
 import log from "../../logger";
+import { GameRoles } from "../../../Common/Interface/General/gameEnums";
 
 export async function GetDbPlayerByPuuid(playerPuuid: string): Promise<PlayerModel> {
   await ensureConnection();
@@ -124,4 +125,21 @@ export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seaso
     `SELECT ${outerSelect}, champStat."championId" FROM (SELECT * FROM playerchampionstats WHERE ${seasonFilter}"playerchampionstats".\"playerPuuid\" = $1) as champStat GROUP BY champStat."championId"`,
     [playerPuuid, seasonId].filter(val => !!val)
   ) as PlayerChampionStatsModel[];
+}
+
+interface PlayerData {
+  playerPuuid: string;
+}
+
+export async function GetPlayerPuuidsInSeason(seasonId: number, roleId: GameRoles, risenOnly: boolean): Promise<PlayerData[]> {
+  await ensureConnection();
+  let params: any[] = risenOnly ? [] : [seasonId];
+  let seasonIdString = risenOnly ? "IS NOT NULL" : "= $1"
+  let query = 'SELECT DISTINCT player_game."playerPuuid" as "playerPuuid" FROM player_game WHERE player_game."seasonId"' + seasonIdString;
+  if (roleId && roleId != GameRoles.ALL) {
+    query += ' AND player_game."lobbyPosition" = $2'
+    params.push(roleId)
+  }
+
+  return await PlayerModel.query(query, params) as PlayerData[];
 }

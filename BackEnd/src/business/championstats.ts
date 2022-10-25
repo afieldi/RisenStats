@@ -2,6 +2,7 @@ import { GetAveragesFromObjects, ObjectArrayToCsv } from "../../../Common/utils"
 import { GetDbPlayerGamesBySeasonId } from "../db/games";
 import championMap from '../../data/champions_map.json';
 import PlayerGameModel from "../../../Common/models/playergame.model";
+import log from "../../logger";
 
 const averageHeaders = [
   "kills", "deaths", "assists", "goldEarned", "totalMinionsKilled",
@@ -9,12 +10,12 @@ const averageHeaders = [
   "totalHeal", "visionScore", "wardsPlaced", "wardsKilled",
   "visionWardsBoughtInGame", "damageDealtToObjectives", "firstBloodKill", "firstBloodAssist",
   "firstTowerKill", "firstTowerAssist", "turretKills", "doubleKills", "tripleKills", "quadraKills",
-  "pentaKills", "damagePerGold", "soloKills"
+  "pentaKills", "damagePerGold", "soloKills", "win"
 ]
 
 export async function GetChampionStatsBySeason(seasonId: string): Promise<string> {
   const seasonGames = await GetDbPlayerGamesBySeasonId(seasonId);
-
+  log.debug(`Found ${seasonGames.length} games`);
   const games: {[key: number]: PlayerGameModel[]} = {};
   for (const game of seasonGames) {
     if (!games[game.championId]) {

@@ -24,7 +24,9 @@ interface Props {
   roleConfig?: {
     roleId: GameRoles,
     setRoleId: (roleId: GameRoles) => void,
-  }
+  };
+
+  hideAllGames?: boolean;
 }
 
 export default function GamesFilter(props: Props) {
@@ -40,7 +42,7 @@ export default function GamesFilter(props: Props) {
             label="Season"
             onChange={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value)}}
           >
-            <MenuItem value="ALL">All Tournament Games</MenuItem>
+            {props.hideAllGames === true ? null : <MenuItem value="ALL">All Tournament Games</MenuItem>}
             <MenuItem value="RISEN">All Risen Games</MenuItem>
             {
               props.seasonConfig?.seasons?.map(season => (

@@ -189,9 +189,9 @@ export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOn
     if (pageNumber <= 0) {
       pageNumber = 1;
     }
+    searchFilter['take'] = pageSize;
+    searchFilter['skip'] = pageSize * (pageNumber - 1);
   }
-  searchFilter['take'] = pageSize;
-  searchFilter['skip'] = pageSize * (pageNumber - 1);
   searchFilter['order'] = {
     timestamp: 'DESC',
   }
@@ -213,7 +213,6 @@ export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOn
       lobbyPosition: GameRoles[roleId]
     };
   }
-  console.log(searchFilter);
 
   return await PlayerGameModel.find(searchFilter);
 }
@@ -258,5 +257,5 @@ export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<Play
   else {
     filter = {where: {seasonId: Number(seasonId)}};
   }
-  return await PlayerGameModel.find();
+  return await PlayerGameModel.find(filter);
 }
