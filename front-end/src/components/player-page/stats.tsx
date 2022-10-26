@@ -1,7 +1,9 @@
 import React from "react";
-import {Box, Typography} from "@mui/material";
+import {Box, Grid, Theme, Typography} from "@mui/material";
 import StatBox from "./stats/stat-box";
 import RisenBox1 from "../risen-box/risen-box-1";
+import {useTheme} from "@emotion/react";
+import PerformanceOverview from "./stats/performance-overview";
 
 interface PlayerPageStatsProps {
 }
@@ -13,6 +15,7 @@ export interface PlayerStat {
 
 
 export default function PlayerPageStats(playerStats: PlayerPageStatsProps) {
+
 
     // TODO get this from props or on tab load
     let allPlayerStats: PlayerStat[] = [
@@ -26,6 +29,8 @@ export default function PlayerPageStats(playerStats: PlayerPageStatsProps) {
         {statTitle: "XPD @25", statValue: "2"},
     ]
 
+
+
     return (
         <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
             <Box sx={{minWidth: 290}}>
@@ -33,8 +38,8 @@ export default function PlayerPageStats(playerStats: PlayerPageStatsProps) {
                     RADAR HERE
                 </RisenBox1>
             </Box>
-            <Box sx={{display: "flex", columnGap: 3}}>
-                {allPlayerStats.map((playerStat) => <StatBox statTitle={playerStat.statTitle} statValue={playerStat.statValue}/>)}
+            <Box>
+                <PerformanceOverview allPlayerStats={allPlayerStats}/>
             </Box>
         </Box>
     );
