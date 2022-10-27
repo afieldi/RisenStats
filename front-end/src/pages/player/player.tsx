@@ -156,7 +156,7 @@ function PlayerPage()
             <PlayerPageChampions championData={championStats}></PlayerPageChampions>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <PlayerPageStats/>
+            <PlayerPageStats seasonConfig={loadGamesConfig?.seasonConfig}/>
           </TabPanel>
         </Box>
       </main>
