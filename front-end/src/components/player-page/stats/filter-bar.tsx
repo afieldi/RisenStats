@@ -1,11 +1,8 @@
-import {Box, Grid} from "@mui/material";
+import {Grid} from "@mui/material";
 import RisenSeasonSelector from "../../selectors/risen-season-selector";
 import RoleSelector from "../../selectors/role-selector";
 import {GameRoles} from "../../../../../Common/Interface/General/gameEnums";
-import RisenBox1 from "../../risen-box/risen-box-1";
-import PerformanceOverview from "./performance-overview";
 import React from "react";
-import {PlayerStat} from "../stats";
 import SeasonModel from "../../../../../Common/models/season.model";
 
 export interface FilterBarProps {
