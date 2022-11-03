@@ -13,7 +13,7 @@ export default function PerformanceOverview(performanceOverviewProps: Performanc
 
     return(
         <Grid item xs={1} md={1}>
-            <Typography color={theme.palette.info.light} align="left" variant="h6">🥇 Performance Overview</Typography>
+            <Typography color={theme.palette.info.light} align="left" variant="h6">Performance Overview</Typography>
             <Box sx={{display: "flex", columnGap: 3}}>
                 {performanceOverviewProps.allPlayerStats.map((playerStat) => <StatBox statTitle={playerStat.statTitle}
                                                              statValue={playerStat.statValue}/>)}

@@ -130,6 +130,8 @@ function PlayerPage()
       setRoleId,
     }
   };
+  let shouldShowStatsPage = process.env.NODE_ENV === 'development';
+
   return (
     <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
       <CssBaseline />
@@ -156,7 +158,8 @@ function PlayerPage()
             <PlayerPageChampions championData={championStats}></PlayerPageChampions>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <PlayerPageStats seasonConfig={loadGamesConfig?.seasonConfig}/>
+            {shouldShowStatsPage && <PlayerPageStats seasonConfig={loadGamesConfig?.seasonConfig}/>}
+            {!shouldShowStatsPage && <Typography>Coming Soon</Typography>}
           </TabPanel>
         </Box>
       </main>
