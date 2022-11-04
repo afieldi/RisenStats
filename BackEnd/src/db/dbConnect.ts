@@ -36,60 +36,60 @@ const options = {
       GameEventModel,
       PlayerGameModel,
       SeasonModel,
-      PlayerChampionStatsModel,
+      PlayerChampionStatsModel
     ]
-  },
-};
-
-function entitiesChanged(prevEntities: any[], newEntities: any[]): boolean {
-  if (prevEntities.length !== newEntities.length) return true;
-
-  for (let i = 0; i < prevEntities.length; i++) {
-    if (prevEntities[i] !== newEntities[i]) return true;
   }
-
-  return false;
 }
 
-async function updateConnectionEntities(connection: Connection, entities: any[]) {
-  // @ts-ignore
-  if (!entitiesChanged(connection.options.entities!, entities)) return;
+function entitiesChanged(prevEntities: any[], newEntities: any[]): boolean {
+  if (prevEntities.length !== newEntities.length) return true
 
-  // @ts-ignore
-  connection.options.entities = entities;
+  for (let i = 0; i < prevEntities.length; i++) {
+    if (prevEntities[i] !== newEntities[i]) return true
+  }
 
-  // @ts-ignore
-  connection.buildMetadatas();
+  return false
+}
+
+async function updateConnectionEntities(connection: Connection, entities: any[]): Promise<void> {
+  // @ts-expect-error
+  if (!entitiesChanged(connection.options.entities, entities)) return
+
+  // @ts-expect-error
+  connection.options.entities = entities
+
+  // @ts-expect-error
+  connection.buildMetadatas()
 
   if (connection.options.synchronize) {
-    await connection.synchronize();
+    await connection.synchronize()
   }
 }
 
 export async function ensureConnection(name: string = 'default'): Promise<Connection> {
-  const connectionManager = getConnectionManager();
+  const connectionManager = getConnectionManager()
 
   if (connectionManager.has(name)) {
-    const connection = connectionManager.get(name);
+    const connection = connectionManager.get(name)
 
     if (!connection.isConnected) {
-      await connection.connect();
+      await connection.connect()
     }
 
     if (process.env.NODE_ENV !== 'production') {
-      // @ts-ignore
-      await updateConnectionEntities(connection, options[name].entities);
+      // @ts-expect-error
+      await updateConnectionEntities(connection, options[name].entities)
     }
 
-    return connection;
+    return connection
   }
 
-  // @ts-ignore
-  return await connectionManager.create({ name, ...options[name] }).connect();
+  // @ts-expect-error
+  return await connectionManager.create({ name, ...options[name] }).connect()
 }
 
 export async function SaveObjects(items: BaseEntity[]): Promise<BaseEntity[]> {
-  await ensureConnection();
-  await getConnection().manager.save(items);
-  return items;
+  await ensureConnection()
+  await getConnection().manager.save(items)
+  return items
 }
