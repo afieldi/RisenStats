@@ -7,16 +7,15 @@ import {PlayerStat} from "../stats";
 interface StatBoxProps extends PlayerStat {
 }
 
-export default function StatBox(statBoxProps: StatBoxProps)
-{
+export default function StatBox(statBoxProps: StatBoxProps) {
     const theme = useTheme() as Theme;
     return (
-        <RisenBox1 sx={{minWidth: 190}}>
+        <RisenBox1 sx={{minWidth: 110, maxWidth: 110, minHeight: 110, maxHeight: 110}}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                <Typography color={theme.palette.primary.main} variant="h3">
+                <Typography color={theme.palette.primary.main} variant="h6">
                     {statBoxProps.statValue}
                 </Typography>
-                <Typography color={theme.palette.info.light} variant="h6">
+                <Typography color={theme.palette.info.light} variant="subtitle2">
                     {statBoxProps.statTitle}
                 </Typography>
             </Box>

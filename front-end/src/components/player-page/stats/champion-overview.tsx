@@ -1,9 +1,7 @@
 import {useTheme} from "@emotion/react";
 import {Box, Grid, Theme, Typography} from "@mui/material";
 import React from "react";
-import {PerformanceOverviewProps} from "./performance-overview";
 import PlayerChampionStatsModel from "../../../../../Common/models/playerchampionstats.model";
-import StatBox from "./stat-box";
 import RisenBox1 from "../../risen-box/risen-box-1";
 import ChampionSummaryBox from "./champion-summary-box";
 
