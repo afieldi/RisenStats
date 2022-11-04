@@ -39,7 +39,7 @@ export default function GamesFilter(props: Props) {
             callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value)}}
             sx={{minWidth: '300px', pt: 1, pb: 1}}
             seasonConfig={props.seasonConfig}
-            hideAllGames={props.hideAllGames !== undefined}/>
+            hideAllGames={!!props.hideAllGames}/>
       }
       {
           props.useRole && <RoleSelector

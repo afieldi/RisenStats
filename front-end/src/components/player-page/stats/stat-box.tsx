@@ -13,19 +13,9 @@ export default function StatBox(statBoxProps: StatBoxProps)
     return (
         <RisenBox1 sx={{minWidth: 200}}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                <Grid container>
-                   <Grid item xs>
-                       <Typography color={theme.palette.primary.main} variant="h3">
-                           {statBoxProps.statValue}
-                       </Typography>
-                   </Grid>
-                    <Grid item xs>
-                        <Typography sx={{fontStyle: 'italic'}} color={'#837d7d'} variant="subtitle2">
-                            (1st)
-                        </Typography>
-                    </Grid>
-                </Grid>
-
+                <Typography color={theme.palette.primary.main} variant="h3">
+                    {statBoxProps.statValue}
+                </Typography>
                 <Typography color={theme.palette.info.light} variant="h6">
                     {statBoxProps.statTitle}
                 </Typography>
