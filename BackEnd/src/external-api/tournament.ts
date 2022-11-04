@@ -1,7 +1,7 @@
 import { InvalidRequestError } from '../../../Common/errors'
 import { MakeTournamentRiotAPICall } from './_call'
 
-export async function CreateRiotTournaments(name: string, providerId: number): Promise<number> {
+export async function CreateRiotTournament(name: string, providerId: number): Promise<number> {
   if (name.length < 3 || providerId <= 0) {
     throw new InvalidRequestError('Name must be longer than 3 characters and providerId must be greater than 0')
   }

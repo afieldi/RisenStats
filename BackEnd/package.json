@@ -9,7 +9,7 @@
     "deploy": "npm run build && gcloud app deploy",
     "start": "node ./dist/BackEnd/index.js --prod",
     "build": "tsc -p .",
-    "link": "eslint ./src ./api"
+    "lint": "eslint ./src ./api"
   },
   "author": "",
   "license": "ISC",
