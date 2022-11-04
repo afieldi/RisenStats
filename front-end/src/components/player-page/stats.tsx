@@ -1,22 +1,13 @@
 import React from "react";
 import {
     Box,
-    FormControl,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Theme,
-    Typography
 } from "@mui/material";
 import RisenBox1 from "../risen-box/risen-box-1";
 import PerformanceOverview from "./stats/performance-overview";
-import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
-import RoleSelector from "../selectors/role-selector";
-import RisenSeasonSelector from "../selectors/risen-season-selector";
 import SeasonModel from "../../../../Common/models/season.model";
 import FilterBar from "./stats/filter-bar";
+import ChampionOverview from "./stats/champion-overview";
+import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
 
 interface PlayerPageStatsProps {
     seasonConfig?: {
@@ -24,6 +15,7 @@ interface PlayerPageStatsProps {
         setSeasonId: (seasonId: string) => void,
         seasons?: SeasonModel[],
     };
+    championData: PlayerChampionStatsModel[]
 }
 
 export interface PlayerStat {
@@ -55,8 +47,9 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
                         RADAR HERE
                     </RisenBox1>
                 </Box>
-                <Box>
+                <Box sx={{rowGap: 10}}>
                     <PerformanceOverview allPlayerStats={allPlayerStats}/>
+                    <ChampionOverview championData={props.championData}/>
                 </Box>
             </Box>
         </Box>

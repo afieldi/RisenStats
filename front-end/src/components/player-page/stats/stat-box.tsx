@@ -11,7 +11,7 @@ export default function StatBox(statBoxProps: StatBoxProps)
 {
     const theme = useTheme() as Theme;
     return (
-        <RisenBox1 sx={{minWidth: 200}}>
+        <RisenBox1 sx={{minWidth: 190}}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
                 <Typography color={theme.palette.primary.main} variant="h3">
                     {statBoxProps.statValue}

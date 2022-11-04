@@ -158,7 +158,7 @@ function PlayerPage()
             <PlayerPageChampions championData={championStats}></PlayerPageChampions>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            {shouldShowStatsPage && <PlayerPageStats seasonConfig={loadGamesConfig?.seasonConfig}/>}
+            {shouldShowStatsPage && <PlayerPageStats seasonConfig={loadGamesConfig?.seasonConfig} championData={championStats}/>}
             {!shouldShowStatsPage && <Typography>Coming Soon</Typography>}
           </TabPanel>
         </Box>
