@@ -8,6 +8,7 @@ import { GetDbChampionStatsByPlayerPuuid } from "../src/db/player";
 import { NonNone } from "../../Common/utils";
 import { GetGamesRequest } from "../../Common/Interface/Internal/games";
 import { GameRoles } from "../../Common/Interface/General/gameEnums";
+import {CreatePlayerStatsByPuuid} from "../src/business/playerstats";
 
 const router: Router = express.Router();
 
@@ -16,6 +17,7 @@ router.post("/update/by-puuid/:playerPuuid", async (req: Request, res: TypedResp
   try {
     const updatedGames = await UpdateGamesByPlayerPuuid(req.params.playerPuuid);
     await CreateChampionStatDataByPuuid(req.params.playerPuuid);
+    await CreatePlayerStatsByPuuid(req.params.playerPuuid)
     res.json(updatedGames);
   } catch (error) {
     logger.error(error);

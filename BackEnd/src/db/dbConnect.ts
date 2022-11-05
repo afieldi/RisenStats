@@ -9,6 +9,7 @@ import SeasonModel from '../../../Common/models/season.model'
 import BanModel from '../../../Common/models/ban.model'
 import LeaderboardModel from '../../../Common/models/leaderboard.model'
 import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model'
+import PlayerStatModel from "../../../Common/models/playerstat.model";
 
 const POSTGRES_URI = process.env.POSTGRES_URI
 
@@ -37,6 +38,7 @@ const options = {
       PlayerGameModel,
       SeasonModel,
       PlayerChampionStatsModel,
+      PlayerStatModel,
     ]
   },
 };
