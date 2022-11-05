@@ -1,5 +1,5 @@
 import {useTheme} from "@emotion/react";
-import {Box, Grid, Theme, Typography} from "@mui/material";
+import {Box, Theme, Typography} from "@mui/material";
 import React from "react";
 import PlayerChampionStatsModel from "../../../../../Common/models/playerchampionstats.model";
 

@@ -1,5 +1,5 @@
 import {useTheme} from "@emotion/react";
-import {Box, Divider, Grid, Theme, Typography} from "@mui/material";
+import {Box, Divider, Theme, Typography} from "@mui/material";
 import React from "react";
 import PlayerChampionStatsModel from "../../../../../Common/models/playerchampionstats.model";
 import RisenBox1 from "../../risen-box/risen-box-1";

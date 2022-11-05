@@ -1,6 +1,6 @@
-import {Box, Grid, Grow, Slide, Theme, Typography, Zoom} from "@mui/material";
+import {Box, Grid, Theme, Typography} from "@mui/material";
 import StatBox from "./stat-box";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {PlayerStat} from "../stats";
 import {useTheme} from "@emotion/react";
 
