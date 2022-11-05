@@ -2,7 +2,7 @@ import RisenBox1 from "../../risen-box/risen-box-1";
 import {Cell, Label, Pie, PieChart, ResponsiveContainer, Tooltip} from "recharts";
 import React from "react";
 import {useTheme} from "@emotion/react";
-import {Theme, Typography} from "@mui/material";
+import {Divider, Theme, Typography} from "@mui/material";
 import "./win-rate-box.css"
 
 interface WinRateBoxProps {

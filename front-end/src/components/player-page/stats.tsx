@@ -8,6 +8,7 @@ import FilterBar from "./stats/filter-bar";
 import ChampionOverview from "./stats/champion-overview";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
 import WinRateBox from "./stats/win-rate-box";
+import RisenBox1 from "../risen-box/risen-box-1";
 
 interface PlayerPageStatsProps {
     seasonConfig?: {
@@ -49,12 +50,13 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
             <Box>
                 <FilterBar seasonConfig={this.props.seasonConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
-                    <Box sx={{maxWidth: 280}}>
+                    <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <WinRateBox wins={20} losses={10}/>
                         <ChampionOverview championData={this.props.championData}/>
                     </Box>
-                    <Box sx={{rowGap: 10}}>
+                    <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <PerformanceOverview allPlayerStats={allPlayerStats}/>
+                        <RisenBox1 sx={{minHeight: 480}}>THIS SECTION IS COMING SOON</RisenBox1>
                     </Box>
                 </Box>
             </Box>

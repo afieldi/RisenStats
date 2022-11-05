@@ -1,5 +1,5 @@
 import {useTheme} from "@emotion/react";
-import {Box, Grid, Theme, Typography} from "@mui/material";
+import {Box, Divider, Grid, Theme, Typography} from "@mui/material";
 import React from "react";
 import PlayerChampionStatsModel from "../../../../../Common/models/playerchampionstats.model";
 import RisenBox1 from "../../risen-box/risen-box-1";
@@ -14,13 +14,14 @@ export default function ChampionOverview(championOverviewProps: ChampionOverview
     const theme = useTheme() as Theme;
 
     return (
-        <Grid item xs={1} md={1}>
-            <Typography color={theme.palette.info.light} align="left" variant="h4">Champions</Typography>
-            <RisenBox1 sx={{display: "flex", columnGap: 1, rowGap: 1, flexWrap: "wrap"}}>
+        <RisenBox1>
+            <Typography color={theme.palette.info.light} align="left" variant="h5" >Champions</Typography>
+            <Divider sx={{marginBottom: 2}}/>
+            <Box sx={{display: "flex", columnGap: 1, rowGap: 1, flexWrap: "wrap"}}>
                 { championOverviewProps.championData.map((champData) =>
                     <ChampionSummaryBox championData={champData}/>
                 )}
-            </RisenBox1>
-        </Grid>
+            </Box>
+        </RisenBox1>
     );
 }
