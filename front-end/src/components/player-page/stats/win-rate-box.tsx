@@ -8,6 +8,7 @@ import "./win-rate-box.css"
 interface WinRateBoxProps {
     wins: number;
     losses: number;
+    hasData: boolean;
 }
 
 export default function WinRateBox(winRateProps: WinRateBoxProps) {
@@ -23,6 +24,7 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
     return (
         <RisenBox1 sx={{minWidth: 280, minHeight: 280}}>
             <Typography color={theme.palette.info.light} variant="h4">Win Rate</Typography>
+            {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
             <PieChart width={240} height={200}>
                 <Pie
                     data={data}

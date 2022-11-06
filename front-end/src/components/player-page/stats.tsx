@@ -55,7 +55,6 @@ const statsGenerators: BaseStatGenerator[] = [
 export default class PlayerPageStats extends React.Component<PlayerPageStatsProps> {
 
     render() {
-
         let wins = 0;
         let games = 0
         for (let playerStat of this.props.playerStats) {
@@ -68,7 +67,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                 <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-                        <WinRateBox wins={wins} losses={games-wins}/>
+                        <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>
                         <ChampionOverview championData={this.props.championData}/>
                     </Box>
                     <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
