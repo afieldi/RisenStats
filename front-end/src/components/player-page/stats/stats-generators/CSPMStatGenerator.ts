@@ -6,7 +6,7 @@ export class CSPMStatGenerator extends BaseStatGenerator {
         let cs = 0
         let time = 0;
         for (let playerStatsModel of playerStatsModels) {
-            cs += playerStatsModel.totalMinionsKilled;
+            cs += playerStatsModel.totalMinionsKilled + playerStatsModel.enemyJungleMonsterKills + playerStatsModel.alliedJungleMonsterKills;
             time += playerStatsModel.gameLength;
         }
 
