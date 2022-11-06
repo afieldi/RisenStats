@@ -1,6 +1,7 @@
 import { PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
 import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
 import { MakeBackendCall } from './_call';
+import {GetPlayerStatsRequest, GetPlayerStatsResponse} from "../../../Common/Interface/Internal/playerstats";
 
 export async function GetPlayerProfile(playerName: string): Promise<PlayerOverviewResponse> {
   return await MakeBackendCall(`/api/player/summary/by-name/${playerName}`, "POST", {}) as PlayerOverviewResponse;
@@ -51,4 +52,18 @@ export async function UpdatePlayer(playerPuuid: string): Promise<UpdatePlayerGam
 
 export async function GetPlayerChampionStats(playerPuuid: string): Promise<PlayerChampionStatsResponse> {
   return await MakeBackendCall(`/api/player/champions/by-puuid/${playerPuuid}`, "POST", {}) as PlayerChampionStatsResponse;
+}
+
+export async function GetPlayerStats(playerPuuid: string, seasonId?: number, roleId?: string): Promise<GetPlayerStatsResponse> {
+  const requestBody = {} as GetPlayerStatsRequest
+
+  if(seasonId) {
+    requestBody.seasonId = seasonId;
+  }
+
+  if(roleId) {
+    requestBody.roleId = roleId;
+  }
+
+  return await MakeBackendCall(`/api/stats/player/by-puuid/${playerPuuid}`, "POST", requestBody) as GetPlayerStatsResponse;
 }

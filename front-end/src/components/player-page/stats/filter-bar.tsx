@@ -1,4 +1,4 @@
-import {Grid} from "@mui/material";
+import {Grid, SelectChangeEvent} from "@mui/material";
 import RisenSeasonSelector from "../../selectors/risen-season-selector";
 import RoleSelector from "../../selectors/role-selector";
 import {GameRoles} from "../../../../../Common/Interface/General/gameEnums";
@@ -11,6 +11,10 @@ export interface FilterBarProps {
         setSeasonId: (seasonId: string) => void,
         seasons?: SeasonModel[],
     };
+    roleConfig?: {
+        roleId: GameRoles,
+        setRoleId: (roleId: GameRoles) => void,
+    };
 }
 
 export default function FilterBar(props: FilterBarProps) {
@@ -18,7 +22,7 @@ export default function FilterBar(props: FilterBarProps) {
         <Grid spacing={2} container>
             <Grid item>
                 <RisenSeasonSelector
-                    callBack={() => {}}
+                    callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value)}}
                     sx={{minWidth: '200px', pt: 1, pb: 1}}
                     seasonConfig={props.seasonConfig}
                     hideAllGames={false}/>
@@ -26,8 +30,8 @@ export default function FilterBar(props: FilterBarProps) {
             <Grid item>
                 <RoleSelector
                     sx={{minWidth: '150px', pt: 1, pb: 1}}
-                    initalValue={GameRoles.ALL}
-                    callBack={() => {}}
+                    initalValue={props.roleConfig?.roleId}
+                    callBack={(event: SelectChangeEvent) => {props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]) }}
                 />
             </Grid>
         </Grid>
