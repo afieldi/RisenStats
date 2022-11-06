@@ -56,8 +56,7 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
 
   for (const playerGame of playerGames) {
-    // TODO talk to arek about why this is possible.
-    if(playerGame.seasonId === null) {
+    if (playerGame.seasonId === null) {
        continue;
     }
 
@@ -73,9 +72,7 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
        rowsByRisenSeason.set(playerGame.lobbyPosition, createInitialPlayerStatModel(playerGame));
     }
 
-    // TODO this call is broken, talk to arek
-    const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId)
-
+    const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
     let currentRow: PlayerStatModel = rowsByRisenSeason.get(playerGame.lobbyPosition)
     rowsByRisenSeason.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
   }
@@ -106,7 +103,7 @@ function createInitialPlayerStatModel(game: PlayerGameModel) {
     lobbyPosition: game.lobbyPosition,
     player: game.player,
     season: game.season,
-    // games: 0,
+    games: 0,
     kills: 0,
     deaths: 0,
     assists: 0,
@@ -280,7 +277,7 @@ function createInitialPlayerStatModel(game: PlayerGameModel) {
 }
 
 function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGameModel, fullGame: GameModel): PlayerStatModel {
-  // currentRow.games += 1;
+  currentRow.games += 1;
   currentRow.kills += NonNone(game.kills, 0);
   currentRow.deaths += NonNone(game.deaths, 0);
   currentRow.assists += NonNone(game.assists, 0);
@@ -450,7 +447,7 @@ export function getTotalsForGame(currentRow: PlayerStatModel, game: PlayerGameMo
     return currentRow;
   }
 
-  const teammates: PlayerGameModel[] = fullGame.players.filter((game)=> game.teamId === game.teamId)
+  const teammates: PlayerGameModel[] = fullGame.players.filter((teammateGame) => game.teamId === teammateGame.teamId)
 
   teammates.forEach((teammate) => {
     currentRow.totalKillsOfTeam += NonNone(teammate.kills, 0);

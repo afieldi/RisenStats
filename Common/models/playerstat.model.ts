@@ -21,9 +21,8 @@ export default class PlayerStatModel extends BaseEntity
     @ManyToOne(() => SeasonModel)
     season: SeasonModel;
 
-    // TODO add this after arek drops the table
-    // @Column("integer")
-    // games: number;
+    @Column("integer")
+    games: number;
 
     // Base Stats
     @Column("integer")

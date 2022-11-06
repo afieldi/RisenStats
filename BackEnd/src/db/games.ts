@@ -1,4 +1,4 @@
-import { DeepPartial, FindManyOptions, In, IsNull, Not } from "typeorm";
+import {DeepPartial, FindManyOptions, FindOneOptions, In, IsNull, Not} from "typeorm";
 import { GameSummaryPlayers, TeamSumStat } from "../../../Common/Interface/Database/game";
 import { TimelineParticipantStats } from "../../../Common/Interface/Database/timeline";
 import { GameRoles } from "../../../Common/Interface/General/gameEnums";
@@ -177,9 +177,13 @@ export async function CreateDbGame(gameData: RiotMatchDto, seasonId: number, pla
   }).save();
 }
 
-export async function GetDbGameByGameId(gameId: number): Promise<GameModel> {
+export async function GetDbGameByGameId(gameId: number, expandGames: boolean = false): Promise<GameModel> {
   await ensureConnection();
-  return await GameModel.findOne({where: {gameId: gameId}});
+  const searchFilter: FindOneOptions<GameModel> = {where: {gameId: gameId}};
+  searchFilter["relations"] = {
+    players: expandGames
+  }
+  return await GameModel.findOne(searchFilter);
 }
 
 export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, seasonId: number = undefined, pageSize = 0, pageNumber = 0, roleId?: GameRoles): Promise<PlayerGameModel[]> {
