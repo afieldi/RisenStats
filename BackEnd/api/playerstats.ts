@@ -56,7 +56,7 @@ router.post('/by-puuid/:playerPuuid', async (req: TypedRequest<GetPlayerStatsReq
   }
   catch (error) {
     logger.error(error);
-    res.status(500).send("Something went wrong");
+    res.status(500).send("Something went wrong while fetching playerstatmodel");
   }
 });
 
