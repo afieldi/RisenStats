@@ -92,15 +92,17 @@ function PlayerPage()
 
   async function loadPlayerStats(profile: PlayerOverviewResponse | undefined) {
     profile = profile ? profile : playerProfile
-    if (profile) {
-      try {
-        let numberSeasonId = seasonId === "RISEN" ? undefined : Number(seasonId)
-        const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId);
-        setPlayerStats(stats.playerStats);
-      }
-      catch (error) {
-
-      }
+    if(!profile) {
+      console.log("Tried to call loadPlayerStats with a null profile")
+      return;
+    }
+    try {
+      let numberSeasonId = seasonId === "RISEN" ? undefined : Number(seasonId)
+      const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId);
+      setPlayerStats(stats.playerStats);
+    }
+    catch (error) {
+      console.error("An error occured while trying to load player stats")
     }
   }
 

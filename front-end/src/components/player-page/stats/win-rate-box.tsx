@@ -43,7 +43,7 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
                            className='label'
                            style={{ fill: theme.palette.info.dark }}/>
                     {
-                        data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+                        data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
                     }
                 </Pie>
                 <Tooltip/>

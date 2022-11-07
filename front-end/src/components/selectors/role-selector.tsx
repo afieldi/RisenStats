@@ -23,8 +23,8 @@ export default function RoleSelector(props: RoleSelectorProps) {
                 onChange={props.callBack}
             >
                 {
-                    Object.keys(GameRoles).map(gameRole => (
-                        <MenuItem value={gameRole}>{gameRole}</MenuItem>
+                    Object.keys(GameRoles).map((gameRole, index) => (
+                        <MenuItem key={index} value={gameRole}>{gameRole}</MenuItem>
                     ))
                 }
             </Select>

@@ -18,8 +18,8 @@ export default function ChampionOverview(championOverviewProps: ChampionOverview
             <Typography color={theme.palette.info.light} align="left" variant="h5" >Champions</Typography>
             <Divider sx={{marginBottom: 2}}/>
             <Box sx={{display: "flex", columnGap: 1, rowGap: 1, flexWrap: "wrap"}}>
-                { championOverviewProps.championData.map((champData) =>
-                    <ChampionSummaryBox championData={champData}/>
+                { championOverviewProps.championData.map((champData, index) =>
+                    <ChampionSummaryBox key={index} championData={champData}/>
                 )}
             </Box>
         </RisenBox1>

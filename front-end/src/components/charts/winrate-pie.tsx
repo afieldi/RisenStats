@@ -28,7 +28,7 @@ export default function WinRatePieChart({height, width, wins, losses}: Props) {
     <PieChart height={NonNone(height, 300)} width={NonNone(width, NonNone(height, 300))}>
       <Pie data={data} dataKey="value" nameKey="name" fill="#8884d8" outerRadius={NonNone(height, 300) * .5}>
       {
-        data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+        data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
       }
       </Pie>
     </PieChart>
