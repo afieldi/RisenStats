@@ -20,6 +20,11 @@ export function riotTimestampToMinutes(time: number): number
   return riotTimestampToSeconds(time) / 60;
 }
 
+export function riotTimelineTimestampToMinutes(time: number): number
+{
+  return riotTimestampToMinutes(time / 1000);
+}
+
 export function riotTimestampToGameTime(time: number): string
 {
   let s = riotTimestampToSeconds(time);
