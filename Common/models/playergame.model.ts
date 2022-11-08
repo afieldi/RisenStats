@@ -67,10 +67,19 @@ export default class PlayerGameModel extends BaseEntity
   kills15: number;
 
   @Column("smallint")
+  kills25: number;
+
+  @Column("smallint")
   deaths15: number;
 
   @Column("smallint")
+  deaths25: number;
+
+  @Column("smallint")
   assists15: number;
+
+  @Column("smallint")
+  assists25: number;
 
   // Income
   @Column("smallint")
@@ -130,10 +139,16 @@ export default class PlayerGameModel extends BaseEntity
   wardsPlaced15: number;
 
   @Column("smallint")
+  wardsPlaced25: number;
+
+  @Column("smallint")
   wardsPlaced: number;
 
   @Column("smallint")
   wardsKilled15: number;
+
+  @Column("smallint")
+  wardsKilled25: number;
 
   @Column("smallint")
   wardsKilled: number;
@@ -194,6 +209,67 @@ export default class PlayerGameModel extends BaseEntity
 
   @Column("int", { array: true })
   xpMap: number[];
+
+  // Diff
+  @Column("boolean")
+  has15Diff: boolean;
+
+  @Column("boolean")
+  has25Diff: boolean;
+
+  @Column("smallint")
+  killDiff: number;
+
+  @Column("smallint")
+  killDiff15: number;
+
+  @Column("smallint")
+  killDiff25: number;
+
+  @Column("smallint")
+  assistDiff: number;
+
+  @Column("smallint")
+  assistDiff15: number;
+
+  @Column("smallint")
+  assistDiff25: number;
+
+  @Column("smallint")
+  deathDiff: number;
+
+  @Column("smallint")
+  deathDiff15: number;
+
+  @Column("smallint")
+  deathDiff25: number;
+
+  @Column("smallint")
+  goldDiff: number;
+
+  @Column("smallint")
+  goldDiff15: number;
+
+  @Column("smallint")
+  goldDiff25: number;
+
+  @Column("smallint")
+  csDiff: number;
+
+  @Column("smallint")
+  csDiff15: number;
+
+  @Column("smallint")
+  csDiff25: number;
+
+  @Column("smallint")
+  xpDiff: number;
+
+  @Column("smallint")
+  xpDiff15: number;
+
+  @Column("smallint")
+  xpDiff25: number;
 
   // Items
   @Column("smallint", { array: true })

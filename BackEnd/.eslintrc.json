@@ -40,6 +40,7 @@
             "before": false,
             "after": true
         }],
-        "@typescript-eslint/space-before-function-paren": ["error", "never"]
+        "@typescript-eslint/space-before-function-paren": ["error", "never"],
+        "semi-style": ["error", "last"]
     }
 }
