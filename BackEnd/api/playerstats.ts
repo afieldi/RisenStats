@@ -12,35 +12,35 @@ import { GameRoles } from "../../Common/Interface/General/gameEnums";
 import {GetDbPlayerStatsByPlayerPuuid} from "../src/db/playerstats";
 import PlayerStatModel from "../../Common/models/playerstat.model";
 
-const router: Router = express.Router();
+const router: Router = express.Router()
 
-router.post("/table", async (req: TypedRequest<PlayerStatsTableRequest>, res: TypedResponse<string>) => {
-  const body = req.body;
-  logger.info(`Generating table stats for: ${body.playerNames.join(", ")}`);
+router.post('/table', async(req: TypedRequest<PlayerStatsTableRequest>, res: TypedResponse<string>) => {
+  const body = req.body
+  logger.info(`Generating table stats for: ${body.playerNames.join(', ')}`)
   try {
     const data = await GeneratePlayersCsv(body.playerNames, body.games)
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment;filename=myfilename.csv");
+    res.setHeader('Content-Type', 'text/csv')
+    res.setHeader('Content-Disposition', 'attachment;filename=myfilename.csv')
     // Must use send otherwise quotes appear around data when using .json
-    res.send(data);
+    res.send(data)
   } catch (error) {
-    logger.error(error);
-    res.status(500).send("Something went wrong");
+    logger.error(error)
+    res.status(500).send('Something went wrong')
   }
-});
+})
 
-router.post("/by-season", async (req: TypedRequest<GetGamesRequest>, res: TypedResponse<string>) => {
-  const body = req.body;
-  logger.info(`Generating table stats season: ${body.seasonId}`);
+router.post('/by-season', async(req: TypedRequest<GetGamesRequest>, res: TypedResponse<string>) => {
+  const body = req.body
+  logger.info(`Generating table stats season: ${body.seasonId}`)
   try {
     const data = await GeneratePlayersCsvByFilter(body.seasonId, body.risenOnly, GameRoles[req.body.roleId as keyof typeof GameRoles])
-    res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment;filename=myfilename.csv");
+    res.setHeader('Content-Type', 'text/csv')
+    res.setHeader('Content-Disposition', 'attachment;filename=myfilename.csv')
     // Must use send otherwise quotes appear around data when using .json
-    res.send(data);
+    res.send(data)
   } catch (error) {
-    logger.error(error);
-    res.status(500).send("Something went wrong");
+    logger.error(error)
+    res.status(500).send('Something went wrong')
   }
 })
 

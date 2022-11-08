@@ -1,55 +1,52 @@
-import express, { Request, Router } from "express";
-import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
-import { CreateSeasonRequest, GetSeasonResponse, GetSeasonsResponse } from "../../Common/Interface/Internal/season";
-import { CreateSeason, GetSeasons } from "../src/business/season";
-import logger from "../logger";
+import express, { Request, Router } from 'express'
+import { TypedRequest, TypedResponse } from '../../Common/Interface/Internal/responseUtil'
+import { CreateSeasonRequest, GetSeasonResponse, GetSeasonsResponse } from '../../Common/Interface/Internal/season'
+import { CreateSeason, GetSeasons } from '../src/business/season'
+import logger from '../logger'
 
-const router: Router = express.Router();
+const router: Router = express.Router()
 
-router.post('/get/all', async (req: Request, res: TypedResponse<GetSeasonsResponse>) => {
-  logger.debug("Season get all");
-
-  try {
-    let seasons = await GetSeasons(false);
-    res.json({
-      seasons: seasons
-    });
-  }
-  catch (error) {
-    logger.error(error);
-    res.status(500).send("Something went wrong");
-  }
-});
-
-router.post('/get/active', async (req: Request, res: TypedResponse<GetSeasonsResponse>) => {
-  logger.debug("Season get active");
+router.post('/get/all', async(req: Request, res: TypedResponse<GetSeasonsResponse>) => {
+  logger.debug('Season get all')
 
   try {
-    let seasons = await GetSeasons(true);
+    const seasons = await GetSeasons(false)
     res.json({
-      seasons: seasons
-    });
+      seasons
+    })
+  } catch (error) {
+    logger.error(error)
+    res.status(500).send('Something went wrong')
   }
-  catch (error) {
-    logger.error(error);
-    res.status(500).send("Something went wrong");
-  }
-});
+})
 
-router.post('/create', async (req: TypedRequest<CreateSeasonRequest>, res: TypedResponse<GetSeasonResponse>) => {
-  logger.debug(`Season create ${JSON.stringify(req.body)}`);
+router.post('/get/active', async(req: Request, res: TypedResponse<GetSeasonsResponse>) => {
+  logger.debug('Season get active')
 
   try {
-    const body = req.body;
-    let season = await CreateSeason(body.seasonName, body.providerId);
+    const seasons = await GetSeasons(true)
     res.json({
-      season: season
-    });
+      seasons
+    })
+  } catch (error) {
+    logger.error(error)
+    res.status(500).send('Something went wrong')
   }
-  catch (error) {
-    logger.error(error);
-    res.status(500).send("Something went wrong");
-  }
-});
+})
 
-export default router;
+router.post('/create', async(req: TypedRequest<CreateSeasonRequest>, res: TypedResponse<GetSeasonResponse>) => {
+  logger.debug(`Season create ${JSON.stringify(req.body)}`)
+
+  try {
+    const body = req.body
+    const season = await CreateSeason(body.seasonName, body.providerId)
+    res.json({
+      season
+    })
+  } catch (error) {
+    logger.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+export default router

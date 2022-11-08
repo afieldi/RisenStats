@@ -1,32 +1,32 @@
-import {DeepPartial, FindManyOptions, FindOneOptions, In, IsNull, Not} from "typeorm";
-import { GameSummaryPlayers, TeamSumStat } from "../../../Common/Interface/Database/game";
-import { TimelineParticipantStats } from "../../../Common/Interface/Database/timeline";
-import { GameRoles } from "../../../Common/Interface/General/gameEnums";
-import { CHALLENGE_COLUMNS, RiotMatchDto, RiotParticipantDto } from "../../../Common/Interface/RiotAPI/RiotApiDto";
-import GameModel from "../../../Common/models/game.model";
-import PlayerGameModel from "../../../Common/models/playergame.model";
-import SeasonModel from "../../../Common/models/season.model";
-import { GetCurrentEpcohMs, NonNone } from "../../../Common/utils";
-import { ensureConnection } from "./dbConnect";
+import { DeepPartial, FindManyOptions, FindOneOptions, In, IsNull, Not } from 'typeorm'
+import { GameSummaryPlayers, TeamSumStat } from '../../../Common/Interface/Database/game'
+import { TimelineParticipantStats } from '../../../Common/Interface/Database/timeline'
+import { GameRoles } from '../../../Common/Interface/General/gameEnums'
+import { CHALLENGE_COLUMNS, RiotMatchDto, RiotParticipantDto } from '../../../Common/Interface/RiotAPI/RiotApiDto'
+import GameModel from '../../../Common/models/game.model'
+import PlayerGameModel from '../../../Common/models/playergame.model'
+import SeasonModel from '../../../Common/models/season.model'
+import { GetCurrentEpcohMs, NonNone } from '../../../Common/utils'
+import { ensureConnection } from './dbConnect'
 
 const roleOrder = [
   GameRoles.TOP,
   GameRoles.JUNGLE,
   GameRoles.MIDDLE,
   GameRoles.BOTTOM,
-  GameRoles.SUPPORT,
+  GameRoles.SUPPORT
 ]
 
 export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj: GameModel,
   timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number, lobbyOrder: number): PlayerGameModel {
 
   if (!riotPlayer.challenges) {
-    const d = new Date(0);
-    d.setUTCMilliseconds(gameObj.gameStart);
+    const d = new Date(0)
+    d.setUTCMilliseconds(gameObj.gameStart)
     throw Error(`Game has no challenge stats. Probably too old. Game start: ${d.toUTCString()}`)
   }
 
-  let shortPlayerData = {
+  const shortPlayerData = {
     game: gameObj,
     timestamp: gameObj.gameStart,
     timestampAdded: GetCurrentEpcohMs(),
@@ -36,7 +36,7 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     championId: riotPlayer.championId,
     teamId: riotPlayer.teamId,
 
-    seasonId: seasonId,
+    seasonId,
 
     championTransform: riotPlayer.championTransform,
 
@@ -145,36 +145,34 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     goldShare: riotPlayer.goldEarned / teamStats.totalGold,
     damageShare: riotPlayer.challenges.teamDamagePercentage,
     visionShare: riotPlayer.visionScore / teamStats.totalVision,
-    killParticipation: riotPlayer.challenges.killParticipation,
-  };
+    killParticipation: riotPlayer.challenges.killParticipation
+  }
 
-  let challenges = riotPlayer.challenges;
-  for (let key of CHALLENGE_COLUMNS)
-  {
-    // @ts-ignore ignore for typing sakes
-    challenges[key] = NonNone(challenges[key]);
+  const challenges = riotPlayer.challenges
+  for (const key of CHALLENGE_COLUMNS) {
+    // @ts-expect-error ignore for typing sakes
+    challenges[key] = NonNone(challenges[key])
   }
 
   // Add challenge data. Challenges were ported over one to one.
-  const fullPlayerData = {...shortPlayerData, ...riotPlayer.challenges} as DeepPartial<PlayerGameModel>;
+  const fullPlayerData = { ...shortPlayerData, ...riotPlayer.challenges }
 
-
-  return PlayerGameModel.create(fullPlayerData);
+  return PlayerGameModel.create(fullPlayerData)
 }
 
 export async function CreateDbGame(gameData: RiotMatchDto, seasonId: number, playersSummary: GameSummaryPlayers): Promise<GameModel> {
-  await ensureConnection();
+  await ensureConnection()
   return await GameModel.create({
     gameId: Number(gameData.info.gameId),
     gameStart: gameData.info.gameCreation,
     patch: gameData.info.gameVersion,
     gameDuration: gameData.info.gameDuration,
     winner: gameData.info.teams[0].win,
-    seasonId: seasonId,
+    seasonId,
     gameType: gameData.info.queueId,
-    tournamentGame: gameData.info.tournamentCode ? true : false,
-    playersSummary: playersSummary
-  }).save();
+    tournamentGame: !!gameData.info.tournamentCode,
+    playersSummary
+  }).save()
 }
 
 export async function GetDbGameByGameId(gameId: number, expandGames: boolean = false): Promise<GameModel> {
@@ -187,79 +185,76 @@ export async function GetDbGameByGameId(gameId: number, expandGames: boolean = f
 }
 
 export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, seasonId: number = undefined, pageSize = 0, pageNumber = 0, roleId?: GameRoles): Promise<PlayerGameModel[]> {
-  await ensureConnection();
-  const searchFilter: FindManyOptions<PlayerGameModel> = {where: {playerPuuid: playerPuuid}};
+  await ensureConnection()
+  const searchFilter: FindManyOptions<PlayerGameModel> = { where: { playerPuuid } }
   if (pageSize > 0) {
     if (pageNumber <= 0) {
-      pageNumber = 1;
+      pageNumber = 1
     }
-    searchFilter['take'] = pageSize;
-    searchFilter['skip'] = pageSize * (pageNumber - 1);
+    searchFilter.take = pageSize
+    searchFilter.skip = pageSize * (pageNumber - 1)
   }
-  searchFilter['order'] = {
-    timestamp: 'DESC',
+  searchFilter.order = {
+    timestamp: 'DESC'
   }
   if (seasonId) {
-    searchFilter['where'] = {
-      ...searchFilter['where'],
-      seasonId: seasonId
-    };
-  }
-  else if (risenOnly) {
-    searchFilter['where'] = {
-      ...searchFilter['where'],
+    searchFilter.where = {
+      ...searchFilter.where,
+      seasonId
+    }
+  } else if (risenOnly) {
+    searchFilter.where = {
+      ...searchFilter.where,
       seasonId: Not(IsNull())
-    };
+    }
   }
   if (roleId && roleId !== GameRoles.ALL) {
-    searchFilter['where'] = {
-      ...searchFilter['where'],
+    searchFilter.where = {
+      ...searchFilter.where,
       lobbyPosition: GameRoles[roleId]
-    };
+    }
   }
 
-  return await PlayerGameModel.find(searchFilter);
+  return await PlayerGameModel.find(searchFilter)
 }
 
 export async function GetDbPlayerGamesByGameId(gameId: number): Promise<PlayerGameModel[]> {
-  await ensureConnection();
-  return await PlayerGameModel.find({where: {gameGameId: gameId}});
+  await ensureConnection()
+  return await PlayerGameModel.find({ where: { gameGameId: gameId } })
 }
 
 export async function GetDbGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, seasonId: number = undefined, pageSize = 0, pageNumber = 0): Promise<GameModel[]> {
-  await ensureConnection();
-  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, risenOnly, seasonId, pageSize, pageNumber);
-  const gameIds = playerGames.map(game => game.gameGameId);
-  return await GameModel.find({where: {gameId: In(gameIds)}});
+  await ensureConnection()
+  const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid, risenOnly, seasonId, pageSize, pageNumber)
+  const gameIds = playerGames.map(game => game.gameGameId)
+  return await GameModel.find({ where: { gameId: In(gameIds) } })
 }
 
 export async function GetDbGamesByGameIds(gameIds: number[]): Promise<GameModel[]> {
-  await ensureConnection();
+  await ensureConnection()
   const searchFilter: FindManyOptions<GameModel> = {
-    where: {gameId: In(gameIds)},
+    where: { gameId: In(gameIds) },
     order: {
       gameStart: 'DESC'
     }
-  };
+  }
 
-  return await GameModel.find(searchFilter);
+  return await GameModel.find(searchFilter)
 }
 
 export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<PlayerGameModel[]> {
-  await ensureConnection();
-  let filter: FindManyOptions<PlayerGameModel> = {};
-  if (seasonId === "RISEN") {
+  await ensureConnection()
+  let filter: FindManyOptions<PlayerGameModel> = {}
+  if (seasonId === 'RISEN') {
     filter = {
       where: {
-        seasonId: Not(IsNull()),
+        seasonId: Not(IsNull())
       }
     }
+  } else if (seasonId === 'ALL') {
+    filter = {}
+  } else {
+    filter = { where: { seasonId: Number(seasonId) } }
   }
-  else if (seasonId === "ALL") {
-    filter = {};
-  }
-  else {
-    filter = {where: {seasonId: Number(seasonId)}};
-  }
-  return await PlayerGameModel.find(filter);
+  return await PlayerGameModel.find(filter)
 }
