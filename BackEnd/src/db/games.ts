@@ -46,8 +46,11 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     win: riotPlayer.win,
 
     kills15: timelineStats.kills15,
+    kills25: timelineStats.kills25,
     deaths15: timelineStats.deaths15,
+    deaths25: timelineStats.deaths25,
     assists15: timelineStats.assists15,
+    assists25: timelineStats.assists25,
 
     goldEarned: NonNone(riotPlayer.goldEarned),
     goldSpent: NonNone(riotPlayer.goldSpent),
@@ -71,8 +74,10 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     // Vision
     visionScore: riotPlayer.visionScore,
     wardsPlaced15: timelineStats.wardsPlaced15,
+    wardsPlaced25: timelineStats.wardsPlaced25,
     wardsPlaced: riotPlayer.wardsPlaced ? riotPlayer.wardsPlaced : 0,
     wardsKilled15: timelineStats.wardsKilled15,
+    wardsKilled25: timelineStats.wardsKilled25,
     wardsKilled: riotPlayer.wardsKilled ? riotPlayer.wardsKilled : 0,
     visionWardsBoughtInGame: riotPlayer.visionWardsBoughtInGame,
 
@@ -102,6 +107,27 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     goldMap: timelineStats.goldMap,
     csMap: timelineStats.csMap,
     xpMap: timelineStats.xpMap,
+
+    has15Diff: timelineStats.has15Stats,
+    has25Diff: timelineStats.has25Stats,
+    killDiff: timelineStats.killDiff,
+    killDiff15: timelineStats.killDiff15,
+    killDiff25: timelineStats.killDiff25,
+    assistDiff: timelineStats.assistDiff,
+    assistDiff15: timelineStats.assistDiff15,
+    assistDiff25: timelineStats.assistDiff25,
+    deathDiff: timelineStats.deathDiff,
+    deathDiff15: timelineStats.deathDiff15,
+    deathDiff25: timelineStats.deathDiff25,
+    goldDiff: timelineStats.goldDiff,
+    goldDiff15: timelineStats.goldDiff15,
+    goldDiff25: timelineStats.goldDiff25,
+    csDiff: timelineStats.csDiff,
+    csDiff15: timelineStats.csDiff15,
+    csDiff25: timelineStats.csDiff25,
+    xpDiff: timelineStats.xpDiff,
+    xpDiff15: timelineStats.xpDiff15,
+    xpDiff25: timelineStats.xpDiff25,
 
     items: [
       riotPlayer.item0,

@@ -66,11 +66,20 @@ export default class PlayerGameModel extends BaseEntity
   @Column("smallint")
   kills15: number;
 
+  @Column("smallint", {nullable: true})
+  kills25: number;
+
   @Column("smallint")
   deaths15: number;
 
+  @Column("smallint", {nullable: true})
+  deaths25: number;
+
   @Column("smallint")
   assists15: number;
+
+  @Column("smallint", {nullable: true})
+  assists25: number;
 
   // Income
   @Column("smallint")
@@ -129,11 +138,17 @@ export default class PlayerGameModel extends BaseEntity
   @Column("smallint")
   wardsPlaced15: number;
 
+  @Column("smallint", {nullable: true})
+  wardsPlaced25: number;
+
   @Column("smallint")
   wardsPlaced: number;
 
   @Column("smallint")
   wardsKilled15: number;
+
+  @Column("smallint", {nullable: true})
+  wardsKilled25: number;
 
   @Column("smallint")
   wardsKilled: number;
@@ -194,6 +209,67 @@ export default class PlayerGameModel extends BaseEntity
 
   @Column("int", { array: true })
   xpMap: number[];
+
+  // Diff
+  @Column("boolean", {nullable: true})
+  has15Diff: boolean;
+
+  @Column("boolean", {nullable: true})
+  has25Diff: boolean;
+
+  @Column("smallint", {nullable: true})
+  killDiff: number;
+
+  @Column("smallint", {nullable: true})
+  killDiff15: number;
+
+  @Column("smallint", {nullable: true})
+  killDiff25: number;
+
+  @Column("smallint", {nullable: true})
+  assistDiff: number;
+
+  @Column("smallint", {nullable: true})
+  assistDiff15: number;
+
+  @Column("smallint", {nullable: true})
+  assistDiff25: number;
+
+  @Column("smallint", {nullable: true})
+  deathDiff: number;
+
+  @Column("smallint", {nullable: true})
+  deathDiff15: number;
+
+  @Column("smallint", {nullable: true})
+  deathDiff25: number;
+
+  @Column("smallint", {nullable: true})
+  goldDiff: number;
+
+  @Column("smallint", {nullable: true})
+  goldDiff15: number;
+
+  @Column("smallint", {nullable: true})
+  goldDiff25: number;
+
+  @Column("smallint", {nullable: true})
+  csDiff: number;
+
+  @Column("smallint", {nullable: true})
+  csDiff15: number;
+
+  @Column("smallint", {nullable: true})
+  csDiff25: number;
+
+  @Column("smallint", {nullable: true})
+  xpDiff: number;
+
+  @Column("smallint", {nullable: true})
+  xpDiff15: number;
+
+  @Column("smallint", {nullable: true})
+  xpDiff25: number;
 
   // Items
   @Column("smallint", { array: true })
