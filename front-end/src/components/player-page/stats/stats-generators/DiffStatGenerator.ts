@@ -8,19 +8,19 @@ export enum DiffEnum {
 }
 
 const goldDiffResolver: Record<15 | 25, (x: PlayerStatModel) => number> = {
-    15 : (model: PlayerStatModel) => {return model.goldDiff15},
-    25 : (model: PlayerStatModel) => {return model.goldDiff25}
+    15 : (model: PlayerStatModel) => model.goldDiff15,
+    25 : (model: PlayerStatModel) => model.goldDiff25
 }
 
 
 const xpDiffResolver: Record<15 | 25, (x: PlayerStatModel) => number> =  {
-    15: (model: PlayerStatModel) => {return model.xpDiff15},
-    25: (model: PlayerStatModel) => {return model.xpDiff25}
+    15: (model: PlayerStatModel) => model.xpDiff15,
+    25: (model: PlayerStatModel) => model.xpDiff25
 }
 
 const csDiffResolver: Record<15 | 25, (x: PlayerStatModel) => number> = {
-    15: (model: PlayerStatModel) => {return model.csDiff15},
-    25: (model: PlayerStatModel) => {return model.csDiff25},
+    15: (model: PlayerStatModel) => model.csDiff15,
+    25: (model: PlayerStatModel) => model.csDiff25,
 }
 
 const diffResolvers: Record<DiffEnum,  Record<15 | 25, (x: PlayerStatModel) => number>> = {

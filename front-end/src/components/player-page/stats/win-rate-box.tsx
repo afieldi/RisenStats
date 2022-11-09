@@ -4,6 +4,7 @@ import React from "react";
 import {useTheme} from "@emotion/react";
 import {Theme, Typography} from "@mui/material";
 import "./win-rate-box.css"
+import {calculateWR} from "../../../../../Common/utils";
 
 interface WinRateBoxProps {
     wins: number;
@@ -18,7 +19,7 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
     const COLORS = [theme.palette.primary.dark, theme.palette.secondary.dark];
 
     const data = [{name: 'Wins', value: winRateProps.wins}, {name: 'Losses', value: winRateProps.losses}]
-    const winRate = Math.round((winRateProps.wins / (winRateProps.wins + winRateProps.losses)) * 100)
+    const winRate = calculateWR({totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses}, 2)
     const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}G ${winRateProps.losses}L`
 
     return (
