@@ -272,7 +272,16 @@ function createInitialPlayerStatModel(game: PlayerGameModel) {
     totalMagicDamageDealtToChampionsOfTeam: 0,
     totalTrueDamageDealtToChampionsOfTeam: 0,
     totalDamageDealtToChampionsOfTeam: 0,
-    totalVisionScoreOfTeam: 0
+    totalVisionScoreOfTeam: 0,
+    xpDiff: 0,
+    xpDiff15: 0,
+    xpDiff25: 0,
+    goldDiff: 0,
+    goldDiff15: 0,
+    goldDiff25: 0,
+    csDiff: 0,
+    csDiff15: 0,
+    csDiff25: 0,
   });
 }
 
@@ -437,6 +446,15 @@ function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGameModel
   currentRow.wardTakedowns += NonNone(game.wardTakedowns, 0);
   currentRow.wardTakedownsBefore20M += NonNone(game.wardTakedownsBefore20M, 0);
   currentRow.wardsGuarded += NonNone(game.wardsGuarded, 0);
+  currentRow.xpDiff += NonNone(game.xpDiff, 0);
+  currentRow.xpDiff15 += NonNone(game.xpDiff15, 0);
+  currentRow.xpDiff25 += NonNone(game.xpDiff25, 0);
+  currentRow.goldDiff += NonNone(game.goldDiff, 0);
+  currentRow.goldDiff15 += NonNone(game.goldDiff15, 0);
+  currentRow.goldDiff25 += NonNone(game.goldDiff25, 0);
+  currentRow.csDiff += NonNone(game.csDiff, 0);
+  currentRow.csDiff15 += NonNone(game.csDiff15, 0);
+  currentRow.csDiff25 += NonNone(game.csDiff25, 0);
   currentRow = getTotalsForGame(currentRow, game, fullGame);
   return currentRow;
 }

@@ -539,4 +539,33 @@ export default class PlayerStatModel extends BaseEntity
 
     @Column("real")
     totalVisionScoreOfTeam: number
+
+    //Diffs
+    @Column("integer")
+    xpDiff: number
+
+    @Column("integer")
+    xpDiff15: number
+
+    @Column("integer")
+    xpDiff25: number
+
+    @Column("integer")
+    goldDiff: number
+
+    @Column("integer")
+    goldDiff15: number
+
+    @Column("integer")
+    goldDiff25: number
+
+    @Column("integer")
+    csDiff: number;
+
+    @Column("integer")
+    csDiff15: number;
+
+    @Column("integer")
+    csDiff25: number;
+
 }
