@@ -1,7 +1,5 @@
 import React from "react";
-import {
-    Box,
-} from "@mui/material";
+import {Box,} from "@mui/material";
 import PerformanceOverview from "./stats/performance-overview";
 import SeasonModel from "../../../../Common/models/season.model";
 import FilterBar from "./stats/filter-bar";
@@ -23,6 +21,7 @@ import {GoldShareStatGenerator} from "./stats/stats-generators/GoldShareStatGene
 import {VisionScorePercentStatGenerator} from "./stats/stats-generators/VisionScorePercentStatGenerator";
 import {DMGPercentStatGenerator} from "./stats/stats-generators/DMGPercentStatGenerator";
 import {GPMStatGenerator} from "./stats/stats-generators/GPMStatGenerator";
+import {DiffEnum, DiffStatGenerator} from "./stats/stats-generators/DiffStatGenerator";
 
 interface PlayerPageStatsProps {
     seasonConfig?: {
@@ -40,16 +39,22 @@ interface PlayerPageStatsProps {
 
 const statsGenerators: BaseStatGenerator[] = [
     new KDAStatGenerator(),
-    new KPAStatGenerator(),
-    new AverageVisionScoreStatGenerator(),
+    new DMGPercentStatGenerator(),
     new CSPMStatGenerator(),
-    new DeathPercentStatGenerator(),
-    new DPGStatGenerator(),
     new DPMStatGenerator(),
     new GoldShareStatGenerator(),
+    new KPAStatGenerator(),
+    new AverageVisionScoreStatGenerator(),
+    new DeathPercentStatGenerator(),
+    new DPGStatGenerator(),
     new VisionScorePercentStatGenerator(),
-    new DMGPercentStatGenerator(),
-    new GPMStatGenerator()
+    new GPMStatGenerator(),
+    new DiffStatGenerator(DiffEnum.XP, 15),
+    new DiffStatGenerator(DiffEnum.XP,25),
+    new DiffStatGenerator(DiffEnum.GOLD, 15),
+    new DiffStatGenerator(DiffEnum.GOLD,25),
+    new DiffStatGenerator(DiffEnum.CS, 15),
+    new DiffStatGenerator(DiffEnum.CS,25)
 ]
 
 export default class PlayerPageStats extends React.Component<PlayerPageStatsProps> {

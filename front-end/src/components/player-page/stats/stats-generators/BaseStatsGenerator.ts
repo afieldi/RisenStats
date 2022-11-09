@@ -17,6 +17,7 @@ export abstract class BaseStatGenerator {
     }
 
     formatNumber(value: number) : string {
-        return value.toFixed(2)
+        // We always want to keep the numbers below 6 characters to fit in the box
+        return value.toFixed(2).length > 6 ? value.toFixed(1) : value.toFixed(2)
     }
 }
