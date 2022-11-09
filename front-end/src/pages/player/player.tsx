@@ -178,11 +178,10 @@ function PlayerPage()
             <PlayerPageChampions championData={championStats}></PlayerPageChampions>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            {shouldShowDevelopmentFeature() && <PlayerPageStats playerStats={playerStats}
-                                                                seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
-                                                                roleConfig={loadGamesConfig.roleConfig}
-                                                                championData={championStats}/>}
-            {!shouldShowDevelopmentFeature() && <Typography>Coming Soon</Typography>}
+            <PlayerPageStats playerStats={playerStats}
+                             seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
+                             roleConfig={loadGamesConfig.roleConfig}
+                             championData={championStats}/>
           </TabPanel>
         </Box>
       </main>
