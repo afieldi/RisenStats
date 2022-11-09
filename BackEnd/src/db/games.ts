@@ -1,4 +1,4 @@
-import { DeepPartial, FindManyOptions, In, IsNull, Not } from 'typeorm'
+import { DeepPartial, FindManyOptions, FindOneOptions, In, IsNull, Not } from 'typeorm'
 import { GameSummaryPlayers, TeamSumStat } from '../../../Common/Interface/Database/game'
 import { TimelineParticipantStats } from '../../../Common/Interface/Database/timeline'
 import { GameRoles } from '../../../Common/Interface/General/gameEnums'
@@ -19,6 +19,7 @@ const roleOrder = [
 
 export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj: GameModel,
   timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number, lobbyOrder: number): PlayerGameModel {
+
   if (!riotPlayer.challenges) {
     const d = new Date(0)
     d.setUTCMilliseconds(gameObj.gameStart)
@@ -101,7 +102,7 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     consumablesPurchased: riotPlayer.consumablesPurchased,
 
     lane: riotPlayer.lane,
-    position: riotPlayer.role === 'SUPPORT' ? riotPlayer.role : riotPlayer.lane,
+    position: riotPlayer.role === "SUPPORT" ? riotPlayer.role : riotPlayer.lane,
     lobbyPosition: roleOrder[lobbyOrder % 5],
 
     goldMap: timelineStats.goldMap,
@@ -200,9 +201,13 @@ export async function CreateDbGame(gameData: RiotMatchDto, seasonId: number, pla
   }).save()
 }
 
-export async function GetDbGameByGameId(gameId: number): Promise<GameModel> {
-  await ensureConnection()
-  return await GameModel.findOne({ where: { gameId } })
+export async function GetDbGameByGameId(gameId: number, expandGames: boolean = false): Promise<GameModel> {
+  await ensureConnection();
+  const searchFilter: FindOneOptions<GameModel> = {where: {gameId: gameId}};
+  searchFilter["relations"] = {
+    players: expandGames
+  }
+  return await GameModel.findOne(searchFilter);
 }
 
 export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, seasonId: number = undefined, pageSize = 0, pageNumber = 0, roleId?: GameRoles): Promise<PlayerGameModel[]> {

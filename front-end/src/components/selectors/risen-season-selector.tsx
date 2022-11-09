@@ -31,8 +31,8 @@ export default function RisenSeasonSelector(props: RisenSeasonSelectorProps) {
                 <MenuItem value="RISEN">All Risen Games</MenuItem>
 
                 {
-                    props.seasonConfig?.seasons?.map(season => (
-                        <MenuItem value={season.id}>{season.seasonName}</MenuItem>
+                    props.seasonConfig?.seasons?.map((season, index) => (
+                        <MenuItem key={index} value={season.id}>{season.seasonName}</MenuItem>
                     ))
                 }
             </Select>

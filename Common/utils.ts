@@ -170,6 +170,10 @@ export function NonNone(value: number | undefined, def: number = 0) : number
   return value ? value : def;
 }
 
+export function BoolToNumber(value: Boolean): number {
+  return value ? 1 : 0;
+}
+
 export function GetAveragesFromObjects(objects: any[], keys: string[]): {[key: string]: number}
 {
   if (objects.length === 0) {

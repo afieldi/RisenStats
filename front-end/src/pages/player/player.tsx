@@ -6,7 +6,7 @@ import { tabLabelProps, TabPanel } from "../../components/tab-panel/tab-panel";
 import PlayerPageGeneral from "../../components/player-page/general";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { GetDetailedPlayerGames, GetPlayerChampionStats, GetPlayerProfile } from "../../api/player";
+import {GetDetailedPlayerGames, GetPlayerChampionStats, GetPlayerProfile, GetPlayerStats} from "../../api/player";
 import { PlayerDetailedGame, PlayerOverviewResponse } from "../../../../Common/Interface/Internal/player";
 
 import '../../styles/player.css'
@@ -17,6 +17,8 @@ import SeasonModel from "../../../../Common/models/season.model";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
 import { GetActiveSeasons } from "../../api/season";
 import PlayerPageStats from "../../components/player-page/stats";
+import {shouldShowDevelopmentFeature} from "../../common/utils";
+import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
 function PlayerPage()
 {
@@ -32,6 +34,7 @@ function PlayerPage()
   const [playerProfile, setPlayerProfile] = useState<PlayerOverviewResponse>();
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
+  const [playerStats, setPlayerStats] = useState<PlayerStatModel[]>([]);
   const [seasonId, setSeasonId] = useState<string>("ALL");
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
@@ -87,6 +90,22 @@ function PlayerPage()
     }
   }
 
+  async function loadPlayerStats(profile: PlayerOverviewResponse | undefined) {
+    profile = profile ? profile : playerProfile
+    if(!profile) {
+      console.log("Tried to call loadPlayerStats with a null profile")
+      return;
+    }
+    try {
+      let numberSeasonId = seasonId === "RISEN" ? undefined : Number(seasonId)
+      const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId);
+      setPlayerStats(stats.playerStats);
+    }
+    catch (error) {
+      console.error("An error occured while trying to load player stats")
+    }
+  }
+
   async function loadSeasons() {
     try {
       setSeasons((await GetActiveSeasons()).seasons);
@@ -100,6 +119,7 @@ function PlayerPage()
       setPlayerProfile(profile)
       loadMoreGames(true, profile);
       loadChampionStats(profile);
+      loadPlayerStats(profile)
     }, (err: any) => {
       console.log(err);
     });
@@ -107,6 +127,7 @@ function PlayerPage()
 
   useEffect(() => {
     loadMoreGames(true);
+    loadPlayerStats(playerProfile)
   }, [seasonId, roleId]);
 
   useEffect(() => {
@@ -130,7 +151,6 @@ function PlayerPage()
       setRoleId,
     }
   };
-  let shouldShowStatsPage = process.env.NODE_ENV === 'development';
 
   return (
     <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
@@ -158,8 +178,10 @@ function PlayerPage()
             <PlayerPageChampions championData={championStats}></PlayerPageChampions>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            {shouldShowStatsPage && <PlayerPageStats seasonConfig={loadGamesConfig?.seasonConfig}/>}
-            {!shouldShowStatsPage && <Typography>Coming Soon</Typography>}
+            <PlayerPageStats playerStats={playerStats}
+                             seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
+                             roleConfig={loadGamesConfig.roleConfig}
+                             championData={championStats}/>
           </TabPanel>
         </Box>
       </main>

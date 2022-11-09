@@ -1,0 +1,7 @@
+.label-top {
+    transform: translateY(-5px);
+}
+
+.label {
+    transform: translateY(5px);
+}

@@ -1,10 +1,16 @@
-import express, { json, Request, Router } from 'express'
-import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from '../src/business/playerstats'
-import { PlayerStatsTableRequest } from '../../Common/Interface/Internal/playerstats'
-import { TypedRequest, TypedResponse } from '../../Common/Interface/Internal/responseUtil'
-import logger from '../logger'
-import { GetGamesRequest } from '../../Common/Interface/Internal/games'
-import { GameRoles } from '../../Common/Interface/General/gameEnums'
+import express, { json, Request, Router } from "express";
+import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from "../src/business/playerstats";
+import {
+  GetPlayerStatsRequest,
+  GetPlayerStatsResponse,
+  PlayerStatsTableRequest
+} from "../../Common/Interface/Internal/playerstats";
+import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
+import logger from "../logger";
+import {GetGamesRequest, GetGamesResponse} from "../../Common/Interface/Internal/games";
+import { GameRoles } from "../../Common/Interface/General/gameEnums";
+import {GetDbPlayerStatsByPlayerPuuid} from "../src/db/playerstats";
+import PlayerStatModel from "../../Common/models/playerstat.model";
 
 const router: Router = express.Router()
 
@@ -38,4 +44,21 @@ router.post('/by-season', async(req: TypedRequest<GetGamesRequest>, res: TypedRe
   }
 })
 
-export default router
+router.post('/by-puuid/:playerPuuid', async (req: TypedRequest<GetPlayerStatsRequest>, res: TypedResponse<GetPlayerStatsResponse>) => {
+  logger.info(`Get player stats by player puuid ${req.params.playerPuuid}`);
+  try {
+    const seasonId = req.body.seasonId;
+    const roleId = req.body.roleId as GameRoles;
+    const playerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(req.params.playerPuuid, seasonId, roleId);
+    res.json({
+      playerStats
+    });
+  }
+  catch (error) {
+    logger.error(error);
+    res.status(500).send("Something went wrong while fetching playerstatmodel");
+  }
+});
+
+
+export default router;

@@ -1,22 +1,14 @@
 import React from "react";
-import {
-    Box,
-    FormControl,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Theme,
-    Typography
-} from "@mui/material";
-import RisenBox1 from "../risen-box/risen-box-1";
+import {Box, Typography,} from "@mui/material";
 import PerformanceOverview from "./stats/performance-overview";
-import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
-import RoleSelector from "../selectors/role-selector";
-import RisenSeasonSelector from "../selectors/risen-season-selector";
 import SeasonModel from "../../../../Common/models/season.model";
 import FilterBar from "./stats/filter-bar";
+import ChampionOverview from "./stats/champion-overview";
+import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
+import WinRateBox from "./stats/win-rate-box";
+import RisenBox1 from "../risen-box/risen-box-1";
+import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
+import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
 interface PlayerPageStatsProps {
     seasonConfig?: {
@@ -24,42 +16,42 @@ interface PlayerPageStatsProps {
         setSeasonId: (seasonId: string) => void,
         seasons?: SeasonModel[],
     };
+    roleConfig?: {
+        roleId: GameRoles,
+        setRoleId: (roleId: GameRoles) => void,
+    };
+    championData: PlayerChampionStatsModel[]
+    playerStats: PlayerStatModel[]
 }
 
-export interface PlayerStat {
-    statValue: String
-    statTitle: String
-}
+export default class PlayerPageStats extends React.Component<PlayerPageStatsProps> {
 
+    render() {
+        let wins = 0;
+        let games = 0
+        for (let playerStat of this.props.playerStats) {
+            wins += playerStat.win;
+            games += playerStat.games;
+        }
 
-export default function PlayerPageStats(props: PlayerPageStatsProps) {
-
-    // TODO get this from props or on tab load
-    let allPlayerStats: PlayerStat[] = [
-        {statTitle: "GPM", statValue: "200"},
-        {statTitle: "CSPM", statValue: "300"},
-        {statTitle: "Gold Per Game", statValue: "1000"},
-        {statTitle: "GPM", statValue: "1000"},
-        {statTitle: "Vision Score", statValue: "1234"},
-        {statTitle: "KP", statValue: "12345"},
-        {statTitle: "XPD @15", statValue: "12345"},
-        {statTitle: "XPD @25", statValue: "2"},
-    ]
-
-    return (
-        <Box>
-            <FilterBar seasonConfig={props.seasonConfig}/>
-            <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
-                <Box sx={{minWidth: 290}}>
-                    <RisenBox1>
-                        RADAR HERE
-                    </RisenBox1>
-                </Box>
-                <Box>
-                    <PerformanceOverview allPlayerStats={allPlayerStats}/>
+        return (
+            <Box>
+                <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
+                <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
+                    <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
+                        <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>
+                        <ChampionOverview championData={this.props.championData}/>
+                    </Box>
+                    <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
+                        <PerformanceOverview playerStats={this.props.playerStats}/>
+                        <RisenBox1 sx={{minHeight: 480}}>
+                            <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
+                            <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
+                        </RisenBox1>
+                    </Box>
                 </Box>
             </Box>
-        </Box>
 
-    );
+        );
+    }
 }

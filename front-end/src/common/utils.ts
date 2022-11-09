@@ -11,6 +11,9 @@ export function ChampionIdToName(championId: number): string {
   return '';
 }
 
+export function shouldShowDevelopmentFeature() : Boolean {
+  return  process.env.NODE_ENV === 'development';
+}
 export function SaveBlob(blob: any, fileName: string) {
   const url = window.URL.createObjectURL(
     new Blob([blob]),
