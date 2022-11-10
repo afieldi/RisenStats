@@ -1,16 +1,16 @@
 import express, { json, Request, Router } from "express";
-import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from "../src/business/playerstats";
+import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from "../business/playerstats";
 import {
   GetPlayerStatsRequest,
   GetPlayerStatsResponse,
   PlayerStatsTableRequest
-} from "../../Common/Interface/Internal/playerstats";
-import { TypedRequest, TypedResponse } from "../../Common/Interface/Internal/responseUtil";
-import logger from "../logger";
-import {GetGamesRequest, GetGamesResponse} from "../../Common/Interface/Internal/games";
-import { GameRoles } from "../../Common/Interface/General/gameEnums";
-import {GetDbPlayerStatsByPlayerPuuid} from "../src/db/playerstats";
-import PlayerStatModel from "../../Common/models/playerstat.model";
+} from "../../../Common/Interface/Internal/playerstats";
+import { TypedRequest, TypedResponse } from "../../../Common/Interface/Internal/responseUtil";
+import logger from "../../logger";
+import {GetGamesRequest, GetGamesResponse} from "../../../Common/Interface/Internal/games";
+import { GameRoles } from "../../../Common/Interface/General/gameEnums";
+import {GetDbPlayerStatsByPlayerPuuid} from "../db/playerstats";
+import PlayerStatModel from "../../../Common/models/playerstat.model";
 
 const router: Router = express.Router()
 

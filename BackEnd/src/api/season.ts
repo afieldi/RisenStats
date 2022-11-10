@@ -1,8 +1,8 @@
 import express, { Request, Router } from 'express'
-import { TypedRequest, TypedResponse } from '../../Common/Interface/Internal/responseUtil'
-import { CreateSeasonRequest, GetSeasonResponse, GetSeasonsResponse } from '../../Common/Interface/Internal/season'
-import { CreateSeason, GetSeasons } from '../src/business/season'
-import logger from '../logger'
+import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil'
+import { CreateSeasonRequest, GetSeasonResponse, GetSeasonsResponse } from '../../../Common/Interface/Internal/season'
+import { CreateSeason, GetSeasons } from '../business/season'
+import logger from '../../logger'
 
 const router: Router = express.Router()
 

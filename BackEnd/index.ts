@@ -51,16 +51,16 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-import CodesRouter from "./api/codes";
-import ProviderRouter from "./api/provider";
-import SeasonRouter from "./api/season";
-import PlayerRouter from "./api/player";
-import GamesRouter from "./api/games";
-import AuthRouter from "./api/auth";
-import StreamRouter from "./api/stream";
-import ChartRouter from "./api/charts";
-import PlayerStatsRouter from "./api/playerstats";
-import ChampionStatsRouter from './api/championstats';
+import CodesRouter from "./src/api/codes";
+import ProviderRouter from "./src/api/provider";
+import SeasonRouter from "./src/api/season";
+import PlayerRouter from "./src/api/player";
+import GamesRouter from "./src/api/games";
+import AuthRouter from "./src/api/auth";
+import StreamRouter from "./src/api/stream";
+import ChartRouter from "./src/api/charts";
+import PlayerStatsRouter from "./src/api/playerstats";
+import ChampionStatsRouter from './src/api/championstats';
 
 app.use("/api/codes", CodesRouter);
 app.use("/api/provider", ProviderRouter);
