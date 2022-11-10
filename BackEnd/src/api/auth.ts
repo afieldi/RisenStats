@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from 'express'
-import { DoAuth } from '../src/business/auth'
-import logger from '../logger'
+import { DoAuth } from '../business/auth'
+import logger from '../../logger'
 import NodeCache from 'node-cache'
 
 const router: Router = express.Router()

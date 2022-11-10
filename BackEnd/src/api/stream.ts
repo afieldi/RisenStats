@@ -1,6 +1,6 @@
 import express, { Request, Router } from 'express'
 import fetch from 'node-fetch'
-import { TypedResponse } from '../../Common/Interface/Internal/responseUtil'
+import { TypedResponse } from '../../../Common/Interface/Internal/responseUtil'
 
 const router: Router = express.Router()
 

@@ -1,8 +1,8 @@
 import express, { Response, Router } from 'express'
-import { RadarChartsRequest } from '../../Common/Interface/Internal/charts'
-import { TypedRequest } from '../../Common/Interface/Internal/responseUtil'
-import { CreatePlayerRadarWithName } from '../src/business/charts'
-import logger from '../logger'
+import { RadarChartsRequest } from '../../../Common/Interface/Internal/charts'
+import { TypedRequest } from '../../../Common/Interface/Internal/responseUtil'
+import { CreatePlayerRadarWithName } from '../business/charts'
+import logger from '../../logger'
 
 const router: Router = express.Router()
 

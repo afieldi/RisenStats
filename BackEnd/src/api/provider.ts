@@ -1,8 +1,8 @@
 import express, { Request, Router } from 'express'
-import { CreateProviderRequest, CreateProviderResponse, GetProvidersResponse } from '../../Common/Interface/Internal/provider'
-import { TypedResponse, TypedRequest } from '../../Common/Interface/Internal/responseUtil'
-import { CreateTournamentProvider, GetTournamentProviders } from '../src/business/provider'
-import logger from '../logger'
+import { CreateProviderRequest, CreateProviderResponse, GetProvidersResponse } from '../../../Common/Interface/Internal/provider'
+import { TypedResponse, TypedRequest } from '../../../Common/Interface/Internal/responseUtil'
+import { CreateTournamentProvider, GetTournamentProviders } from '../business/provider'
+import logger from '../../logger'
 
 const router: Router = express.Router()
 
