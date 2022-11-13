@@ -26,6 +26,11 @@ interface PlayerPageStatsProps {
 
 export default class PlayerPageStats extends React.Component<PlayerPageStatsProps> {
 
+    componentDidMount() {
+        // Default this page to the risen stats since we dont support all tourney games for player stats
+        this.props.seasonConfig.setSeasonId('RISEN')
+    }
+
     render() {
         let wins = 0;
         let games = 0
@@ -33,9 +38,6 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
             wins += playerStat.win;
             games += playerStat.games;
         }
-
-        // Default this page to the risen stats since we dont support all tourney games for player stats
-        this.props.seasonConfig.setSeasonId('RISEN')
 
         return (
             <Box>
