@@ -12,4 +12,5 @@ export interface GetPlayerStatsResponse {
 export interface GetPlayerStatsRequest {
   seasonId?: number;
   roleId?: string;
+  risenOnly?: boolean;
 }

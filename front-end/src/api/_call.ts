@@ -10,7 +10,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function MakeBackendCall(url: string, method: string, body: {}, json: boolean = true): Promise<{}> {
+export async function MakeBackendCall<T>(url: string, method: string, body: T, json: boolean = true): Promise<{}> {
   url = process.env.REACT_APP_BACKEND_URL + url;
   let data = await fetch(url, {
     method,

@@ -1,18 +1,28 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { GameRoles } from "../Interface/General/gameEnums";
+import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";
 
 @Entity({name: "playerchampionstats"})
 export default class PlayerChampionStatsModel extends BaseEntity
 {
-  @PrimaryColumn('integer')
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Index()
+  @Column('integer')
   championId: number;
 
-  @PrimaryColumn('varchar')
+  @Index()
+  @Column('varchar')
   playerPuuid: string;
 
   @ManyToOne(() => PlayerModel)
   player: PlayerModel;
+
+  @Index()
+  @Column('text', {nullable: true})
+  position: string;
 
   @Column('integer', {nullable: true})
   seasonId: number;

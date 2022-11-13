@@ -99,7 +99,7 @@ export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDt
   return playerDto
 }
 
-export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seasonId?: string): Promise<PlayerChampionStatsModel[]> {
+export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seasonId?: number, risenOnly?: boolean, role?: GameRoles): Promise<PlayerChampionStatsModel[]> {
   await ensureConnection()
   const sumCols = [
     'totalKills',
@@ -118,13 +118,20 @@ export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seaso
     'totalPentaKills',
     'averageGameDuration'
   ]
+  let paramCount = 2;
+  const seasonFilter = seasonId ? `playerchampionstats."seasonId" = $${paramCount} AND ` : (risenOnly ? 'playerchampionstats."seasonId" IS NOT NULL AND '  : '');
+  if (seasonId) paramCount ++;
 
-  const seasonFilter = seasonId ? 'playerchampionstats."seasonId" = $2 AND ' : ''
+  const useRole = role && role !== GameRoles.ALL;
+  const roleFilter = useRole ? `playerchampionstats."position" = $${paramCount} AND ` : '';
+  if (useRole) paramCount++;
+  else role = undefined;
+
   const outerSelect = sumCols.map(col => col.includes('average') ? `AVG(champStat."${col}") as "${col}"` : `SUM(champStat."${col}") as "${col}"`).join(', ')
   return await PlayerChampionStatsModel.query(
-    `SELECT ${outerSelect}, champStat."championId" FROM (SELECT * FROM playerchampionstats WHERE ${seasonFilter}"playerchampionstats"."playerPuuid" = $1) as champStat GROUP BY champStat."championId"`,
-    [playerPuuid, seasonId].filter(val => !!val)
-  ) as PlayerChampionStatsModel[]
+    `SELECT ${outerSelect}, champStat."championId" FROM (SELECT * FROM playerchampionstats WHERE ${seasonFilter}${roleFilter}"playerchampionstats"."playerPuuid" = $1) as champStat GROUP BY champStat."championId"`,
+    [playerPuuid, seasonId, role].filter(val => !!val)
+  ) as PlayerChampionStatsModel[];
 }
 
 interface PlayerData {
