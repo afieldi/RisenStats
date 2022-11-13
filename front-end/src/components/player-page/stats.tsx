@@ -11,10 +11,10 @@ import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
 interface PlayerPageStatsProps {
-    seasonConfig?: {
+    seasonConfig: {
         seasonId: string,
         setSeasonId: (seasonId: string) => void,
-        seasons?: SeasonModel[],
+        seasons: SeasonModel[],
     };
     roleConfig?: {
         roleId: GameRoles,
@@ -34,9 +34,12 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
             games += playerStat.games;
         }
 
+        // Default this page to the risen stats since we dont support all tourney games for player stats
+        this.props.seasonConfig.setSeasonId('RISEN')
+
         return (
             <Box>
-                <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
+                <FilterBar hideAllGames={true} seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>

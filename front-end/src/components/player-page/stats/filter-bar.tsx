@@ -15,6 +15,7 @@ export interface FilterBarProps {
         roleId: GameRoles,
         setRoleId: (roleId: GameRoles) => void,
     };
+    hideAllGames?: boolean;
 }
 
 export default function FilterBar(props: FilterBarProps) {
@@ -25,7 +26,7 @@ export default function FilterBar(props: FilterBarProps) {
                     callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value)}}
                     sx={{minWidth: '200px', pt: 1, pb: 1}}
                     seasonConfig={props.seasonConfig}
-                    hideAllGames={false}/>
+                    hideAllGames={!!props.hideAllGames}/>
             </Grid>
             <Grid item>
                 <RoleSelector
