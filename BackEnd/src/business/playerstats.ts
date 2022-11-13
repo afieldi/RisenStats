@@ -57,7 +57,7 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
 
   for (const playerGame of playerGames) {
     if (playerGame.seasonId === null) {
-       continue;
+       playerGame.seasonId == 0; // I hate this. But seasonId is used as a PK so it needs to have a value. We will use 0 as no season
     }
 
     // Check if the season exists

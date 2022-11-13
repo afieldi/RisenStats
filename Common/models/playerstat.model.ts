@@ -1,18 +1,24 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";
 
 @Entity({ name: "player_stat_model" })
 export default class PlayerStatModel extends BaseEntity
 {
-    @PrimaryColumn('text', )
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Index()
+    @Column('text')
     playerPuuid: string;
 
     // Duplicated from game for filtering
-    @PrimaryColumn('integer')
+    @Index()
+    @Column('integer', {nullable: true})
     seasonId: number;
 
-    @PrimaryColumn("text", )
+    @Index()
+    @Column('text')
     lobbyPosition: string;
 
     @ManyToOne(() => PlayerModel, { eager: true })

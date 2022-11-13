@@ -1,6 +1,6 @@
 import express, { Request, Router } from "express";
 import { TypedRequest, TypedResponse } from "../../../Common/Interface/Internal/responseUtil";
-import { PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, UpdatePlayerGamesResponse } from "../../../Common/Interface/Internal/player";
+import { PlayerChampionStatsRequest, PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, UpdatePlayerGamesResponse } from "../../../Common/Interface/Internal/player";
 import { CreateChampionStatDataByPuuid, GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, UpdateGamesByPlayerPuuid } from "../business/player";
 import logger from "../../logger";
 import { DocumentNotFound } from "../../../Common/errors";
@@ -8,7 +8,7 @@ import { GetDbChampionStatsByPlayerPuuid } from "../db/player";
 import { NonNone } from "../../../Common/utils";
 import { GetGamesRequest } from "../../../Common/Interface/Internal/games";
 import { GameRoles } from "../../../Common/Interface/General/gameEnums";
-import {CreatePlayerStatsByPuuid} from "../business/playerstats";
+import { CreatePlayerStatsByPuuid } from "../business/playerstats";
 
 const router: Router = express.Router()
 
@@ -47,13 +47,13 @@ router.post('/summary/by-name/:playerName', async(req: Request, res: TypedRespon
   }
 })
 
-router.post('/champions/by-puuid/:playerPuuid', async(req, res: TypedResponse<PlayerChampionStatsResponse>) => {
+router.post('/champions/by-puuid/:playerPuuid', async(req:TypedRequest<PlayerChampionStatsRequest>, res: TypedResponse<PlayerChampionStatsResponse>) => {
   logger.info(`Getting champion stats for player: ${req.params.playerPuuid}`)
   try {
-    const champData = await GetDbChampionStatsByPlayerPuuid(req.params.playerPuuid)
+    const champData = await GetDbChampionStatsByPlayerPuuid(req.params.playerPuuid, req.body.seasonId, req.body.risenOnly, GameRoles[req.body.roleId as keyof typeof GameRoles]);
     res.json({
       champions: champData
-    })
+    });
   } catch (error) {
     logger.error(error)
     res.status(500).send('Something went wrong')
