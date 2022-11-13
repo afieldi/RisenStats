@@ -31,8 +31,9 @@ async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise
     if (response.ok) {
       return response.json()
     } else if (response.status === 429) {
+      logger.debug("Rate limited, waiting 2s");
       await setTimeout(() => {
-      }, 2000)
+      }, 2000);
       return await _MakeAPICall(url, method, body)
     } else {
       const responseText = await response.json()
