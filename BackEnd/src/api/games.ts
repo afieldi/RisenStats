@@ -26,11 +26,11 @@ router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetGamesRequest>, 
 router.post('/callback', async(req: TypedRequest<RiotMatchCallbackDto>, res) => {
   logger.info(`Match callback for match ${req.body.gameId}`)
   try {
-    await SaveSingleMatchById(ToMatchId(req.body.gameId), req.body.shortCode)
-    res.json('Success')
+    await SaveSingleMatchById(ToMatchId(req.body.gameId));
+    res.json('Success');
   } catch (error) {
-    logger.error(error)
-    res.status(500).send('Something went wrong')
+    logger.error(error);
+    res.status(500).send('Something went wrong');
   }
 })
 
