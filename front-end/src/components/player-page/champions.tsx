@@ -56,7 +56,7 @@ export default function PlayerPageChampions({ championData }: Props) {
                     <TableCell>
                       <Box sx={{display: 'flex', flexDirection: 'row'}}>
                         <WinRatePieChart wins={champData.totalWins} losses={champData.totalGames - champData.totalWins} height={25}></WinRatePieChart>
-                        <Typography sx={{pl: 1}}>{calculateWR(champData)}%</Typography>
+                        <Typography sx={{pl: 1}}>{calculateWR(champData, 1)}%</Typography>
                       </Box>
                       {/* In Progress */}
                     </TableCell>
