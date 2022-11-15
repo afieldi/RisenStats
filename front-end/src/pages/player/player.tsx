@@ -80,7 +80,7 @@ function PlayerPage()
     if (profile) {
       // setLoadingGames(true);
       try {
-        const stats = await GetPlayerChampionStats(profile.overview.puuid);
+        const stats = await GetPlayerChampionStats(profile.overview.puuid, Number(seasonId), seasonId === "RISEN", roleId);
         stats.champions.sort((a, b) => b.totalGames - a.totalGames);
         setChampionStats(stats.champions);
       }
@@ -98,7 +98,7 @@ function PlayerPage()
     }
     try {
       let numberSeasonId = seasonId === "RISEN" ? undefined : Number(seasonId)
-      const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId);
+      const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId, seasonId === "RISEN");
       setPlayerStats(stats.playerStats);
     }
     catch (error) {
@@ -127,7 +127,8 @@ function PlayerPage()
 
   useEffect(() => {
     loadMoreGames(true);
-    loadPlayerStats(playerProfile)
+    loadPlayerStats(playerProfile);
+    loadChampionStats(playerProfile);
   }, [seasonId, roleId]);
 
   useEffect(() => {

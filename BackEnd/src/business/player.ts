@@ -89,9 +89,11 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string): Promis
   const games = await GetDbPlayerGamesByPlayerPuuid(playerPuuid)
   const stats: { [key: string]: PlayerChampionStatsModel } = {}
   for (const game of games) {
-    if (!stats[game.championId]) {
-      stats[game.championId] = PlayerChampionStatsModel.create({
+    let key = `${game.championId}_${game.lobbyPosition}`;
+    if (!stats[key]) {
+      stats[key] = PlayerChampionStatsModel.create({
         championId: game.championId,
+        position: game.lobbyPosition,
         playerPuuid,
         seasonId: game.seasonId,
         totalAssists: 0,
@@ -111,7 +113,7 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string): Promis
         averageGoldEarned: 0
       })
     }
-    const statGame = stats[game.championId]
+    const statGame = stats[key]
     statGame.totalKills += NonNone(game.kills, 0)
     statGame.totalDeaths += NonNone(game.deaths, 0)
     statGame.totalAssists += NonNone(game.assists, 0)

@@ -7,9 +7,9 @@ import {
 } from "../../../Common/Interface/Internal/playerstats";
 import { TypedRequest, TypedResponse } from "../../../Common/Interface/Internal/responseUtil";
 import logger from "../../logger";
-import {GetGamesRequest, GetGamesResponse} from "../../../Common/Interface/Internal/games";
+import { GetGamesRequest, GetGamesResponse } from "../../../Common/Interface/Internal/games";
 import { GameRoles } from "../../../Common/Interface/General/gameEnums";
-import {GetDbPlayerStatsByPlayerPuuid} from "../db/playerstats";
+import { GetDbPlayerStatsByPlayerPuuid } from "../db/playerstats";
 import PlayerStatModel from "../../../Common/models/playerstat.model";
 
 const router: Router = express.Router()
@@ -49,7 +49,8 @@ router.post('/by-puuid/:playerPuuid', async (req: TypedRequest<GetPlayerStatsReq
   try {
     const seasonId = req.body.seasonId;
     const roleId = req.body.roleId as GameRoles;
-    const playerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(req.params.playerPuuid, seasonId, roleId);
+    const risenOnly = req.body.risenOnly;
+    const playerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(req.params.playerPuuid, seasonId, roleId, risenOnly);
     res.json({
       playerStats
     });

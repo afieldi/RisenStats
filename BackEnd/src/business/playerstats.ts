@@ -56,10 +56,6 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
 
   for (const playerGame of playerGames) {
-    if (playerGame.seasonId === null) {
-       continue;
-    }
-
     // Check if the season exists
     if (!playerStatModelMap.has(playerGame.seasonId)) {
         playerStatModelMap.set(playerGame.seasonId, new Map<String, PlayerStatModel>())

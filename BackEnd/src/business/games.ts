@@ -10,18 +10,19 @@ import { CreateDbPlayersWithParticipantData } from '../db/player'
 import { SaveObjects } from '../db/dbConnect'
 import { GetDbCode } from '../db/codes'
 
-export async function SaveSingleMatchById(matchId: string, tournamentCode: string = null): Promise<GameModel> {
-  let seasonId = null
-
-  if (tournamentCode) {
-    seasonId = (await GetDbCode(tournamentCode))?.seasonId
-  }
+export async function SaveSingleMatchById(matchId: string): Promise<GameModel> {
+  let seasonId = null;
 
   const existingObj = await GetDbGameByGameId(ToGameId(matchId))
   if (existingObj) {
-    return existingObj
+    return existingObj;
   }
-  const gameData = await GetRiotGameByMatchId(matchId)
+  const gameData = await GetRiotGameByMatchId(matchId);
+
+  if (gameData.info.tournamentCode) {
+    seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId
+  }
+
   const timelineData = await GetRiotTimelineByMatchId(matchId)
 
   const timelineStats = ProcessTimeline(timelineData)
