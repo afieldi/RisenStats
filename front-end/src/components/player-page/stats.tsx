@@ -11,10 +11,10 @@ import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
 interface PlayerPageStatsProps {
-    seasonConfig?: {
+    seasonConfig: {
         seasonId: string,
         setSeasonId: (seasonId: string) => void,
-        seasons?: SeasonModel[],
+        seasons: SeasonModel[],
     };
     roleConfig?: {
         roleId: GameRoles,

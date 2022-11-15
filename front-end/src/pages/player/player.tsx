@@ -176,7 +176,9 @@ function PlayerPage()
             <PlayerPageGeneral player={playerProfile?.overview} seasons={seasons} games={games} loadGamesConfig={loadGamesConfig}></PlayerPageGeneral>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PlayerPageChampions championData={championStats}></PlayerPageChampions>
+            <PlayerPageChampions championData={championStats}
+                                 seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
+                                 roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PlayerPageStats playerStats={playerStats}

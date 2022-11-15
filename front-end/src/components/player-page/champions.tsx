@@ -4,14 +4,27 @@ import PlayerChampionStatsModel from "../../../../Common/models/playerchampionst
 import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from "../../../../Common/utils";
 import { ChampionIdToName } from "../../common/utils";
 import WinRatePieChart from "../charts/winrate-pie";
+import FilterBar from "./stats/filter-bar";
+import SeasonModel from "../../../../Common/models/season.model";
+import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 
 interface Props {
   championData: PlayerChampionStatsModel[]
+  seasonConfig: {
+    seasonId: string,
+    setSeasonId: (seasonId: string) => void,
+    seasons: SeasonModel[],
+  };
+  roleConfig?: {
+    roleId: GameRoles,
+    setRoleId: (roleId: GameRoles) => void,
+  };
 }
 
-export default function PlayerPageChampions({ championData }: Props) {
+export default function PlayerPageChampions(props: Props) {
   return (
     <Box>
+      <FilterBar seasonConfig={props.seasonConfig} roleConfig={props.roleConfig}/>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -41,7 +54,7 @@ export default function PlayerPageChampions({ championData }: Props) {
           </TableHead>
           <TableBody>
             {
-              championData.map((champData: PlayerChampionStatsModel) => {
+              props.championData.map((champData: PlayerChampionStatsModel) => {
                 const gameTime = Number.parseInt(champData.averageGameDuration.toString());
                 return (
                   <TableRow key={champData.championId}>
@@ -56,7 +69,7 @@ export default function PlayerPageChampions({ championData }: Props) {
                     <TableCell>
                       <Box sx={{display: 'flex', flexDirection: 'row'}}>
                         <WinRatePieChart wins={champData.totalWins} losses={champData.totalGames - champData.totalWins} height={25}></WinRatePieChart>
-                        <Typography sx={{pl: 1}}>{calculateWR(champData)}%</Typography>
+                        <Typography sx={{pl: 1}}>{calculateWR(champData, 2)}%</Typography>
                       </Box>
                       {/* In Progress */}
                     </TableCell>
