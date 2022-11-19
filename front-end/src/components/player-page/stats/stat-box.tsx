@@ -2,6 +2,8 @@ import {useTheme} from "@emotion/react";
 import {Box, Grid, Grow, Theme, Tooltip, Typography} from "@mui/material";
 import RisenBox1 from "../../risen-box/risen-box-1";
 import React from "react";
+import {getNumberWithSuffix} from "../../../common/utils";
+import LeaderboardRanking from "./leaderboard-ranking";
 
 interface StatBoxProps {
     statTitle: String
@@ -12,6 +14,10 @@ interface StatBoxProps {
 
 export default function StatBox(statBoxProps: StatBoxProps) {
     const theme = useTheme() as Theme;
+
+    // Base the side of the statsTitle based on the characters so it fits in the box
+    const typographySize = statBoxProps.statTitle.length < 8 ? "subtitle2" : "caption";
+
     return (
         <RisenBox1 sx={{minWidth: 110, maxWidth: 110, minHeight: 110, maxHeight: 110}}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
@@ -22,12 +28,13 @@ export default function StatBox(statBoxProps: StatBoxProps) {
                 }
                 <Grow in={statBoxProps.haveStatsLoaded} style={{ transitionDelay: '200ms'}}>
                     <div>
-                        <Typography color={theme.palette.primary.main} variant="h5">
+                        <Typography color={theme.palette.primary.main} variant="h6">
                             {statBoxProps.statValue}
                         </Typography>
-                        <Typography color={theme.palette.info.light} variant="subtitle2">
+                        <Typography color={theme.palette.info.light} variant={typographySize}>
                             <Tooltip title={statBoxProps.statToolTip}><div>{statBoxProps.statTitle}</div></Tooltip>
                         </Typography>
+                        <LeaderboardRanking rank={1} leagueAvg={420}/>
                     </div>
                 </Grow>
             </Box>

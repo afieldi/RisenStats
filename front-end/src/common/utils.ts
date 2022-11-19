@@ -34,3 +34,11 @@ export function SaveBlob(blob: any, fileName: string) {
   // Clean up and remove the link
   link.parentNode?.removeChild(link);
 }
+
+export function nth(n: number): string {
+  return["st","nd","rd"][((n+90)%100-10)%10-1]||"th"
+}
+
+export function getNumberWithSuffix(n: number): string {
+  return `${n}${nth(n)}`
+}
