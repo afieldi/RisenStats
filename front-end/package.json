@@ -31,7 +31,7 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "update": "node ./utils/update.js",
-    "push": "aws s3 sync ./build s3://risen-stats",
+    "push": "aws s3 sync ./build s3://risenstats.com",
     "deploy": "npm run build && npm run push"
   },
   "eslintConfig": {
