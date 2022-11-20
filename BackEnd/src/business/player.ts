@@ -90,7 +90,7 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string): Promis
   const games = await GetDbPlayerGamesByPlayerPuuid(playerPuuid)
   const stats: { [key: string]: PlayerChampionStatsModel } = {}
 
-  function handleGame(game: PlayerGameModel, seasonId: number) {
+  const handleGame = (game: PlayerGameModel, seasonId: number) => {
     let key = `${game.championId}_${game.lobbyPosition}_${seasonId}`;
     if (!stats[key]) {
       stats[key] = PlayerChampionStatsModel.create({
