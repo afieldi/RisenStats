@@ -11,9 +11,10 @@ import logger from '../../logger'
 import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from '../db/games'
 import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model'
 import { NonNone, roundTo } from '../../../Common/utils'
-import { SaveObjects } from '../db/dbConnect'
+import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, SaveObjects } from '../db/dbConnect'
 import { ApiError } from '../external-api/_call'
 import { GameRoles } from '../../../Common/Interface/General/gameEnums'
+import PlayerGameModel from '../../../Common/models/playergame.model'
 
 export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
   try {
@@ -88,14 +89,15 @@ async function UpdateGamesByPlayerObject(player: PlayerModel): Promise<UpdatePla
 export async function CreateChampionStatDataByPuuid(playerPuuid: string): Promise<PlayerChampionStatsModel[]> {
   const games = await GetDbPlayerGamesByPlayerPuuid(playerPuuid)
   const stats: { [key: string]: PlayerChampionStatsModel } = {}
-  for (const game of games) {
-    let key = `${game.championId}_${game.lobbyPosition}`;
+
+  function handleGame(game: PlayerGameModel, seasonId: number) {
+    let key = `${game.championId}_${game.lobbyPosition}_${seasonId}`;
     if (!stats[key]) {
       stats[key] = PlayerChampionStatsModel.create({
         championId: game.championId,
         position: game.lobbyPosition,
         playerPuuid,
-        seasonId: game.seasonId,
+        seasonId: seasonId,
         totalAssists: 0,
         totalDeaths: 0,
         totalKills: 0,
@@ -129,6 +131,13 @@ export async function CreateChampionStatDataByPuuid(playerPuuid: string): Promis
     statGame.totalPentaKills += NonNone(game.pentaKills, 0)
     statGame.averageGameDuration += NonNone(game.gameLength)
     statGame.averageGoldEarned += NonNone(game.goldEarned, 0)
+  }
+  for (const game of games) {
+    handleGame(game, ALL_TOURNAMENT_GAMES_ID);
+    if (game.seasonId) {
+      handleGame(game, ALL_RISEN_GAMES_ID);
+      handleGame(game, game.seasonId);
+    }
   }
 
   // average out the ones needed

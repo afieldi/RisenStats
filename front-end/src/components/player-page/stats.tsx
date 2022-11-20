@@ -9,6 +9,7 @@ import RisenBox1 from "../risen-box/risen-box-1";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import GamesFilter from "../filters/games-filter";
+import FilterBar from "../filters/filter-bar";
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -36,7 +37,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
 
         return (
             <Box>
-                <GamesFilter seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
+                <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>

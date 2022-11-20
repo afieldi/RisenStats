@@ -9,13 +9,13 @@ export default class PlayerGameModel extends BaseEntity
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('text', {nullable: true})
+  @Column('text')
   playerPuuid: string;
 
   @ManyToOne(() => PlayerModel, { eager: true })
   player: PlayerModel;
 
-  @Column('bigint', {nullable: true})
+  @Column('bigint')
   gameGameId: number;
 
   @ManyToOne(() => GameModel)

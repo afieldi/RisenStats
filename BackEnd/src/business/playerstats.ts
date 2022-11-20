@@ -3,7 +3,7 @@ import PlayerModel from "../../../Common/models/player.model";
 import {BoolToNumber, GetAveragesFromObjects, NonNone, ObjectArrayToCsv} from "../../../Common/utils";
 import {GetDbGameByGameId, GetDbPlayerGamesByPlayerPuuid} from "../db/games";
 import { GameRoles } from "../../../Common/Interface/General/gameEnums";
-import {SaveObjects} from "../db/dbConnect";
+import {ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, SaveObjects} from "../db/dbConnect";
 import {BaseEntity} from "typeorm";
 import PlayerStatModel from "../../../Common/models/playerstat.model";
 import PlayerGameModel from "../../../Common/models/playergame.model";
@@ -58,22 +58,46 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   // Primary key is risenSeason, second key is role
   let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
 
+  function getRowsByRisenSeason(seasonId: number) {
+    if (!playerStatModelMap.has(seasonId)) {
+      playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())
+    }
+
+    return playerStatModelMap.get(seasonId);
+  }
+
+  function getCurrentRow(rows: Map<String, PlayerStatModel>, lobbyPosition: string, playerGame: PlayerGameModel, seasonId: number) {
+    if(!rows.has(lobbyPosition)) {
+      rows.set(lobbyPosition, createInitialPlayerStatModel(playerGame, seasonId));
+    }
+
+    return rows.get(playerGame.lobbyPosition)
+  }
+
+  function handleGame(playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) {
+    if (!playerStatModelMap.has(seasonId)) {
+      playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())
+    }
+
+    const rowsBySeasons = playerStatModelMap.get(seasonId);
+
+    if(!rowsBySeasons.has(playerGame.lobbyPosition)) {
+      rowsBySeasons.set(playerGame.lobbyPosition, createInitialPlayerStatModel(playerGame, seasonId));
+    }
+
+    const currentRow = rowsBySeasons.get(playerGame.lobbyPosition);
+    rowsBySeasons.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
+  }
+
   for (const playerGame of playerGames) {
-    // Check if the season exists
-    if (!playerStatModelMap.has(playerGame.seasonId)) {
-        playerStatModelMap.set(playerGame.seasonId, new Map<String, PlayerStatModel>())
-    }
-
-    let rowsByRisenSeason = playerStatModelMap.get(playerGame.seasonId);
-
-    // Check if the role exists
-    if(!rowsByRisenSeason.has(playerGame.lobbyPosition)) {
-       rowsByRisenSeason.set(playerGame.lobbyPosition, createInitialPlayerStatModel(playerGame));
-    }
-
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
-    let currentRow: PlayerStatModel = rowsByRisenSeason.get(playerGame.lobbyPosition)
-    rowsByRisenSeason.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
+
+    handleGame(playerGame, ALL_TOURNAMENT_GAMES_ID, fullGame);
+
+    if (playerGame.seasonId) {
+      handleGame(playerGame, playerGame.seasonId, fullGame);
+      handleGame(playerGame, ALL_RISEN_GAMES_ID, fullGame);
+    }
   }
 
   // Save the rows to the DB
@@ -90,18 +114,16 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
       objsToSave.push(risenLeaguePlayerStatModel.get(roleKey))
     }
   }
-  await SaveObjects(objsToSave);
+  await SaveObjects(objsToSave, PlayerStatModel);
   return objsToSave;
 }
 
 
-function createInitialPlayerStatModel(game: PlayerGameModel) {
+function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: number) {
   return PlayerStatModel.create({
     playerPuuid: game.playerPuuid,
-    seasonId: game.seasonId,
+    seasonId: seasonId,
     lobbyPosition: game.lobbyPosition,
-    player: game.player,
-    season: game.season,
     games: 0,
     kills: 0,
     deaths: 0,
