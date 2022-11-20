@@ -58,7 +58,7 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   // Primary key is risenSeason, second key is role
   let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
 
-  function handleGame(playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) {
+  const handleGame = (playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) => {
     if (!playerStatModelMap.has(seasonId)) {
       playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())
     }
