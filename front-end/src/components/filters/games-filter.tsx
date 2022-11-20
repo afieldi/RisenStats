@@ -33,18 +33,18 @@ interface Props {
 
 export default function GamesFilter(props: Props) {
   return (
-    <RisenBox1 title="Filters" sx={props.sx}>
+    <RisenBox1 title="Filters" sx={{...props.sx}}>
       {
         props.useSeason && <RisenSeasonSelector
             callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value)}}
-            sx={{minWidth: '300px', pt: 1, pb: 1}}
+            sx={{width: '100%', pt: 1, pb: 1}}
             seasonConfig={props.seasonConfig}
             hideAllGames={!!props.hideAllGames}/>
       }
       {
           props.useRole && <RoleSelector
               initalValue={props.roleConfig?.roleId}
-              sx={{minWidth: '300px', pt: 1, pb: 1}}
+              sx={{width: '100%', pt: 1, pb: 1}}
               callBack={(event: SelectChangeEvent) => {
                               console.log(event.target.value);
                               props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles])

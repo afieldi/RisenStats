@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from 'react';
+import React, { KeyboardEvent, ReactNode } from 'react';
 import { alpha } from '@mui/system';
 import { InputBase, Theme, SxProps } from '@mui/material';
 
@@ -51,11 +51,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 interface Props
 {
   placeholder?: string;
+  id?: string;
   onSubmit?: (event: KeyboardEvent<HTMLInputElement>) => void;
   sx?: SxProps<Theme> | undefined;
+  endAdornment?: ReactNode;
 }
 
-export default function SearchField({placeholder, onSubmit, sx}: Props)
+export default function SearchField({id, placeholder, onSubmit, sx, endAdornment}: Props)
 {
   let resolvedPlaceholder: string = placeholder ? placeholder : "Search...";
   const theme = useTheme() as Theme;
@@ -65,6 +67,7 @@ export default function SearchField({placeholder, onSubmit, sx}: Props)
         <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
+        id={id}
         placeholder={resolvedPlaceholder}
         inputProps={{ 'aria-label': 'search' }}
         onKeyPress={(ev: KeyboardEvent<HTMLInputElement>) => {
@@ -76,6 +79,7 @@ export default function SearchField({placeholder, onSubmit, sx}: Props)
             ev.preventDefault();
           }
         }}
+        endAdornment={endAdornment}
       />
     </Search>
   )

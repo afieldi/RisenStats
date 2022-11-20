@@ -52,16 +52,17 @@ interface Props
 {
   placeholder?: string;
   name?: string;
+  id?: string;
   onSubmit?: (event: KeyboardEvent<HTMLInputElement>) => void;
   sx?: SxProps<Theme> | undefined;
 }
 
-export default function SearchField2({placeholder, onSubmit, sx, name}: Props)
+export default function SearchField2({id, placeholder, onSubmit, sx, name}: Props)
 {
   let resolvedPlaceholder: string = placeholder ? placeholder : "Search...";
   const theme = useTheme() as Theme;
   return (
-    <TextField id="outlined-basic"
+    <TextField id={id}
       label={resolvedPlaceholder}
       variant="outlined"
       name={name}

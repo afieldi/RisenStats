@@ -126,9 +126,10 @@ function PlayerRadar({sx, games, options}: Props)
     return null;
   }
 
+  const width = options.width || '100%';
   return (
-    // <ResponsiveContainer >
-      <RadarChart outerRadius={NonNone(options.size, 90)} data={data} height={NonNone(options.height, 300)} width={NonNone(options.width, NonNone(options.height, 300))}>
+    <ResponsiveContainer height={NonNone(options.height, 300)} width={width}>
+      <RadarChart outerRadius={NonNone(options.size, 90)} data={data}>
         <PolarGrid />
         { options.hideLabels ? null : <PolarAngleAxis dataKey="subject" label={whiteLabel} tick={customTick} />}
         <PolarRadiusAxis angle={90} domain={[0, 1]} tick={false} />
@@ -138,7 +139,7 @@ function PlayerRadar({sx, games, options}: Props)
         }
         {/* <Radar name="Lily" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} /> */}
       </RadarChart>
-    // </ResponsiveContainer>
+    </ResponsiveContainer>
   )
 }
 

@@ -4,9 +4,9 @@ import PlayerChampionStatsModel from "../../../../Common/models/playerchampionst
 import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from "../../../../Common/utils";
 import { ChampionIdToName } from "../../common/utils";
 import WinRatePieChart from "../charts/winrate-pie";
-import FilterBar from "./stats/filter-bar";
 import SeasonModel from "../../../../Common/models/season.model";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
+import GamesFilter from "../filters/games-filter";
 
 interface Props {
   championData: PlayerChampionStatsModel[]
@@ -24,7 +24,7 @@ interface Props {
 export default function PlayerPageChampions(props: Props) {
   return (
     <Box>
-      <FilterBar seasonConfig={props.seasonConfig} roleConfig={props.roleConfig}/>
+      <GamesFilter seasonConfig={props.seasonConfig} roleConfig={props.roleConfig}/>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
