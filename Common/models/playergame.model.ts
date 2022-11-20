@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import GameModel from "./game.model";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";
@@ -6,16 +6,13 @@ import SeasonModel from "./season.model";
 @Entity({ name: "player_game" })
 export default class PlayerGameModel extends BaseEntity
 {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column('text')
+  @PrimaryColumn('text')
   playerPuuid: string;
 
   @ManyToOne(() => PlayerModel, { eager: true })
   player: PlayerModel;
 
-  @Column('bigint')
+  @PrimaryColumn('bigint')
   gameGameId: number;
 
   @ManyToOne(() => GameModel)
