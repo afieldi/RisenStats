@@ -3,10 +3,11 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
+import LoginIcon from '@mui/icons-material/Login';
 import MuiAppBar from '@mui/material/AppBar';
 import { styled } from '@mui/material/styles';
 import SearchField from '../search-field/search-field';
-import { Box, Typography, Hidden } from '@mui/material';
+import { Box, Typography, Hidden, InputAdornment } from '@mui/material';
 import SignIn from '../signin/sign-in';
 import { DRAWER_WIDTH } from "../../common/constants";
 
@@ -48,11 +49,12 @@ export default function HeaderBar({open, setOpen}: Props) {
     setOpen(false);
   };
 
-  function doSearch(ev: KeyboardEvent<HTMLInputElement>)
-  {
-    const summonerName = ev.target.value;
+  const headerSearchId = 'playerHeaderId';
 
-    navigate("/player/"+ encodeURIComponent(summonerName));
+  function doSearch()
+  {
+    const playerName = (document.getElementById(headerSearchId) as HTMLInputElement).value;
+    navigate(`player/${encodeURIComponent(playerName)}`)
   }
 
   return (
@@ -82,7 +84,20 @@ export default function HeaderBar({open, setOpen}: Props) {
 
         </Box>
         {/* <SignIn></SignIn> */}
-        <SearchField placeholder="Summoner Name" onSubmit={doSearch}></SearchField>
+        <SearchField
+          id={headerSearchId}
+          placeholder="Summoner Name"
+          onSubmit={doSearch}
+          endAdornment={
+            <InputAdornment position='end'>
+              <IconButton
+                onClick={doSearch}
+                edge='start' >
+                  <LoginIcon />
+              </IconButton>
+            </InputAdornment>
+          }
+        ></SearchField>
       </Toolbar>
     </AppBar>
   )

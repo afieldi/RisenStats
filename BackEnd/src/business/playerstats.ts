@@ -16,6 +16,9 @@ const tableCombineCols = [
   'neutralMinionsKilled', 'totalDamageDealtToChampions', 'totalDamageTaken', 'damageSelfMitigated',
   'totalHeal', 'visionScore', 'wardsPlaced', 'wardsKilled',
   'visionWardsBoughtInGame', 'damageDealtToObjectives', 'firstBloodKill', 'firstBloodAssist',
+  'killDiff', 'killDiff15', 'killDiff25','assistDiff','assistDiff15','assistDiff25','deathDiff',
+  'deathDiff15','deathDiff25','goldDiff','goldDiff15','goldDiff25','csDiff','csDiff15',
+  'csDiff25','xpDiff','xpDiff15','xpDiff25',
   'firstTowerKill', 'firstTowerAssist', 'turretKills', 'doubleKills', 'tripleKills', 'quadraKills',
   'pentaKills', 'damagePerGold', 'soloKills', 'gameLength', 'baronTakedowns'
 ]
