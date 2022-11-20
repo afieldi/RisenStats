@@ -10,8 +10,13 @@ import BanModel from '../../../Common/models/ban.model'
 import LeaderboardModel from '../../../Common/models/leaderboard.model'
 import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model'
 import PlayerStatModel from "../../../Common/models/playerstat.model";
+import { toSearchName } from '../../../Common/utils'
 
 const POSTGRES_URI = process.env.POSTGRES_URI
+export const ALL_TOURNAMENT_GAMES_NAME = 'ALL TOURNAMENT GAMES'; // DO NOT TOUCH
+export let ALL_TOURNAMENT_GAMES_ID: number = undefined;
+export const ALL_RISEN_GAMES_NAME = 'ALL RISEN GAMES'; // DO NOT TOUCH
+export let ALL_RISEN_GAMES_ID: number = undefined;
 
 if (!POSTGRES_URI) {
   throw new Error(
@@ -68,6 +73,18 @@ async function updateConnectionEntities(connection: Connection, entities: any[])
   }
 }
 
+async function createDefaultSeason(seasonName: string): Promise<SeasonModel> {
+  const season = await SeasonModel.findOne({where: { searchname: toSearchName(seasonName) }});
+  if (season) return season;
+
+  return await SeasonModel.create({
+    seasonName,
+    searchname: toSearchName(seasonName),
+    active: false,
+    tourneyId: 0
+  }).save();
+}
+
 export async function ensureConnection(name: string = 'default'): Promise<Connection> {
   const connectionManager = getConnectionManager()
 
@@ -83,6 +100,14 @@ export async function ensureConnection(name: string = 'default'): Promise<Connec
       await updateConnectionEntities(connection, options[name].entities)
     }
 
+    if (!ALL_RISEN_GAMES_ID) {
+      ALL_RISEN_GAMES_ID = (await createDefaultSeason(ALL_RISEN_GAMES_NAME)).id;
+    }
+
+    if (!ALL_TOURNAMENT_GAMES_ID) {
+      ALL_TOURNAMENT_GAMES_ID = (await createDefaultSeason(ALL_TOURNAMENT_GAMES_NAME)).id;
+    }
+
     return connection
   }
 
@@ -90,8 +115,11 @@ export async function ensureConnection(name: string = 'default'): Promise<Connec
   return await connectionManager.create({ name, ...options[name] }).connect()
 }
 
-export async function SaveObjects(items: BaseEntity[]): Promise<BaseEntity[]> {
+export async function SaveObjects(items: BaseEntity[], type?: typeof BaseEntity): Promise<BaseEntity[]> {
   await ensureConnection()
+  if (type) {
+    return await type.save(items);
+  }
   await getConnection().manager.save(items)
   return items
 }

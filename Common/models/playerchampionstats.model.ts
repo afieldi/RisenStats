@@ -6,25 +6,19 @@ import SeasonModel from "./season.model";
 @Entity({name: "playerchampionstats"})
 export default class PlayerChampionStatsModel extends BaseEntity
 {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Index()
-  @Column('integer')
+  @PrimaryColumn('integer')
   championId: number;
 
-  @Index()
-  @Column('varchar')
+  @PrimaryColumn('varchar')
   playerPuuid: string;
 
   @ManyToOne(() => PlayerModel)
   player: PlayerModel;
 
-  @Index()
-  @Column('text', {nullable: true})
+  @PrimaryColumn('text')
   position: string;
 
-  @Column('integer', {nullable: true})
+  @PrimaryColumn('integer')
   seasonId: number;
 
   @ManyToOne(() => SeasonModel)

@@ -8,13 +8,12 @@ export default class PlayerStatModel extends BaseEntity
     @PrimaryColumn('text')
     playerPuuid: string;
 
+    // Duplicated from game for filtering
+    @PrimaryColumn('integer')
+    seasonId: number;
+
     @PrimaryColumn('text')
     lobbyPosition: string;
-
-    // Duplicated from game for filtering
-    @Index()
-    @Column('integer', {nullable: true})
-    seasonId: number;
 
     @ManyToOne(() => PlayerModel, { eager: true })
     player: PlayerModel;
