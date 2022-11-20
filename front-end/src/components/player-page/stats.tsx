@@ -2,13 +2,13 @@ import React from "react";
 import {Box, Typography,} from "@mui/material";
 import PerformanceOverview from "./stats/performance-overview";
 import SeasonModel from "../../../../Common/models/season.model";
-import FilterBar from "./stats/filter-bar";
 import ChampionOverview from "./stats/champion-overview";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
 import WinRateBox from "./stats/win-rate-box";
 import RisenBox1 from "../risen-box/risen-box-1";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import GamesFilter from "../filters/games-filter";
 
 interface PlayerPageStatsProps {
     seasonConfig?: {
@@ -36,7 +36,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
 
         return (
             <Box>
-                <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
+                <GamesFilter seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>

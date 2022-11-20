@@ -25,6 +25,7 @@ export default function RisenSeasonSelector(props: RisenSeasonSelectorProps) {
                 value={props.seasonConfig?.seasonId}
                 label="Season"
                 onChange={props.callBack}
+                sx={{overflow: 'hidden'}}
             >
                 {!props.hideAllGames && <MenuItem value="ALL">All Tournament Games</MenuItem>}
 

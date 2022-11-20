@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { Theme, Typography } from "@mui/material";
+import { SxProps, Theme, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import React from "react";
 import PlayerModel from "../../../../../Common/models/player.model";
@@ -7,15 +7,16 @@ import RisenBox1 from "../../risen-box/risen-box-1";
 
 interface Props {
   player?: PlayerModel;
+  sx?: SxProps<Theme> | undefined;
 }
 
-export default function RankFlag({player}: Props)
+export default function RankFlag({player, sx}: Props)
 {
   const theme = useTheme() as Theme;
   let league = player?.league ? player?.league : "Unranked";
   league = league[0].toUpperCase() + league.substring(1).toLocaleLowerCase();
   return (
-    <RisenBox1 title="Rank">
+    <RisenBox1 title="Rank" sx={sx}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         {
           league === "Unranked" ? null :
