@@ -17,6 +17,7 @@ import {VisionScorePercentStatGenerator} from "./stats-generators/VisionScorePer
 import {GPMStatGenerator} from "./stats-generators/GPMStatGenerator";
 import {DiffEnum, DiffStatGenerator} from "./stats-generators/DiffStatGenerator";
 import {DamageTakenPerMinuteStatGenerator} from "./stats-generators/DamageTakenPerMinuteStatGenerator";
+import {SoloKillStatGenerator} from "./stats-generators/SoloKillStatGenerator";
 
 export interface PerformanceOverviewProps {
     playerStats: PlayerStatModel[]
@@ -34,6 +35,7 @@ const statsGenerators: BaseStatGenerator[] = [
     new DPGStatGenerator(),
     new VisionScorePercentStatGenerator(),
     new GPMStatGenerator(),
+    new SoloKillStatGenerator(),
     new DamageTakenPerMinuteStatGenerator(),
     new DiffStatGenerator(DiffEnum.XP, 15),
     new DiffStatGenerator(DiffEnum.XP,25),
