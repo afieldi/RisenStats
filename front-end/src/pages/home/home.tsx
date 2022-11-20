@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Box, Button, Container, Grid } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import React, { KeyboardEvent } from 'react';
 import SearchField from '../../components/search-field/search-field';
@@ -7,19 +7,28 @@ import { toSearchName } from '../../../../Common/utils';
 
 export default function Home() {
   const navigate = useNavigate();
-
-  function searchName(event: KeyboardEvent<HTMLInputElement>) {
-    const playerName = event.target.value;
+  const playerSearchFieldId = 'playerSearch';
+  function searchName() {
+    const playerName = (document.getElementById(playerSearchFieldId) as HTMLInputElement).value;
     navigate(`player/${encodeURIComponent(playerName)}`)
   }
   return (
     <Container className="full-height full-width" sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-          <img src="/images/logos/risen.png" style={{maxWidth: '500px'}}></img>
+          <img src="/images/logos/risen.png" style={{width: '70%'}}></img>
         </Box>
         <Box>
-          <SearchField2 placeholder='Summoner Name' sx={{width: '500px'}} onSubmit={searchName}></SearchField2>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={10}>
+              <SearchField2 id={playerSearchFieldId} placeholder='Summoner Name' sx={{width: '80%'}} onSubmit={searchName}></SearchField2>
+            </Grid>
+            <Grid item xs={12} md={2}>
+              <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <Button variant='outlined' onClick={searchName} sx={{width: '80%', height: '4em'}}>Search</Button>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </Container>
