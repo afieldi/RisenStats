@@ -58,6 +58,9 @@ function DefaultTimelineStats(): TimelineParticipantStats {
 }
 
 export function ProcessTimeline(timeline: RiotTimelineDto): TimelineParticipantStats[] {
+  if (timeline.info.participants.length !== 10) {
+    throw new Error(`Invalid number of participants: ${timeline.info.participants.length}`);
+  }
   const allParticipants: TimelineParticipantStats[] = []
   const timelineInfo = timeline.info;
   for (let i = 0; i < 10; i++) {
