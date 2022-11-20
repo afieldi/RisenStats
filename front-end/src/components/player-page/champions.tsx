@@ -7,6 +7,7 @@ import WinRatePieChart from "../charts/winrate-pie";
 import SeasonModel from "../../../../Common/models/season.model";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import GamesFilter from "../filters/games-filter";
+import FilterBar from "../filters/filter-bar";
 
 interface Props {
   championData: PlayerChampionStatsModel[]
@@ -24,7 +25,7 @@ interface Props {
 export default function PlayerPageChampions(props: Props) {
   return (
     <Box>
-      <GamesFilter seasonConfig={props.seasonConfig} roleConfig={props.roleConfig}/>
+      <FilterBar seasonConfig={props.seasonConfig} roleConfig={props.roleConfig}/>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

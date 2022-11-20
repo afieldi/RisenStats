@@ -4,7 +4,7 @@ import GameModel from '../../../Common/models/game.model'
 import PlayerModel from '../../../Common/models/player.model'
 import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model'
 import { GetAveragesFromObjects, GetCurrentEpcohMs, toSearchName } from '../../../Common/utils'
-import { ensureConnection, SaveObjects } from './dbConnect'
+import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection, SaveObjects } from './dbConnect'
 import log from '../../logger'
 import { GameRoles } from '../../../Common/Interface/General/gameEnums'
 
@@ -118,19 +118,20 @@ export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seaso
     'totalPentaKills',
     'averageGameDuration'
   ]
-  let paramCount = 2;
-  const seasonFilter = seasonId ? `playerchampionstats."seasonId" = $${paramCount} AND ` : (risenOnly ? 'playerchampionstats."seasonId" IS NOT NULL AND '  : '');
-  if (seasonId) paramCount ++;
+  const seasonFilter = `playerchampionstats."seasonId" = $${2} AND `;
+  const seasonIdFilter = seasonId ? seasonId : ( risenOnly ? ALL_RISEN_GAMES_ID : ALL_TOURNAMENT_GAMES_ID );
 
   const useRole = role && role !== GameRoles.ALL;
+  let paramCount = 3;
   const roleFilter = useRole ? `playerchampionstats."position" = $${paramCount} AND ` : '';
   if (useRole) paramCount++;
   else role = undefined;
 
   const outerSelect = sumCols.map(col => col.includes('average') ? `AVG(champStat."${col}") as "${col}"` : `SUM(champStat."${col}") as "${col}"`).join(', ')
+
   return await PlayerChampionStatsModel.query(
     `SELECT ${outerSelect}, champStat."championId" FROM (SELECT * FROM playerchampionstats WHERE ${seasonFilter}${roleFilter}"playerchampionstats"."playerPuuid" = $1) as champStat GROUP BY champStat."championId"`,
-    [playerPuuid, seasonId, role].filter(val => !!val)
+    [playerPuuid, seasonIdFilter, role].filter(val => !!val)
   ) as PlayerChampionStatsModel[];
 }
 
