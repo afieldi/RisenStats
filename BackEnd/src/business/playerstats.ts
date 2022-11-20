@@ -58,22 +58,6 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   // Primary key is risenSeason, second key is role
   let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
 
-  function getRowsByRisenSeason(seasonId: number) {
-    if (!playerStatModelMap.has(seasonId)) {
-      playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())
-    }
-
-    return playerStatModelMap.get(seasonId);
-  }
-
-  function getCurrentRow(rows: Map<String, PlayerStatModel>, lobbyPosition: string, playerGame: PlayerGameModel, seasonId: number) {
-    if(!rows.has(lobbyPosition)) {
-      rows.set(lobbyPosition, createInitialPlayerStatModel(playerGame, seasonId));
-    }
-
-    return rows.get(playerGame.lobbyPosition)
-  }
-
   function handleGame(playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) {
     if (!playerStatModelMap.has(seasonId)) {
       playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())

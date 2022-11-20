@@ -18,7 +18,9 @@ export async function SaveSingleMatchById(matchId: string): Promise<GameModel> {
     return existingObj;
   }
   const gameData = await GetRiotGameByMatchId(matchId);
-
+  if (gameData.info.participants.length !== 10) {
+    throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
+  }
   if (gameData.info.tournamentCode) {
     seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId
   }
