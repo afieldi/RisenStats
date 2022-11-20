@@ -1,14 +1,15 @@
-import { getDbPlayerByname, GetDbPlayerByPuuid, GetPlayerPuuidsInSeason } from "../db/player";
+import {getDbPlayerByname, GetDbPlayerByPuuid, GetPlayerPuuidsInSeason} from "../db/player";
 import PlayerModel from "../../../Common/models/player.model";
 import {BoolToNumber, GetAveragesFromObjects, NonNone, ObjectArrayToCsv} from "../../../Common/utils";
 import {GetDbGameByGameId, GetDbPlayerGamesByPlayerPuuid} from "../db/games";
-import { GameRoles } from "../../../Common/Interface/General/gameEnums";
+import {GameRoles} from "../../../Common/Interface/General/gameEnums";
 import {SaveObjects} from "../db/dbConnect";
 import {BaseEntity} from "typeorm";
 import PlayerStatModel from "../../../Common/models/playerstat.model";
 import PlayerGameModel from "../../../Common/models/playergame.model";
 import GameModel from "../../../Common/models/game.model";
 import logger from "../../logger";
+import SeasonModel from "../../../Common/models/season.model";
 
 const tableCombineCols = [
   'kills', 'deaths', 'assists', 'kills15', 'deaths15', 'assists15', 'goldEarned', 'totalMinionsKilled',
@@ -65,7 +66,7 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
 
     // Check if the role exists
     if(!rowsByRisenSeason.has(playerGame.lobbyPosition)) {
-       rowsByRisenSeason.set(playerGame.lobbyPosition, createInitialPlayerStatModel(playerGame));
+       rowsByRisenSeason.set(playerGame.lobbyPosition, createInitialPlayerStatModelFromGame(playerGame));
     }
 
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
@@ -73,8 +74,6 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
     rowsByRisenSeason.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
   }
 
-  // Save the rows to the DB
-  // const objsToSave = Object.values(stats);
   const objsToSave: BaseEntity[] = [];
 
   // Get the keys for all the leagues the player has played in
@@ -87,18 +86,23 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
       objsToSave.push(risenLeaguePlayerStatModel.get(roleKey))
     }
   }
+  // Save the rows to the DB
   await SaveObjects(objsToSave);
   return objsToSave;
 }
 
+function createInitialPlayerStatModelFromGame(game: PlayerGameModel) {
+  return createInitialPlayerStatModel(game.playerPuuid, game.lobbyPosition, game.seasonId, game.player, game.season)
+}
 
-function createInitialPlayerStatModel(game: PlayerGameModel) {
+
+function createInitialPlayerStatModel(playerPuuid: string, lobbyPosition: string, seasonId?: number, player?: PlayerModel, season?: SeasonModel) : PlayerStatModel {
   return PlayerStatModel.create({
-    playerPuuid: game.playerPuuid,
-    seasonId: game.seasonId,
-    lobbyPosition: game.lobbyPosition,
-    player: game.player,
-    season: game.season,
+    playerPuuid: playerPuuid,
+    seasonId: seasonId,
+    lobbyPosition: lobbyPosition,
+    player: player,
+    season: season,
     games: 0,
     kills: 0,
     deaths: 0,
@@ -478,5 +482,186 @@ export function getTotalsForGame(currentRow: PlayerStatModel, game: PlayerGameMo
   return currentRow;
 }
 
-
-
+// This is super bad and is duplicating code but i want to get this working quickly
+// export function combinePlayerStatsModel(main: PlayerStatModel, beingCombined: PlayerStatModel) : PlayerStatModel {
+//   main.games += NonNone(beingCombined.games, 0);
+//   main.kills += NonNone(beingCombined.kills, 0);
+//   main.deaths += NonNone(beingCombined.deaths, 0);
+//   main.assists += NonNone(beingCombined.assists, 0);
+//   main.champLevel += NonNone(beingCombined.champLevel, 0);
+//   main.win += NonNone(beingCombined.win);
+//   main.kills15 += NonNone(beingCombined.kills15, 0);
+//   main.deaths15 += NonNone(beingCombined.deaths15, 0);
+//   main.assists15 += NonNone(beingCombined.assists15, 0);
+//   main.goldEarned += NonNone(beingCombined.goldEarned, 0);
+//   main.goldSpent += NonNone(beingCombined.goldSpent, 0);
+//   main.totalMinionsKilled += NonNone(beingCombined.totalMinionsKilled, 0);
+//   main.neutralMinionsKilled += NonNone(beingCombined.neutralMinionsKilled, 0);
+//   main.physicalDamageDealtToChampions += NonNone(beingCombined.physicalDamageDealtToChampions, 0);
+//   main.magicDamageDealtToChampions += NonNone(beingCombined.magicDamageDealtToChampions, 0);
+//   main.trueDamageDealtToChampions += NonNone(beingCombined.trueDamageDealtToChampions, 0);
+//   main.totalDamageDealtToChampions += NonNone(beingCombined.totalDamageDealtToChampions, 0);
+//   main.physicalDamageTaken += NonNone(beingCombined.physicalDamageTaken, 0);
+//   main.magicalDamageTaken += NonNone(beingCombined.magicalDamageTaken, 0);
+//   main.trueDamageTaken += NonNone(beingCombined.trueDamageTaken, 0);
+//   main.totalDamageTaken += NonNone(beingCombined.totalDamageTaken, 0);
+//   main.damageSelfMitigated += NonNone(beingCombined.damageSelfMitigated, 0);
+//   main.totalHeal += NonNone(beingCombined.totalHeal, 0);
+//   main.totalHealsOnTeammates += NonNone(beingCombined.totalHealsOnTeammates, 0);
+//   main.totalDamageShieldedOnTeammates += NonNone(beingCombined.totalDamageShieldedOnTeammates, 0);
+//   main.visionScore += NonNone(beingCombined.visionScore, 0);
+//   main.wardsPlaced15 += NonNone(beingCombined.wardsPlaced15, 0);
+//   main.wardsPlaced += NonNone(beingCombined.wardsPlaced, 0);
+//   main.wardsKilled15 += NonNone(beingCombined.wardsKilled15, 0);
+//   main.wardsKilled += NonNone(beingCombined.wardsKilled, 0);
+//   main.visionWardsBoughtInGame += NonNone(beingCombined.visionWardsBoughtInGame, 0);
+//   main.damageDealtToObjectives += NonNone(beingCombined.damageDealtToObjectives, 0);
+//   main.dragonKills += NonNone(beingCombined.dragonKills, 0);
+//   main.firstTowerTakedown += NonNone(beingCombined.firstTowerTakedown);
+//   main.firstBloodTakedown += NonNone(beingCombined.firstBloodTakedown);
+//   main.firstBloodKill += NonNone(beingCombined.firstBloodKill);
+//   main.firstBloodAssist += NonNone(beingCombined.firstBloodAssist);
+//   main.firstTowerKill += NonNone(beingCombined.firstTowerKill);
+//   main.firstTowerAssist += NonNone(beingCombined.firstTowerAssist);
+//   main.turretKills += NonNone(beingCombined.turretKills, 0);
+//   main.doubleKills += NonNone(beingCombined.doubleKills, 0);
+//   main.tripleKills += NonNone(beingCombined.tripleKills, 0);
+//   main.quadraKills += NonNone(beingCombined.quadraKills, 0);
+//   main.pentaKills += NonNone(beingCombined.pentaKills, 0);
+//   main.consumablesPurchased += NonNone(beingCombined.consumablesPurchased, 0);
+//   main["12AssistStreakCount"] += NonNone(beingCombined["12AssistStreakCount"], 0);
+//   main.abilityUses += NonNone(beingCombined.abilityUses, 0);
+//   main.acesBefore15Minutes += NonNone(beingCombined.acesBefore15Minutes, 0);
+//   main.alliedJungleMonsterKills += NonNone(beingCombined.alliedJungleMonsterKills, 0);
+//   main.baronTakedowns += NonNone(beingCombined.baronTakedowns, 0);
+//   main.blastConeOppositeOpponentCount += NonNone(beingCombined.blastConeOppositeOpponentCount, 0);
+//   main.bountyGold += NonNone(beingCombined.bountyGold, 0);
+//   main.buffsStolen += NonNone(beingCombined.buffsStolen, 0);
+//   main.completeSupportQuestInTime += NonNone(beingCombined.completeSupportQuestInTime);
+//   main.controlWardTimeCoverageInRiverOrEnemyHalf += NonNone(beingCombined.controlWardTimeCoverageInRiverOrEnemyHalf, 0);
+//   main.controlWardsPlaced += NonNone(beingCombined.controlWardsPlaced, 0);
+//   main.damagePerMinute += NonNone(beingCombined.damagePerMinute, 0);
+//   main.damageTakenOnTeamPercentage += NonNone(beingCombined.damageTakenOnTeamPercentage, 0);
+//   main.dancedWithRiftHerald += NonNone(beingCombined.dancedWithRiftHerald);
+//   main.deathsByEnemyChamps += NonNone(beingCombined.deathsByEnemyChamps, 0);
+//   main.dodgeSkillShotsSmallWindow += NonNone(beingCombined.dodgeSkillShotsSmallWindow, 0);
+//   main.doubleAces += NonNone(beingCombined.doubleAces, 0);
+//   main.dragonTakedowns += NonNone(beingCombined.dragonTakedowns, 0);
+//   main.earliestBaron += NonNone(beingCombined.earliestBaron, 0);
+//   main.earliestDragonTakedown += NonNone(beingCombined.earliestDragonTakedown, 0);
+//   main.earlyLaningPhaseGoldExpAdvantage += NonNone(beingCombined.earlyLaningPhaseGoldExpAdvantage, 0);
+//   main.effectiveHealAndShielding += NonNone(beingCombined.effectiveHealAndShielding, 0);
+//   main.elderDragonKillsWithOpposingSoul += NonNone(beingCombined.elderDragonKillsWithOpposingSoul, 0);
+//   main.elderDragonMultikills += NonNone(beingCombined.elderDragonMultikills, 0);
+//   main.enemyChampionImmobilizations += NonNone(beingCombined.enemyChampionImmobilizations, 0);
+//   main.enemyJungleMonsterKills += NonNone(beingCombined.enemyJungleMonsterKills, 0);
+//   main.epicMonsterKillsNearEnemyJungler += NonNone(beingCombined.epicMonsterKillsNearEnemyJungler, 0);
+//   main.epicMonsterKillsWithin30SecondsOfSpawn += NonNone(beingCombined.epicMonsterKillsWithin30SecondsOfSpawn, 0);
+//   main.epicMonsterSteals += NonNone(beingCombined.epicMonsterSteals, 0);
+//   main.epicMonsterStolenWithoutSmite += NonNone(beingCombined.epicMonsterStolenWithoutSmite, 0);
+//   main.flawlessAces += NonNone(beingCombined.flawlessAces, 0);
+//   main.fullTeamTakedown += NonNone(beingCombined.fullTeamTakedown, 0);
+//   main.gameLength += NonNone(beingCombined.gameLength, 0);
+//   main.getTakedownsInAllLanesEarlyJungleAsLaner += NonNone(beingCombined.getTakedownsInAllLanesEarlyJungleAsLaner);
+//   main.goldPerMinute += NonNone(beingCombined.goldPerMinute, 0);
+//   main.hadAfkTeammate += NonNone(beingCombined.hadAfkTeammate);
+//   main.hadOpenNexus += NonNone(beingCombined.hadOpenNexus);
+//   main.immobilizeAndKillWithAlly += NonNone(beingCombined.immobilizeAndKillWithAlly, 0);
+//   main.initialBuffCount += NonNone(beingCombined.initialBuffCount, 0);
+//   main.initialCrabCount += NonNone(beingCombined.initialCrabCount, 0);
+//   main.jungleCsBefore10Minutes += NonNone(beingCombined.jungleCsBefore10Minutes, 0);
+//   main.junglerKillsEarlyJungle += NonNone(beingCombined.junglerKillsEarlyJungle, 0);
+//   main.junglerTakedownsNearDamagedEpicMonster += NonNone(beingCombined.junglerTakedownsNearDamagedEpicMonster, 0);
+//   main.kTurretsDestroyedBeforePlatesFall += NonNone(beingCombined.kTurretsDestroyedBeforePlatesFall, 0);
+//   main.kda += NonNone(beingCombined.kda, 0);
+//   main.killAfterHiddenWithAlly += NonNone(beingCombined.killAfterHiddenWithAlly, 0);
+//   main.killParticipation += NonNone(beingCombined.killParticipation, 0);
+//   main.killedChampTookFullTeamDamageSurvived += NonNone(beingCombined.killedChampTookFullTeamDamageSurvived, 0);
+//   main.killsNearEnemyTurret += NonNone(beingCombined.killsNearEnemyTurret, 0);
+//   main.killsOnLanersEarlyJungleAsJungler += NonNone(beingCombined.killsOnLanersEarlyJungleAsJungler, 0);
+//   main.killsOnOtherLanesEarlyJungleAsLaner += NonNone(beingCombined.killsOnOtherLanesEarlyJungleAsLaner, 0);
+//   main.killsOnRecentlyHealedByAramPack += NonNone(beingCombined.killsOnRecentlyHealedByAramPack, 0);
+//   main.killsUnderOwnTurret += NonNone(beingCombined.killsUnderOwnTurret, 0);
+//   main.killsWithHelpFromEpicMonster += NonNone(beingCombined.killsWithHelpFromEpicMonster, 0);
+//   main.knockEnemyIntoTeamAndKill += NonNone(beingCombined.knockEnemyIntoTeamAndKill, 0);
+//   main.landSkillShotsEarlyGame += NonNone(beingCombined.landSkillShotsEarlyGame, 0);
+//   main.laneMinionsFirst10Minutes += NonNone(beingCombined.laneMinionsFirst10Minutes, 0);
+//   main.laningPhaseGoldExpAdvantage += NonNone(beingCombined.laningPhaseGoldExpAdvantage, 0);
+//   main.legendaryCount += NonNone(beingCombined.legendaryCount, 0);
+//   main.lostAnInhibitor += NonNone(beingCombined.lostAnInhibitor, 0);
+//   main.maxCsAdvantageOnLaneOpponent += NonNone(beingCombined.maxCsAdvantageOnLaneOpponent, 0);
+//   main.maxKillDeficit += NonNone(beingCombined.maxKillDeficit, 0);
+//   main.maxLevelLeadLaneOpponent += NonNone(beingCombined.maxLevelLeadLaneOpponent, 0);
+//   main.moreEnemyJungleThanOpponent += NonNone(beingCombined.moreEnemyJungleThanOpponent, 0);
+//   main.multiKillOneSpell += NonNone(beingCombined.multiKillOneSpell, 0);
+//   main.multiTurretRiftHeraldCount += NonNone(beingCombined.multiTurretRiftHeraldCount, 0);
+//   main.multikills += NonNone(beingCombined.multikills, 0);
+//   main.multikillsAfterAggressiveFlash += NonNone(beingCombined.multikillsAfterAggressiveFlash, 0);
+//   main.mythicItemUsed += NonNone(beingCombined.mythicItemUsed, 0);
+//   main.outerTurretExecutesBefore10Minutes += NonNone(beingCombined.outerTurretExecutesBefore10Minutes, 0);
+//   main.outnumberedKills += NonNone(beingCombined.outnumberedKills, 0);
+//   main.outnumberedNexusKill += NonNone(beingCombined.outnumberedNexusKill, 0);
+//   main.perfectDragonSoulsTaken += NonNone(beingCombined.perfectDragonSoulsTaken, 0);
+//   main.perfectGame += NonNone(beingCombined.perfectGame);
+//   main.pickKillWithAlly += NonNone(beingCombined.pickKillWithAlly, 0);
+//   main.poroExplosions += NonNone(beingCombined.poroExplosions, 0);
+//   main.quickCleanse += NonNone(beingCombined.quickCleanse, 0);
+//   main.quickFirstTurret += NonNone(beingCombined.quickFirstTurret, 0);
+//   main.quickSoloKills += NonNone(beingCombined.quickSoloKills, 0);
+//   main.riftHeraldTakedowns += NonNone(beingCombined.riftHeraldTakedowns, 0);
+//   main.saveAllyFromDeath += NonNone(beingCombined.saveAllyFromDeath, 0);
+//   main.scuttleCrabKills += NonNone(beingCombined.scuttleCrabKills, 0);
+//   main.skillshotsDodged += NonNone(beingCombined.skillshotsDodged, 0);
+//   main.skillshotsHit += NonNone(beingCombined.skillshotsHit, 0);
+//   main.snowballsHit += NonNone(beingCombined.snowballsHit, 0);
+//   main.soloBaronKills += NonNone(beingCombined.soloBaronKills, 0);
+//   main.soloKills += NonNone(beingCombined.soloKills, 0);
+//   main.soloTurretsLategame += NonNone(beingCombined.soloTurretsLategame, 0);
+//   main.stealthWardsPlaced += NonNone(beingCombined.stealthWardsPlaced, 0);
+//   main.survivedSingleDigitHpCount += NonNone(beingCombined.survivedSingleDigitHpCount, 0);
+//   main.survivedThreeImmobilizesInFight += NonNone(beingCombined.survivedThreeImmobilizesInFight, 0);
+//   main.takedownOnFirstTurret += NonNone(beingCombined.takedownOnFirstTurret, 0);
+//   main.takedowns += NonNone(beingCombined.takedowns, 0);
+//   main.takedownsAfterGainingLevelAdvantage += NonNone(beingCombined.takedownsAfterGainingLevelAdvantage, 0);
+//   main.takedownsBeforeJungleMinionSpawn += NonNone(beingCombined.takedownsBeforeJungleMinionSpawn, 0);
+//   main.takedownsFirst25Minutes += NonNone(beingCombined.takedownsFirst25Minutes, 0);
+//   main.takedownsInAlcove += NonNone(beingCombined.takedownsInAlcove, 0);
+//   main.takedownsInEnemyFountain += NonNone(beingCombined.takedownsInEnemyFountain, 0);
+//   main.teamBaronKills += NonNone(beingCombined.teamBaronKills, 0);
+//   main.teamDamagePercentage += NonNone(beingCombined.teamDamagePercentage, 0);
+//   main.teamElderDragonKills += NonNone(beingCombined.teamElderDragonKills, 0);
+//   main.teamRiftHeraldKills += NonNone(beingCombined.teamRiftHeraldKills, 0);
+//   main.teleportTakedowns += NonNone(beingCombined.teleportTakedowns, 0);
+//   main.threeWardsOneSweeperCount += NonNone(beingCombined.threeWardsOneSweeperCount, 0);
+//   main.tookLargeDamageSurvived += NonNone(beingCombined.tookLargeDamageSurvived, 0);
+//   main.turretPlatesTaken += NonNone(beingCombined.turretPlatesTaken, 0);
+//   main.turretTakedowns += NonNone(beingCombined.turretTakedowns, 0);
+//   main.turretsTakenWithRiftHerald += NonNone(beingCombined.turretsTakenWithRiftHerald, 0);
+//   main.twentyMinionsIn3SecondsCount += NonNone(beingCombined.twentyMinionsIn3SecondsCount, 0);
+//   main.unseenRecalls += NonNone(beingCombined.unseenRecalls, 0);
+//   main.visionScoreAdvantageLaneOpponent += NonNone(beingCombined.visionScoreAdvantageLaneOpponent, 0);
+//   main.visionScorePerMinute += NonNone(beingCombined.visionScorePerMinute, 0);
+//   main.wardTakedowns += NonNone(beingCombined.wardTakedowns, 0);
+//   main.wardTakedownsBefore20M += NonNone(beingCombined.wardTakedownsBefore20M, 0);
+//   main.wardsGuarded += NonNone(beingCombined.wardsGuarded, 0);
+//   main.xpDiff += NonNone(beingCombined.xpDiff, 0);
+//   main.xpDiff15 += NonNone(beingCombined.xpDiff15, 0);
+//   main.xpDiff25 += NonNone(beingCombined.xpDiff25, 0);
+//   main.goldDiff += NonNone(beingCombined.goldDiff, 0);
+//   main.goldDiff15 += NonNone(beingCombined.goldDiff15, 0);
+//   main.goldDiff25 += NonNone(beingCombined.goldDiff25, 0);
+//   main.csDiff += NonNone(beingCombined.csDiff, 0);
+//   main.csDiff15 += NonNone(beingCombined.csDiff15, 0);
+//   main.csDiff25 += NonNone(beingCombined.csDiff25, 0);
+//   main.totalKillsOfTeam += NonNone(beingCombined.kills, 0);
+//   main.totalDeathsOfTeam += NonNone(beingCombined.deaths, 0);
+//   main.totalAssistsOfTeam += NonNone(beingCombined.assists, 0);
+//   main.totalDamageDealtToObjectivesOfTeam += NonNone(beingCombined.damageDealtToObjectives, 0);
+//   main.totalGoldOfTeam += NonNone(beingCombined.goldEarned, 0);
+//   main.totalPhysicalDamageDealtToChampionsOfTeam += NonNone(beingCombined.physicalDamageDealtToChampions, 0);
+//   main.totalMagicDamageDealtToChampionsOfTeam += NonNone(beingCombined.magicDamageDealtToChampions, 0);
+//   main.totalTrueDamageDealtToChampionsOfTeam += NonNone(beingCombined.trueDamageDealtToChampions, 0);
+//   main.totalDamageDealtToChampionsOfTeam += NonNone(beingCombined.totalDamageDealtToChampions, 0);
+//   main.totalVisionScoreOfTeam += NonNone(beingCombined.visionScore, 0);
+//   return main;
+// }

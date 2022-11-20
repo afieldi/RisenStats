@@ -5,21 +5,16 @@ import SeasonModel from "./season.model";
 @Entity({ name: "player_stat_model" })
 export default class PlayerStatModel extends BaseEntity
 {
-    @PrimaryGeneratedColumn()
-    id: number;
-
-    @Index()
-    @Column('text')
+    @PrimaryColumn('text')
     playerPuuid: string;
+
+    @PrimaryColumn('text')
+    lobbyPosition: string;
 
     // Duplicated from game for filtering
     @Index()
     @Column('integer', {nullable: true})
     seasonId: number;
-
-    @Index()
-    @Column('text')
-    lobbyPosition: string;
 
     @ManyToOne(() => PlayerModel, { eager: true })
     player: PlayerModel;
