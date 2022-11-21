@@ -61,6 +61,8 @@ import StreamRouter from "./src/api/stream";
 import ChartRouter from "./src/api/charts";
 import PlayerStatsRouter from "./src/api/playerstats";
 import ChampionStatsRouter from './src/api/championstats';
+import LeaderboardsRouter from './src/api/leaderboards';
+
 
 app.use("/api/codes", CodesRouter);
 app.use("/api/provider", ProviderRouter);
@@ -72,6 +74,8 @@ app.use("/api/stream", StreamRouter);
 app.use("/api/charts", ChartRouter);
 app.use("/api/stats/player", PlayerStatsRouter);
 app.use("/api/stats/champions", ChampionStatsRouter);
+app.use("/api/stats/leaderboards", LeaderboardsRouter);
+
 
 app.listen(port, () => {
   // console.log(`Example app listening on port ${port}`)

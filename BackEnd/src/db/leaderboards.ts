@@ -1,11 +1,13 @@
-import {ensureConnection} from "./dbConnect";
+import {ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection} from "./dbConnect";
 import PlayerStatModel from "../../../Common/models/playerstat.model";
 import {GameRoles} from "../../../Common/Interface/General/gameEnums";
-import {FindManyOptions, IsNull, Not} from "typeorm";
+import {FindManyOptions, MoreThan} from "typeorm";
 
 export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, risenOnly?: boolean): Promise<PlayerStatModel[]> {
     await ensureConnection();
-    const searchFilter: FindManyOptions<PlayerStatModel> = {};
+
+    const searchFilter: FindManyOptions<PlayerStatModel> = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThan(4)}};
+
     if (seasonId) {
         searchFilter['where'] = {
             ...searchFilter['where'],
@@ -15,7 +17,7 @@ export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, r
     else if (risenOnly) {
         searchFilter['where'] = {
             ...searchFilter['where'],
-            seasonId: Not(IsNull()),
+            seasonId: ALL_RISEN_GAMES_ID,
         };
     }
     if (roleId && roleId !== GameRoles.ALL) {
