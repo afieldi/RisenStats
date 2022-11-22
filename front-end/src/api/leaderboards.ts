@@ -10,7 +10,6 @@ export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boo
 
     // if role is == ALL we need to combine the stats for all roles
     if(roleId == GameRoles.ALL) {
-        console.log("here")
         return combineRoleStatsIntoOneLeaderboard(stats);
     }
     return stats.playerStats;
