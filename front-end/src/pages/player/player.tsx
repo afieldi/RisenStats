@@ -77,8 +77,7 @@ function PlayerPage()
   }
 
   async function loadLeaderboards() {
-    if (seasonId === "ALL" || seasonId === "RISEN") {
-      console.log(`Not loading leaderboards for ${seasonId}`);
+    if (seasonId === "ALL") {
       return;
     }
     try {

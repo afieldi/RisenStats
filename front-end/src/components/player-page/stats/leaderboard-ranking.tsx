@@ -23,8 +23,8 @@ export default function LeaderboardRanking(leaderboardRankingProps: LeaderboardR
     const ranking: string = getNumberWithSuffix(leaderboardRankingProps.rank);
     const color: string = !!rankToColorMap[leaderboardRankingProps.rank] ? rankToColorMap[leaderboardRankingProps.rank] : NTH;
     return (
-        <Typography color={color} variant="body2">
-            <Tooltip title={`Average: ${leaderboardRankingProps.leagueAvg.toFixed(2)} (${leaderboardRankingProps.totalPLayersOnLeaderboard} players)`}><p>{ranking}</p></Tooltip>
-        </Typography>
+        <Tooltip title={`Average: ${leaderboardRankingProps.leagueAvg.toFixed(2)} (${leaderboardRankingProps.totalPLayersOnLeaderboard} players)`}>
+            <Typography color={color} variant="body2">{ranking}</Typography>
+        </Tooltip>
     )
 }
