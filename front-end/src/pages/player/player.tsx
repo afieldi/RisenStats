@@ -36,7 +36,7 @@ function PlayerPage()
   const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
   const [playerStats, setPlayerStats] = useState<PlayerStatModel[]>([]);
   const [fullLeaderboard, setFullLeaderboard] = useState<Map<string, Map<GameRoles, PlayerStatModel[]>>>(new Map<string, Map<GameRoles, PlayerStatModel[]>>());
-  const [seasonId, setSeasonId] = useState<string>("ALL");
+  const [seasonId, setSeasonId] = useState<string>("RISEN");
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
   async function loadPlayerProfile() {
