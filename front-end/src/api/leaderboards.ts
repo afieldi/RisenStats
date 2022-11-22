@@ -6,6 +6,7 @@ import PlayerStatModel from "../../../Common/models/playerstat.model";
 import {combine} from "../../../Common/utils";
 
 export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string) : Promise<PlayerStatModel[]> {
+    console.log(`getting leaderboard for SID: ${seasonId} RISEN: ${risenOnly} ROLE: ${roleId}`)
     let stats =  await GetLeaderboards(seasonId, risenOnly,  roleId);
 
     // if role is == ALL we need to combine the stats for all roles
