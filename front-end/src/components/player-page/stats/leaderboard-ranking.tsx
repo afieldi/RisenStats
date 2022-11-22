@@ -5,6 +5,7 @@ import {getNumberWithSuffix} from "../../../common/utils";
 interface LeaderboardRankingProps {
     rank: number
     leagueAvg: number
+    totalPLayersOnLeaderboard: number
 }
 
 const FIRST = "#FFA500";
@@ -23,7 +24,7 @@ export default function LeaderboardRanking(leaderboardRankingProps: LeaderboardR
     const color: string = !!rankToColorMap[leaderboardRankingProps.rank] ? rankToColorMap[leaderboardRankingProps.rank] : NTH;
     return (
         <Typography color={color} variant="body2">
-            <Tooltip title={`Average: ${leaderboardRankingProps.leagueAvg}`}><p>{ranking}</p></Tooltip>
+            <Tooltip title={`Average: ${leaderboardRankingProps.leagueAvg.toFixed(2)} (${leaderboardRankingProps.totalPLayersOnLeaderboard} players)`}><p>{ranking}</p></Tooltip>
         </Typography>
     )
 }

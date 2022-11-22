@@ -30,4 +30,10 @@ export abstract class BaseStatGenerator {
         }
         return `${this.formatNumber(total/roles)}` ;
     }
+
+    getSortedLeaderboard(unsortedLeaderboard: PlayerStatModel[]): PlayerStatModel[] {
+        return unsortedLeaderboard.sort((o1, o2) => {
+            return this.getStatValue(o2) - this.getStatValue(o1);
+        })
+    }
 }

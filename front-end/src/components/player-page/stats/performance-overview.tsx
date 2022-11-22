@@ -49,7 +49,6 @@ const statsGenerators: BaseStatGenerator[] = [
 
 export default function PerformanceOverview(performanceOverviewProps: PerformanceOverviewProps) {
     const theme = useTheme() as Theme;
-
     return(
         <Grid item xs={1} md={1}>
             <Typography color={theme.palette.info.light} align="left" variant="h4">Performance Overview</Typography>
@@ -63,23 +62,15 @@ export default function PerformanceOverview(performanceOverviewProps: Performanc
 }
 
 function getStatBox(index: number, statGenerator: BaseStatGenerator, performanceOverviewProps: PerformanceOverviewProps) {
-    let sorted: PlayerStatModel[] = performanceOverviewProps.leaderboardStats.sort((o1, o2) => {
-        let stat1: number = statGenerator.getStatValue(o1);
-        let stat2: number = statGenerator.getStatValue(o2);
-        if(stat1 < stat2) {
-            return 1;
-        }
-        if(stat1 > stat2) {
-            return -1;
-        }
-        return 0;
-    })
+    let sorted: PlayerStatModel[] = statGenerator.getSortedLeaderboard(performanceOverviewProps.leaderboardStats);
 
     const average = sorted.reduce((total, next) => total + statGenerator.getStatValue(next), 0) / sorted.length;
 
     let rank = 0;
+    let isPlayerInLeaderBoard = false;
     for(; rank < sorted.length; rank++) {
         if(sorted[rank].playerPuuid == performanceOverviewProps.playerPuuid) {
+            isPlayerInLeaderBoard = true;
             break;
         }
     }
@@ -89,8 +80,12 @@ function getStatBox(index: number, statGenerator: BaseStatGenerator, performance
                     statValue={statGenerator.getStatString(performanceOverviewProps.playerStats)}
                     statTitle={statGenerator.getStatTitle()}
                     haveStatsLoaded={statGenerator.canLoadData(performanceOverviewProps.playerStats)}
-                    leaderboardRank={rank + 1}
-                    leagueAvg={average}
+                    shouldShowLeaderboard={isPlayerInLeaderBoard && statGenerator.canLoadData(performanceOverviewProps.playerStats)}
+                    leaderboardData={{
+                        rank: rank + 1,
+                        leagueAvg: average,
+                        totalPLayersOnLeaderboard: sorted.length
+                    }}
     />;
 }
 

@@ -9,8 +9,12 @@ interface StatBoxProps {
     statValue: String
     statToolTip: String
     haveStatsLoaded: boolean
-    leaderboardRank: number;
-    leagueAvg: number;
+    shouldShowLeaderboard: boolean
+    leaderboardData: {
+        rank: number
+        leagueAvg: number
+        totalPLayersOnLeaderboard: number
+    }
 }
 
 export default function StatBox(statBoxProps: StatBoxProps) {
@@ -35,7 +39,7 @@ export default function StatBox(statBoxProps: StatBoxProps) {
                         <Typography color={theme.palette.info.light} variant={typographySize}>
                             <Tooltip title={statBoxProps.statToolTip}><div>{statBoxProps.statTitle}</div></Tooltip>
                         </Typography>
-                        {statBoxProps.haveStatsLoaded && <LeaderboardRanking rank={statBoxProps.leaderboardRank} leagueAvg={statBoxProps.leagueAvg}/>}
+                        {statBoxProps.shouldShowLeaderboard && <LeaderboardRanking {...statBoxProps.leaderboardData}/>}
                     </div>
                 </Grow>
             </Box>

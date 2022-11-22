@@ -82,7 +82,7 @@ function PlayerPage()
       return;
     }
     try {
-      let cachedLeaderboard: Map<string, Map<GameRoles, PlayerStatModel[]>> = fullLeaderboard;
+      let cachedLeaderboard: Map<string, Map<GameRoles, PlayerStatModel[]>> = new Map<string, Map<GameRoles, PlayerStatModel[]>>(fullLeaderboard); // Need to create new object to trigger rerender
       let numberSeasonId = seasonId === "RISEN" ? undefined : Number(seasonId)
 
       let roleMaps: Map<GameRoles, PlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, PlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, PlayerStatModel[]>
@@ -165,6 +165,7 @@ function PlayerPage()
 
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    loadLeaderboards();
     setValue(newValue);
   };
 
