@@ -77,7 +77,7 @@ function PlayerPage()
   }
 
   async function loadLeaderboards() {
-    if (seasonId === "ALL") {
+    if (seasonId === "ALL" || seasonId === "RISEN") {
       return;
     }
     try {
@@ -139,6 +139,12 @@ function PlayerPage()
     }
   }
 
+  function onUpdatePlayer() {
+    // When a player reloads thier profile, reset all the cached leaderboards and reget from API
+    setFullLeaderboard(new Map<string, Map<GameRoles, PlayerStatModel[]>>())
+    loadLeaderboards();
+  }
+
   useEffect(() => {
     loadPlayerProfile().then(profile => {
       setPlayerProfile(profile)
@@ -191,7 +197,7 @@ function PlayerPage()
             pb: 6,
           }}
         >
-          <PlayerPageHeader playerOverview={playerProfile}></PlayerPageHeader>
+          <PlayerPageHeader playerOverview={playerProfile} onUpdate={onUpdatePlayer}/>
           <hr></hr>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs textColor="primary" indicatorColor="primary"  value={value} onChange={handleChange} aria-label="basic tabs example">
