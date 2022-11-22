@@ -1,8 +1,7 @@
 import {useTheme} from "@emotion/react";
-import {Box, Grid, Grow, Theme, Tooltip, Typography} from "@mui/material";
+import {Box, Grow, Theme, Tooltip, Typography} from "@mui/material";
 import RisenBox1 from "../../risen-box/risen-box-1";
 import React from "react";
-import {getNumberWithSuffix} from "../../../common/utils";
 import LeaderboardRanking from "./leaderboard-ranking";
 
 interface StatBoxProps {
@@ -10,6 +9,8 @@ interface StatBoxProps {
     statValue: String
     statToolTip: String
     haveStatsLoaded: boolean
+    leaderboardRank: number;
+    leagueAvg: number;
 }
 
 export default function StatBox(statBoxProps: StatBoxProps) {
@@ -34,7 +35,7 @@ export default function StatBox(statBoxProps: StatBoxProps) {
                         <Typography color={theme.palette.info.light} variant={typographySize}>
                             <Tooltip title={statBoxProps.statToolTip}><div>{statBoxProps.statTitle}</div></Tooltip>
                         </Typography>
-                        <LeaderboardRanking rank={1} leagueAvg={420}/>
+                        {statBoxProps.haveStatsLoaded && <LeaderboardRanking rank={statBoxProps.leaderboardRank} leagueAvg={statBoxProps.leagueAvg}/>}
                     </div>
                 </Grow>
             </Box>

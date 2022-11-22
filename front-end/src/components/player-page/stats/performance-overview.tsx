@@ -21,6 +21,8 @@ import {SoloKillStatGenerator} from "./stats-generators/SoloKillStatGenerator";
 
 export interface PerformanceOverviewProps {
     playerStats: PlayerStatModel[]
+    leaderboardStats: PlayerStatModel[]
+    playerPuuid?: string
 }
 
 const statsGenerators: BaseStatGenerator[] = [
@@ -53,14 +55,42 @@ export default function PerformanceOverview(performanceOverviewProps: Performanc
             <Typography color={theme.palette.info.light} align="left" variant="h4">Performance Overview</Typography>
             <Box sx={{display: "flex", columnGap: 1, rowGap: 2, flexWrap: "wrap"}}>
                 { statsGenerators.map((statGenerator, index) =>
-                        <StatBox key={index}
-                                 statToolTip={statGenerator.getToolTip()}
-                                 statValue={statGenerator.getStatValue(performanceOverviewProps.playerStats)}
-                                 statTitle={statGenerator.getStatTitle()}
-                                 haveStatsLoaded={statGenerator.canLoadData(performanceOverviewProps.playerStats)}
-                        />
+                        getStatBox(index, statGenerator, performanceOverviewProps)
                 )}
             </Box>
         </Grid>
     );
 }
+
+function getStatBox(index: number, statGenerator: BaseStatGenerator, performanceOverviewProps: PerformanceOverviewProps) {
+    let sorted: PlayerStatModel[] = performanceOverviewProps.leaderboardStats.sort((o1, o2) => {
+        let stat1: number = statGenerator.getStatValue(o1);
+        let stat2: number = statGenerator.getStatValue(o2);
+        if(stat1 < stat2) {
+            return 1;
+        }
+        if(stat1 > stat2) {
+            return -1;
+        }
+        return 0;
+    })
+
+    const average = sorted.reduce((total, next) => total + statGenerator.getStatValue(next), 0) / sorted.length;
+
+    let rank = 0;
+    for(; rank < sorted.length; rank++) {
+        if(sorted[rank].playerPuuid == performanceOverviewProps.playerPuuid) {
+            break;
+        }
+    }
+
+    return <StatBox key={index}
+                    statToolTip={statGenerator.getToolTip()}
+                    statValue={statGenerator.getStatString(performanceOverviewProps.playerStats)}
+                    statTitle={statGenerator.getStatTitle()}
+                    haveStatsLoaded={statGenerator.canLoadData(performanceOverviewProps.playerStats)}
+                    leaderboardRank={rank + 1}
+                    leagueAvg={average}
+    />;
+}
+

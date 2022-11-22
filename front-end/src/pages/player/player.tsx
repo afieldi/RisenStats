@@ -17,8 +17,8 @@ import SeasonModel from "../../../../Common/models/season.model";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
 import { GetActiveSeasons } from "../../api/season";
 import PlayerPageStats from "../../components/player-page/stats";
-import {shouldShowDevelopmentFeature} from "../../common/utils";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import {getFlattenedLeaderboard} from "../../api/leaderboards";
 
 function PlayerPage()
 {
@@ -35,6 +35,7 @@ function PlayerPage()
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
   const [playerStats, setPlayerStats] = useState<PlayerStatModel[]>([]);
+  const [fullLeaderboard, setFullLeaderboard] = useState<Map<string, Map<GameRoles, PlayerStatModel[]>>>(new Map<string, Map<GameRoles, PlayerStatModel[]>>());
   const [seasonId, setSeasonId] = useState<string>("ALL");
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
@@ -72,6 +73,31 @@ function PlayerPage()
           navigate('/404');
         }
       }
+    }
+  }
+
+  async function loadLeaderboards() {
+    if (seasonId === "ALL" || seasonId === "RISEN") {
+      console.log(`Not loading leaderboards for ${seasonId}`);
+      return;
+    }
+    try {
+      let cachedLeaderboard: Map<string, Map<GameRoles, PlayerStatModel[]>> = fullLeaderboard;
+      let numberSeasonId = seasonId === "RISEN" ? undefined : Number(seasonId)
+
+      let roleMaps: Map<GameRoles, PlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, PlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, PlayerStatModel[]>
+      if (roleMaps.has(roleId)) {
+        return;
+      }
+
+      const stats = await getFlattenedLeaderboard(numberSeasonId,seasonId === "RISEN",  roleId);
+      roleMaps.set(roleId, stats);
+      cachedLeaderboard.set(seasonId, roleMaps);
+      setFullLeaderboard(cachedLeaderboard);
+
+    }
+    catch (error) {
+      console.error("An error occured while trying to load leaderboards")
     }
   }
 
@@ -119,7 +145,8 @@ function PlayerPage()
       setPlayerProfile(profile)
       loadMoreGames(true, profile);
       loadChampionStats(profile);
-      loadPlayerStats(profile)
+      loadPlayerStats(profile);
+      loadLeaderboards()
     }, (err: any) => {
       console.log(err);
     });
@@ -129,6 +156,7 @@ function PlayerPage()
     loadMoreGames(true);
     loadPlayerStats(playerProfile);
     loadChampionStats(playerProfile);
+    loadLeaderboards()
   }, [seasonId, roleId]);
 
   useEffect(() => {
@@ -182,6 +210,8 @@ function PlayerPage()
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PlayerPageStats playerStats={playerStats}
+                             playerPuuid={playerProfile?.overview.puuid}
+                             leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
                              seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
                              roleConfig={loadGamesConfig.roleConfig}
                              championData={championStats}/>

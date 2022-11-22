@@ -45,15 +45,6 @@ export class DiffStatGenerator extends BaseStatGenerator {
             this.resolver = (model: PlayerStatModel) => {return model.goldDiff}
         }
     }
-    getStatValue(playerStatsModels: PlayerStatModel[]): string {
-        let goldDiff = 0
-        let games = 0;
-        for (let playerStatsModel of playerStatsModels) {
-            games += playerStatsModel.games;
-            goldDiff += this.resolver(playerStatsModel);
-        }
-        return `${this.formatNumber(goldDiff/games)}` ;
-    }
 
     formatNumber(value: number): string {
         return value > 0 ? `+${super.formatNumber(value)}` : super.formatNumber(value)
@@ -65,5 +56,9 @@ export class DiffStatGenerator extends BaseStatGenerator {
 
     getToolTip(): string {
         return `${this.diffValue} diff vs your lane opponent @${this.atValue} mins`;
+    }
+
+    getStatValue(playerStatsModel: PlayerStatModel): number {
+        return this.resolver(playerStatsModel) /  playerStatsModel.games
     }
 }
