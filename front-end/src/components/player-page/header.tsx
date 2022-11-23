@@ -16,7 +16,6 @@ interface Props {
 
 export default function PlayerPageHeader(playerOverviewProps: Props)
 {
-  const theme = useTheme() as Theme;
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 

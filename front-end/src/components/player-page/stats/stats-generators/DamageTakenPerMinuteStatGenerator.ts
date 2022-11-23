@@ -1,5 +1,6 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import {getMinutesFromRiotTime} from "../../../../common/utils";
 
 export class DamageTakenPerMinuteStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
@@ -11,7 +12,6 @@ export class DamageTakenPerMinuteStatGenerator extends BaseStatGenerator {
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        let minutes =  playerStatsModel.gameLength / 60
-        return playerStatsModel.totalDamageTaken / minutes;
+        return playerStatsModel.totalDamageTaken / getMinutesFromRiotTime(playerStatsModel.gameLength);
     }
 }
