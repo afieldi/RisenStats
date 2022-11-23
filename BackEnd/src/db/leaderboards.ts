@@ -6,7 +6,10 @@ import {FindManyOptions, MoreThan} from "typeorm";
 export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, risenOnly?: boolean): Promise<PlayerStatModel[]> {
     await ensureConnection();
 
-    const searchFilter: FindManyOptions<PlayerStatModel> = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThan(4)}};
+    let searchFilter: FindManyOptions<PlayerStatModel> = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID}};
+    if (roleId != GameRoles.ALL) {
+        searchFilter = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThan(4)}};
+    }
 
     if (seasonId) {
         searchFilter['where'] = {
