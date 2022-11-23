@@ -224,7 +224,7 @@ export function ObjectArrayToCsv(objects: { [key: string]: any }[], headers?: st
 }
 
 export function combine(object1: PlayerStatModel, object2: PlayerStatModel): PlayerStatModel {
-  object1.games += 1;
+  object1.games += object2.games;
   object1.kills += NonNone(object2.kills, 0);
   object1.deaths += NonNone(object2.deaths, 0);
   object1.assists += NonNone(object2.assists, 0);
