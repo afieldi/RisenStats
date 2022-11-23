@@ -8,25 +8,7 @@ import {combine} from "../../../Common/utils";
 export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string) : Promise<PlayerStatModel[]> {
     console.log(`getting leaderboard for SID: ${seasonId} RISEN: ${risenOnly} ROLE: ${roleId}`)
     let stats =  await GetLeaderboards(seasonId, risenOnly,  roleId);
-
-    // if role is == ALL we need to combine the stats for all roles
-    if(roleId == GameRoles.ALL) {
-        return combineRoleStatsIntoOneLeaderboard(stats);
-    }
     return stats.playerStats;
-}
-
-
-function combineRoleStatsIntoOneLeaderboard(stats: GetLeaderboardResponse) {
-    let flattenedLeaderboard: Map<String, PlayerStatModel> = new Map();
-    for (let playerStat of stats.playerStats) {
-        if (!flattenedLeaderboard.has(playerStat.playerPuuid)) {
-            flattenedLeaderboard.set(playerStat.playerPuuid, playerStat);
-        } else {
-            flattenedLeaderboard.set(playerStat.playerPuuid, combine(playerStat, flattenedLeaderboard.get(playerStat.playerPuuid) as PlayerStatModel))
-        }
-    }
-    return Array.from(flattenedLeaderboard.values());
 }
 
 export async function GetLeaderboards(seasonId?: number, risenOnly?: boolean, roleId?: string): Promise<GetLeaderboardResponse> {
