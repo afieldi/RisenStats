@@ -1,6 +1,6 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
-import {getMinutesFromRiotTime} from "../../../../common/utils";
+import {riotTimestampToMinutes} from "../../../../../../Common/utils";
 
 export class DPMStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
@@ -12,6 +12,6 @@ export class DPMStatGenerator extends BaseStatGenerator {
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.totalDamageDealtToChampions/ getMinutesFromRiotTime(playerStatsModel.gameLength);
+        return playerStatsModel.totalDamageDealtToChampions/ riotTimestampToMinutes(playerStatsModel.gameLength);
     }
 }

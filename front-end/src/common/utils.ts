@@ -42,7 +42,3 @@ export function nth(n: number): string {
 export function getNumberWithSuffix(n: number): string {
   return `${n}${nth(n)}`
 }
-
-export function getMinutesFromRiotTime(riotTime: number): number {
-  return riotTime / 60
-}

@@ -1,6 +1,6 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
-import {getMinutesFromRiotTime} from "../../../../common/utils";
+import {riotTimestampToMinutes} from "../../../../../../Common/utils";
 
 export class GPMStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
@@ -12,6 +12,6 @@ export class GPMStatGenerator extends BaseStatGenerator {
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.goldEarned / getMinutesFromRiotTime(playerStatsModel.gameLength);
+        return playerStatsModel.goldEarned / riotTimestampToMinutes(playerStatsModel.gameLength);
     }
 }
