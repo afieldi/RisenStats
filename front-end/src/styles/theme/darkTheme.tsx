@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles';
-import { Palette, TypeBackground, PaletteOptions } from '@mui/material/styles/createPalette';
 
 declare module '@mui/material/styles'
 {
@@ -7,12 +6,20 @@ declare module '@mui/material/styles'
     risenBoxBg: PaletteOptions['primary'];
     risenVictory: PaletteOptions['primary'];
     risenDefeat: PaletteOptions['primary'];
+    first: PaletteOptions['primary'];
+    second: PaletteOptions['primary'];
+    third: PaletteOptions['primary'];
+    nth: PaletteOptions['primary']
   }
 
   interface Palette {
     risenBoxBg: Palette['primary'];
     risenVictory: Palette['primary'];
     risenDefeat: Palette['primary'];
+    first: Palette['primary'];
+    second: Palette['primary'];
+    third: Palette['primary'];
+    nth: Palette['primary']
   }
 
   interface TypeBackground {
@@ -32,6 +39,18 @@ const darkTheme = createTheme({
     risenDefeat: {
       main: '#4b2222'
     },
+    first: {
+      main: '#FFA500',
+    },
+    second: {
+      main: '#85BCBF',
+    },
+    third: {
+      main: '#834B24',
+    },
+    nth: {
+      main: '#565554',
+    },
     primary: {
       main: '#f45f00'
     },
@@ -40,7 +59,8 @@ const darkTheme = createTheme({
     },
     info: {
       main: '#a3a3a3'
-    }
+    },
+
   }
 });
 export default darkTheme;

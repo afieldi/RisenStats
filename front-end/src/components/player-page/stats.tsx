@@ -23,6 +23,8 @@ interface PlayerPageStatsProps {
     };
     championData: PlayerChampionStatsModel[]
     playerStats: PlayerStatModel[]
+    leaderboardData?: PlayerStatModel[]
+    playerPuuid?: string
 }
 
 export default class PlayerPageStats extends React.Component<PlayerPageStatsProps> {
@@ -44,7 +46,10 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                         <ChampionOverview championData={this.props.championData}/>
                     </Box>
                     <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
-                        <PerformanceOverview playerStats={this.props.playerStats}/>
+                        <PerformanceOverview    playerStats={this.props.playerStats}
+                                                playerPuuid={this.props.playerPuuid}
+                                                leaderboardStats={this.props.leaderboardData ? this.props.leaderboardData : []}
+                        />
                         <RisenBox1 sx={{minHeight: 480}}>
                             <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                             <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>

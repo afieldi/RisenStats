@@ -2,16 +2,16 @@ import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
 import {riotTimestampToMinutes} from "../../../../../../Common/utils";
 
-export class CSPMStatGenerator extends BaseStatGenerator {
+export class DamageTakenPerMinuteStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "CSPM"
+        return "DTPM"
     }
 
     getToolTip(): string {
-        return "CS Per Min";
+        return "Damage Taken Per Min";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return (playerStatsModel.totalMinionsKilled + playerStatsModel.enemyJungleMonsterKills + playerStatsModel.alliedJungleMonsterKills) /  riotTimestampToMinutes(playerStatsModel.gameLength);
+        return playerStatsModel.totalDamageTaken / riotTimestampToMinutes(playerStatsModel.gameLength);
     }
 }

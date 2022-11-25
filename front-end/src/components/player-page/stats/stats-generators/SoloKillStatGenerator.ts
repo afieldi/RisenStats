@@ -1,16 +1,16 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
 
-export class KDAStatGenerator extends BaseStatGenerator {
+export class SoloKillStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "KDA"
+        return "SKPG"
     }
 
     getToolTip(): string {
-        return "Kills + Assists / Deaths";
+        return "Solo Kills Per Game";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return (playerStatsModel.kills + playerStatsModel.assists) / playerStatsModel.deaths;
+        return playerStatsModel.soloKills / playerStatsModel.games;
     }
 }

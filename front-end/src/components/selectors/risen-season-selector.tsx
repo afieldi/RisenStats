@@ -27,15 +27,13 @@ export default function RisenSeasonSelector(props: RisenSeasonSelectorProps) {
                 onChange={props.callBack}
                 sx={{overflow: 'hidden'}}
             >
-                {!props.hideAllGames && <MenuItem value="ALL">All Tournament Games</MenuItem>}
-
                 <MenuItem value="RISEN">All Risen Games</MenuItem>
-
                 {
                     props.seasonConfig?.seasons?.map((season, index) => (
                         <MenuItem key={index} value={season.id}>{season.seasonName}</MenuItem>
                     ))
                 }
+                {!props.hideAllGames && <MenuItem value="ALL">All Tournament Games</MenuItem>}
             </Select>
         </FormControl>
     );

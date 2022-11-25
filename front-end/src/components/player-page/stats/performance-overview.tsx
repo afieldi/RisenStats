@@ -16,9 +16,13 @@ import {DPGStatGenerator} from "./stats-generators/DPGStatGenerator";
 import {VisionScorePercentStatGenerator} from "./stats-generators/VisionScorePercentStatGenerator";
 import {GPMStatGenerator} from "./stats-generators/GPMStatGenerator";
 import {DiffEnum, DiffStatGenerator} from "./stats-generators/DiffStatGenerator";
+import {DamageTakenPerMinuteStatGenerator} from "./stats-generators/DamageTakenPerMinuteStatGenerator";
+import {SoloKillStatGenerator} from "./stats-generators/SoloKillStatGenerator";
 
 export interface PerformanceOverviewProps {
     playerStats: PlayerStatModel[]
+    leaderboardStats: PlayerStatModel[]
+    playerPuuid?: string
 }
 
 const statsGenerators: BaseStatGenerator[] = [
@@ -33,6 +37,8 @@ const statsGenerators: BaseStatGenerator[] = [
     new DPGStatGenerator(),
     new VisionScorePercentStatGenerator(),
     new GPMStatGenerator(),
+    new SoloKillStatGenerator(),
+    new DamageTakenPerMinuteStatGenerator(),
     new DiffStatGenerator(DiffEnum.XP, 15),
     new DiffStatGenerator(DiffEnum.XP,25),
     new DiffStatGenerator(DiffEnum.GOLD, 15),
@@ -43,20 +49,43 @@ const statsGenerators: BaseStatGenerator[] = [
 
 export default function PerformanceOverview(performanceOverviewProps: PerformanceOverviewProps) {
     const theme = useTheme() as Theme;
-
     return(
         <Grid item xs={1} md={1}>
             <Typography color={theme.palette.info.light} align="left" variant="h4">Performance Overview</Typography>
             <Box sx={{display: "flex", columnGap: 1, rowGap: 2, flexWrap: "wrap"}}>
                 { statsGenerators.map((statGenerator, index) =>
-                        <StatBox key={index}
-                                 statToolTip={statGenerator.getToolTip()}
-                                 statValue={statGenerator.getStatValue(performanceOverviewProps.playerStats)}
-                                 statTitle={statGenerator.getStatTitle()}
-                                 haveStatsLoaded={statGenerator.canLoadData(performanceOverviewProps.playerStats)}
-                        />
+                        getStatBox(index, statGenerator, performanceOverviewProps)
                 )}
             </Box>
         </Grid>
     );
 }
+
+function getStatBox(index: number, statGenerator: BaseStatGenerator, performanceOverviewProps: PerformanceOverviewProps) {
+    let sorted: PlayerStatModel[] = statGenerator.getSortedLeaderboard(performanceOverviewProps.leaderboardStats);
+
+    const average = sorted.reduce((total, next) => total + statGenerator.getStatValue(next), 0) / sorted.length;
+
+    let rank = 0;
+    let isPlayerInLeaderBoard = false;
+    for(; rank < sorted.length; rank++) {
+        if(sorted[rank].playerPuuid == performanceOverviewProps.playerPuuid) {
+            isPlayerInLeaderBoard = true;
+            break;
+        }
+    }
+
+    return <StatBox key={index}
+                    statToolTip={statGenerator.getToolTip()}
+                    statValue={statGenerator.getStatString(performanceOverviewProps.playerStats)}
+                    statTitle={statGenerator.getStatTitle()}
+                    haveStatsLoaded={statGenerator.canLoadData(performanceOverviewProps.playerStats)}
+                    shouldShowLeaderboard={isPlayerInLeaderBoard && statGenerator.canLoadData(performanceOverviewProps.playerStats)}
+                    leaderboardData={{
+                        rank: rank + 1,
+                        leagueAvg: average,
+                        totalPLayersOnLeaderboard: sorted.length
+                    }}
+    />;
+}
+

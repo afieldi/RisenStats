@@ -58,7 +58,7 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   // Primary key is risenSeason, second key is role
   let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
 
-  const handleGame = (playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) => {
+  function aggregateGame(playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) {
     if (!playerStatModelMap.has(seasonId)) {
       playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())
     }
@@ -73,14 +73,22 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
     rowsBySeasons.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
   }
 
+  /**
+   * For Every game track 3 season types
+   * 1. Tournament games: Every match is a tournament game so always aggregate it to that season
+   * 2. If its a risen game
+   *    a) Aggregate it for the ruisen season itself
+   *    b) Aggregate it for ALL_RISEN_GAMES season too
+   * this allows us to have stats for individual seasons aswell as all risen games and all tournament games.
+   */
   for (const playerGame of playerGames) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
 
-    handleGame(playerGame, ALL_TOURNAMENT_GAMES_ID, fullGame);
+    aggregateGame(playerGame, ALL_TOURNAMENT_GAMES_ID, fullGame);
 
     if (playerGame.seasonId) {
-      handleGame(playerGame, playerGame.seasonId, fullGame);
-      handleGame(playerGame, ALL_RISEN_GAMES_ID, fullGame);
+      aggregateGame(playerGame, playerGame.seasonId, fullGame);
+      aggregateGame(playerGame, ALL_RISEN_GAMES_ID, fullGame);
     }
   }
 
