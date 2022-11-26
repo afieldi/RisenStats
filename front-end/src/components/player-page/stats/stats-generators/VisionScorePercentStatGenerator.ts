@@ -13,4 +13,8 @@ export class VisionScorePercentStatGenerator extends BaseStatGenerator {
     getStatValue(playerStatsModel: PlayerStatModel): number {
         return playerStatsModel.visionScore / playerStatsModel.totalVisionScoreOfTeam * 100;
     }
+
+    formatNumber(value: number): string {
+        return `${super.formatNumber(value)}%`;
+    }
 }

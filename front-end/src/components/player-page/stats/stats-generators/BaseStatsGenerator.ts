@@ -8,6 +8,8 @@ export abstract class BaseStatGenerator {
 
     abstract getToolTip(): string;
 
+    protected shouldInvertLeaderboard = false
+
     getNoDataValue(): String {
         return ""
     }
@@ -32,8 +34,9 @@ export abstract class BaseStatGenerator {
     }
 
     getSortedLeaderboard(unsortedLeaderboard: PlayerStatModel[]): PlayerStatModel[] {
-        return unsortedLeaderboard.sort((o1, o2) => {
+        const sortedLeaderboard = unsortedLeaderboard.sort((o1, o2) => {
             return this.getStatValue(o2) - this.getStatValue(o1);
         })
+        return this.shouldInvertLeaderboard ?  sortedLeaderboard.reverse() : sortedLeaderboard;
     }
 }
