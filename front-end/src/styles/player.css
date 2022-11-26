@@ -1,10 +1,10 @@
 .player-names {
-  text-overflow: ellipsis;
-  overflow: hidden;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .player-profile-picture {
-  border: 2px #f45f00 solid;
-  border-radius: 10px;
-  height: 100px;
+    border: 2px #f45f00 solid;
+    border-radius: 10px;
+    height: 100px;
 }

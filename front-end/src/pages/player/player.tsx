@@ -1,4 +1,4 @@
-import {Container, CssBaseline, Box, Tab, Tabs } from "@mui/material";
+import {Container, CssBaseline, Box, Tab, Tabs} from "@mui/material";
 import PlayerPageHeader from "../../components/player-page/header";
 import React from "react";
 import {tabLabelProps, TabPanel} from "../../components/tab-panel/tab-panel";
@@ -183,7 +183,7 @@ function PlayerPage() {
         <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
             <CssBaseline/>
             <main>
-                <Box sx={{ pt: 15, pb: 6}}>
+                <Box sx={{pt: 15, pb: 6}}>
                     <PlayerPageHeader playerOverview={playerProfile} onUpdate={onUpdatePlayer}/>
                     <hr></hr>
                     <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
