@@ -56,7 +56,6 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                     </Box>
                 </Box>
             </Box>
-
         );
     }
 }

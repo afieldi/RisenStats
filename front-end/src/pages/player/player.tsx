@@ -183,12 +183,7 @@ function PlayerPage() {
         <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
             <CssBaseline/>
             <main>
-                <Box
-                    sx={{
-                        pt: 15,
-                        pb: 6,
-                    }}
-                >
+                <Box sx={{ pt: 15, pb: 6}}>
                     <PlayerPageHeader playerOverview={playerProfile} onUpdate={onUpdatePlayer}/>
                     <hr></hr>
                     <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
