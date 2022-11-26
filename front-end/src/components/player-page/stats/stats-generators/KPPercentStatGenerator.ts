@@ -1,7 +1,7 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
 
-export class KPPercentStatGenerator extends BaseStatGenerator {
+export class KPPercentStatGenerator extends PercentBaseStatGenerator {
     getStatTitle(): string {
         return "KP%"
     }
@@ -12,9 +12,5 @@ export class KPPercentStatGenerator extends BaseStatGenerator {
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
         return (playerStatsModel.kills + playerStatsModel.assists) / (playerStatsModel.totalKillsOfTeam) * 100;
-    }
-
-    formatNumber(value: number): string {
-        return `${super.formatNumber(value)}%`;
     }
 }

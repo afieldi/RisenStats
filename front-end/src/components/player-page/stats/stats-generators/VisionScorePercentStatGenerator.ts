@@ -1,7 +1,7 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
 
-export class VisionScorePercentStatGenerator extends BaseStatGenerator {
+export class VisionScorePercentStatGenerator extends PercentBaseStatGenerator {
     getStatTitle(): string {
         return "VS %"
     }
@@ -12,9 +12,5 @@ export class VisionScorePercentStatGenerator extends BaseStatGenerator {
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
         return playerStatsModel.visionScore / playerStatsModel.totalVisionScoreOfTeam * 100;
-    }
-
-    formatNumber(value: number): string {
-        return `${super.formatNumber(value)}%`;
     }
 }
