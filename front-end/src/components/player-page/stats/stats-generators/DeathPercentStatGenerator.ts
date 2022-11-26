@@ -16,6 +16,10 @@ export class DeathPercentStatGenerator extends BaseStatGenerator {
         return "Avg Share of Deaths per game";
     }
 
+    formatNumber(value: number): string {
+        return `${super.formatNumber(value)}%`;
+    }
+
     getStatValue(playerStatsModel: PlayerStatModel): number {
         return  (playerStatsModel.deaths/ playerStatsModel.totalDeathsOfTeam) * 100;
     }

@@ -9,7 +9,6 @@ import {DMGPercentStatGenerator} from "./stats-generators/DMGPercentStatGenerato
 import {CSPMStatGenerator} from "./stats-generators/CSPMStatGenerator";
 import {DPMStatGenerator} from "./stats-generators/DPMStatGenerator";
 import {GoldShareStatGenerator} from "./stats-generators/GoldShareStatGenerator";
-import {KPAStatGenerator} from "./stats-generators/KPAStatGenerator";
 import {AverageVisionScoreStatGenerator} from "./stats-generators/AverageVisionScoreStatGenerator";
 import {DeathPercentStatGenerator} from "./stats-generators/DeathPercentStatGenerator";
 import {DPGStatGenerator} from "./stats-generators/DPGStatGenerator";
@@ -18,6 +17,7 @@ import {GPMStatGenerator} from "./stats-generators/GPMStatGenerator";
 import {DiffEnum, DiffStatGenerator} from "./stats-generators/DiffStatGenerator";
 import {DamageTakenPerMinuteStatGenerator} from "./stats-generators/DamageTakenPerMinuteStatGenerator";
 import {SoloKillStatGenerator} from "./stats-generators/SoloKillStatGenerator";
+import {KPPercentStatGenerator} from "./stats-generators/KPPercentStatGenerator";
 
 export interface PerformanceOverviewProps {
     playerStats: PlayerStatModel[]
@@ -31,7 +31,7 @@ const statsGenerators: BaseStatGenerator[] = [
     new CSPMStatGenerator(),
     new DPMStatGenerator(),
     new GoldShareStatGenerator(),
-    new KPAStatGenerator(),
+    new KPPercentStatGenerator(),
     new AverageVisionScoreStatGenerator(),
     new DeathPercentStatGenerator(),
     new DPGStatGenerator(),
