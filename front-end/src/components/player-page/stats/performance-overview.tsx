@@ -69,7 +69,7 @@ function getStatBox(index: number, statGenerator: BaseStatGenerator, performance
     let rank = 0;
     let isPlayerInLeaderBoard = false;
     for(; rank < sorted.length; rank++) {
-        if(sorted[rank].playerPuuid == performanceOverviewProps.playerPuuid) {
+        if(sorted[rank].playerPuuid === performanceOverviewProps.playerPuuid) {
             isPlayerInLeaderBoard = true;
             break;
         }
