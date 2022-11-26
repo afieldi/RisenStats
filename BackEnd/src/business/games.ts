@@ -1,26 +1,44 @@
-import { CreateDbGame, CreateDbPlayerGameNoSave, GetDbGameByGameId } from '../db/games'
-import { GameSummaryPlayer, GameSummaryPlayers, TeamSumStat, TeamSumStats } from '../../../Common/Interface/Database/game'
-import { RiotMatchDto, RiotParticipantDto } from '../../../Common/Interface/RiotAPI/RiotApiDto'
+import {CreateDbGame, CreateDbPlayerGameNoSave, GetDbGameByGameId, GetDbPlayerGamesByGameId} from '../db/games'
+import {GameSummaryPlayer, GameSummaryPlayers, TeamSumStat, TeamSumStats} from '../../../Common/Interface/Database/game'
+import {RiotMatchDto, RiotParticipantDto} from '../../../Common/Interface/RiotAPI/RiotApiDto'
 import GameModel from '../../../Common/models/game.model'
-import { ToGameId, TotalDamageToChamps } from '../../../Common/utils'
-import { GetRiotGameByMatchId, GetRiotTimelineByMatchId } from '../external-api/game'
-import { ProcessTimeline } from './timeline'
-import { BaseEntity, getConnection } from 'typeorm'
-import { CreateDbPlayersWithParticipantData } from '../db/player'
-import { SaveObjects } from '../db/dbConnect'
-import { GetDbCode } from '../db/codes'
+import {ToGameId, TotalDamageToChamps} from '../../../Common/utils'
+import {GetRiotGameByMatchId, GetRiotTimelineByMatchId} from '../external-api/game'
+import {ProcessTimeline} from './timeline'
+import {BaseEntity} from 'typeorm'
+import {CreateDbPlayersWithParticipantData} from '../db/player'
+import {SaveObjects} from '../db/dbConnect'
+import {GetDbCode} from '../db/codes'
+import {GetDbPlayerStatsByPlayerPuuid} from "../db/playerstats";
+import {GameRoles} from "../../../Common/Interface/General/gameEnums";
+import PlayerStatModel from "../../../Common/models/playerstat.model";
+import {aggregateStatsForRow, createInitialPlayerStatModel, getSeasonsToUpdate} from "./playerstats";
+import PlayerGameModel from "../../../Common/models/playergame.model";
+import logger from "../../logger";
 
-export async function SaveSingleMatchById(matchId: string): Promise<GameModel> {
+export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
+    const existingObj = await GetDbGameByGameId(ToGameId(matchId))
+    if (existingObj) {
+        return existingObj;
+    }
+
+    const gameData = await GetRiotGameByMatchId(matchId);
+    if (gameData.info.participants.length !== 10) {
+        throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
+    }
+
+    const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData)
+
+    if (updatePlayerStats) {
+        await updatePlayerStatsForGame(matchId)
+    }
+
+    return savedGameModel;
+}
+
+export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDto): Promise<GameModel> {
   let seasonId = null;
 
-  const existingObj = await GetDbGameByGameId(ToGameId(matchId))
-  if (existingObj) {
-    return existingObj;
-  }
-  const gameData = await GetRiotGameByMatchId(matchId);
-  if (gameData.info.participants.length !== 10) {
-    throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
-  }
   if (gameData.info.tournamentCode) {
     seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId
   }
@@ -110,4 +128,30 @@ function SumTeamInfo(participantData: RiotParticipantDto[]): TeamSumStats {
     blueStats,
     redStats
   } as TeamSumStats
+}
+
+export async function updatePlayerStatsForGame(matchId: string) {
+  logger.info(`Updating Player Stats For Match: ${matchId}`)
+  const allPlayersGames: PlayerGameModel[] = await GetDbPlayerGamesByGameId(ToGameId(matchId))
+
+  for (let playerGame of allPlayersGames) {
+    const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
+    for (let number of getSeasonsToUpdate(playerGame)) {
+      await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, false)
+    }
+  }
+}
+
+async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, playerPuuid: string, seasonId: number, roleId: GameRoles, risenOnly: boolean) {
+  let currentDbPlayerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(playerPuuid, seasonId, roleId, risenOnly);
+  let updatedDbPlayerStats: PlayerStatModel[] = []
+  if (currentDbPlayerStats.length === 0) {
+    currentDbPlayerStats.push(createInitialPlayerStatModel(playerGame, seasonId))
+  }
+
+  for (let currentDbPlayerStat of currentDbPlayerStats) {
+      updatedDbPlayerStats.push(aggregateStatsForRow(currentDbPlayerStat, playerGame, fullgame));
+  }
+
+  await SaveObjects(updatedDbPlayerStats, PlayerStatModel);
 }

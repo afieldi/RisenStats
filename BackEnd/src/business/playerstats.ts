@@ -22,34 +22,6 @@ const tableCombineCols = [
   'pentaKills', 'damagePerGold', 'soloKills', 'gameLength', 'baronTakedowns'
 ]
 
-export async function GeneratePlayersCsv(playerNames: string[], games: number = 20): Promise<string> {
-  const items: any[] = []
-  for (const playerName of playerNames) {
-    const playerObj = await getDbPlayerByname(playerName)
-    items.push(await GeneratePlayerRow(playerObj, games))
-  }
-  return ObjectArrayToCsv(items, tableCombineCols)
-}
-
-export async function GeneratePlayerRow(playerObject: PlayerModel, games: number = 20, seasonId?: number, roleId?: GameRoles): Promise<{ [key: string]: any }> {
-  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, seasonId, games, 0, roleId)
-  const averages: { [key: string]: any } = GetAveragesFromObjects(dbGames, tableCombineCols)
-  averages.name = playerObject.name
-  averages.totalGames = dbGames.length
-  return averages
-}
-
-export async function GeneratePlayersCsvByFilter(seasonId: number, risenOnly: boolean, roleId?: GameRoles): Promise<string> {
-  const items: any[] = []
-
-  const players = await GetPlayerPuuidsInSeason(seasonId, roleId, risenOnly)
-  for (const player of players) {
-    const playerObj = await GetDbPlayerByPuuid(player.playerPuuid)
-    items.push(await GeneratePlayerRow(playerObj, 0, seasonId, roleId))
-  }
-  return ObjectArrayToCsv(items, tableCombineCols)
-}
-
 export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   logger.info("Updating Player Stats")
   const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid);
@@ -73,22 +45,10 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
     rowsBySeasons.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
   }
 
-  /**
-   * For Every game track 3 season types
-   * 1. Tournament games: Every match is a tournament game so always aggregate it to that season
-   * 2. If its a risen game
-   *    a) Aggregate it for the ruisen season itself
-   *    b) Aggregate it for ALL_RISEN_GAMES season too
-   * this allows us to have stats for individual seasons aswell as all risen games and all tournament games.
-   */
   for (const playerGame of playerGames) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
-
-    aggregateGame(playerGame, ALL_TOURNAMENT_GAMES_ID, fullGame);
-
-    if (playerGame.seasonId) {
-      aggregateGame(playerGame, playerGame.seasonId, fullGame);
-      aggregateGame(playerGame, ALL_RISEN_GAMES_ID, fullGame);
+    for (let seasonId of getSeasonsToUpdate(playerGame)) {
+      aggregateGame(playerGame, seasonId, fullGame);
     }
   }
 
@@ -110,8 +70,23 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   return objsToSave;
 }
 
+/**
+ * For Every game track 3 season types
+ * 1. Tournament games: Every match is a tournament game so always aggregate it to that season
+ * 2. If its a risen game
+ *    a) Aggregate it for the ruisen season itself
+ *    b) Aggregate it for ALL_RISEN_GAMES season too
+ * this allows us to have stats for individual seasons aswell as all risen games and all tournament games.
+ */
+export function getSeasonsToUpdate(playerGame: PlayerGameModel) : number[] {
+  let seasons: number[] = [ALL_TOURNAMENT_GAMES_ID];
+  if (playerGame.seasonId) {
+    seasons.push(playerGame.seasonId, ALL_RISEN_GAMES_ID)
+  }
+  return seasons
+}
 
-function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: number) {
+export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: number) {
   return PlayerStatModel.create({
     playerPuuid: game.playerPuuid,
     seasonId: seasonId,
@@ -298,7 +273,7 @@ function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: number) {
   });
 }
 
-function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGameModel, fullGame: GameModel): PlayerStatModel {
+export function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGameModel, fullGame: GameModel): PlayerStatModel {
   currentRow.games += 1;
   currentRow.kills += NonNone(game.kills, 0);
   currentRow.deaths += NonNone(game.deaths, 0);
@@ -493,6 +468,34 @@ export function getTotalsForGame(currentRow: PlayerStatModel, game: PlayerGameMo
     currentRow.totalVisionScoreOfTeam += NonNone(teammate.visionScore, 0);
   })
   return currentRow;
+}
+
+export async function GeneratePlayersCsv(playerNames: string[], games: number = 20): Promise<string> {
+  const items: any[] = []
+  for (const playerName of playerNames) {
+    const playerObj = await getDbPlayerByname(playerName)
+    items.push(await GeneratePlayerRow(playerObj, games))
+  }
+  return ObjectArrayToCsv(items, tableCombineCols)
+}
+
+export async function GeneratePlayerRow(playerObject: PlayerModel, games: number = 20, seasonId?: number, roleId?: GameRoles): Promise<{ [key: string]: any }> {
+  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, seasonId, games, 0, roleId)
+  const averages: { [key: string]: any } = GetAveragesFromObjects(dbGames, tableCombineCols)
+  averages.name = playerObject.name
+  averages.totalGames = dbGames.length
+  return averages
+}
+
+export async function GeneratePlayersCsvByFilter(seasonId: number, risenOnly: boolean, roleId?: GameRoles): Promise<string> {
+  const items: any[] = []
+
+  const players = await GetPlayerPuuidsInSeason(seasonId, roleId, risenOnly)
+  for (const player of players) {
+    const playerObj = await GetDbPlayerByPuuid(player.playerPuuid)
+    items.push(await GeneratePlayerRow(playerObj, 0, seasonId, roleId))
+  }
+  return ObjectArrayToCsv(items, tableCombineCols)
 }
 
 

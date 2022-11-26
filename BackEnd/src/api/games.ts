@@ -4,7 +4,7 @@ import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Int
 import logger from '../../logger'
 import { GetDbGamesByPlayerPuuid } from '../db/games'
 import { RiotMatchCallbackDto } from '../../../Common/Interface/RiotAPI/RiotApiDto'
-import { SaveSingleMatchById } from '../business/games'
+import {SaveDataByMatchId} from '../business/games'
 import { ToMatchId } from '../../../Common/utils'
 
 const router: Router = express.Router()
@@ -26,7 +26,7 @@ router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetGamesRequest>, 
 router.post('/callback', async(req: TypedRequest<RiotMatchCallbackDto>, res) => {
   logger.info(`Match callback for match ${req.body.gameId}`)
   try {
-    await SaveSingleMatchById(ToMatchId(req.body.gameId));
+    await SaveDataByMatchId(ToMatchId(req.body.gameId), true);
     res.json('Success');
   } catch (error) {
     logger.error(error);
