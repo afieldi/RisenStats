@@ -4,8 +4,7 @@ import { DocumentNotFound } from '../../../Common/errors'
 import { CreateDbPlayerWithRiotPlayer, GetDbPlayerByPuuid, UpdateDbPlayer } from '../db/player'
 import GameModel from '../../../Common/models/game.model'
 import { GetRiotGamesByPlayerPuuid } from '../external-api/game'
-import { SaveSingleMatchById } from './games'
-import { RiotParticipantDto } from '../../../Common/Interface/RiotAPI/RiotApiDto'
+import { SaveDataByMatchId } from './games'
 import { PlayerDetailedGame, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player'
 import logger from '../../logger'
 import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from '../db/games'
@@ -73,7 +72,7 @@ async function UpdateGamesByPlayerObject(player: PlayerModel): Promise<UpdatePla
   const failedUpdates = []
   for (const gameId of gameIds) {
     try {
-      games.push(await SaveSingleMatchById(gameId))
+      games.push(await SaveDataByMatchId(gameId))
     } catch (error) {
       logger.error(error)
       failedUpdates.push(gameId.toString())
