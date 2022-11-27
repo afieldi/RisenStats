@@ -1,17 +1,13 @@
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
-import {BaseStatGenerator} from "./BaseStatsGenerator";
+import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
 
-export class DMGPercentStatGenerator extends BaseStatGenerator {
+export class DMGPercentStatGenerator extends PercentBaseStatGenerator {
     getStatTitle(): string {
         return "DMG %"
     }
 
     getToolTip(): string {
         return "Damage Share";
-    }
-
-    formatNumber(value: number): string {
-        return `${super.formatNumber(value)}%`;
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

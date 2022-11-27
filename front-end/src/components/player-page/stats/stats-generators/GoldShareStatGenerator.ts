@@ -1,7 +1,7 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
 
-export class GoldShareStatGenerator extends BaseStatGenerator {
+export class GoldShareStatGenerator extends PercentBaseStatGenerator {
     getStatTitle(): string {
         return "Gold %"
     }
