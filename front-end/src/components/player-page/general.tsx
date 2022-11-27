@@ -1,14 +1,11 @@
 import React from "react";
 import { Container, Grid, Box, Hidden, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from "@mui/material";
-import GameSummaryList from "./general-components/game-summary-list";
+import GameSummaryList from "./game-summary/game-summary-list";
 import RankFlag from "./general-components/rank-flag";
-import GameModel from "../../../../Common/models/game.model";
-import { PlayerDetailedGame, PlayerOverviewResponse } from "../../../../Common/Interface/Internal/player";
+import { PlayerDetailedGame } from "../../../../Common/Interface/Internal/player";
 import PlayerModel from "../../../../Common/models/player.model";
 import PlayerRadarCard from "./general-components/player-radar-card";
-import RisenBox1 from "../risen-box/risen-box-1";
-import { callbackify } from "util";
-import { useState } from "react";
+
 import SeasonModel from "../../../../Common/models/season.model";
 import GamesFilter from "../filters/games-filter";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
