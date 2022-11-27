@@ -2,7 +2,7 @@ import RisenBox1 from "../../risen-box/risen-box-1";
 import {Cell, Label, Pie, PieChart, ResponsiveContainer, Tooltip} from "recharts";
 import React from "react";
 import {useTheme} from "@emotion/react";
-import {Theme, Typography} from "@mui/material";
+import {Divider, Theme, Typography} from "@mui/material";
 import "./win-rate-box.css"
 import {calculateWR} from "../../../../../Common/utils";
 
@@ -29,8 +29,8 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
             <PieChart width={240} height={200}>
                 <Pie
                     data={data}
-                    innerRadius={60}
-                    outerRadius={90}
+                    innerRadius={65}
+                    outerRadius={95}
                     cx={'50%'}
                     cy={'50%'}
                     blendStroke={true}
