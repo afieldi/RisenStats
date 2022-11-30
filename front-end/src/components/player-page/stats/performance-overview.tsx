@@ -2,22 +2,9 @@ import {Box, Grid, Theme, Typography} from "@mui/material";
 import StatBox from "./stat-box";
 import React from "react";
 import {useTheme} from "@emotion/react";
-import {BaseStatGenerator} from "./stats-generators/BaseStatsGenerator";
+import {BaseStatGenerator} from "../../../common/stats-generators/BaseStatsGenerator";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import {KDAStatGenerator} from "./stats-generators/KDAStatGenerator";
-import {DMGPercentStatGenerator} from "./stats-generators/DMGPercentStatGenerator";
-import {CSPMStatGenerator} from "./stats-generators/CSPMStatGenerator";
-import {DPMStatGenerator} from "./stats-generators/DPMStatGenerator";
-import {GoldShareStatGenerator} from "./stats-generators/GoldShareStatGenerator";
-import {AverageVisionScoreStatGenerator} from "./stats-generators/AverageVisionScoreStatGenerator";
-import {DeathPercentStatGenerator} from "./stats-generators/DeathPercentStatGenerator";
-import {DPGStatGenerator} from "./stats-generators/DPGStatGenerator";
-import {VisionScorePercentStatGenerator} from "./stats-generators/VisionScorePercentStatGenerator";
-import {GPMStatGenerator} from "./stats-generators/GPMStatGenerator";
-import {DiffEnum, DiffStatGenerator} from "./stats-generators/DiffStatGenerator";
-import {DamageTakenPerMinuteStatGenerator} from "./stats-generators/DamageTakenPerMinuteStatGenerator";
-import {SoloKillStatGenerator} from "./stats-generators/SoloKillStatGenerator";
-import {KPPercentStatGenerator} from "./stats-generators/KPPercentStatGenerator";
+import { StatGenerators } from '../../../common/utils';
 
 export interface PerformanceOverviewProps {
     playerStats: PlayerStatModel[]
@@ -26,26 +13,26 @@ export interface PerformanceOverviewProps {
 }
 
 const statsGenerators: BaseStatGenerator[] = [
-    new KDAStatGenerator(),
-    new DMGPercentStatGenerator(),
-    new CSPMStatGenerator(),
-    new DPMStatGenerator(),
-    new GoldShareStatGenerator(),
-    new KPPercentStatGenerator(),
-    new AverageVisionScoreStatGenerator(),
-    new DeathPercentStatGenerator(),
-    new DPGStatGenerator(),
-    new VisionScorePercentStatGenerator(),
-    new GPMStatGenerator(),
-    new SoloKillStatGenerator(),
-    new DamageTakenPerMinuteStatGenerator(),
-    new DiffStatGenerator(DiffEnum.XP, 15),
-    new DiffStatGenerator(DiffEnum.XP,25),
-    new DiffStatGenerator(DiffEnum.GOLD, 15),
-    new DiffStatGenerator(DiffEnum.GOLD,25),
-    new DiffStatGenerator(DiffEnum.CS, 15),
-    new DiffStatGenerator(DiffEnum.CS,25)
-]
+    StatGenerators.KDA,
+    StatGenerators.DMG_PERCENT,
+    StatGenerators.CSPM,
+    StatGenerators.DPM,
+    StatGenerators.GOLD_SHARE,
+    StatGenerators.KP_PERCENT,
+    StatGenerators.AVERAGE_VS,
+    StatGenerators.DEATH_PERCENT,
+    StatGenerators.DMG_PER_GOLD,
+    StatGenerators.VS_PERCENT,
+    StatGenerators.GPM,
+    StatGenerators.SOLO_KILL,
+    StatGenerators.DMG_TAKEN_PM,
+    StatGenerators.XP_DIFF_15,
+    StatGenerators.XP_DIFF_25,
+    StatGenerators.GOLD_DIFF_15,
+    StatGenerators.GOLD_DIFF_25,
+    StatGenerators.CS_DIFF_15,
+    StatGenerators.CS_DIFF_25,
+];
 
 export default function PerformanceOverview(performanceOverviewProps: PerformanceOverviewProps) {
     const theme = useTheme() as Theme;
@@ -75,6 +62,7 @@ function getStatBox(index: number, statGenerator: BaseStatGenerator, performance
         }
     }
 
+    console.log(isPlayerInLeaderBoard);
     return <StatBox key={index}
                     statToolTip={statGenerator.getToolTip()}
                     statValue={statGenerator.getStatString(performanceOverviewProps.playerStats)}

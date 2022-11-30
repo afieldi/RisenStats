@@ -1,5 +1,5 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
 export class AverageVisionScoreStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {

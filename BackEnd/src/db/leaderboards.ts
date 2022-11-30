@@ -4,7 +4,7 @@ import {GameRoles} from "../../../Common/Interface/General/gameEnums";
 import {FindManyOptions,  MoreThanOrEqual} from "typeorm";
 import {combine} from "../../../Common/utils";
 
-const minAmountOfGames = 4
+const minAmountOfGames = 5
 
 export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, risenOnly?: boolean): Promise<PlayerStatModel[]> {
     await ensureConnection();

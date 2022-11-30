@@ -1,6 +1,6 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
-import {riotTimestampToMinutes} from "../../../../../../Common/utils";
+import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import {riotTimestampToMinutes} from "../../../../Common/utils";
 
 export class CSPMStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
