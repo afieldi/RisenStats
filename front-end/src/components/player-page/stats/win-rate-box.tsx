@@ -1,5 +1,5 @@
 import RisenBox1 from "../../risen-box/risen-box-1";
-import {Cell, Label, Pie, PieChart, ResponsiveContainer, Tooltip} from "recharts";
+import {Cell, Label, Pie, PieChart, Tooltip} from "recharts";
 import React from "react";
 import {useTheme} from "@emotion/react";
 import {Theme, Typography} from "@mui/material";
@@ -15,22 +15,20 @@ interface WinRateBoxProps {
 export default function WinRateBox(winRateProps: WinRateBoxProps) {
     const theme = useTheme() as Theme;
 
-    // Fix this later lol
-    const COLORS = [theme.palette.primary.dark, theme.palette.secondary.dark];
-
-    const data = [{name: 'Wins', value: winRateProps.wins}, {name: 'Losses', value: winRateProps.losses}]
+    const data = [{name: 'Wins', value: winRateProps.wins, color: theme.palette.primary.dark},
+        {name: 'Losses', value: winRateProps.losses, color: theme.palette.secondary.dark}]
     const winRate = calculateWR({totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses}, 1)
     const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}G ${winRateProps.losses}L`
 
     return (
         <RisenBox1 sx={{minWidth: 280, minHeight: 280}}>
-            <Typography color={theme.palette.info.light} variant="h4">Win Rate</Typography>
+            <Typography fontFamily="Montserrat" color={theme.palette.info.light} variant="h4">WIN RATE</Typography>
             {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
             <PieChart width={240} height={200}>
                 <Pie
                     data={data}
-                    innerRadius={60}
-                    outerRadius={90}
+                    innerRadius={65}
+                    outerRadius={95}
                     cx={'50%'}
                     cy={'50%'}
                     blendStroke={true}
@@ -38,13 +36,13 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
                     <Label value={winRate + "%"}
                            position="centerBottom"
                            className='label-top'
-                           style={{ fill: theme.palette.info.dark, fontSize: '35px' }}/>
+                           style={{fill: theme.palette.info.dark, fontSize: '35px'}}/>
                     <Label value={winsOverLoss}
                            position="centerTop"
                            className='label'
-                           style={{ fill: theme.palette.info.dark }}/>
+                           style={{fill: theme.palette.info.dark}}/>
                     {
-                        data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
+                        data.map((entry, index) => <Cell key={index} fill={entry.color}/>)
                     }
                 </Pie>
                 <Tooltip/>

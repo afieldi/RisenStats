@@ -51,7 +51,7 @@ export default function PerformanceOverview(performanceOverviewProps: Performanc
     const theme = useTheme() as Theme;
     return(
         <Grid item xs={1} md={1}>
-            <Typography color={theme.palette.info.light} align="left" variant="h4">Performance Overview</Typography>
+            <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="h4">PERFORMANCE OVERVIEW</Typography>
             <Box sx={{display: "flex", columnGap: 1, rowGap: 2, flexWrap: "wrap"}}>
                 { statsGenerators.map((statGenerator, index) =>
                         getStatBox(index, statGenerator, performanceOverviewProps)
@@ -69,7 +69,7 @@ function getStatBox(index: number, statGenerator: BaseStatGenerator, performance
     let rank = 0;
     let isPlayerInLeaderBoard = false;
     for(; rank < sorted.length; rank++) {
-        if(sorted[rank].playerPuuid == performanceOverviewProps.playerPuuid) {
+        if(sorted[rank].playerPuuid === performanceOverviewProps.playerPuuid) {
             isPlayerInLeaderBoard = true;
             break;
         }

@@ -15,7 +15,7 @@ export default function ChampionOverview(championOverviewProps: ChampionOverview
 
     return (
         <RisenBox1>
-            <Typography color={theme.palette.info.light} align="left" variant="h5" >Champions</Typography>
+            <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="h5" >CHAMPIONS</Typography>
             <Divider sx={{marginBottom: 2}}/>
             <Box sx={{display: "flex", columnGap: 1, rowGap: 1, flexWrap: "wrap"}}>
                 { championOverviewProps.championData.map((champData, index) =>
