@@ -8,6 +8,7 @@ import { getFlattenedLeaderboard } from "../../api/leaderboards";
 import { DPMStatGenerator } from "../../common/stats-generators/DPMStatGenerator";
 import { KDAStatGenerator } from "../../common/stats-generators/KDAStatGenerator";
 import { HeadCell, SortOrder } from "../../common/types";
+import { StatGenerators } from "../../common/utils";
 import SortableTableHead from "./helper-components/sortable-head";
 
 interface PlayerTierTableProps {
@@ -88,12 +89,12 @@ function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
   return data.map((stat, i) => ({
     rank: +i+1,
     playerName: stat.player.name,
-    wr: roundTo((stat.win / stat.games)*100),
+    wr: StatGenerators.WR.getStatValue(stat),
     role: GameRoles[stat.lobbyPosition as keyof typeof GameRoles],
-    kda: calculateKDA(stat),
-    dpm: roundTo(stat.totalDamageDealtToChampions / riotTimestampToMinutes(stat.gameLength)),
-    gpm: roundTo(stat.goldEarned / riotTimestampToMinutes(stat.gameLength)),
-    kpp: roundTo((stat.kills + stat.assists) / stat.totalKillsOfTeam),
+    kda: StatGenerators.KDA.getStatValue(stat),
+    dpm: StatGenerators.DPM.getStatValue(stat),
+    gpm: StatGenerators.GPM.getStatValue(stat),
+    kpp: StatGenerators.KP_PERCENT.getStatValue(stat),
     games: stat.games,
   }));
 }

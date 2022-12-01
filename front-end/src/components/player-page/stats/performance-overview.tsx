@@ -62,7 +62,6 @@ function getStatBox(index: number, statGenerator: BaseStatGenerator, performance
         }
     }
 
-    console.log(isPlayerInLeaderBoard);
     return <StatBox key={index}
                     statToolTip={statGenerator.getToolTip()}
                     statValue={statGenerator.getStatString(performanceOverviewProps.playerStats)}

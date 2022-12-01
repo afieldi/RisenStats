@@ -1,5 +1,6 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { roundTo } from '../../../../Common/utils';
 
 export class WRStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
@@ -11,6 +12,6 @@ export class WRStatGenerator extends BaseStatGenerator {
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.win / playerStatsModel.games;
+        return roundTo((playerStatsModel.win / playerStatsModel.games)*100);
     }
 }

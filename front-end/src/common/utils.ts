@@ -13,6 +13,8 @@ import { KPPercentStatGenerator } from './stats-generators/KPPercentStatGenerato
 import { SoloKillStatGenerator } from './stats-generators/SoloKillStatGenerator';
 import { VisionScorePercentStatGenerator } from './stats-generators/VisionScorePercentStatGenerator';
 import { AverageVisionScoreStatGenerator } from './stats-generators/AverageVisionScoreStatGenerator';
+import { WRStatGenerator } from './stats-generators/WRStatGenerator';
+
 
 export function ChampionIdToName(championId: number): string {
   const key = championId.toString();
@@ -77,4 +79,5 @@ export const StatGenerators = {
   'GOLD_DIFF_25': new DiffStatGenerator(DiffEnum.GOLD,25),
   'CS_DIFF_15': new DiffStatGenerator(DiffEnum.CS, 15),
   'CS_DIFF_25': new DiffStatGenerator(DiffEnum.CS,25),
+  'WR': new WRStatGenerator(),
 };
