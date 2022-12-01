@@ -4,14 +4,14 @@ import {GameRoles} from "../../../Common/Interface/General/gameEnums";
 import {FindManyOptions,  MoreThanOrEqual} from "typeorm";
 import {combine} from "../../../Common/utils";
 
-const minAmountOfGames = 4
+const minNumberOfGames = 4;
 
 export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, risenOnly?: boolean): Promise<PlayerStatModel[]> {
     await ensureConnection();
 
     let searchFilter: FindManyOptions<PlayerStatModel> = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID}};
     if (roleId != GameRoles.ALL) {
-        searchFilter = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThanOrEqual(minAmountOfGames)}};
+        searchFilter = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThanOrEqual(minNumberOfGames)}};
     }
 
     if (seasonId) {
@@ -53,5 +53,5 @@ function flattenLeaderboard(playerStatsModel: PlayerStatModel[]) {
     }
 
     // Since we cant garuntee that N > 4 for ALL we need to filter
-    return Array.from(flattenedLeaderboard.values()).filter(playerStatModel => playerStatModel.games >= minAmountOfGames);
+    return Array.from(flattenedLeaderboard.values()).filter(playerStatModel => playerStatModel.games >= minNumberOfGames);
 }

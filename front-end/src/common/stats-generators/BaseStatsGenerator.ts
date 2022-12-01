@@ -1,6 +1,21 @@
-import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import { Theme } from "@mui/material";
+import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
 export abstract class BaseStatGenerator {
+
+    static getColor(stat: number, theme: Theme): string {
+        return theme.palette.text.primary;
+    }
+
+    static getColorHelper(stat: number, theme: Theme, bp1: number, bp2: number, bp3: number): string {
+        if (stat >= bp1)
+            return theme.palette.first.main;
+        else if (stat >= bp2)
+            return theme.palette.second.main;
+        else if (stat >= bp3)
+            return theme.palette.third.main;
+        return theme.palette.text.primary;
+    }
 
     abstract getStatValue(playerStatsModel: PlayerStatModel): number
 

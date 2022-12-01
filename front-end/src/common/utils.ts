@@ -1,4 +1,20 @@
 import championsMap from '../data/champions_map.json';
+import { CSPMStatGenerator } from './stats-generators/CSPMStatGenerator';
+import { DamageTakenPerMinuteStatGenerator } from './stats-generators/DamageTakenPerMinuteStatGenerator';
+import { DeathPercentStatGenerator } from './stats-generators/DeathPercentStatGenerator';
+import { DiffEnum, DiffStatGenerator } from './stats-generators/DiffStatGenerator';
+import { DMGPercentStatGenerator } from './stats-generators/DMGPercentStatGenerator';
+import { DPGStatGenerator } from './stats-generators/DPGStatGenerator';
+import { DPMStatGenerator } from './stats-generators/DPMStatGenerator';
+import { GoldShareStatGenerator } from './stats-generators/GoldShareStatGenerator';
+import { GPMStatGenerator } from './stats-generators/GPMStatGenerator';
+import { KDAStatGenerator } from './stats-generators/KDAStatGenerator';
+import { KPPercentStatGenerator } from './stats-generators/KPPercentStatGenerator';
+import { SoloKillStatGenerator } from './stats-generators/SoloKillStatGenerator';
+import { VisionScorePercentStatGenerator } from './stats-generators/VisionScorePercentStatGenerator';
+import { AverageVisionScoreStatGenerator } from './stats-generators/AverageVisionScoreStatGenerator';
+import { WRStatGenerator } from './stats-generators/WRStatGenerator';
+
 
 export function ChampionIdToName(championId: number): string {
   const key = championId.toString();
@@ -42,3 +58,26 @@ export function nth(n: number): string {
 export function getNumberWithSuffix(n: number): string {
   return `${n}${nth(n)}`
 }
+
+export const StatGenerators = {
+  'KDA': new KDAStatGenerator(),
+  'DMG_PERCENT': new DMGPercentStatGenerator(),
+  'CSPM': new CSPMStatGenerator(),
+  'DPM': new DPMStatGenerator(),
+  'GOLD_SHARE': new GoldShareStatGenerator(),
+  'KP_PERCENT': new KPPercentStatGenerator(),
+  'AVERAGE_VS': new AverageVisionScoreStatGenerator(),
+  'DEATH_PERCENT': new DeathPercentStatGenerator(),
+  'DMG_PER_GOLD': new DPGStatGenerator(),
+  'VS_PERCENT': new VisionScorePercentStatGenerator(),
+  'GPM': new GPMStatGenerator(),
+  'SOLO_KILL': new SoloKillStatGenerator(),
+  'DMG_TAKEN_PM': new DamageTakenPerMinuteStatGenerator(),
+  'XP_DIFF_15': new DiffStatGenerator(DiffEnum.XP, 15),
+  'XP_DIFF_25': new DiffStatGenerator(DiffEnum.XP,25),
+  'GOLD_DIFF_15': new DiffStatGenerator(DiffEnum.GOLD, 15),
+  'GOLD_DIFF_25': new DiffStatGenerator(DiffEnum.GOLD,25),
+  'CS_DIFF_15': new DiffStatGenerator(DiffEnum.CS, 15),
+  'CS_DIFF_25': new DiffStatGenerator(DiffEnum.CS,25),
+  'WR': new WRStatGenerator(),
+};

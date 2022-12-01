@@ -1,4 +1,4 @@
-import PlayerStatModel from "../../../../../../Common/models/playerstat.model";
+import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
 
 export class GoldShareStatGenerator extends PercentBaseStatGenerator {

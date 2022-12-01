@@ -11,6 +11,7 @@ import { SideBar } from './components/sidebar/sidebar';
 import Home from './pages/home/home';
 import Error404 from './pages/errors/404';
 import StatExport from './pages/statExport/statExport';
+import Leaderboards from './pages/leaderboards/leaderboards';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -28,6 +29,7 @@ function App() {
             <Route path="/player/:playerName" element={<Player />}></Route>
             <Route path="/404" element={<Error404 />}></Route>
             <Route path="/statexport" element={<StatExport />}></Route>
+            <Route path="/leaderboard" element={<Leaderboards />}></Route>
           </Routes>
         </div>
       </ThemeProvider>
