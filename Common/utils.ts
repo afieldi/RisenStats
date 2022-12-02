@@ -393,15 +393,15 @@ export function combine(object1: PlayerStatModel, object2: PlayerStatModel): Pla
   object1.csDiff += NonNone(object2.csDiff, 0);
   object1.csDiff15 += NonNone(object2.csDiff15, 0);
   object1.csDiff25 += NonNone(object2.csDiff25, 0);
-  object1.totalKillsOfTeam += NonNone(object2.kills, 0);
-  object1.totalDeathsOfTeam += NonNone(object2.deaths, 0);
-  object1.totalAssistsOfTeam += NonNone(object2.assists, 0);
-  object1.totalDamageDealtToObjectivesOfTeam += NonNone(object2.damageDealtToObjectives, 0);
-  object1.totalGoldOfTeam += NonNone(object2.goldEarned, 0);
-  object1.totalPhysicalDamageDealtToChampionsOfTeam += NonNone(object2.physicalDamageDealtToChampions, 0);
-  object1.totalMagicDamageDealtToChampionsOfTeam += NonNone(object2.magicDamageDealtToChampions, 0);
-  object1.totalTrueDamageDealtToChampionsOfTeam += NonNone(object2.trueDamageDealtToChampions, 0);
-  object1.totalDamageDealtToChampionsOfTeam += NonNone(object2.totalDamageDealtToChampions, 0);
-  object1.totalVisionScoreOfTeam += NonNone(object2.visionScore, 0);
+  object1.totalKillsOfTeam += NonNone(object2.totalKillsOfTeam, 0);
+  object1.totalDeathsOfTeam += NonNone(object2.totalDeathsOfTeam, 0);
+  object1.totalAssistsOfTeam += NonNone(object2.totalAssistsOfTeam, 0);
+  object1.totalDamageDealtToObjectivesOfTeam += NonNone(object2.totalDamageDealtToObjectivesOfTeam, 0);
+  object1.totalGoldOfTeam += NonNone(object2.totalGoldOfTeam, 0);
+  object1.totalPhysicalDamageDealtToChampionsOfTeam += NonNone(object2.totalPhysicalDamageDealtToChampionsOfTeam, 0);
+  object1.totalMagicDamageDealtToChampionsOfTeam += NonNone(object2.totalMagicDamageDealtToChampionsOfTeam, 0);
+  object1.totalTrueDamageDealtToChampionsOfTeam += NonNone(object2.totalTrueDamageDealtToChampionsOfTeam, 0);
+  object1.totalDamageDealtToChampionsOfTeam += NonNone(object2.totalDamageDealtToChampionsOfTeam, 0);
+  object1.totalVisionScoreOfTeam += NonNone(object2.totalVisionScoreOfTeam, 0);
   return object1;
 }
