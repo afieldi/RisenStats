@@ -14,6 +14,12 @@ import { SoloKillStatGenerator } from './stats-generators/SoloKillStatGenerator'
 import { VisionScorePercentStatGenerator } from './stats-generators/VisionScorePercentStatGenerator';
 import { AverageVisionScoreStatGenerator } from './stats-generators/AverageVisionScoreStatGenerator';
 import { WRStatGenerator } from './stats-generators/WRStatGenerator';
+import {TotalElderDragonKillsStatGenerator} from "./stats-generators/TotalElderDragonKillsStatGenerator";
+import {TotalBaronKillsStatsGenerator} from "./stats-generators/TotalBaronKillsStatsGenerator";
+import {TotalHeraldKillsStatsGenerator} from "./stats-generators/TotalHeraldKillsStatsGenerator";
+import {TotalDragonKillsStatsGenerator} from "./stats-generators/TotalDragonKillsStatsGenerator";
+import {TotalTowersTakenStatsGenerator} from "./stats-generators/TotalTowersTakenStatsGenerator";
+import {TotalTowerPlatesStatsGenerator} from "./stats-generators/TotalTowerPlatesStatsGenerator";
 
 
 export function ChampionIdToName(championId: number): string {
@@ -80,4 +86,10 @@ export const StatGenerators = {
   'CS_DIFF_15': new DiffStatGenerator(DiffEnum.CS, 15),
   'CS_DIFF_25': new DiffStatGenerator(DiffEnum.CS,25),
   'WR': new WRStatGenerator(),
+  'TOTAL_ELDER': new TotalElderDragonKillsStatGenerator(),
+  'TOTAL_BARON': new TotalBaronKillsStatsGenerator(),
+  'TOTAL_HERALD': new TotalHeraldKillsStatsGenerator(),
+  'TOTAL_DRAGON': new TotalDragonKillsStatsGenerator(),
+  'TOTAL_TOWERS': new TotalTowersTakenStatsGenerator(),
+  'TOTAL_TOWER_PLATES': new TotalTowerPlatesStatsGenerator()
 };
