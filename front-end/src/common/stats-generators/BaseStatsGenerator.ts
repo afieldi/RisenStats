@@ -59,7 +59,7 @@ export abstract class BaseStatGenerator {
 
     getPositionInLeaderboard(value: number, sortedLeaderboard: PlayerStatModel[]): number {
         for (const i in sortedLeaderboard) {
-            if (value > this.getStatValue(sortedLeaderboard[i])) {
+            if (value >= this.getStatValue(sortedLeaderboard[i])) {
                 return +i+1;
             }
         }
