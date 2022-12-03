@@ -2,14 +2,14 @@ import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Typography } 
 import { Box } from "@mui/system";
 import { visuallyHidden } from "@mui/utils";
 import React from "react";
-import { HeadCell, SortOrder } from "../../../common/types";
+import { TableColumn, SortOrder } from "../../../common/types";
 
 
 interface EnhancedTableProps<T> {
   onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
   order: SortOrder;
   orderBy: string;
-  headCells: HeadCell<T>[];
+  headCells: TableColumn<T>[];
 }
 
 export default function SortableTableHead<T>(props: EnhancedTableProps<T>) {

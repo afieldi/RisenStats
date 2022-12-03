@@ -8,4 +8,5 @@ export interface GetLeaderboardRequest {
     seasonId?: number;
     roleId?: string;
     risenOnly?: boolean;
+    collapseRoles?: boolean;
 }

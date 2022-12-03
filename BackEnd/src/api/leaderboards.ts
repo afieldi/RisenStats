@@ -14,7 +14,8 @@ router.post('/', async (req: TypedRequest<GetLeaderboardRequest>, res: TypedResp
         const seasonId = req.body.seasonId;
         const roleId = req.body.roleId as GameRoles;
         const risenOnly = req.body.risenOnly;
-        const playerStats: PlayerStatModel[] = await GetDbLeaderboards(seasonId, roleId, risenOnly);
+        const collapseRoles = !!req.body.collapseRoles;
+        const playerStats: PlayerStatModel[] = await GetDbLeaderboards(seasonId, roleId, risenOnly, collapseRoles);
         res.json({
             playerStats
         });

@@ -11,6 +11,6 @@ export class DMGPercentStatGenerator extends PercentBaseStatGenerator {
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.totalDamageDealtToChampions/ playerStatsModel.totalDamageDealtToChampionsOfTeam * 100;
+        return playerStatsModel.totalDamageDealtToChampions / playerStatsModel.totalDamageDealtToChampionsOfTeam * 100;
     }
 }
