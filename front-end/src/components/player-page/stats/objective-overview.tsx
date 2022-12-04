@@ -1,6 +1,6 @@
 import {useTheme} from "@emotion/react";
-import {Box, Divider, Fade, Grow, Theme, Typography} from "@mui/material";
-import React from "react";
+import {Box, Divider, Fade, Switch, Theme, Tooltip, Typography} from "@mui/material";
+import React, {useState} from "react";
 import RisenBox1 from "../../risen-box/risen-box-1";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 import {BaseStatGenerator} from "../../../common/stats-generators/BaseStatsGenerator";
@@ -28,7 +28,7 @@ const ObjectiveToPath: Record<AllObjectives, string> = {
     Baron : "/images/game/Baron.svg"
 }
 
-const objectives: Record<Objectives, BaseStatGenerator> = {
+const totalObjectives: Record<Objectives, BaseStatGenerator> = {
     Elder : StatGenerators.TOTAL_ELDER,
     Herald : StatGenerators.TOTAL_HERALD,
     Baron : StatGenerators.TOTAL_BARON,
@@ -36,23 +36,44 @@ const objectives: Record<Objectives, BaseStatGenerator> = {
     Plates: StatGenerators.TOTAL_TOWER_PLATES
 }
 
+const averageObjectives: Record<Objectives, BaseStatGenerator> = {
+    Elder : StatGenerators.ELDER,
+    Herald : StatGenerators.HERALD,
+    Baron : StatGenerators.BARON,
+    Tower: StatGenerators.TOWERS,
+    Plates: StatGenerators.TOWER_PLATES
+}
+
 export default function ObjectiveOverview(props: ChampionOverviewProps) {
+
+    const [shouldUseTotals, setShouldUseTotals] = useState(false);
+
     const theme = useTheme() as Theme;
     const hasStats = props.playerStats.length > 0;
+    const statsGeneratorToUse:  Record<Objectives, BaseStatGenerator> = shouldUseTotals ? totalObjectives : averageObjectives;
+    const dragonsStatsGeneratorToUse: BaseStatGenerator = shouldUseTotals ? StatGenerators.TOTAL_DRAGON : StatGenerators.DRAGON;
+    const amountOfDecimals = shouldUseTotals ? 0 : 2;
     return (
-        <RisenBox1>
-            <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left"
-                        variant="subtitle1">OBJECTIVES</Typography>
+        <RisenBox1 sx={{padding: "0px 16px 16px 16px"}}>
+
+            <Box sx={{display: "flex", flexDirection:"row", justifyContent:"space-between" }}>
+                <Typography sx={{paddingTop: "16px"}} fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="subtitle1">OBJECTIVES</Typography>
+                <Tooltip title={shouldUseTotals ? "Show Averages" : "Show Totals" }>
+                    <Switch sx={{marginTop: "8px"}} onChange={(event) => setShouldUseTotals(event.target.checked)} />
+                </Tooltip>
+            </Box>
+
             <Divider sx={{marginBottom: 2}}/>
-            {hasStats &&
+
+            { hasStats &&
                 <Box>
                     <Fade in={true} style={{ transitionDelay: '50ms'}}>
-                        <Box sx={{display: "flex", columnGap: 4, rowGap: 1}}>
-                            { Object.keys(objectives).map((key) => ObjectiveStat(key as Objectives, objectives[key as Objectives], props.playerStats ))}
+                        <Box sx={{display: "flex", columnGap: 3, rowGap: 1}}>
+                            { Object.keys(statsGeneratorToUse).map((key) => ObjectiveStat(key as Objectives, statsGeneratorToUse[key as Objectives], props.playerStats, amountOfDecimals))}
                         </Box>
                     </Fade>
                     <Box sx={{marginBottom: 2}}/>
-                    { getDragonObjectiveStat(StatGenerators.TOTAL_DRAGON, props.playerStats) }
+                    { getDragonObjectiveStat(dragonsStatsGeneratorToUse, props.playerStats, amountOfDecimals) }
                 </Box>
             }
 
@@ -60,24 +81,32 @@ export default function ObjectiveOverview(props: ChampionOverviewProps) {
     );
 }
 
-function ObjectiveStat(objectiveType: Objectives, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[]) {
+function ObjectiveStat(objectiveType: Objectives, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[], amountOfDecimals: number) {
     return (
-        <Box sx={{display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent:"center"}}>
-            {getObjectiveImg(objectiveType)}
-            <Typography fontFamily="Montserrat" align="center"
-                        variant="button">{statGenerator.getStatString(playerStats, 0)}</Typography>
+        <Box>
+            <Tooltip title={objectiveType} sx={{display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent:"center"}}>
+                {getObjectiveImg(objectiveType)}
+            </Tooltip>
+            <Box sx={{width: "30px"}}>
+                <Typography  fontFamily="Montserrat" align="center"
+                             variant="button">{statGenerator.getStatString(playerStats, amountOfDecimals)}</Typography>
+            </Box>
+
         </Box>
     );
 }
 
-function getDragonObjectiveStat(statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[]) {
+// Need a sperate component for dragons since we use all 6 icons for 1 stat
+function getDragonObjectiveStat(statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[], amountOfDecimals: number) {
     return (
         <Box sx={{display: "flex", rowGap: 1, flexDirection:"column"}}>
-            <Box sx={{display: "flex", flexDirection:"row", justifyContent: "center"}}>
-                {Object.values(Dragons).map(dragonName => getObjectiveImg(dragonName as Dragons))}
-            </Box>
+            <Tooltip title={"Dragons"}>
+                <Box sx={{display: "flex", flexDirection:"row", justifyContent: "center"}}>
+                    {Object.values(Dragons).map(dragonName => getObjectiveImg(dragonName as Dragons))}
+                </Box>
+            </Tooltip>
             <Typography fontFamily="Montserrat" align="center"
-                        variant="button">{statGenerator.getStatString(playerStats, 0)}</Typography>
+                        variant="button">{statGenerator.getStatString(playerStats, amountOfDecimals)}</Typography>
         </Box>
     );
 }
