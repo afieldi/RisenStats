@@ -38,7 +38,7 @@ export abstract class BaseStatGenerator {
         return value.toFixed(decimals).length > 6 ? value.toFixed(1) : value.toFixed(decimals)
     }
 
-    getStatString(playerStatsModels: PlayerStatModel[], decimals?: number): string {
+    getStatString(playerStatsModels: PlayerStatModel[], decimals: number = 2): string {
         let total = 0
         let roles = 0;
         for (let playerStatsModel of playerStatsModels) {

@@ -1,7 +1,7 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
+import {TotalStatGenerator} from "./TotalStatGenerator";
 
-export class TotalElderDragonKillsStatGenerator extends BaseStatGenerator {
+export class TotalElderDragonKillsStatGenerator extends TotalStatGenerator {
     getStatTitle(): string {
         return "TED"
     }

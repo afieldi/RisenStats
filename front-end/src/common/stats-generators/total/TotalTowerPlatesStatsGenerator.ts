@@ -1,7 +1,7 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
+import {TotalStatGenerator} from "./TotalStatGenerator";
 
-export class TotalTowerPlatesStatsGenerator extends BaseStatGenerator {
+export class TotalTowerPlatesStatsGenerator extends TotalStatGenerator {
     getStatTitle(): string {
         return "TTPT"
     }
