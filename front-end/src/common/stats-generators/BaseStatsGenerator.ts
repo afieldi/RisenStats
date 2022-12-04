@@ -38,7 +38,7 @@ export abstract class BaseStatGenerator {
         return value.toFixed(decimals).length > 6 ? value.toFixed(1) : value.toFixed(decimals)
     }
 
-    getStatString(playerStatsModels: PlayerStatModel[], decimals: number = 2): string {
+    getStatNumber(playerStatsModels: PlayerStatModel[]) {
         let total = 0
         let games = 0;
         for (let playerStatsModel of playerStatsModels) {
@@ -47,7 +47,11 @@ export abstract class BaseStatGenerator {
             total = (total * weight1) + (weight2 * this.getStatValue(playerStatsModel));
             games += playerStatsModel.games;
         }
-        return `${this.formatNumber(total, decimals)}` ;
+        return total
+    }
+
+    getStatString(playerStatsModels: PlayerStatModel[], decimals: number = 2): string {
+        return `${this.formatNumber(this.getStatNumber(playerStatsModels), decimals)}` ;
     }
 
     getSortedLeaderboard(unsortedLeaderboard: PlayerStatModel[]): PlayerStatModel[] {
