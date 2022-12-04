@@ -1,16 +1,16 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
-export class TotalTowersTakenStatsGenerator extends BaseStatGenerator {
+export class HeraldKillsStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "TTT"
+        return "RHTPG"
     }
 
     getToolTip(): string {
-        return "Total Towers taken";
+        return "Rift Herald Taken Per Game";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.turretTakedowns;
+        return playerStatsModel.riftHeraldTakedowns / playerStatsModel.games;
     }
 }

@@ -1,16 +1,16 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
-export class TotalElderDragonKillsStatGenerator extends BaseStatGenerator {
+export class TowerPlatesStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "AVG ED"
+        return "TPTPG"
     }
 
     getToolTip(): string {
-        return "Average Elder Dragons Taken Per Game";
+        return "Tower Plates Taken Per Game";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.teamElderDragonKills;
+        return playerStatsModel.turretPlatesTaken / playerStatsModel.games;
     }
 }

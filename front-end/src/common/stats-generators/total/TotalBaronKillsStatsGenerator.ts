@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import {BaseStatGenerator} from "../BaseStatsGenerator";
+import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 
 export class TotalBaronKillsStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "TOTAL RH"
+        return "TB"
     }
 
     getToolTip(): string {
-        return "Total Rift Herald Taken Per Game";
+        return "Total Barons Taken";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

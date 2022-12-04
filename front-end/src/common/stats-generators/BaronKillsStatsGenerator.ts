@@ -1,16 +1,16 @@
 import {BaseStatGenerator} from "./BaseStatsGenerator";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 
-export class TotalTowerPlatesStatsGenerator extends BaseStatGenerator {
+export class BaronKillsStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "TTPT"
+        return "BTPG"
     }
 
     getToolTip(): string {
-        return "Total Tower Plates Taken";
+        return "Average Number Of Barons Taken Per Game";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.turretPlatesTaken;
+        return playerStatsModel.baronTakedowns / playerStatsModel.games;
     }
 }
