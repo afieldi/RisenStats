@@ -53,17 +53,21 @@ function getStatBox(index: number, statGenerator: BaseStatGenerator, performance
 
     const average = sorted.reduce((total, next) => total + statGenerator.getStatValue(next), 0) / sorted.length;
 
-    let rank = statGenerator.getPositionInLeaderboard(
-        +statGenerator.getStatString(performanceOverviewProps.playerStats),
-        sorted
-    );
+    let rank = 0;
+    let isPlayerInLeaderBoard = false;
+    for(; rank < sorted.length; rank++) {
+        if(sorted[rank].playerPuuid === performanceOverviewProps.playerPuuid) {
+            isPlayerInLeaderBoard = true;
+            break;
+        }
+    }
 
     return <StatBox key={index}
                     statToolTip={statGenerator.getToolTip()}
                     statValue={statGenerator.getStatString(performanceOverviewProps.playerStats)}
                     statTitle={statGenerator.getStatTitle()}
                     haveStatsLoaded={statGenerator.canLoadData(performanceOverviewProps.playerStats)}
-                    shouldShowLeaderboard={sorted.length > 0 && statGenerator.canLoadData(performanceOverviewProps.playerStats)}
+                    shouldShowLeaderboard={isPlayerInLeaderBoard && statGenerator.canLoadData(performanceOverviewProps.playerStats)}
                     leaderboardData={{
                         rank: rank + 1,
                         leagueAvg: average,
