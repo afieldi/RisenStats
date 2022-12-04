@@ -10,6 +10,7 @@ import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import GamesFilter from "../filters/games-filter";
 import FilterBar from "../filters/filter-bar";
+import ObjectiveOverview from "./stats/objective-overview";
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -44,6 +45,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>
                         <ChampionOverview championData={this.props.championData}/>
+                        <ObjectiveOverview playerStats={this.props.playerStats}/>
                     </Box>
                     <Box sx={{display: 'flex', flexDirection: 'column', rowGap: 2}}>
                         <PerformanceOverview    playerStats={this.props.playerStats}

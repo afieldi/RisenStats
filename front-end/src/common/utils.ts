@@ -14,6 +14,18 @@ import { SoloKillStatGenerator } from './stats-generators/SoloKillStatGenerator'
 import { VisionScorePercentStatGenerator } from './stats-generators/VisionScorePercentStatGenerator';
 import { AverageVisionScoreStatGenerator } from './stats-generators/AverageVisionScoreStatGenerator';
 import { WRStatGenerator } from './stats-generators/WRStatGenerator';
+import {ElderDragonKillsStatGenerator} from "./stats-generators/ElderDragonKillsStatGenerator";
+import {BaronKillsStatsGenerator} from "./stats-generators/BaronKillsStatsGenerator";
+import {HeraldKillsStatsGenerator} from "./stats-generators/HeraldKillsStatsGenerator";
+import {DragonKillsStatsGenerator} from "./stats-generators/DragonKillsStatsGenerator";
+import {TowersTakenStatsGenerator} from "./stats-generators/TowersTakenStatsGenerator";
+import {TowerPlatesStatsGenerator} from "./stats-generators/TowerPlatesStatsGenerator";
+import {TotalTowerPlatesStatsGenerator} from "./stats-generators/total/TotalTowerPlatesStatsGenerator";
+import {TotalTowersTakenStatsGenerator} from "./stats-generators/total/TotalTowersTakenStatsGenerator";
+import {TotalDragonKillsStatsGenerator} from "./stats-generators/total/TotalDragonKillsStatsGenerator";
+import {TotalHeraldKillsStatsGenerator} from "./stats-generators/total/TotalHeraldKillsStatsGenerator";
+import {TotalBaronKillsStatsGenerator} from "./stats-generators/total/TotalBaronKillsStatsGenerator";
+import {TotalElderDragonKillsStatGenerator} from "./stats-generators/total/TotalElderDragonKillsStatGenerator";
 
 
 export function ChampionIdToName(championId: number): string {
@@ -80,4 +92,16 @@ export const StatGenerators = {
   'CS_DIFF_15': new DiffStatGenerator(DiffEnum.CS, 15),
   'CS_DIFF_25': new DiffStatGenerator(DiffEnum.CS,25),
   'WR': new WRStatGenerator(),
+  'ELDER': new ElderDragonKillsStatGenerator(),
+  'BARON': new BaronKillsStatsGenerator(),
+  'HERALD': new HeraldKillsStatsGenerator(),
+  'DRAGON': new DragonKillsStatsGenerator(),
+  'TOWERS': new TowersTakenStatsGenerator(),
+  'TOWER_PLATES': new TowerPlatesStatsGenerator(),
+  'TOTAL_ELDER': new TotalElderDragonKillsStatGenerator(),
+  'TOTAL_BARON': new TotalBaronKillsStatsGenerator(),
+  'TOTAL_HERALD': new TotalHeraldKillsStatsGenerator(),
+  'TOTAL_DRAGON': new TotalDragonKillsStatsGenerator(),
+  'TOTAL_TOWERS': new TotalTowersTakenStatsGenerator(),
+  'TOTAL_TOWER_PLATES': new TotalTowerPlatesStatsGenerator()
 };
