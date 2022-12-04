@@ -17,7 +17,6 @@ interface PlayerTierTableProps {
 };
 
 function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
-  console.log('map')
   return data.map((stat, i) => ({
     rank: +i+1,
     playerName: stat.player.name,
