@@ -16,6 +16,7 @@ export interface FilterBarProps {
     setRoleId: (roleId: GameRoles) => void,
   };
   hideAllGames?: boolean;
+  children?: React.ReactNode;
 }
 
 export default function FilterBar(props: FilterBarProps) {
@@ -35,6 +36,7 @@ export default function FilterBar(props: FilterBarProps) {
           callBack={(event: SelectChangeEvent) => { props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]) }}
         />
       </Grid>
+      {props.children}
     </Grid>
   );
 }

@@ -38,7 +38,7 @@ export default function PlayerPageHeader(playerOverviewProps: Props)
             <Typography variant="h5">{playerOverviewProps.playerOverview?.overview?.name}</Typography>
           </Hidden>
           <Hidden smDown>
-            <Typography variant="h3" className="text-overflow">{playerOverviewProps.playerOverview?.overview?.name}</Typography>
+            <Typography fontFamily="Montserrat" variant="h3" className="text-overflow">{playerOverviewProps.playerOverview?.overview?.name}</Typography>
           </Hidden>
           {/* <br></br> */}
           <LoadingButton variant="outlined" color="primary" onClick={updateGames} loading={loading}>Update</LoadingButton>

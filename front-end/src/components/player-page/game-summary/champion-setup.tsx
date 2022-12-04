@@ -2,46 +2,54 @@ import PlayerGameModel from "../../../../../Common/models/playergame.model";
 import {Box, Typography} from "@mui/material";
 import {GameTypeToString} from "../../../../../Common/utils";
 import React from "react";
+import SeasonModel from "../../../../../Common/models/season.model";
 
 interface ChampionSetupProps {
     mainPlayer: PlayerGameModel
     gameType: number,
-    seasonId: number
+    seasonId: number,
+    seasons: SeasonModel[],
 }
 
 function ChampionSetup(championSetupProps: ChampionSetupProps) {
+    const {
+        mainPlayer,
+        gameType,
+        seasonId,
+        seasons,
+    } = championSetupProps;
     return <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <Box sx={{display: "inline-flex"}}>
             <Box sx={{pl: 1, pr: 1}}>
-                <img src={`/images/champions/icons/${championSetupProps.mainPlayer.championId}_0.png`}
-                     alt={`${championSetupProps.mainPlayer.championId}`}
+                <img src={`/images/champions/icons/${mainPlayer.championId}_0.png`}
+                     alt={`${mainPlayer.championId}`}
                      height="50px"
                      width="50px"/>
             </Box>
             <Box sx={{display: "flex", flexDirection: "column"}}>
-                <img src={`/images/summoner/${championSetupProps.mainPlayer.summoner1Id}.png`}
-                     alt={`${championSetupProps.mainPlayer.summoner1Id}`}
+                <img src={`/images/summoner/${mainPlayer.summoner1Id}.png`}
+                     alt={`${mainPlayer.summoner1Id}`}
                      height="25px"
                      width="25px"/>
-                <img src={`/images/summoner/${championSetupProps.mainPlayer.summoner2Id}.png`}
-                     alt={`${championSetupProps.mainPlayer.summoner2Id}`}
+                <img src={`/images/summoner/${mainPlayer.summoner2Id}.png`}
+                     alt={`${mainPlayer.summoner2Id}`}
                      height="25px"
                      width="25px"/>
             </Box>
             <Box sx={{display: "flex", flexDirection: "column", pl: .4}}>
-                <img src={`/images/runes/${championSetupProps.mainPlayer.primaryRunes[0]}.png`}
-                     alt={`${championSetupProps.mainPlayer.primaryRunes[0]}`}
+                <img src={`/images/runes/${mainPlayer.primaryRunes[0]}.png`}
+                     alt={`${mainPlayer.primaryRunes[0]}`}
                      height="25px"
                      width="25px"/>
-                <img src={`/images/runes/${championSetupProps.mainPlayer.secondaryStyle}.png`}
-                     alt={`${championSetupProps.mainPlayer.secondaryStyle}`}
+                <img src={`/images/runes/${mainPlayer.secondaryStyle}.png`}
+                     alt={`${mainPlayer.secondaryStyle}`}
                      height="25px"
                      width="25px"/>
             </Box>
         </Box>
         <Box>
-            <Typography variant="body2" align="center">
-                {GameTypeToString(championSetupProps.gameType, championSetupProps.seasonId)}
+            <Typography variant="body2" sx={{fontSize: '12px', maxWidth: '115px'}} align="center">
+                {GameTypeToString(gameType, seasonId, seasons)}
             </Typography>
         </Box>
     </Box>;
