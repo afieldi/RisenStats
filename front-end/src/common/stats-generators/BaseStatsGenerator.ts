@@ -40,7 +40,6 @@ export abstract class BaseStatGenerator {
 
     getStatString(playerStatsModels: PlayerStatModel[], decimals: number = 2): string {
         let total = 0
-        let roles = 0;
         let games = 0;
         for (let playerStatsModel of playerStatsModels) {
             const weight1 = games / (games + playerStatsModel.games);
