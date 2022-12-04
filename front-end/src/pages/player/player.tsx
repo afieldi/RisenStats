@@ -89,7 +89,7 @@ function PlayerPage()
         return;
       }
 
-      const stats = await getFlattenedLeaderboard(numberSeasonId,seasonId === "RISEN",  roleId);
+      const stats = await getFlattenedLeaderboard(numberSeasonId,seasonId === "RISEN",  roleId, true);
       roleMaps.set(roleId, stats);
       cachedLeaderboard.set(seasonId, roleMaps);
       setFullLeaderboard(cachedLeaderboard);

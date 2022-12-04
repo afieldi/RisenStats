@@ -1,17 +1,14 @@
 import {PlayerChampionStatsRequest} from "../../../Common/Interface/Internal/player";
 import {GameRoles} from "../../../Common/Interface/General/gameEnums";
 import {MakeBackendCall} from "./_call";
-import {GetLeaderboardResponse} from "../../../Common/Interface/Internal/leaderboard";
+import {GetLeaderboardRequest, GetLeaderboardResponse} from "../../../Common/Interface/Internal/leaderboard";
 import PlayerStatModel from "../../../Common/models/playerstat.model";
-import {combine} from "../../../Common/utils";
 
-export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string) : Promise<PlayerStatModel[]> {
-    console.log(`getting leaderboard for SID: ${seasonId} RISEN: ${risenOnly} ROLE: ${roleId}`)
-    let stats =  await GetLeaderboards(seasonId, risenOnly,  roleId);
-    return stats.playerStats;
+export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string, collapseRoles?: boolean) : Promise<PlayerStatModel[]> {
+    return (await GetLeaderboards(seasonId, risenOnly,  roleId, collapseRoles)).playerStats;
 }
 
-export async function GetLeaderboards(seasonId?: number, risenOnly?: boolean, roleId?: string): Promise<GetLeaderboardResponse> {
+export async function GetLeaderboards(seasonId?: number, risenOnly?: boolean, roleId?: string, collapseRoles?: boolean): Promise<GetLeaderboardResponse> {
     const role = GameRoles[roleId as keyof typeof GameRoles];
-    return await MakeBackendCall<PlayerChampionStatsRequest>(`/api/stats/leaderboards/`, "POST", {seasonId, risenOnly, roleId: role}) as GetLeaderboardResponse;
+    return await MakeBackendCall<GetLeaderboardRequest>(`/api/stats/leaderboards/`, "POST", {seasonId, risenOnly, roleId: role, collapseRoles}) as GetLeaderboardResponse;
 }

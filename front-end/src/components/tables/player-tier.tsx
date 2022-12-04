@@ -7,7 +7,7 @@ import { calculateKDA, riotTimestampToMinutes, roundTo, toSearchName } from "../
 import { getFlattenedLeaderboard } from "../../api/leaderboards";
 import { DPMStatGenerator } from "../../common/stats-generators/DPMStatGenerator";
 import { KDAStatGenerator } from "../../common/stats-generators/KDAStatGenerator";
-import { HeadCell, SortOrder } from "../../common/types";
+import { TableColumn, SortOrder } from "../../common/types";
 import { StatGenerators } from "../../common/utils";
 import SortableTableHead from "./helper-components/sortable-head";
 
@@ -28,66 +28,90 @@ interface LeaderboardType {
   games: number;
 }
 
-const headCells: HeadCell<LeaderboardType>[] = [
-  {
-    id: 'rank',
-    align: 'left',
-    disablePadding: false,
-    label: 'Rank'
-  },
-  {
-    id: 'role',
-    align: 'left',
-    disablePadding: false,
-    label: 'Role'
-  },
-  {
-    id: 'playerName',
-    align: 'left',
-    disablePadding: false,
-    label: 'Name'
-  },
-  {
-    id: 'wr',
-    align: 'center',
-    disablePadding: false,
-    label: 'WR',
-  },
-  {
-    id: 'kda',
-    align: 'center',
-    disablePadding: false,
-    label: 'KDA'
-  },
-  {
-    id: 'dpm',
-    align: 'center',
-    disablePadding: false,
-    label: 'DPM'
-  },
-  {
-    id: 'gpm',
-    align: 'center',
-    disablePadding: false,
-    label: 'GPM'
-  },
-  {
-    id: 'kpp',
-    align: 'center',
-    disablePadding: false,
-    label: 'KP%'
-  },
-  {
-    id: 'games',
-    align: 'center',
-    disablePadding: false,
-    label: 'Games'
-  },
-]
+function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardType>[] {
+  return [
+    {
+      id: 'rank',
+      align: 'left',
+      disablePadding: false,
+      label: 'Rank',
+      active: true,
+      display: (i: LeaderboardType) => i.rank,
+    },
+    {
+      id: 'role',
+      align: 'left',
+      disablePadding: false,
+      label: 'Role',
+      active: true,
+      display: (item: LeaderboardType) => item.role,
+    },
+    {
+      id: 'playerName',
+      align: 'left',
+      disablePadding: false,
+      label: 'Name',
+      active: true,
+      display: (item: LeaderboardType) => (
+        <div className="clickable" onClick={() => {goToPlayer(item.playerName)}}>
+          {item.playerName}
+        </div>
+      ),
+    },
+    {
+      id: 'wr',
+      align: 'center',
+      disablePadding: false,
+      label: 'WR',
+      active: true,
+      display: (item: LeaderboardType) => `${item.wr}%`,
+    },
+    {
+      id: 'kda',
+      align: 'center',
+      disablePadding: false,
+      label: 'KDA',
+      active: true,
+      display: (item: LeaderboardType) => `${item.kda}:1`,
+    },
+    {
+      id: 'dpm',
+      align: 'center',
+      disablePadding: false,
+      label: 'DPM',
+      active: true,
+      display: (item: LeaderboardType) => item.dpm,
+    },
+    {
+      id: 'gpm',
+      align: 'center',
+      disablePadding: false,
+      label: 'GPM',
+      active: true,
+      display: (item: LeaderboardType) => item.gpm,
+    },
+    {
+      id: 'kpp',
+      align: 'center',
+      disablePadding: false,
+      label: 'KP%',
+      active: true,
+      display: (item: LeaderboardType) => `${item.kpp}%`,
+    },
+    {
+      id: 'games',
+      align: 'center',
+      disablePadding: false,
+      label: 'Games',
+      active: true,
+      display: (item: LeaderboardType) => item.games,
+    },
+  ];
+}
 
 function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
   return data.map((stat, i) => ({
-    rank: +i+1,
+    rank: i,
     playerName: stat.player.name,
     wr: StatGenerators.WR.getStatValue(stat),
     role: GameRoles[stat.lobbyPosition as keyof typeof GameRoles],
@@ -104,8 +128,9 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
     seasonId,
     roleId,
   } = props;
+
   const [playersStats, setPlayersStats] = useState<LeaderboardType[]>([]);
-  const [sortCol, setSortCol] = useState<keyof LeaderboardType>('rank');
+  const [sortCol, setSortCol] = useState<keyof LeaderboardType>('playerName');
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
   const theme = useTheme();
   const navigate = useNavigate();
@@ -122,6 +147,11 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
   const goToPlayer = (playerName: string) => {
     navigate(`/player/${toSearchName(playerName)}`)
   }
+
+  const headCells = getAllHeadCells(goToPlayer);
+
+  const [activeCells, setActiveCells] = useState<TableColumn<LeaderboardType>[]>(headCells.filter(cell => cell.active));
+
 
   const sortPlayerStats = (newSortCol: keyof LeaderboardType) => {
     let newSortOrder: SortOrder;
@@ -163,36 +193,13 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
                     <TableRow
                       hover
                       key={`row_${index}`}>
-                        <TableCell>
-                          {row.rank}
-                        </TableCell>
-                        <TableCell>
-                          {row.role}
-                        </TableCell>
-                        <TableCell>
-                          <div className="clickable" onClick={() => {goToPlayer(row.playerName)}}>
-                            {row.playerName}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Typography align='center'>{row.wr}%</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography color={KDAStatGenerator.getColor(row.kda, theme)} align='center'>{row.kda}:1</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography color={DPMStatGenerator.getColor(row.dpm, theme)} align='center'>{row.dpm}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography align='center'>{row.gpm}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography align='center'>{row.kpp}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography align='center'>{row.games}</Typography>
-                        </TableCell>
-                        {/* <TableCell>{row.kda}</TableCell> */}
+                        {
+                          headCells.map((cell, j) => (
+                            <TableCell key={`item_${j}`}>
+                              {cell.display(row)}
+                            </TableCell>
+                          ))
+                        }
                     </TableRow>
                   )
                 })
