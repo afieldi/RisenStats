@@ -72,8 +72,8 @@ export default function Leaderboards() {
   return (
     <Container maxWidth='lg' sx={{pt: 10, minHeight: '100vh', color: theme.palette.info.light}}>
       <Box>
-        <Typography variant="h1" color={theme.palette.info.light}>
-          Top Players
+        <Typography fontFamily="Montserrat" variant="h1" color={theme.palette.info.light}>
+          TOP PLAYERS
         </Typography>
       </Box>
       <hr />
