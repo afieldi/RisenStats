@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, SelectChangeEvent } from "@mui/material";
+import { Box, SelectChangeEvent } from "@mui/material";
 import RisenSeasonSelector from "../selectors/risen-season-selector";
 import RoleSelector from "../selectors/role-selector";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
@@ -21,22 +21,22 @@ export interface FilterBarProps {
 
 export default function FilterBar(props: FilterBarProps) {
   return (
-    <Grid spacing={2} container>
-      <Grid item>
+    <Box sx={{display: 'flex', columnGap: 2}}>
+      <Box>
         <RisenSeasonSelector
           callBack={(event: SelectChangeEvent) => { props.seasonConfig?.setSeasonId(event.target.value) }}
           sx={{ minWidth: '200px', pt: 1, pb: 1 }}
           seasonConfig={props.seasonConfig}
           hideAllGames={!!props.hideAllGames} />
-      </Grid>
-      <Grid item>
+      </Box>
+      <Box>
         <RoleSelector
           sx={{ minWidth: '150px', pt: 1, pb: 1 }}
           initalValue={props.roleConfig?.roleId}
           callBack={(event: SelectChangeEvent) => { props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]) }}
         />
-      </Grid>
+      </Box>
       {props.children}
-    </Grid>
+    </Box>
   );
 }

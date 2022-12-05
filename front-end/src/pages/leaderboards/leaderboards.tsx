@@ -81,8 +81,9 @@ export default function Leaderboards() {
         hideAllGames={true}
         seasonConfig={{seasonId, setSeasonId, seasons}}
         roleConfig={{roleId, setRoleId}} >
-          <Grid item>
-            <Button aria-describedby={id} onClick={handleEdit} variant='contained' sx={{height: '90%'}}>
+          <Box sx={{flexGrow: 1}}></Box>
+          <Box>
+            <Button aria-describedby={id} onClick={handleEdit} variant='contained' sx={{height: '80%', top: '10%'}}>
               Edit Columns
             </Button>
             <Popper id={id} open={open} anchorEl={anchorEl}>
@@ -111,7 +112,7 @@ export default function Leaderboards() {
                 </FormGroup>
               </RisenBox1>
             </Popper>
-          </Grid>
+          </Box>
       </FilterBar>
       {playerTierTable}
     </Container>
