@@ -60,11 +60,11 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
       seasonId === "RISEN",
       roleId,
     ).then((data) => {
-      setPlayersStats(MapStatsToLeaderboard(data));
+      sortPlayerStats(MapStatsToLeaderboard(data), sortCol, sortOrder);
     })
   }, [seasonId, roleId]);
 
-  const sortPlayerStats = (newSortCol: keyof LeaderboardType) => {
+  const setNewSort = (newSortCol: keyof LeaderboardType) => {
     let newSortOrder: SortOrder;
     if (sortCol === newSortCol) {
       newSortOrder = sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
@@ -75,14 +75,17 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
       setSortOrder(newSortOrder);
     }
     setSortCol(newSortCol);
+    sortPlayerStats(playersStats, newSortCol, newSortOrder);
+  }
 
-    setPlayersStats(playersStats.sort((a, b) => {
+  const sortPlayerStats = (newStats: LeaderboardType[], passedCol: keyof LeaderboardType, passedOrder: SortOrder) => {
+    setPlayersStats(newStats.sort((a, b) => {
       let retValue = 0;
-      if (a[newSortCol] > b[newSortCol])
+      if (a[passedCol] > b[passedCol])
         retValue = 1;
-      else if (a[newSortCol] < b[newSortCol])
+      else if (a[passedCol] < b[passedCol])
         retValue = -1;
-      return retValue * (newSortOrder === SortOrder.ASC ? 1 : -1);
+      return retValue * (passedOrder === SortOrder.ASC ? 1 : -1);
     }));
   }
 
@@ -95,7 +98,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
               order={sortOrder}
               orderBy={sortCol}
               headCells={activeCols}
-              onRequestSort={(event: React.MouseEvent<unknown>, property) => {sortPlayerStats(property)}}
+              onRequestSort={(event: React.MouseEvent<unknown>, property) => {setNewSort(property)}}
             />
             <TableBody>
               {
