@@ -187,6 +187,8 @@ function PlayerPage()
     }
   };
 
+  const activeSeasons = seasons.filter(season => season.active);
+
   return (
     <Container maxWidth="lg" sx={{minHeight: '100vh'}}>
       <CssBaseline />
@@ -211,14 +213,14 @@ function PlayerPage()
           </TabPanel>
           <TabPanel value={value} index={1}>
             <PlayerPageChampions championData={championStats}
-                                 seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
+                                 seasonConfig={{...loadGamesConfig.seasonConfig, seasons: activeSeasons}}
                                  roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PlayerPageStats playerStats={playerStats}
                              playerPuuid={playerProfile?.overview.puuid}
                              leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
-                             seasonConfig={{...loadGamesConfig.seasonConfig, seasons}}
+                             seasonConfig={{...loadGamesConfig.seasonConfig, seasons: activeSeasons}}
                              roleConfig={loadGamesConfig.roleConfig}
                              championData={championStats}/>
           </TabPanel>
