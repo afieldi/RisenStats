@@ -15,12 +15,12 @@ export default function SearchPage() {
     <Container className="full-height full-width" sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-          <img src="/images/logos/risen.png" style={{width: '70%'}}></img>
+          <img src="/images/logos/risen.png" style={{width: '70%'}} />
         </Box>
         <Box>
           <Grid container spacing={2}>
             <Grid item xs={12} md={10}>
-              <SearchField2 id={playerSearchFieldId} placeholder='Summoner Name' sx={{width: '80%'}} onSubmit={searchName}></SearchField2>
+              <SearchField2 id={playerSearchFieldId} placeholder='Summoner Name' sx={{width: '80%'}} onSubmit={searchName} />
             </Grid>
             <Grid item xs={12} md={2}>
               <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>

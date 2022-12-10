@@ -104,31 +104,33 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
               headCells={activeCols}
               onRequestSort={(event: React.MouseEvent<unknown>, property) => {setNewSort(property)}}
             />
-            {loadingStats ? null :
-            <TableBody>
-              {
-                playersStats.map((row, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      key={`row_${index}`}>
-                        {
-                          activeCols.map((cell, j) => (
-                            <TableCell key={`item_${j}`}>
-                              {cell.display(row)}
-                            </TableCell>
-                          ))
-                        }
-                    </TableRow>
-                  )
-                })
-              }
-            </TableBody>}
+            {
+            loadingStats ? null :
+              <TableBody>
+                {
+                  playersStats.map((row, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        key={`row_${index}`}>
+                          {
+                            activeCols.map((cell, j) => (
+                              <TableCell key={`item_${j}`}>
+                                {cell.display(row)}
+                              </TableCell>
+                            ))
+                          }
+                      </TableRow>
+                    )
+                  })
+                }
+              </TableBody>
+            }
           </Table>
         </TableContainer>
       </Paper>
       {
-        loadingStats ? <Loading sx={{pt: 2}} /> : null
+        loadingStats && <Loading sx={{pt: 2}} />
       }
     </Box>
   )

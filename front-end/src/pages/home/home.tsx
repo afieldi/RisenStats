@@ -2,9 +2,6 @@ import { Box, Button, Container, Grid, Hidden, Typography, useTheme } from '@mui
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import React, { KeyboardEvent } from 'react';
-import SearchField from '../../components/search-field/search-field';
-import SearchField2 from '../../components/search-field/search-field2';
-import { toSearchName } from '../../../../Common/utils';
 
 const AngleBox = styled(Box)`
   height: 100vh;
