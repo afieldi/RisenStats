@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Hidden, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Hidden, Typography, useTheme } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import React, { KeyboardEvent } from 'react';
@@ -16,9 +16,10 @@ const AngleBox = styled(Box)`
   justify-content: center;
   background-position: center;
   background-repeat: repeat-y;
-  filter: grayscale(1);
+  filter: grayscale(30%);
   &:hover {
-    filter: grayscale(60%);
+    filter: grayscale(0%);
+    color: white;
     width: 50%;
     cursor: pointer;
   }
@@ -34,17 +35,14 @@ const MobileBox = styled(Button)`
 
 const directory = {
   'leaderboard': '/leaderboard',
-  'leagues': 'http://risenesports.com/leagues',
+  'search': '/search',
   'discord': 'https://discord.com/invite/BwnnBsV',
 };
 
 export default function Home() {
   const navigate = useNavigate();
-  const playerSearchFieldId = 'playerSearch';
-  function searchName() {
-    const playerName = (document.getElementById(playerSearchFieldId) as HTMLInputElement).value;
-    navigate(`player/${encodeURIComponent(playerName)}`)
-  }
+  const theme = useTheme();
+
   function goTo(location: keyof typeof directory) {
     const newUrl = directory[location];
     if (newUrl.startsWith('http')) {
@@ -58,14 +56,14 @@ export default function Home() {
     <Box className="full-height full-width" sx={{overflow: 'hidden'}}>
       <Hidden mdDown>
         <Box sx={{display: 'flex', flexDirection: 'row'}}>
-          <AngleBox sx={{backgroundColor: 'red'}} onClick={() => goTo('leaderboard')}>
-            <Typography fontFamily="Montserrat" variant="h3">Leaderboards</Typography>
+          <AngleBox sx={{backgroundColor: theme.palette.primary.main, color: theme.palette.info.light}} onClick={() => goTo('leaderboard')}>
+            <Typography fontFamily="Montserrat" variant="h3">LEADERBOARDS</Typography>
           </AngleBox>
-          <AngleBox sx={{backgroundColor: 'green'}} onClick={() => goTo('leagues')}>
-            <Typography fontFamily="Montserrat" variant="h3">Leagues</Typography>
+          <AngleBox sx={{backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light}} onClick={() => goTo('search')}>
+            <Typography fontFamily="Montserrat" variant="h3">PLAYER STATS</Typography>
           </AngleBox>
-          <AngleBox sx={{backgroundColor: '#2828f7'}} onClick={() => goTo('discord')}>
-            <Typography fontFamily="Montserrat" variant="h3">Discord</Typography>
+          <AngleBox sx={{backgroundColor: 'black', color: theme.palette.info.light}} onClick={() => goTo('discord')}>
+            <Typography fontFamily="Montserrat" variant="h3">DISCORD</Typography>
           </AngleBox>
         </Box>
       </Hidden>
@@ -76,13 +74,13 @@ export default function Home() {
               <img src="/images/logos/risen.png" style={{width: '70%'}}></img>
             </Box>
             <MobileBox variant='outlined' onClick={() => goTo('leaderboard')}>
-              <Typography fontFamily="Montserrat" variant="h5">Leaderboards</Typography>
+              <Typography fontFamily="Montserrat" variant="h5">LEADERBOARDS</Typography>
             </MobileBox>
-            <MobileBox variant='outlined' onClick={() => goTo('leagues')}>
-              <Typography fontFamily="Montserrat" variant="h5">Leagues</Typography>
+            <MobileBox variant='outlined' onClick={() => goTo('search')}>
+              <Typography fontFamily="Montserrat" variant="h5">PLAYER STATS</Typography>
             </MobileBox>
             <MobileBox variant='outlined' onClick={() => goTo('discord')}>
-              <Typography fontFamily="Montserrat" variant="h5">Discord</Typography>
+              <Typography fontFamily="Montserrat" variant="h5">DISCORD</Typography>
             </MobileBox>
           </Box>
         </Container>
