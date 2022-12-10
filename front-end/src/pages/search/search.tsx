@@ -9,7 +9,7 @@ export default function SearchPage() {
 
   function searchName() {
     const playerName = (document.getElementById(playerSearchFieldId) as HTMLInputElement).value;
-    navigate(`player/${encodeURIComponent(playerName)}`)
+    navigate(`/player/${encodeURIComponent(playerName)}`)
   }
   return (
     <Container className="full-height full-width" sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
