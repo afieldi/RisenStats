@@ -22,7 +22,6 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "recharts": "^2.1.13",
-    "styled-components": "^5.3.6",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
@@ -47,7 +46,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/styled-components": "^5.1.26",
     "react-app-rewired": "^2.2.1"
   }
 }

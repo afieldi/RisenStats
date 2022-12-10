@@ -45,7 +45,7 @@ a {
 }
 
 .full-width {
-  width: calc(100vw - 65px);
+  width: 100vw;
 }
 
 @font-face {
