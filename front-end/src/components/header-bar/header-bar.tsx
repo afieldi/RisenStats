@@ -60,29 +60,30 @@ export default function HeaderBar({open, setOpen}: Props) {
   return (
     <AppBar position="fixed" barOpen={open} sx={{bgcolor: '#12121200'}}>
       <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          sx={{
-            marginRight: '36px',
-            ...(open && { display: 'none' }),
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Box sx={{flexGrow: 1, display: 'flex', pr: 2}}>
-          <Link to="/">
-            <Box sx={{height: '50px', display: 'inline-flex', top: '10px'}} className="clickable-bg">
-              <img src="/images/logos/risen-small-white.png" width="60" height="50"></img>
-              <Hidden smDown>
-                <Typography variant="h5" sx={{pt: 1.5, pl: 1}}>Risen Esports</Typography>
-              </Hidden>
-            </Box>
-          </Link>
-
-        </Box>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{
+              marginRight: '36px',
+              ...(open && { display: 'none' }),
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        <Hidden smDown>
+          <Box sx={{flexGrow: 1, display: 'flex', pr: 2}}>
+            <Link to="/">
+              <Box sx={{height: '50px', display: 'inline-flex', top: '10px'}} className="clickable-bg">
+                <img src="/images/logos/risen-small-white.png" width="60" height="50"></img>
+                <Hidden smDown>
+                  <Typography variant="h5" sx={{pt: 1.5, pl: 1}}>Risen Esports</Typography>
+                </Hidden>
+              </Box>
+            </Link>
+          </Box>
+        </Hidden>
         {/* <SignIn></SignIn> */}
         <SearchField
           id={headerSearchId}

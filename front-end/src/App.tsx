@@ -21,7 +21,7 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={darkTheme}>
-        <div className="App" style={{paddingLeft: '75px'}}>
+        <div className="App" style={{paddingLeft: '65px'}}>
           <HeaderBar open={open} setOpen={setOpen}></HeaderBar>
           <SideBar open={open} onClose={handleDrawerClose}></SideBar>
           <Routes>
