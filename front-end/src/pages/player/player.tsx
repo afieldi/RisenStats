@@ -15,7 +15,7 @@ import PlayerPageChampions from "../../components/player-page/champions";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
 import SeasonModel from "../../../../Common/models/season.model";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
-import { GetActiveSeasons } from "../../api/season";
+import { GetActiveSeasons, GetAllSeasons } from "../../api/season";
 import PlayerPageStats from "../../components/player-page/stats";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import {getFlattenedLeaderboard} from "../../api/leaderboards";
@@ -133,7 +133,7 @@ function PlayerPage()
 
   async function loadSeasons() {
     try {
-      setSeasons((await GetActiveSeasons()).seasons);
+      setSeasons((await GetAllSeasons()).seasons);
     } catch (error) {
       console.log(error);
     }
