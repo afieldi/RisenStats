@@ -1,36 +1,87 @@
-import { Box, Button, Container, Grid } from '@mui/material';
+import { Box, Button, Container, Grid, Hidden, Typography, useTheme } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
 import React, { KeyboardEvent } from 'react';
-import SearchField from '../../components/search-field/search-field';
-import SearchField2 from '../../components/search-field/search-field2';
-import { toSearchName } from '../../../../Common/utils';
+
+const AngleBox = styled(Box)`
+  height: 100vh;
+  width: 34%;
+  transition: .5s;
+  transform: skewX(-10deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-position: center;
+  background-repeat: repeat-y;
+  filter: grayscale(30%);
+  &:hover {
+    filter: grayscale(0%);
+    color: white;
+    width: 50%;
+    cursor: pointer;
+  }
+`;
+
+const MobileBox = styled(Button)`
+  margin-top: 10px;
+  padding: 40px;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const directory = {
+  'leaderboard': '/leaderboard',
+  'search': '/search',
+  'discord': 'https://discord.com/invite/BwnnBsV',
+};
 
 export default function Home() {
   const navigate = useNavigate();
-  const playerSearchFieldId = 'playerSearch';
-  function searchName() {
-    const playerName = (document.getElementById(playerSearchFieldId) as HTMLInputElement).value;
-    navigate(`player/${encodeURIComponent(playerName)}`)
+  const theme = useTheme();
+
+  function goTo(location: keyof typeof directory) {
+    const newUrl = directory[location];
+    if (newUrl.startsWith('http')) {
+      window.location.href = newUrl;
+    }
+    else {
+      navigate(newUrl);
+    }
   }
   return (
-    <Container className="full-height full-width" sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-      <Box sx={{display: 'flex', flexDirection: 'column'}}>
-        <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-          <img src="/images/logos/risen.png" style={{width: '70%'}}></img>
+    <Box className="full-height full-width" sx={{overflow: 'hidden'}}>
+      <Hidden mdDown>
+        <Box sx={{display: 'flex', flexDirection: 'row'}}>
+          <AngleBox sx={{backgroundColor: theme.palette.primary.main, color: theme.palette.info.light}} onClick={() => goTo('leaderboard')}>
+            <Typography fontFamily="Montserrat" variant="h3">LEADERBOARDS</Typography>
+          </AngleBox>
+          <AngleBox sx={{backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light}} onClick={() => goTo('search')}>
+            <Typography fontFamily="Montserrat" variant="h3">PLAYER STATS</Typography>
+          </AngleBox>
+          <AngleBox sx={{backgroundColor: 'black', color: theme.palette.info.light}} onClick={() => goTo('discord')}>
+            <Typography fontFamily="Montserrat" variant="h3">DISCORD</Typography>
+          </AngleBox>
         </Box>
-        <Box>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={10}>
-              <SearchField2 id={playerSearchFieldId} placeholder='Summoner Name' sx={{width: '80%'}} onSubmit={searchName}></SearchField2>
-            </Grid>
-            <Grid item xs={12} md={2}>
-              <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                <Button variant='outlined' onClick={searchName} sx={{width: '80%', height: '4em'}}>Search</Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Container>
+      </Hidden>
+      <Hidden mdUp>
+        <Container>
+          <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: 3}}>
+              <img src="/images/logos/risen.png" style={{width: '70%'}}></img>
+            </Box>
+            <MobileBox variant='outlined' onClick={() => goTo('leaderboard')}>
+              <Typography fontFamily="Montserrat" variant="h5">LEADERBOARDS</Typography>
+            </MobileBox>
+            <MobileBox variant='outlined' onClick={() => goTo('search')}>
+              <Typography fontFamily="Montserrat" variant="h5">PLAYER STATS</Typography>
+            </MobileBox>
+            <MobileBox variant='outlined' onClick={() => goTo('discord')}>
+              <Typography fontFamily="Montserrat" variant="h5">DISCORD</Typography>
+            </MobileBox>
+          </Box>
+        </Container>
+      </Hidden>
+    </Box>
   )
 }

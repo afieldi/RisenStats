@@ -9,6 +9,7 @@ import { DPMStatGenerator } from "../../common/stats-generators/DPMStatGenerator
 import { KDAStatGenerator } from "../../common/stats-generators/KDAStatGenerator";
 import { TableColumn, SortOrder, LeaderboardType } from "../../common/types";
 import { StatGenerators } from "../../common/utils";
+import Loading from "../loading/loading";
 import SortableTableHead from "./helper-components/sortable-head";
 interface PlayerTierTableProps {
   seasonId: string;
@@ -51,16 +52,19 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
   } = props;
 
   const [playersStats, setPlayersStats] = useState<LeaderboardType[]>([]);
+  const [loadingStats, setLoadingStats] = useState<boolean>(false);
   const [sortCol, setSortCol] = useState<keyof LeaderboardType>('playerName');
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
   const theme = useTheme();
   useEffect(() => {
+    setLoadingStats(true);
     getFlattenedLeaderboard(
       seasonId === "RISEN" ? undefined : Number(seasonId),
       seasonId === "RISEN",
       roleId,
     ).then((data) => {
       sortPlayerStats(MapStatsToLeaderboard(data), sortCol, sortOrder);
+      setLoadingStats(false);
     })
   }, [seasonId, roleId]);
 
@@ -100,28 +104,34 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
               headCells={activeCols}
               onRequestSort={(event: React.MouseEvent<unknown>, property) => {setNewSort(property)}}
             />
-            <TableBody>
-              {
-                playersStats.map((row, index) => {
-                  return (
-                    <TableRow
-                      hover
-                      key={`row_${index}`}>
-                        {
-                          activeCols.map((cell, j) => (
-                            <TableCell key={`item_${j}`}>
-                              {cell.display(row)}
-                            </TableCell>
-                          ))
-                        }
-                    </TableRow>
-                  )
-                })
-              }
-            </TableBody>
+            {
+            loadingStats ? null :
+              <TableBody>
+                {
+                  playersStats.map((row, index) => {
+                    return (
+                      <TableRow
+                        hover
+                        key={`row_${index}`}>
+                          {
+                            activeCols.map((cell, j) => (
+                              <TableCell key={`item_${j}`}>
+                                {cell.display(row)}
+                              </TableCell>
+                            ))
+                          }
+                      </TableRow>
+                    )
+                  })
+                }
+              </TableBody>
+            }
           </Table>
         </TableContainer>
       </Paper>
+      {
+        loadingStats && <Loading sx={{pt: 2}} />
+      }
     </Box>
   )
 }

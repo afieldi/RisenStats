@@ -12,6 +12,7 @@ import Home from './pages/home/home';
 import Error404 from './pages/errors/404';
 import StatExport from './pages/statExport/statExport';
 import Leaderboards from './pages/leaderboards/leaderboards';
+import SearchPage from './pages/search/search';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -21,11 +22,12 @@ function App() {
   return (
     <Router>
       <ThemeProvider theme={darkTheme}>
-        <div className="App" style={{paddingLeft: '75px'}}>
+        <div className="App" style={{paddingLeft: '65px'}}>
           <HeaderBar open={open} setOpen={setOpen}></HeaderBar>
           <SideBar open={open} onClose={handleDrawerClose}></SideBar>
           <Routes>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/search" element={<SearchPage />}></Route>
             <Route path="/player/:playerName" element={<Player />}></Route>
             <Route path="/404" element={<Error404 />}></Route>
             <Route path="/statexport" element={<StatExport />}></Route>
