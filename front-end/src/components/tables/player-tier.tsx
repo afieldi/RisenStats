@@ -1,12 +1,9 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useTheme } from "@mui/material";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
-import { calculateKDA, riotTimestampToMinutes, roundTo, toSearchName } from "../../../../Common/utils";
+import { roundTo } from "../../../../Common/utils";
 import { getFlattenedLeaderboard } from "../../api/leaderboards";
-import { DPMStatGenerator } from "../../common/stats-generators/DPMStatGenerator";
-import { KDAStatGenerator } from "../../common/stats-generators/KDAStatGenerator";
 import { TableColumn, SortOrder, LeaderboardType } from "../../common/types";
 import { StatGenerators } from "../../common/utils";
 import Loading from "../loading/loading";
@@ -26,7 +23,7 @@ function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
     kda: roundTo(StatGenerators.KDA.getStatValue(stat)),
     dpm: roundTo(StatGenerators.DPM.getStatValue(stat)),
     gpm: roundTo(StatGenerators.GPM.getStatValue(stat)),
-    vs: roundTo(stat.visionScore),
+    vs: roundTo(stat.visionScore / stat.games),
     kpp: roundTo(StatGenerators.KP_PERCENT.getStatValue(stat)),
     dmgp: roundTo(StatGenerators.DMG_PERCENT.getStatValue(stat)),
     deathPercent: roundTo(StatGenerators.DEATH_PERCENT.getStatValue(stat)),
@@ -55,7 +52,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
   const [loadingStats, setLoadingStats] = useState<boolean>(false);
   const [sortCol, setSortCol] = useState<keyof LeaderboardType>('playerName');
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
-  const theme = useTheme();
+
   useEffect(() => {
     setLoadingStats(true);
     getFlattenedLeaderboard(
@@ -114,11 +111,16 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
                         hover
                         key={`row_${index}`}>
                           {
-                            activeCols.map((cell, j) => (
-                              <TableCell key={`item_${j}`}>
-                                {cell.display(row)}
-                              </TableCell>
-                            ))
+                            activeCols.map((cell, j) => {
+                              const displayValue = cell.id === 'rank' ? (
+                                <Typography>{+index+1}</Typography>
+                              ) : cell.display(row)
+                              return (
+                                <TableCell key={`item_${j}`}>
+                                  {displayValue}
+                                </TableCell>
+                              );
+                            })
                           }
                       </TableRow>
                     )

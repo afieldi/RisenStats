@@ -87,7 +87,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       label: 'VS',
       active: false,
       display: (item: LeaderboardType) => (
-        <Typography>{`${item.vs}%`}</Typography>
+        <Typography>{`${item.vs}`}</Typography>
       ),
       description: 'Vision Score',
     },
