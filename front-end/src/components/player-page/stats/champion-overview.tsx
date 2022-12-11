@@ -14,9 +14,7 @@ export default function ChampionOverview(championOverviewProps: ChampionOverview
     const theme = useTheme() as Theme;
 
     return (
-        <RisenBox1>
-            <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="h5" >CHAMPIONS</Typography>
-            <Divider sx={{marginBottom: 2}}/>
+        <RisenBox1 title="CHAMPIONS">
             <Box sx={{display: "flex", columnGap: 1, rowGap: 1, flexWrap: "wrap"}}>
                 { championOverviewProps.championData.map((champData, index) =>
                     <ChampionSummaryBox key={index} championData={champData}/>

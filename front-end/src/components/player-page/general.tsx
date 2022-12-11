@@ -39,7 +39,10 @@ function PlayerPageGeneral({games, loadGamesConfig, player, seasons}: Props)
       <Grid container>
         <Grid item xs={12} md={4}>
           <Container sx={{pr: 0, pl: 0}}>
-            <GamesFilter sx={{mb: 2}} useSeason={true} seasonConfig={{...loadGamesConfig.seasonConfig, seasons}} useRole={true} roleConfig={loadGamesConfig.roleConfig} />
+            <GamesFilter sx={{mb: 2}}
+              useSeason={true}
+              seasonConfig={{...loadGamesConfig.seasonConfig, seasons: seasons.filter(season => season.active)}}
+              useRole={true} roleConfig={loadGamesConfig.roleConfig} />
             <RankFlag sx={{mb: 2}} player={player}></RankFlag>
             <Hidden smDown>
               <PlayerRadarCard sx={{mb: 2}} games={games}></PlayerRadarCard>
@@ -47,7 +50,7 @@ function PlayerPageGeneral({games, loadGamesConfig, player, seasons}: Props)
           </Container>
         </Grid>
         <Grid item xs={12} md={8}>
-          <GameSummaryList gameList={games} loadGamesConfig={loadGamesConfig}></GameSummaryList>
+          <GameSummaryList gameList={games} loadGamesConfig={loadGamesConfig} seasons={seasons}></GameSummaryList>
         </Grid>
       </Grid>
     </Box>

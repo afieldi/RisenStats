@@ -1,4 +1,4 @@
-import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Typography } from "@mui/material";
+import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { visuallyHidden } from "@mui/utils";
 import React from "react";
@@ -39,9 +39,16 @@ export default function SortableTableHead<T>(props: EnhancedTableProps<T>) {
               direction={orderBy === headCell.id ? order : SortOrder.ASC}
               onClick={createSortHandler(headCell.id)}
             >
-              <Typography>
-                {headCell.label}
-              </Typography>
+              {
+                headCell.description ? (
+                  <Tooltip title={headCell.description}>
+                    <Typography>
+                      {headCell.label}
+                    </Typography>
+                  </Tooltip>
+                ) : <Typography>{headCell.label}</Typography>
+              }
+
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === SortOrder.DESC ? 'sorted descending' : 'sorted ascending'}

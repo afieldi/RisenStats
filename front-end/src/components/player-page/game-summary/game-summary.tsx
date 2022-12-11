@@ -15,9 +15,11 @@ import AllTeamInfo from "./all-team-info";
 import GameTimeInformation from "./game-time-information";
 import EndOfGameStatsSummary from "./end-of-game-stats-summary";
 import ChampionSetup from "./champion-setup";
+import SeasonModel from "../../../../../Common/models/season.model";
 
 interface Props {
-  gameData: PlayerDetailedGame
+  gameData: PlayerDetailedGame,
+  seasons: SeasonModel[],
 }
 
 function _getPlayerFromGameData(playerName: string, gameData: GameModel): GameSummaryPlayer
@@ -41,7 +43,7 @@ function _getPlayerFromGameData(playerName: string, gameData: GameModel): GameSu
 }
 
 
-function GameSummary({gameData}: Props)
+function GameSummary({gameData, seasons}: Props)
 {
   const theme = useTheme() as Theme;
   const mainPlayer = gameData.playerGame;
@@ -61,7 +63,7 @@ function GameSummary({gameData}: Props)
       <Box sx={{display: "inline-flex", width: "100%", flexWrap: "wrap", justifyContent: "space-evenly", alignItems: "center"}}>
         <Box sx={{display: "inline-flex", justifyContent: "space-evenly", flexGrow: 1, flexWrap: 'wrap',}}>
           <GameTimeInformation playerWin={playerWin} gameDuration={gameData.game.gameDuration}/>
-          <ChampionSetup mainPlayer={mainPlayer} gameType={gameData.game.gameType} seasonId={gameData.game.seasonId}/>
+          <ChampionSetup mainPlayer={mainPlayer} gameType={gameData.game.gameType} seasonId={gameData.game.seasonId} seasons={seasons} />
 
           <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
             <Typography align="center" sx={{fontFamily: 'Montserrat'}}>

@@ -3,6 +3,7 @@ import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
 import PlayerChampionStatsModel from "./models/playerchampionstats.model";
 import PlayerStatModel from "./models/playerstat.model";
+import SeasonModel from "./models/season.model";
 
 export function toSearchName(name: string): string
 {
@@ -129,10 +130,16 @@ export function ToGameId(matchId: string): number
   return Number(split[1]);
 }
 
-export function GameTypeToString(gameType: number, seasonId: number): string
+export function GameTypeToString(gameType: number, seasonId: number, seasons?: SeasonModel[]): string
 {
   if (seasonId)
   {
+    if (seasons) {
+      for (const season of seasons) {
+        if (season.id === seasonId)
+          return season.seasonName;
+      }
+    }
     return "Risen Match"
   }
   if (gameType === 0)

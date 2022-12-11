@@ -23,7 +23,7 @@ export default function RisenBox1(props: Props) {
       {
         props.title ?
         <Box>
-          <Typography fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{props.title}</Typography>
+          <Typography fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{props.title.toUpperCase()}</Typography>
           <hr color={theme.palette.info.main}></hr>
         </Box> : null
       }

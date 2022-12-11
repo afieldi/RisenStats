@@ -9,7 +9,8 @@ declare module '@mui/material/styles'
     first: PaletteOptions['primary'];
     second: PaletteOptions['primary'];
     third: PaletteOptions['primary'];
-    nth: PaletteOptions['primary']
+    nth: PaletteOptions['primary'];
+    tertiary: PaletteOptions['primary'];
   }
 
   interface Palette {
@@ -19,7 +20,8 @@ declare module '@mui/material/styles'
     first: Palette['primary'];
     second: Palette['primary'];
     third: Palette['primary'];
-    nth: Palette['primary']
+    nth: Palette['primary'];
+    tertiary: Palette['primary'];
   }
 
   interface TypeBackground {
@@ -55,12 +57,15 @@ const darkTheme = createTheme({
       main: '#f45f00'
     },
     secondary: {
-      main: '#00112e'
+      main: '#072f73',
+      dark: '#000B20'
     },
     info: {
       main: '#a3a3a3'
     },
-
+    tertiary: {
+      main: '#214E34'
+    }
   }
 });
 export default darkTheme;
