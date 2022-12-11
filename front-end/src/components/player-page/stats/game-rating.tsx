@@ -23,9 +23,9 @@ export default function GameRating(props: GameRatingProps) {
     }
 
     return (
-        <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
+        <Box sx={{maxWidth: 270, display: 'flex', flexDirection: 'column', rowGap: 2}}>
             <RisenBox1 sx={{minWidth: 230}}>
-                <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="subtitle1">{props.title}</Typography>
+                <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="subtitle2">{props.title.toUpperCase()}</Typography>
                 <Divider sx={{marginBottom: 2}}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 1, justifyContent: "space-between", alignContent: "center"}}>
                     <Typography sx={{paddingTop: "10px"}} color={theme.palette.info.light} align="center" variant="h6">{props.rating}</Typography>

@@ -1,39 +1,14 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import {GameRoles} from "../../../../../Common/Interface/General/gameEnums";
+import {GameRatingStatGenerator} from "./GameRatingStatGenerator";
 
-export class EarlyGameRatingStatGenerator extends BaseStatGenerator {
-
-    protected role;
-    protected soloLanes = [
-        GameRoles.MIDDLE,
-        GameRoles.TOP,
-        GameRoles.BOTTOM,
-        GameRoles.ALL,
-    ]
-
-    constructor(role: GameRoles) {
-        super();
-        this.role = role;
-    }
+export class EarlyGameRatingStatGenerator extends GameRatingStatGenerator {
 
     getStatTitle(): string {
         return "Early Game Rating"
     }
 
     getToolTip(): string {
-        return "Early Game Rating";
-    }
-
-    getStatValue(playerStatsModel: PlayerStatModel): number {
-        if(this.soloLanes.includes(this.role)) {
-            return this.getSoloLaneStatValue(playerStatsModel);
-        }
-        else if (this.role === GameRoles.JUNGLE) {
-            return this.getJunglerStatValue(playerStatsModel)
-        } else {
-            return this.getSupportStatValue(playerStatsModel)
-        }
+        return "Rates you based on your early game stats";
     }
 
     getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number {

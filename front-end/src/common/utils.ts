@@ -28,6 +28,8 @@ import {TotalBaronKillsStatsGenerator} from "./stats-generators/total/TotalBaron
 import {TotalElderDragonKillsStatGenerator} from "./stats-generators/total/TotalElderDragonKillsStatGenerator";
 import {EarlyGameRatingStatGenerator} from "./stats-generators/game-rating/EarlyGameRatingStatGenerator";
 import {GameRoles} from "../../../Common/Interface/General/gameEnums";
+import {LateGameRatingStatGenerator} from "./stats-generators/game-rating/LateGameRatingStatGenerator";
+import {OverallGameRatingStatGenerator} from "./stats-generators/game-rating/OverallGameRatingStatGenerator";
 
 
 export function ChampionIdToName(championId: number): string {
@@ -109,5 +111,14 @@ export const StatGenerators = {
   'EARLY_GAME_RATING_SOLO_LANE': new EarlyGameRatingStatGenerator(GameRoles.ALL),
   'EARLY_GAME_RATING_SUPPORT': new EarlyGameRatingStatGenerator(GameRoles.SUPPORT),
   'EARLY_GAME_RATING_JUNGLER': new EarlyGameRatingStatGenerator(GameRoles.JUNGLE),
+  'LATE_GAME_RATING_SOLO_LANE': new LateGameRatingStatGenerator(GameRoles.ALL),
+  'LATE_GAME_RATING_SUPPORT': new LateGameRatingStatGenerator(GameRoles.SUPPORT),
+  'LATE_GAME_RATING_JUNGLER': new LateGameRatingStatGenerator(GameRoles.JUNGLE),
+  'OVERALL_GAME_RATING_SOLO_LANE': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.ALL),
+                                                                      new LateGameRatingStatGenerator(GameRoles.ALL)),
+  'OVERALL_GAME_RATING_SUPPORT': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.SUPPORT),
+                                                                    new LateGameRatingStatGenerator(GameRoles.SUPPORT)),
+  'OVERALL_GAME_RATING_JUNGLER': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.JUNGLE),
+                                                                    new LateGameRatingStatGenerator(GameRoles.JUNGLE)),
 
 };

@@ -38,13 +38,34 @@ const EARLY_GAME_RATING_BY_ROLE: Record<GameRoles, BaseStatGenerator> = {
     JUNGLE: StatGenerators.EARLY_GAME_RATING_JUNGLER
 }
 
+const LATE_GAME_RATING_BY_ROLE: Record<GameRoles, BaseStatGenerator> = {
+    ALL:StatGenerators.LATE_GAME_RATING_SOLO_LANE,
+    MIDDLE: StatGenerators.LATE_GAME_RATING_SOLO_LANE,
+    TOP: StatGenerators.LATE_GAME_RATING_SOLO_LANE,
+    BOTTOM: StatGenerators.LATE_GAME_RATING_SOLO_LANE,
+    SUPPORT: StatGenerators.LATE_GAME_RATING_SUPPORT,
+    JUNGLE: StatGenerators.LATE_GAME_RATING_JUNGLER
+}
+
+const OVERALL_GAME_RATING_OVERVIEW: Record<GameRoles, BaseStatGenerator> = {
+    ALL:StatGenerators.OVERALL_GAME_RATING_SOLO_LANE,
+    MIDDLE: StatGenerators.OVERALL_GAME_RATING_SOLO_LANE,
+    TOP: StatGenerators.OVERALL_GAME_RATING_SOLO_LANE,
+    BOTTOM: StatGenerators.OVERALL_GAME_RATING_SOLO_LANE,
+    SUPPORT: StatGenerators.OVERALL_GAME_RATING_SUPPORT,
+    JUNGLE: StatGenerators.OVERALL_GAME_RATING_JUNGLER
+}
+
 export default function GameRatingOverview(props: GameRatingOverviewProps) {
     return (
         <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-            <GameRating title={"Early Game Rating"}
-                        rating={EARLY_GAME_RATING_BY_ROLE[props.roleId].getStatString(props.playerStats)}
-                        rank={getRatingByValue(EARLY_GAME_RATING_BY_ROLE[props.roleId].getStatNumber(props.playerStats))}/>
-            <GameRating title={"Overall Game Rating"} rating={"1"} rank={Rank.D}/>
+            {
+                [EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW].map(map => {
+                    return <GameRating title={map[props.roleId].getStatTitle()}
+                                rating={map[props.roleId].getStatString(props.playerStats)}
+                                rank={getRatingByValue(map[props.roleId].getStatNumber(props.playerStats))}/>
+                })
+            }
         </Box>
     );
 }

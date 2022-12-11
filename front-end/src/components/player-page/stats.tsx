@@ -58,6 +58,10 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                                 <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                                 <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
                             </RisenBox1>
+                            <RisenBox1>
+                                <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
+                                <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
+                            </RisenBox1>
                         </Box>
                     </Box>
                 </Box>
