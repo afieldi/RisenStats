@@ -1,4 +1,4 @@
-import {Box} from "@mui/material";
+import {Box, Fade, Grow, Slide} from "@mui/material";
 import React from "react";
 import GameRating from "./game-rating";
 import {StatGenerators} from "../../../common/utils";
@@ -13,15 +13,6 @@ export enum Rank {
     B = "B",
     C = "C",
     D = "D"
-}
-
-const ranksByVal: Record<number, Rank> = {
-    110: Rank.SPLUS,
-    90: Rank.S,
-    70: Rank.A,
-    50: Rank.B,
-    30: Rank.C,
-    0: Rank.D,
 }
 
 interface GameRatingOverviewProps {
@@ -58,15 +49,21 @@ const OVERALL_GAME_RATING_OVERVIEW: Record<GameRoles, BaseStatGenerator> = {
 
 export default function GameRatingOverview(props: GameRatingOverviewProps) {
     return (
-        <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-            {
-                [EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW].map(map => {
-                    return <GameRating title={map[props.roleId].getStatTitle()}
-                                rating={map[props.roleId].getStatString(props.playerStats)}
-                                rank={getRatingByValue(map[props.roleId].getStatNumber(props.playerStats))}/>
-                })
-            }
-        </Box>
+        <Fade in={true} style={{ transitionDelay: '600ms'}}>
+            <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
+                {
+                    [EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW].map(gameRatingMap => {
+                        return <GameRating
+                            hasData={props.playerStats.length > 0}
+                            title={gameRatingMap[props.roleId].getStatTitle()}
+                            tooltip={gameRatingMap[props.roleId].getToolTip()}
+                            rating={gameRatingMap[props.roleId].getStatString(props.playerStats)}
+                            rank={getRatingByValue(gameRatingMap[props.roleId].getStatNumber(props.playerStats))}/>
+                    })
+                }
+            </Box>
+        </Fade>
+
     );
 }
 

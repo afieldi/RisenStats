@@ -19,14 +19,14 @@ export class OverallGameRatingStatGenerator extends BaseStatGenerator {
     }
 
     getToolTip(): string {
-        return "Factors in your early + late game rating + how much you win";
+        return "Factors in your early + late game rating + how much you win overall";
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        const wins = 2 * playerStatsModel.win
-        const loss = 2 * (playerStatsModel.games - playerStatsModel.win);
+        const wins = 3 * playerStatsModel.win
+        const loss = 3 * (playerStatsModel.games - playerStatsModel.win);
         return  ((this.midGame.getStatValue(playerStatsModel) * 0.4) + (this.lateGame.getStatValue(playerStatsModel) * 0.6))
-                + wins - loss
+                + ((wins - loss) / playerStatsModel.games)
     }
 
 }
