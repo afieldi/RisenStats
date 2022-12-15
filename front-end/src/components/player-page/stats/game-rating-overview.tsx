@@ -63,7 +63,6 @@ export default function GameRatingOverview(props: GameRatingOverviewProps) {
                 }
             </Box>
         </Fade>
-
     );
 }
 
@@ -83,7 +82,5 @@ function getRatingByValue(val: number): Rank {
     else if(val > 30) {
         return Rank.C
     }
-    else {
-        return Rank.D
-    }
+    return Rank.D
 }

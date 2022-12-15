@@ -53,7 +53,8 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                                                 leaderboardStats={this.props.leaderboardData ? this.props.leaderboardData : []}
                         />
                         <Box sx={{minHeight: 480, display: 'flex', flexDirection: 'row', columnGap: 2}}>
-                            <GameRatingOverview playerStats={this.props.playerStats} roleId={!!this.props.roleConfig?.roleId ? this.props.roleConfig.roleId : GameRoles.ALL}/>
+                            <GameRatingOverview playerStats={this.props.playerStats}
+                                                roleId={!!this.props.roleConfig?.roleId ? this.props.roleConfig.roleId : GameRoles.ALL}/>
                             <RisenBox1>
                                 <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                                 <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
