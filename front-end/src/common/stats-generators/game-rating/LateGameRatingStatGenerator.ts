@@ -16,7 +16,6 @@ export class LateGameRatingStatGenerator extends GameRatingStatGenerator {
         const kda = 2.5 * (playerStatsModel.kda / playerStatsModel.games)
         const cspm = 3.5 * ((playerStatsModel.totalMinionsKilled + playerStatsModel.enemyJungleMonsterKills + playerStatsModel.alliedJungleMonsterKills) /  riotTimestampToMinutes(playerStatsModel.gameLength) - 5)
         const dpg = 20 * ((playerStatsModel.totalDamageDealtToChampions / playerStatsModel.goldEarned) / playerStatsModel.games)
-        const dpm = 0.025 *  (playerStatsModel.totalDamageDealtToChampions / riotTimestampToMinutes(playerStatsModel.gameLength))
         const wardsPlaced = 0.5 * (playerStatsModel.wardsPlaced / playerStatsModel.games)
         const wardsKilled = 2 * (playerStatsModel.wardsKilled / playerStatsModel.games)
         const objDMG = 0.001 * (playerStatsModel.damageDealtToObjectives / playerStatsModel.games)
@@ -24,11 +23,17 @@ export class LateGameRatingStatGenerator extends GameRatingStatGenerator {
         const csDiff = 0.3 * (playerStatsModel.csDiff / playerStatsModel.games)
         const xpDiff = 0.01 * (playerStatsModel.xpDiff / playerStatsModel.games)
 
+        const dpm = 0.025 *  (playerStatsModel.totalDamageDealtToChampions / riotTimestampToMinutes(playerStatsModel.gameLength))
+        const dmgTankedPM = 0.03 * (playerStatsModel.totalDamageTaken / riotTimestampToMinutes(playerStatsModel.gameLength))
+        const carryStat = this.calculateCarryStat(dpm, dmgTankedPM)
+
         // console.log(playerStatsModel.player.name)
         // console.log(`kda ${kda}`)
         // console.log(`cspm ${cspm}`)
         // console.log(`dpg ${dpg} `)
         // console.log(`dpm ${dpm}`)
+        // console.log(`tanked ${dmgTankedPM}`)
+        // console.log(`carry ${carryStat}`)
         // console.log(`wp ${wardsPlaced}`)
         // console.log(`wk ${wardsKilled}`)
         // console.log(`obj ${objDMG}`)
@@ -36,7 +41,7 @@ export class LateGameRatingStatGenerator extends GameRatingStatGenerator {
         // console.log(`csd ${csDiff}`)
         // console.log(`xpd ${xpDiff}`)
 
-        return (kda + cspm + dpg + dpm + wardsKilled + wardsPlaced + objDMG + turretTakedowns + csDiff + xpDiff);
+        return (kda + cspm + dpg + carryStat + wardsKilled + wardsPlaced + objDMG + turretTakedowns + csDiff + xpDiff);
     }
 
     getSupportStatValue(playerStatsModel: PlayerStatModel): number {
@@ -93,6 +98,12 @@ export class LateGameRatingStatGenerator extends GameRatingStatGenerator {
         // console.log(`ste ${steals}`)
 
         return  kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals;
+    }
+
+    private calculateCarryStat(dpm: number, dmgTankedPM: number) {
+        const blend1 = (dpm * 0.7) + (dmgTankedPM * 0.3)
+        const blend2 = (dpm * 0.3) + (dmgTankedPM * 0.7)
+        return Math.max(blend1, blend2)
     }
 
 }
