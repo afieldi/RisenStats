@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Container, FormControlLabel, FormGroup, Grid, Popper, Tooltip, Typography, useTheme } from '@mui/material';
+import { Button, Checkbox, Container, FormControlLabel, FormGroup, Grid, Hidden, Popper, Tooltip, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import FilterBar from '../../components/filters/filter-bar';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
@@ -72,9 +72,16 @@ export default function Leaderboards() {
   return (
     <Container maxWidth='lg' sx={{pt: 10, minHeight: '100vh', color: theme.palette.info.light}}>
       <Box>
-        <Typography fontFamily="Montserrat" variant="h1" color={theme.palette.info.light}>
-          TOP PLAYERS
-        </Typography>
+        <Hidden mdDown>
+          <Typography fontFamily="Montserrat" variant="h1" color={theme.palette.info.light}>
+            TOP PLAYERS
+          </Typography>
+        </Hidden>
+        <Hidden lgUp>
+          <Typography fontFamily="Montserrat" variant="h3" color={theme.palette.info.light}>
+            TOP PLAYERS
+          </Typography>
+        </Hidden>
       </Box>
       <hr />
       <FilterBar
