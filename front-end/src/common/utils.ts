@@ -1,19 +1,19 @@
 import championsMap from '../data/champions_map.json';
-import { CSPMStatGenerator } from './stats-generators/CSPMStatGenerator';
-import { DamageTakenPerMinuteStatGenerator } from './stats-generators/DamageTakenPerMinuteStatGenerator';
-import { DeathPercentStatGenerator } from './stats-generators/DeathPercentStatGenerator';
-import { DiffEnum, DiffStatGenerator } from './stats-generators/DiffStatGenerator';
-import { DMGPercentStatGenerator } from './stats-generators/DMGPercentStatGenerator';
-import { DPGStatGenerator } from './stats-generators/DPGStatGenerator';
-import { DPMStatGenerator } from './stats-generators/DPMStatGenerator';
-import { GoldShareStatGenerator } from './stats-generators/GoldShareStatGenerator';
-import { GPMStatGenerator } from './stats-generators/GPMStatGenerator';
-import { KDAStatGenerator } from './stats-generators/KDAStatGenerator';
-import { KPPercentStatGenerator } from './stats-generators/KPPercentStatGenerator';
-import { SoloKillStatGenerator } from './stats-generators/SoloKillStatGenerator';
-import { VisionScorePercentStatGenerator } from './stats-generators/VisionScorePercentStatGenerator';
-import { AverageVisionScoreStatGenerator } from './stats-generators/AverageVisionScoreStatGenerator';
-import { WRStatGenerator } from './stats-generators/WRStatGenerator';
+import {CSPMStatGenerator} from './stats-generators/CSPMStatGenerator';
+import {DamageTakenPerMinuteStatGenerator} from './stats-generators/DamageTakenPerMinuteStatGenerator';
+import {DeathPercentStatGenerator} from './stats-generators/DeathPercentStatGenerator';
+import {DiffEnum, DiffStatGenerator} from './stats-generators/DiffStatGenerator';
+import {DMGPercentStatGenerator} from './stats-generators/DMGPercentStatGenerator';
+import {DPGStatGenerator} from './stats-generators/DPGStatGenerator';
+import {DPMStatGenerator} from './stats-generators/DPMStatGenerator';
+import {GoldShareStatGenerator} from './stats-generators/GoldShareStatGenerator';
+import {GPMStatGenerator} from './stats-generators/GPMStatGenerator';
+import {KDAStatGenerator} from './stats-generators/KDAStatGenerator';
+import {KPPercentStatGenerator} from './stats-generators/KPPercentStatGenerator';
+import {SoloKillStatGenerator} from './stats-generators/SoloKillStatGenerator';
+import {VisionScorePercentStatGenerator} from './stats-generators/VisionScorePercentStatGenerator';
+import {AverageVisionScoreStatGenerator} from './stats-generators/AverageVisionScoreStatGenerator';
+import {WRStatGenerator} from './stats-generators/WRStatGenerator';
 import {ElderDragonKillsStatGenerator} from "./stats-generators/ElderDragonKillsStatGenerator";
 import {BaronKillsStatsGenerator} from "./stats-generators/BaronKillsStatsGenerator";
 import {HeraldKillsStatsGenerator} from "./stats-generators/HeraldKillsStatsGenerator";
@@ -26,6 +26,10 @@ import {TotalDragonKillsStatsGenerator} from "./stats-generators/total/TotalDrag
 import {TotalHeraldKillsStatsGenerator} from "./stats-generators/total/TotalHeraldKillsStatsGenerator";
 import {TotalBaronKillsStatsGenerator} from "./stats-generators/total/TotalBaronKillsStatsGenerator";
 import {TotalElderDragonKillsStatGenerator} from "./stats-generators/total/TotalElderDragonKillsStatGenerator";
+import {EarlyGameRatingStatGenerator} from "./stats-generators/game-rating/EarlyGameRatingStatGenerator";
+import {GameRoles} from "../../../Common/Interface/General/gameEnums";
+import {LateGameRatingStatGenerator} from "./stats-generators/game-rating/LateGameRatingStatGenerator";
+import {OverallGameRatingStatGenerator} from "./stats-generators/game-rating/OverallGameRatingStatGenerator";
 
 
 export function ChampionIdToName(championId: number): string {
@@ -103,5 +107,18 @@ export const StatGenerators = {
   'TOTAL_HERALD': new TotalHeraldKillsStatsGenerator(),
   'TOTAL_DRAGON': new TotalDragonKillsStatsGenerator(),
   'TOTAL_TOWERS': new TotalTowersTakenStatsGenerator(),
-  'TOTAL_TOWER_PLATES': new TotalTowerPlatesStatsGenerator()
+  'TOTAL_TOWER_PLATES': new TotalTowerPlatesStatsGenerator(),
+  'EARLY_GAME_RATING_SOLO_LANE': new EarlyGameRatingStatGenerator(GameRoles.ALL),
+  'EARLY_GAME_RATING_SUPPORT': new EarlyGameRatingStatGenerator(GameRoles.SUPPORT),
+  'EARLY_GAME_RATING_JUNGLER': new EarlyGameRatingStatGenerator(GameRoles.JUNGLE),
+  'LATE_GAME_RATING_SOLO_LANE': new LateGameRatingStatGenerator(GameRoles.ALL),
+  'LATE_GAME_RATING_SUPPORT': new LateGameRatingStatGenerator(GameRoles.SUPPORT),
+  'LATE_GAME_RATING_JUNGLER': new LateGameRatingStatGenerator(GameRoles.JUNGLE),
+  'OVERALL_GAME_RATING_SOLO_LANE': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.ALL),
+                                                                      new LateGameRatingStatGenerator(GameRoles.ALL)),
+  'OVERALL_GAME_RATING_SUPPORT': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.SUPPORT),
+                                                                    new LateGameRatingStatGenerator(GameRoles.SUPPORT)),
+  'OVERALL_GAME_RATING_JUNGLER': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.JUNGLE),
+                                                                    new LateGameRatingStatGenerator(GameRoles.JUNGLE)),
+
 };

@@ -8,9 +8,9 @@ import WinRateBox from "./stats/win-rate-box";
 import RisenBox1 from "../risen-box/risen-box-1";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
-import GamesFilter from "../filters/games-filter";
 import FilterBar from "../filters/filter-bar";
 import ObjectiveOverview from "./stats/objective-overview";
+import GameRatingOverview from "./stats/game-rating-overview";
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -52,10 +52,18 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                                                 playerPuuid={this.props.playerPuuid}
                                                 leaderboardStats={this.props.leaderboardData ? this.props.leaderboardData : []}
                         />
-                        <RisenBox1 sx={{minHeight: 480}}>
-                            <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
-                            <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
-                        </RisenBox1>
+                        <Box sx={{minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2}}>
+                            <GameRatingOverview playerStats={this.props.playerStats}
+                                                roleId={!!this.props.roleConfig?.roleId ? this.props.roleConfig.roleId : GameRoles.ALL}/>
+                            <RisenBox1>
+                                <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
+                                <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
+                            </RisenBox1>
+                            <RisenBox1>
+                                <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
+                                <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
+                            </RisenBox1>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
