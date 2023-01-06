@@ -5,7 +5,7 @@ import SeasonModel from "../../../../Common/models/season.model";
 import ChampionOverview from "./stats/champion-overview";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
 import WinRateBox from "./stats/win-rate-box";
-import RisenBox1 from "../risen-box/risen-box-1";
+import BaseRisenBox from "../risen-box/base-risen-box";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import FilterBar from "../filters/filter-bar";
@@ -55,14 +55,14 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                         <Box sx={{minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2}}>
                             <GameRatingOverview playerStats={this.props.playerStats}
                                                 roleId={!!this.props.roleConfig?.roleId ? this.props.roleConfig.roleId : GameRoles.ALL}/>
-                            <RisenBox1>
+                            <BaseRisenBox>
                                 <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                                 <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
-                            </RisenBox1>
-                            <RisenBox1>
+                            </BaseRisenBox>
+                            <BaseRisenBox>
                                 <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                                 <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
-                            </RisenBox1>
+                            </BaseRisenBox>
                         </Box>
                     </Box>
                 </Box>

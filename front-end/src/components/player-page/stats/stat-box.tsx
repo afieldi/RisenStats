@@ -1,6 +1,6 @@
 import {useTheme} from "@emotion/react";
 import {Box, Grow, Theme, Tooltip, Typography} from "@mui/material";
-import RisenBox1 from "../../risen-box/risen-box-1";
+import BaseRisenBox from "../../risen-box/base-risen-box";
 import React from "react";
 import LeaderboardRanking from "./leaderboard-ranking";
 
@@ -24,7 +24,7 @@ export default function StatBox(statBoxProps: StatBoxProps) {
     const typographySize = statBoxProps.statTitle.length < 8 ? "subtitle2" : "caption";
 
     return (
-        <RisenBox1 sx={{minWidth: 110, maxWidth: 110, minHeight: 110, maxHeight: 110}}>
+        <BaseRisenBox sx={{minWidth: 110, maxWidth: 110, minHeight: 110, maxHeight: 110}}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
                 {!statBoxProps.haveStatsLoaded &&
                     <Typography color={theme.palette.info.light} variant="subtitle2">
@@ -43,6 +43,6 @@ export default function StatBox(statBoxProps: StatBoxProps) {
                     </div>
                 </Grow>
             </Box>
-        </RisenBox1>
+        </BaseRisenBox>
     )
 }

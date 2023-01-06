@@ -1,5 +1,5 @@
 import React from "react";
-import RisenBox1 from "../risen-box/risen-box-1";
+import BaseRisenBox from "../risen-box/base-risen-box";
 import SeasonModel from "../../../../Common/models/season.model";
 import { Container, Grid, Box, Hidden, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Theme, SxProps } from "@mui/material";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
@@ -33,7 +33,7 @@ interface Props {
 
 export default function GamesFilter(props: Props) {
   return (
-    <RisenBox1 title="Filters" sx={{...props.sx}}>
+    <BaseRisenBox title="Filters" sx={{...props.sx}}>
       {
         props.useSeason && <RisenSeasonSelector
             callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value)}}
@@ -50,6 +50,6 @@ export default function GamesFilter(props: Props) {
                               props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles])
               }}/>
       }
-    </RisenBox1>
+    </BaseRisenBox>
   )
 }

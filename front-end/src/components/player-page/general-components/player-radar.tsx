@@ -4,7 +4,7 @@ import { PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
 import { PolarAngleAxis, PolarGrid, RadarChart } from 'recharts';
 import { PlayerDetailedGame, PlayerGamesResponse } from '../../../../../Common/Interface/Internal/player';
 import { calculateKDA, NonNone, roundTo } from '../../../../../Common/utils';
-import RisenBox1 from '../../risen-box/risen-box-1';
+import BaseRisenBox from '../../risen-box/base-risen-box';
 
 
 interface RadarOptions {
