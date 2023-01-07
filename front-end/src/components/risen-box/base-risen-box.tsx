@@ -8,7 +8,7 @@ export interface Props {
   title?: string;
 }
 
-export default function RisenBox1(props: Props) {
+export default function BaseRisenBox(props: Props) {
   const { children, sx, ...other } = props;
   const theme = useTheme() as Theme;
   // if (!sx)

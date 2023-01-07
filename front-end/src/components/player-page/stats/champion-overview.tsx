@@ -2,7 +2,7 @@ import {useTheme} from "@emotion/react";
 import {Box, Divider, Theme, Typography} from "@mui/material";
 import React from "react";
 import PlayerChampionStatsModel from "../../../../../Common/models/playerchampionstats.model";
-import RisenBox1 from "../../risen-box/risen-box-1";
+import BaseRisenBox from "../../risen-box/base-risen-box";
 import ChampionSummaryBox from "./champion-summary-box";
 
 
@@ -14,12 +14,12 @@ export default function ChampionOverview(championOverviewProps: ChampionOverview
     const theme = useTheme() as Theme;
 
     return (
-        <RisenBox1 title="CHAMPIONS">
+        <BaseRisenBox title="CHAMPIONS">
             <Box sx={{display: "flex", columnGap: 1, rowGap: 1, flexWrap: "wrap"}}>
                 { championOverviewProps.championData.map((champData, index) =>
                     <ChampionSummaryBox key={index} championData={champData}/>
                 )}
             </Box>
-        </RisenBox1>
+        </BaseRisenBox>
     );
 }

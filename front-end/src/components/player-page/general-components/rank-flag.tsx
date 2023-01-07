@@ -3,7 +3,7 @@ import { SxProps, Theme, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import React from "react";
 import PlayerModel from "../../../../../Common/models/player.model";
-import RisenBox1 from "../../risen-box/risen-box-1";
+import BaseRisenBox from "../../risen-box/base-risen-box";
 
 interface Props {
   player?: PlayerModel;
@@ -16,7 +16,7 @@ export default function RankFlag({player, sx}: Props)
   let league = player?.league ? player?.league : "Unranked";
   league = league[0].toUpperCase() + league.substring(1).toLocaleLowerCase();
   return (
-    <RisenBox1 title="Rank" sx={sx}>
+    <BaseRisenBox title="Rank" sx={sx}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         {
           league === "Unranked" ? null :
@@ -29,6 +29,6 @@ export default function RankFlag({player, sx}: Props)
           {/* <Typography>Better than me</Typography> */}
         </Box>
       </Box>
-    </RisenBox1>
+    </BaseRisenBox>
   )
 }

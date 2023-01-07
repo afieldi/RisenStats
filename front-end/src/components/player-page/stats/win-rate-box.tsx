@@ -1,4 +1,4 @@
-import RisenBox1 from "../../risen-box/risen-box-1";
+import BaseRisenBox from "../../risen-box/base-risen-box";
 import {Cell, Label, Pie, PieChart, Tooltip} from "recharts";
 import React from "react";
 import {useTheme} from "@emotion/react";
@@ -21,7 +21,7 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
     const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}G ${winRateProps.losses}L`
 
     return (
-        <RisenBox1 sx={{minWidth: 280, minHeight: 280}}>
+        <BaseRisenBox sx={{minWidth: 280, minHeight: 280}}>
             <Typography fontFamily="Montserrat" color={theme.palette.info.light} variant="h4">WIN RATE</Typography>
             {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
             <PieChart width={240} height={200}>
@@ -47,6 +47,6 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
                 </Pie>
                 <Tooltip/>
             </PieChart>
-        </RisenBox1>
+        </BaseRisenBox>
     )
 }

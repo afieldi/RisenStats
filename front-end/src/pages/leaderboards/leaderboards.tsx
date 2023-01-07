@@ -9,7 +9,7 @@ import SeasonModel from '../../../../Common/models/season.model';
 import { TableColumn, LeaderboardType } from '../../common/types';
 import { useNavigate } from 'react-router-dom';
 import { toSearchName } from '../../../../Common/utils';
-import RisenBox1 from '../../components/risen-box/risen-box-1';
+import BaseRisenBox from '../../components/risen-box/base-risen-box';
 import { getAllHeadCells } from './leaderboardDef';
 
 
@@ -87,7 +87,7 @@ export default function Leaderboards() {
               Edit Columns
             </Button>
             <Popper id={id} open={open} anchorEl={anchorEl}>
-              <RisenBox1 sx={{border: 1}} title="Columns">
+              <BaseRisenBox sx={{border: 1}} title="Columns">
                 <FormGroup>
                   <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: "wrap", maxWidth: '350px' }}>
                     {
@@ -110,7 +110,7 @@ export default function Leaderboards() {
                     <Button variant='outlined' onClick={() => setAnchorEl(null)}>Cancel</Button>
                   </Box>
                 </FormGroup>
-              </RisenBox1>
+              </BaseRisenBox>
             </Popper>
           </Box>
       </FilterBar>

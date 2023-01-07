@@ -1,6 +1,6 @@
 import {useTheme} from "@emotion/react";
 import {Box, Divider, Theme, Tooltip, Typography} from "@mui/material";
-import RisenBox1 from "../../risen-box/risen-box-1";
+import BaseRisenBox from "../../risen-box/base-risen-box";
 import React from "react";
 import {Rank} from "./game-rating-overview";
 
@@ -26,7 +26,7 @@ export default function GameRating(props: GameRatingProps) {
 
     return (
         <Box sx={{maxWidth: 270, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-            <RisenBox1 sx={{minWidth: 230}}>
+            <BaseRisenBox sx={{minWidth: 230}}>
                 <Tooltip title={props.tooltip}>
                     <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="subtitle2">{props.title.toUpperCase()}</Typography>
                 </Tooltip>
@@ -40,7 +40,7 @@ export default function GameRating(props: GameRatingProps) {
                         <Typography color={colorMap[props.rank]} align="left" variant="h5">{props.rank}</Typography>
                     </Box>
                 }
-            </RisenBox1>
+            </BaseRisenBox>
         </Box>
     );
 }

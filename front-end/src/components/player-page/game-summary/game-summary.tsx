@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { calculateCS, calculateKDA, GameTypeToString, riotTimestampToGameTime, toSearchName, trimStr } from "../../../../../Common/utils";
 import GameModel from "../../../../../Common/models/game.model";
 import PlayerGameModel from "../../../../../Common/models/playergame.model";
-import RisenBox1 from "../../risen-box/risen-box-1";
+import BaseRisenBox from "../../risen-box/base-risen-box";
 import { GameSummaryPlayer } from "../../../../../Common/Interface/Database/game";
 import { PlayerDetailedGame } from "../../../../../Common/Interface/Internal/player";
 import ItemBox from "../../item-box/item-box";
@@ -59,7 +59,7 @@ function GameSummary({gameData, seasons}: Props)
   };
 
   return (
-    <RisenBox1 sx={{bgcolor: bgColor, mb: 1}}>
+    <BaseRisenBox sx={{bgcolor: bgColor, mb: 1}}>
       <Box sx={{display: "inline-flex", width: "100%", flexWrap: "wrap", justifyContent: "space-evenly", alignItems: "center"}}>
         <Box sx={{display: "inline-flex", justifyContent: "space-evenly", flexGrow: 1, flexWrap: 'wrap',}}>
           <GameTimeInformation playerWin={playerWin} gameDuration={gameData.game.gameDuration}/>
@@ -83,7 +83,7 @@ function GameSummary({gameData, seasons}: Props)
           <AllTeamInfo gameModel={gameData.game}/>
         </Box>
       </Box>
-    </RisenBox1>
+    </BaseRisenBox>
   )
 }
 
