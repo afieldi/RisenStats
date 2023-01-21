@@ -348,6 +348,12 @@ export default class PlayerGameModel extends BaseEntity
   @Column('integer')
   visionClearedPings: number;
 
+  @Column('integer')
+  commandPings: number;
+
+  @Column('integer')
+  dangerPings: number;
+
   // Computed
   @Column("real")
   damagePerGold: number;

@@ -416,6 +416,8 @@ export interface RiotParticipantDto
   onMyWayPings: number;
   pushPings: number;
   visionClearedPings: number;
+  commandPings: number;
+  dangerPings: number;
 }
 
 export interface RiotInfoDto

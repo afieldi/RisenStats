@@ -148,6 +148,8 @@ export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: nu
     onMyWayPings:  0,
     pushPings:  0,
     visionClearedPings:  0,
+    commandPings: 0,
+    dangerPings: 0,
     "12AssistStreakCount": 0,
     abilityUses: 0,
     acesBefore15Minutes: 0,
@@ -343,6 +345,8 @@ export function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGa
   currentRow.onMyWayPings += NonNone(game.onMyWayPings);
   currentRow.pushPings += NonNone(game.pushPings);
   currentRow.visionClearedPings += NonNone(game.visionClearedPings);
+  currentRow.commandPings += NonNone(game.commandPings);
+  currentRow.dangerPings += NonNone(game.dangerPings);
   currentRow["12AssistStreakCount"] += NonNone(game["12AssistStreakCount"], 0);
   currentRow.abilityUses += NonNone(game.abilityUses, 0);
   currentRow.acesBefore15Minutes += NonNone(game.acesBefore15Minutes, 0);

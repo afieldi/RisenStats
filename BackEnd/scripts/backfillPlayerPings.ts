@@ -24,6 +24,8 @@ async function backfillPlayerGamePings(): Promise<any> {
         item.onMyWayPings = 0;
         item.pushPings = 0;
         item.visionClearedPings = 0;
+        item.dangerPings = 0
+        item.commandPings = 0
         console.log(`Saving item ${i}`)
         await SaveObjects([item])
     }
@@ -51,6 +53,8 @@ async function backfillPlayerGamePingsForStats(): Promise<any> {
         item.onMyWayPings = 0;
         item.pushPings = 0;
         item.visionClearedPings = 0;
+        item.dangerPings = 0
+        item.commandPings = 0
         console.log(`Saving item ${i}`)
         await SaveObjects([item])
     }
