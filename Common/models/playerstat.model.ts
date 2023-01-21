@@ -163,6 +163,43 @@ export default class PlayerStatModel extends BaseEntity
     @Column("integer")
     consumablesPurchased: number;
 
+    // Pings
+    @Column('integer')
+    allInPings: number;
+
+    @Column('integer')
+    assistMePings: number;
+
+    @Column('integer')
+    baitPings: number;
+
+    @Column('integer')
+    basicPings: number;
+
+    @Column('integer')
+    enemyMissingPings: number;
+
+    @Column('integer')
+    enemyVisionPings: number;
+
+    @Column('integer')
+    getBackPings: number;
+
+    @Column('integer')
+    holdPings: number;
+
+    @Column('integer')
+    needVisionPings: number;
+
+    @Column('integer')
+    onMyWayPings: number;
+
+    @Column('integer')
+    pushPings: number;
+
+    @Column('integer')
+    visionClearedPings: number;
+
     // Challenges
     @Column("integer")
     "12AssistStreakCount": number;

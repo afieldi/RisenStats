@@ -166,6 +166,20 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     primaryStyle: riotPlayer.perks.styles[1].style,
     secondaryStyle: riotPlayer.perks.styles[1].style,
 
+    // Pings
+    allInPings: riotPlayer.allInPings,
+    assistMePings: riotPlayer.assistMePings,
+    baitPings: riotPlayer.baitPings,
+    basicPings: riotPlayer.basicPings,
+    enemyMissingPings: riotPlayer.enemyMissingPings,
+    enemyVisionPings: riotPlayer.enemyVisionPings,
+    getBackPings: riotPlayer.getBackPings,
+    holdPings: riotPlayer.holdPings,
+    needVisionPings: riotPlayer.needVisionPings,
+    onMyWayPings: riotPlayer.onMyWayPings,
+    pushPings: riotPlayer.pushPings,
+    visionClearedPings: riotPlayer.visionClearedPings,
+
     // Computed
     damagePerGold: riotPlayer.totalDamageDealtToChampions / riotPlayer.goldEarned,
     goldShare: riotPlayer.goldEarned / teamStats.totalGold,

@@ -136,6 +136,18 @@ export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: nu
     quadraKills: 0,
     pentaKills: 0,
     consumablesPurchased: 0,
+    allInPings:  0,
+    assistMePings: 0,
+    baitPings:  0,
+    basicPings:  0,
+    enemyMissingPings:  0,
+    enemyVisionPings: 0,
+    getBackPings: 0,
+    holdPings:  0,
+    needVisionPings: 0,
+    onMyWayPings:  0,
+    pushPings:  0,
+    visionClearedPings:  0,
     "12AssistStreakCount": 0,
     abilityUses: 0,
     acesBefore15Minutes: 0,
@@ -319,6 +331,18 @@ export function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGa
   currentRow.quadraKills += NonNone(game.quadraKills, 0);
   currentRow.pentaKills += NonNone(game.pentaKills, 0);
   currentRow.consumablesPurchased += NonNone(game.consumablesPurchased, 0);
+  currentRow.allInPings += NonNone(game.allInPings);
+  currentRow.assistMePings+= NonNone(game.assistMePings);
+  currentRow.baitPings += NonNone(game.baitPings);
+  currentRow.basicPings += NonNone(game.basicPings);
+  currentRow.enemyMissingPings += NonNone(game.enemyMissingPings);
+  currentRow.enemyVisionPings += NonNone(game.enemyVisionPings);
+  currentRow.getBackPings += NonNone(game.getBackPings);
+  currentRow.holdPings += NonNone(game.holdPings);
+  currentRow.needVisionPings += NonNone(game.needVisionPings);
+  currentRow.onMyWayPings += NonNone(game.onMyWayPings);
+  currentRow.pushPings += NonNone(game.pushPings);
+  currentRow.visionClearedPings += NonNone(game.visionClearedPings);
   currentRow["12AssistStreakCount"] += NonNone(game["12AssistStreakCount"], 0);
   currentRow.abilityUses += NonNone(game.abilityUses, 0);
   currentRow.acesBefore15Minutes += NonNone(game.acesBefore15Minutes, 0);

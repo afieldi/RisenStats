@@ -404,6 +404,18 @@ export interface RiotParticipantDto
   wardsKilled: number;
   wardsPlaced: number;
   win: boolean;
+  allInPings: number;
+  assistMePings: number;
+  baitPings: number;
+  basicPings: number;
+  enemyMissingPings: number;
+  enemyVisionPings: number;
+  getBackPings: number;
+  holdPings: number;
+  needVisionPings: number;
+  onMyWayPings: number;
+  pushPings: number;
+  visionClearedPings: number;
 }
 
 export interface RiotInfoDto
