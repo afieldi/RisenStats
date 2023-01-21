@@ -1,5 +1,4 @@
 import { RiotTimelineEvent } from "./RiotApiTimelineEvents";
-import {Column} from "typeorm";
 
 export interface RiotObjectiveDto
 {
