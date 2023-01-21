@@ -43,6 +43,8 @@ import {TotalNeedVisionPingStatGenerator} from "./stats-generators/pings/TotalNe
 import {TotalOnMyWayPingStatGenerator} from "./stats-generators/pings/TotalOnMyWayPingStatGenerator";
 import {TotalPushPingStatGenerator} from "./stats-generators/pings/TotalPushPingStatGenerator";
 import {TotalVisionClearedPingStatGenerator} from "./stats-generators/pings/TotalVisionClearedPingStatGenerator";
+import {TotalCommandPingStatGenerator} from "./stats-generators/pings/TotalCommandPingStatGenerator";
+import {TotalDangerPingStatGenerator} from "./stats-generators/pings/TotalDangerPingStatGenerator";
 
 export const DRAWER_WIDTH = 230;
 
@@ -103,6 +105,8 @@ export const StatGenerators = {
   'TOTAL_ON_MY_WAY_PINGS': new TotalOnMyWayPingStatGenerator(),
   'TOTAL_PUSH_PINGS': new TotalPushPingStatGenerator(),
   'TOTAL_VISION_CLEARED_PINGS': new TotalVisionClearedPingStatGenerator(),
+  'TOTAL_COMMAND_PINGS': new TotalCommandPingStatGenerator(),
+  'TOTAL_DANGER_PINGS': new TotalDangerPingStatGenerator(),
 };
 
 export const EARLY_GAME_RATING_BY_ROLE: Record<GameRoles, RoleRatingStatGenerator> = {
