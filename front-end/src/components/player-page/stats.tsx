@@ -12,7 +12,7 @@ import FilterBar from "../filters/filter-bar";
 import ObjectiveOverview from "./stats/objective-overview";
 import GameRatingOverview from "./stats/game-rating-overview";
 import PingOverview from "./stats/ping-overview";
-import {playerStatsHasData} from "../../../../Common/utils";
+import {doesPlayerStatsObjectHaveData} from "../../../../Common/utils";
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -45,7 +45,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                 <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-                        <WinRateBox hasData={playerStatsHasData(this.props.playerStats)} wins={wins} losses={games-wins}/>
+                        <WinRateBox hasData={doesPlayerStatsObjectHaveData(this.props.playerStats)} wins={wins} losses={games-wins}/>
                         <ChampionOverview championData={this.props.championData}/>
                         <ObjectiveOverview playerStats={this.props.playerStats}/>
                     </Box>

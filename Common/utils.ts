@@ -237,6 +237,6 @@ export function sigmoid(z: number, k: number) {
   return 1 / (1 + Math.exp(-z/k));
 }
 
-export function playerStatsHasData(playerStats: PlayerStatModel[]): boolean {
-  return playerStats.length > 0;
+export function doesPlayerStatsObjectHaveData(playerStats: PlayerStatModel[]): boolean {
+  return !!playerStats.length;
 }

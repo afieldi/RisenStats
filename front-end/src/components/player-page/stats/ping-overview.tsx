@@ -5,14 +5,14 @@ import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 import {useTheme} from "@emotion/react";
 import {StatGenerators} from "../../../common/constants";
 import {BaseStatGenerator} from "../../../common/stats-generators/BaseStatsGenerator";
-import {playerStatsHasData} from "../../../../../Common/utils";
+import {doesPlayerStatsObjectHaveData} from "../../../../../Common/utils";
 import {abbreviateNumber} from "../../../common/utils";
 
 interface PingOverviewProps {
     playerStats: PlayerStatModel[]
 }
 
-export const pings: Record<string, BaseStatGenerator> = {
+const pings: Record<string, BaseStatGenerator> = {
     "/images/game/pings/all_in.png" : StatGenerators.TOTAL_ALL_IN_PINGS,
     "/images/game/pings/assist.png" : StatGenerators.TOTAL_ASSIST_ME_PINGS,
     "/images/game/pings/ping.png" : StatGenerators.TOTAL_BASIC_PINGS,
@@ -38,11 +38,11 @@ export default function PingOverview(props: PingOverviewProps) {
     return (
         <BaseRisenBox sx={{minWidth: 240, maxWidth: 270, justifyContent:"space-between"}} title="Total Pings">
             {
-                !playerStatsHasData(props.playerStats) && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>
+                !doesPlayerStatsObjectHaveData(props.playerStats) && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>
             }
             <Box sx={{justifyContent:"space-between", display: "flex", flexWrap: "wrap", columnGap: 2, rowGap: 1, padding: "5px"}}>
                 {
-                    playerStatsHasData(props.playerStats) &&
+                    doesPlayerStatsObjectHaveData(props.playerStats) &&
                     Object.keys(pings)
                         .sort((a, b) => pings[b].getStatNumber(props.playerStats) - pings[a].getStatNumber(props.playerStats))
                         .map((key) => {
@@ -66,7 +66,7 @@ function getRow(theme: Theme, src: string, statGenerator: BaseStatGenerator, pla
     return (
         <Box>
             <Tooltip title={statGenerator.getToolTip()} sx={{display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent:"center"}}>
-                {getImg(src)}
+                <img alt={statGenerator.getToolTip()} src={src} height="25x" width="25px"/>
             </Tooltip>
             <Box sx={{width: "30px"}}>
                 <Typography  fontFamily="Montserrat" align="center"
@@ -75,13 +75,4 @@ function getRow(theme: Theme, src: string, statGenerator: BaseStatGenerator, pla
 
         </Box>
     );
-}
-
-function getImg(src: string) {
-    return (
-        <img alt={""}
-             src={src}
-             height="25x"
-             width="25px"/>
-    )
 }
