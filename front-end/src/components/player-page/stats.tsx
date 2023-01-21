@@ -11,6 +11,8 @@ import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import FilterBar from "../filters/filter-bar";
 import ObjectiveOverview from "./stats/objective-overview";
 import GameRatingOverview from "./stats/game-rating-overview";
+import PingOverview from "./stats/ping-overview";
+import {doesPlayerStatsObjectHaveData} from "../../../../Common/utils";
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -43,7 +45,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                 <FilterBar seasonConfig={this.props.seasonConfig} roleConfig={this.props.roleConfig}/>
                 <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 3}}>
                     <Box sx={{maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-                        <WinRateBox hasData={this.props.playerStats.length > 0} wins={wins} losses={games-wins}/>
+                        <WinRateBox hasData={doesPlayerStatsObjectHaveData(this.props.playerStats)} wins={wins} losses={games-wins}/>
                         <ChampionOverview championData={this.props.championData}/>
                         <ObjectiveOverview playerStats={this.props.playerStats}/>
                     </Box>
@@ -55,10 +57,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                         <Box sx={{minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2}}>
                             <GameRatingOverview playerStats={this.props.playerStats}
                                                 roleId={!!this.props.roleConfig?.roleId ? this.props.roleConfig.roleId : GameRoles.ALL}/>
-                            <BaseRisenBox>
-                                <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
-                                <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
-                            </BaseRisenBox>
+                            <PingOverview playerStats={this.props.playerStats}></PingOverview>
                             <BaseRisenBox>
                                 <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                                 <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>

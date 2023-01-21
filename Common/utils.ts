@@ -236,3 +236,7 @@ export function combine(object1: PlayerStatModel, object2: PlayerStatModel): Pla
 export function sigmoid(z: number, k: number) {
   return 1 / (1 + Math.exp(-z/k));
 }
+
+export function doesPlayerStatsObjectHaveData(playerStats: PlayerStatModel[]): boolean {
+  return !!playerStats.length;
+}
