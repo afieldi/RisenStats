@@ -200,6 +200,12 @@ export default class PlayerStatModel extends BaseEntity
     @Column('integer')
     visionClearedPings: number;
 
+    @Column('integer')
+    commandPings: number;
+
+    @Column('integer')
+    dangerPings: number;
+
     // Challenges
     @Column("integer")
     "12AssistStreakCount": number;

@@ -179,6 +179,8 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     onMyWayPings: riotPlayer.onMyWayPings,
     pushPings: riotPlayer.pushPings,
     visionClearedPings: riotPlayer.visionClearedPings,
+    commandPings: riotPlayer.commandPings,
+    dangerPings: riotPlayer.dangerPings,
 
     // Computed
     damagePerGold: riotPlayer.totalDamageDealtToChampions / riotPlayer.goldEarned,

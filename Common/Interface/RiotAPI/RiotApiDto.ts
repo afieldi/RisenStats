@@ -1,4 +1,5 @@
 import { RiotTimelineEvent } from "./RiotApiTimelineEvents";
+import {Column} from "typeorm";
 
 export interface RiotObjectiveDto
 {
@@ -416,6 +417,8 @@ export interface RiotParticipantDto
   onMyWayPings: number;
   pushPings: number;
   visionClearedPings: number;
+  commandPings: number;
+  dangerPings: number;
 }
 
 export interface RiotInfoDto
