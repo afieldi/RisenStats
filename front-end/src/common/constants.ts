@@ -31,6 +31,18 @@ import {LateGameRatingStatGenerator} from "./stats-generators/game-rating/LateGa
 import {OverallGameRatingStatGenerator} from "./stats-generators/game-rating/OverallGameRatingStatGenerator";
 import { RoleRatingStatGenerator } from './stats-generators/game-rating/RoleRatingStatGenerator';
 import { GameRatingStatGenerator } from './stats-generators/game-rating/GameRatingStatGenerator';
+import {TotalAllInPingsStatsGenerator} from "./stats-generators/pings/TotalAllInPingsStatsGenerator";
+import {TotalAssistMePingStatGenerator} from "./stats-generators/pings/TotalAssistMePingStatGenerator";
+import {TotalBasicPingStatsGenerator} from "./stats-generators/pings/TotalBasicPingStatsGenerator";
+import {TotalBaitPingStatGenerator} from "./stats-generators/pings/TotalBaitPingStatGenerator";
+import {TotalEnemyMissingPingStatGenerator} from "./stats-generators/pings/TotalEnemyMissingPingStatGenerator";
+import {TotalEnemyVisionPingStatGenerator} from "./stats-generators/pings/TotalEnemyVisionPingStatGenerator";
+import {TotalGetBackPingStatGenerator} from "./stats-generators/pings/TotalGetBackPingStatGenerator";
+import {TotalHoldPingStatGenerator} from "./stats-generators/pings/TotalHoldPingStatGenerator";
+import {TotalNeedVisionPingStatGenerator} from "./stats-generators/pings/TotalNeedVisionPingStatGenerator";
+import {TotalOnMyWayPingStatGenerator} from "./stats-generators/pings/TotalOnMyWayPingStatGenerator";
+import {TotalPushPingStatGenerator} from "./stats-generators/pings/TotalPushPingStatGenerator";
+import {TotalVisionClearedPingStatGenerator} from "./stats-generators/pings/TotalVisionClearedPingStatGenerator";
 
 export const DRAWER_WIDTH = 230;
 
@@ -79,7 +91,18 @@ export const StatGenerators = {
                                                                     new LateGameRatingStatGenerator(GameRoles.SUPPORT)),
   'OVERALL_GAME_RATING_JUNGLER': new OverallGameRatingStatGenerator(new EarlyGameRatingStatGenerator(GameRoles.JUNGLE),
                                                                     new LateGameRatingStatGenerator(GameRoles.JUNGLE)),
-
+  'TOTAL_ALL_IN_PINGS': new TotalAllInPingsStatsGenerator(),
+  'TOTAL_ASSIST_ME_PINGS': new TotalAssistMePingStatGenerator(),
+  'TOTAL_BASIC_PINGS': new TotalBasicPingStatsGenerator(),
+  'TOTAL_BAIT_PINGS': new TotalBaitPingStatGenerator(),
+  'TOTAL_ENEMY_MISSING_PINGS': new TotalEnemyMissingPingStatGenerator(),
+  'TOTAL_ENEMY_VISION_PINGS': new TotalEnemyVisionPingStatGenerator(),
+  'TOTAL_GET_BACK_PING': new TotalGetBackPingStatGenerator(),
+  'TOTAL_HOLD_PING': new TotalHoldPingStatGenerator(),
+  'TOTAL_NEED_VISION_PING': new TotalNeedVisionPingStatGenerator(),
+  'TOTAL_ON_MY_WAY_PINGS': new TotalOnMyWayPingStatGenerator(),
+  'TOTAL_PUSH_PINGS': new TotalPushPingStatGenerator(),
+  'TOTAL_VISION_CLEARED_PINGS': new TotalVisionClearedPingStatGenerator(),
 };
 
 export const EARLY_GAME_RATING_BY_ROLE: Record<GameRoles, RoleRatingStatGenerator> = {
