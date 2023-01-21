@@ -1,8 +1,9 @@
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 import {GameRatingStatGenerator} from "./GameRatingStatGenerator";
 import {riotTimestampToMinutes} from "../../../../../Common/utils";
+import { RoleRatingStatGenerator } from "./RoleRatingStatGenerator";
 
-export class LateGameRatingStatGenerator extends GameRatingStatGenerator {
+export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
 
     getStatTitle(): string {
         return "Late Game Rating"

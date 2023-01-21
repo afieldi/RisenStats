@@ -1,5 +1,7 @@
-import { Typography } from '@mui/material';
-import { TableColumn, LeaderboardType } from '../../common/types';
+import { Theme, Typography } from '@mui/material';
+import { OVERALL_GAME_RATING_OVERVIEW } from '../../common/constants';
+import { TableColumn, LeaderboardType, Rank } from '../../common/types';
+import { getRankColor } from '../../common/utils';
 
 export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardType>[] {
   return [
@@ -9,7 +11,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Rank',
       active: true,
-      display: (i: LeaderboardType) => (
+      display: (i: LeaderboardType, theme: Theme) => (
         <Typography>{i.rank}</Typography>
       ),
     },
@@ -19,7 +21,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Role',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <img src={`/images/roles/${item.role}.png`} style={{height: '30px'}}></img>
       ),
     },
@@ -29,7 +31,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Name',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>
           <div className="clickable" onClick={() => {goToPlayer(item.playerName)}}>
             {item.playerName}
@@ -38,12 +40,25 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       ),
     },
     {
+      id: 'tier',
+      align: 'left',
+      disablePadding: false,
+      label: 'Tier',
+      active: true,
+      display: (item: LeaderboardType, theme: Theme) => {
+        const rank: Rank = OVERALL_GAME_RATING_OVERVIEW[item.role].getRatingFromNumber(item.tier);
+        return (
+          <Typography color={getRankColor(rank, theme)} align="left" variant="h5">{rank}</Typography>
+        )
+      },
+    },
+    {
       id: 'wr',
       align: 'left',
       disablePadding: false,
       label: 'WR',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.wr}%`}</Typography>
       ),
       description: 'Win Rate',
@@ -54,7 +69,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'KDA',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.kda}:1`}</Typography>
       ),
     },
@@ -64,7 +79,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'DPM',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{item.dpm}</Typography>
       ),
       description: 'Damage Per Minute',
@@ -75,7 +90,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'GPM',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{item.gpm}</Typography>
       ),
       description: 'Gold Per Minute',
@@ -86,7 +101,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'VS',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.vs}`}</Typography>
       ),
       description: 'Vision Score',
@@ -97,7 +112,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'KP%',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.kpp}%`}</Typography>
       ),
       description: 'Kill Participation Percent',
@@ -108,7 +123,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'DMG%',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.dmgp}%`}</Typography>
       ),
       description: "% of Team's Damage",
@@ -119,7 +134,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Death%',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.deathPercent}%`}</Typography>
       ),
       description: "% of Team's Deaths",
@@ -130,7 +145,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Gold%',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.goldPercent}%`}</Typography>
       ),
       description: "% of Team's Gold",
@@ -141,7 +156,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Solo Kills',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.soloKills}`}</Typography>
       ),
       description: 'Solo Kills per game',
@@ -152,7 +167,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Plates',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.towerPlates}`}</Typography>
       ),
       description: 'Tower Plates',
@@ -163,7 +178,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'VS%',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.vsPercent}%`}</Typography>
       ),
       description: "% of Team's Vision Score",
@@ -174,7 +189,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'GD@15',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.gdDiff15}`}</Typography>
       ),
       description: 'Gold Difference at 15 min',
@@ -185,7 +200,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'GD@25',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.gdDiff25}`}</Typography>
       ),
       description: 'Gold Difference at 25 min',
@@ -196,7 +211,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'XPD@15',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.xpDiff15}`}</Typography>
       ),
       description: 'XP Difference at 15 min',
@@ -207,7 +222,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'XPD@25',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.xpDiff25}`}</Typography>
       ),
       description: 'XP Difference at 25 min',
@@ -218,7 +233,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'CSD@15',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.csDiff15}`}</Typography>
       ),
       description: 'CS Difference at 15 min',
@@ -229,7 +244,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'CSD@25',
       active: false,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.csDiff25}`}</Typography>
       ),
       description: 'CS Difference at 25 min',
@@ -240,7 +255,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       disablePadding: false,
       label: 'Games',
       active: true,
-      display: (item: LeaderboardType) => (
+      display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{item.games}</Typography>
       ),
       description: 'Total Games',

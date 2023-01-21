@@ -4,7 +4,7 @@ import React from "react";
 import {useTheme} from "@emotion/react";
 import {BaseStatGenerator} from "../../../common/stats-generators/BaseStatsGenerator";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import { StatGenerators } from '../../../common/utils';
+import { StatGenerators } from '../../../common/constants';
 
 export interface PerformanceOverviewProps {
     playerStats: PlayerStatModel[]

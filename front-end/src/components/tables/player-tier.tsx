@@ -1,11 +1,11 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
 import { roundTo } from "../../../../Common/utils";
 import { getFlattenedLeaderboard } from "../../api/leaderboards";
 import { TableColumn, SortOrder, LeaderboardType } from "../../common/types";
-import { StatGenerators } from "../../common/utils";
+import { StatGenerators, OVERALL_GAME_RATING_OVERVIEW } from "../../common/constants";
 import Loading from "../loading/loading";
 import SortableTableHead from "./helper-components/sortable-head";
 interface PlayerTierTableProps {
@@ -18,6 +18,7 @@ function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
   return data.map((stat, i) => ({
     rank: +i+1,
     playerName: stat.player.name,
+    tier: OVERALL_GAME_RATING_OVERVIEW[stat.lobbyPosition as keyof typeof GameRoles].getStatNumber([stat]),
     wr: roundTo(StatGenerators.WR.getStatValue(stat)),
     role: GameRoles[stat.lobbyPosition as keyof typeof GameRoles],
     kda: roundTo(StatGenerators.KDA.getStatValue(stat)),
@@ -47,6 +48,8 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
     roleId,
     activeCols,
   } = props;
+
+  const theme = useTheme();
 
   const [playersStats, setPlayersStats] = useState<LeaderboardType[]>([]);
   const [loadingStats, setLoadingStats] = useState<boolean>(false);
@@ -114,7 +117,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
                             activeCols.map((cell, j) => {
                               const displayValue = cell.id === 'rank' ? (
                                 <Typography>{+index+1}</Typography>
-                              ) : cell.display(row)
+                              ) : cell.display(row, theme);
                               return (
                                 <TableCell key={`item_${j}`}>
                                   {displayValue}
