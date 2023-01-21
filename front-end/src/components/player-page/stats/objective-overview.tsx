@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import BaseRisenBox from "../../risen-box/base-risen-box";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 import {BaseStatGenerator} from "../../../common/stats-generators/BaseStatsGenerator";
-import {StatGenerators} from "../../../common/utils";
+import {StatGenerators} from "../../../common/constants";
 import {AllObjectives, Dragons, Objectives} from "../../../common/types";
 
 

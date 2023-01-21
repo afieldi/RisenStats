@@ -1,7 +1,8 @@
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 import {GameRatingStatGenerator} from "./GameRatingStatGenerator";
+import { RoleRatingStatGenerator } from "./RoleRatingStatGenerator";
 
-export class EarlyGameRatingStatGenerator extends GameRatingStatGenerator {
+export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
 
     getStatTitle(): string {
         return "Early Game Rating"

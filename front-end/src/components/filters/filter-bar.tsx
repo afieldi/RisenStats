@@ -21,7 +21,7 @@ export interface FilterBarProps {
 
 export default function FilterBar(props: FilterBarProps) {
   return (
-    <Box sx={{display: 'flex', columnGap: 2}}>
+    <Box sx={{display: 'flex', columnGap: 2, flexWrap: 'wrap'}}>
       <Box>
         <RisenSeasonSelector
           callBack={(event: SelectChangeEvent) => { props.seasonConfig?.setSeasonId(event.target.value) }}

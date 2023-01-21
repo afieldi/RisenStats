@@ -38,6 +38,10 @@ export abstract class BaseStatGenerator {
         return value.toFixed(decimals).length > 6 ? value.toFixed(1) : value.toFixed(decimals)
     }
 
+    getSortValue(playerStatsModel: PlayerStatModel) {
+        return this.getStatValue(playerStatsModel);
+    }
+
     getStatNumber(playerStatsModels: PlayerStatModel[]) {
         let total = 0
         let games = 0;
@@ -56,7 +60,7 @@ export abstract class BaseStatGenerator {
 
     getSortedLeaderboard(unsortedLeaderboard: PlayerStatModel[]): PlayerStatModel[] {
         const sortedLeaderboard = unsortedLeaderboard.sort((o1, o2) => {
-            return this.getStatValue(o2) - this.getStatValue(o1);
+            return this.getSortValue(o2) - this.getSortValue(o1);
         })
         return this.shouldInvertLeaderboard ?  sortedLeaderboard.reverse() : sortedLeaderboard;
     }

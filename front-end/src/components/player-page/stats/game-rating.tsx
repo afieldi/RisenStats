@@ -2,7 +2,8 @@ import {useTheme} from "@emotion/react";
 import {Box, Divider, Theme, Tooltip, Typography} from "@mui/material";
 import BaseRisenBox from "../../risen-box/base-risen-box";
 import React from "react";
-import {Rank} from "./game-rating-overview";
+import { Rank } from "../../../common/types";
+import { getRankColor } from "../../../common/utils";
 
 interface GameRatingProps {
     hasData: boolean;
@@ -14,15 +15,6 @@ interface GameRatingProps {
 
 export default function GameRating(props: GameRatingProps) {
     const theme = useTheme() as Theme;
-
-    const colorMap: Record<Rank, string> = {
-        "S+": theme.palette.secondary.light,
-        S: theme.palette.primary.dark,
-        A: theme.palette.first.main,
-        B: theme.palette.second.main,
-        C: theme.palette.third.main,
-        D: theme.palette.info.light,
-    }
 
     return (
         <Box sx={{maxWidth: 270, display: 'flex', flexDirection: 'column', rowGap: 2}}>
@@ -37,7 +29,7 @@ export default function GameRating(props: GameRatingProps) {
                 { props.hasData &&
                     <Box sx={{display: 'flex', flexDirection: 'row', columnGap: 1, justifyContent: "space-between", alignContent: "center"}}>
                         <Typography color={theme.palette.info.light} align="left" variant="h6">{props.rating}</Typography>
-                        <Typography color={colorMap[props.rank]} align="left" variant="h5">{props.rank}</Typography>
+                        <Typography color={getRankColor(props.rank, theme)} align="left" variant="h5">{props.rank}</Typography>
                     </Box>
                 }
             </BaseRisenBox>

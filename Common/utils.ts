@@ -214,11 +214,6 @@ export function GetAveragesFromObjects(objects: any[], keys: string[]): {[key: s
 }
 
 export function ObjectArrayToCsv(objects: { [key: string]: any }[], headers?: string[]): string {
-  // let dataString = "";
-  // if (headers) {
-  //   dataString = headers.join(",") + "\n";
-  // }
-  // return dataString + objects.map(row => row.join(",")).join("\n");
   const dictionaryKeys = Object.keys(objects[0]);
   dictionaryKeys.splice(dictionaryKeys.indexOf("name"), 1);
   dictionaryKeys.splice(0, 0, "name");
@@ -236,4 +231,8 @@ export function combine(object1: PlayerStatModel, object2: PlayerStatModel): Pla
     object1[key] += NonNone(object2[key], 0);
   }
   return object1;
+}
+
+export function sigmoid(z: number, k: number) {
+  return 1 / (1 + Math.exp(-z/k));
 }

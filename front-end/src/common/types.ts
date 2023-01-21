@@ -15,6 +15,7 @@ export interface TableColumn<T> {
 export interface LeaderboardType {
   rank: number;
   role: GameRoles;
+  tier: number;
   playerName: string;
   wr: number;
   kda: number;
@@ -59,4 +60,13 @@ export enum Dragons {
   CLOUD = 'Cloud',
   INFERNAL = 'Infernal',
   CHEMTECH = 'Chemtech',
+}
+
+export enum Rank {
+  SPLUS = "S+",
+  S = "S",
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D"
 }
