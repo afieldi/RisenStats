@@ -63,4 +63,4 @@ async function backfillPlayerGamePingsForStats(): Promise<any> {
 }
 
 // backfillPlayerGamePings();
-backfillPlayerGamePingsForStats()
+// backfillPlayerGamePingsForStats()
