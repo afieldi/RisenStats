@@ -4,7 +4,7 @@ import GameRating from "./game-rating";
 import { EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW } from "../../../common/constants";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
 import {GameRoles} from "../../../../../Common/Interface/General/gameEnums";
-import {playerStatsHasData} from "../../../../../Common/utils";
+import {doesPlayerStatsObjectHaveData} from "../../../../../Common/utils";
 
 
 interface GameRatingOverviewProps {
@@ -19,7 +19,7 @@ export default function GameRatingOverview(props: GameRatingOverviewProps) {
                 {
                     [EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW].map(gameRatingMap => {
                         return <GameRating
-                            hasData={playerStatsHasData(props.playerStats)}
+                            hasData={doesPlayerStatsObjectHaveData(props.playerStats)}
                             title={gameRatingMap[props.roleId].getStatTitle()}
                             tooltip={gameRatingMap[props.roleId].getToolTip()}
                             rating={gameRatingMap[props.roleId].getStatString(props.playerStats)}
