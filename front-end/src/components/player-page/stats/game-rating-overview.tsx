@@ -1,4 +1,4 @@
-import {Box, Fade, Grow, Slide} from "@mui/material";
+import {Box, Fade} from "@mui/material";
 import React from "react";
 import GameRating from "./game-rating";
 import { EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW } from "../../../common/constants";
@@ -19,6 +19,7 @@ export default function GameRatingOverview(props: GameRatingOverviewProps) {
                 {
                     [EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATING_OVERVIEW].map(gameRatingMap => {
                         return <GameRating
+                            key={gameRatingMap[props.roleId].getStatTitle()}
                             hasData={doesPlayerStatsObjectHaveData(props.playerStats)}
                             title={gameRatingMap[props.roleId].getStatTitle()}
                             tooltip={gameRatingMap[props.roleId].getToolTip()}

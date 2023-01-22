@@ -57,7 +57,7 @@ export default class PlayerPageStats extends React.Component<PlayerPageStatsProp
                         <Box sx={{minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2}}>
                             <GameRatingOverview playerStats={this.props.playerStats}
                                                 roleId={!!this.props.roleConfig?.roleId ? this.props.roleConfig.roleId : GameRoles.ALL}/>
-                            <PingOverview playerStats={this.props.playerStats}></PingOverview>
+                            <PingOverview playerStats={this.props.playerStats}/>
                             <BaseRisenBox>
                                 <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                                 <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
