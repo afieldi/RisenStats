@@ -83,7 +83,7 @@ export default function ObjectiveOverview(props: ChampionOverviewProps) {
 
 function ObjectiveStat(objectiveType: Objectives, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[], amountOfDecimals: number) {
     return (
-        <Box>
+        <Box key={statGenerator.getStatTitle()}>
             <Tooltip title={objectiveType} sx={{display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent:"center"}}>
                 {getObjectiveImg(objectiveType)}
             </Tooltip>

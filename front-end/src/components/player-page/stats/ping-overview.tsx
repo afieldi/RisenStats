@@ -1,4 +1,4 @@
-import {Box, Fade, Theme, Tooltip, Typography} from "@mui/material";
+import {Box, Theme, Tooltip, Typography} from "@mui/material";
 import React from "react";
 import BaseRisenBox from "../../risen-box/base-risen-box";
 import PlayerStatModel from "../../../../../Common/models/playerstat.model";
@@ -46,11 +46,7 @@ export default function PingOverview(props: PingOverviewProps) {
                     Object.keys(pings)
                         .sort((a, b) => pings[b].getStatNumber(props.playerStats) - pings[a].getStatNumber(props.playerStats))
                         .map((key) => {
-                            return (
-                                <Fade in={true} style={{ transitionDelay: '300ms'}}>
-                                    { getRow(theme, key, pings[key], props.playerStats) }
-                                </Fade>
-                            )
+                            return getPing(theme, key, pings[key], props.playerStats);
                         })
                 }
             </Box>
@@ -62,9 +58,9 @@ export default function PingOverview(props: PingOverviewProps) {
     );
 }
 
-function getRow(theme: Theme, src: string, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[]) {
+function getPing(theme: Theme, src: string, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[]) {
     return (
-        <Box>
+        <Box key={statGenerator.getStatTitle()}>
             <Tooltip title={statGenerator.getToolTip()} sx={{display: "flex", flexWrap: "wrap", flexDirection: "row", justifyContent:"center"}}>
                 <img alt={statGenerator.getToolTip()} src={src} height="25x" width="25px"/>
             </Tooltip>

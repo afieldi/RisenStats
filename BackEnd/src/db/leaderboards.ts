@@ -10,7 +10,7 @@ export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, r
     await ensureConnection();
 
     let searchFilter: FindManyOptions<PlayerStatModel> = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID}};
-    if (roleId != GameRoles.ALL) {
+    if (roleId !== GameRoles.ALL) {
         searchFilter = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThanOrEqual(minNumberOfGames)}};
     }
 
