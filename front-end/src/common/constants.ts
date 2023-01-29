@@ -45,6 +45,7 @@ import {TotalPushPingStatGenerator} from "./stats-generators/pings/TotalPushPing
 import {TotalVisionClearedPingStatGenerator} from "./stats-generators/pings/TotalVisionClearedPingStatGenerator";
 import {TotalCommandPingStatGenerator} from "./stats-generators/pings/TotalCommandPingStatGenerator";
 import {TotalDangerPingStatGenerator} from "./stats-generators/pings/TotalDangerPingStatGenerator";
+import {VisionScorePerMinuteStatGenerator} from "./stats-generators/VisionScorePerMinuteStatGenerator";
 
 export const DRAWER_WIDTH = 230;
 
@@ -56,6 +57,7 @@ export const StatGenerators = {
   'GOLD_SHARE': new GoldShareStatGenerator(),
   'KP_PERCENT': new KPPercentStatGenerator(),
   'AVERAGE_VS': new AverageVisionScoreStatGenerator(),
+  'AVERAGE_VSPM': new VisionScorePerMinuteStatGenerator(),
   'DEATH_PERCENT': new DeathPercentStatGenerator(),
   'DMG_PER_GOLD': new DPGStatGenerator(),
   'VS_PERCENT': new VisionScorePercentStatGenerator(),
