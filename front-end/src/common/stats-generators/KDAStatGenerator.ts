@@ -11,6 +11,7 @@ export class KDAStatGenerator extends BaseStatGenerator {
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        return (playerStatsModel.kills + playerStatsModel.assists) / playerStatsModel.deaths;
+        return (playerStatsModel.kills + playerStatsModel.assists) /
+            (playerStatsModel.deaths === 0 ? 1 : playerStatsModel.deaths);
     }
 }
