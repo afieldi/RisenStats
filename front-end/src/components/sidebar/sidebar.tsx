@@ -1,23 +1,21 @@
 import { styled } from '@mui/material/styles';
 import React from "react";
 import MuiDrawer from '@mui/material/Drawer';
-import { Link } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import GavelIcon from '@mui/icons-material/Gavel';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { Button, List, Theme } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import {List } from '@mui/material';
 
 import { DRAWER_WIDTH } from "../../common/constants";
-import { useTheme } from "@emotion/react";
 
 import theme from '../../styles/theme/darkTheme';
+import {Leaderboard} from "@mui/icons-material";
+import SideBarLinkItem from "./side-bar-link-item";
 
 interface Props {
   open: boolean;
@@ -87,59 +85,52 @@ export function SideBar({ open, onClose }: Props) {
       </DrawerHeader>
       <Divider />
       <List>
-        {/* Home button */}
-        <Link to="/">
-          <ListItem button key="nav-home">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Home"} />
-          </ListItem>
-        </Link>
+          <SideBarLinkItem  isInternalLink={true}
+                            url={"/"}
+                            key={"nav-home"}
+                            primaryText={"Home"}>
+              <HomeIcon/>
+          </SideBarLinkItem>
 
-        {/* League info */}
-        <a href="http://risenesports.com/leagues">
-          <ListItem button key="nav-home">
-            <ListItemIcon>
-              <GavelIcon />
-            </ListItemIcon>
-            <ListItemText primary={"League Info"} />
-          </ListItem>
-        </a>
+          <SideBarLinkItem  isInternalLink={true}
+                            url={"/search"}
+                            key={"nav-search"}
+                            primaryText={"Player Stats"}>
+              <PersonIcon/>
+          </SideBarLinkItem>
 
-        {/* Rules */}
-        {/* <Link to="/info/rules">
-          <ListItem button key="nav-home">
-            <ListItemIcon>
-              <GavelIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Rules"} />
-          </ListItem>
-        </Link> */}
+          <SideBarLinkItem  isInternalLink={true}
+                            url={"/leaderboard"}
+                            key={"nav-leaderboard"}
+                            primaryText={"Stats Leaderboards"}>
+              <Leaderboard/>
+          </SideBarLinkItem>
 
-        {/* Contact */}
-        <a href="http://risenesports.com/contact">
-          <ListItem button key="nav-home">
-            <ListItemIcon>
-              <PhoneIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Contact Us"} />
-          </ListItem>
-        </a>
+          <SideBarLinkItem  isInternalLink={false}
+                            url={"http://risenesports.com/leagues"}
+                            key={"nav-league"}
+                            primaryText={"League Info"}>
+              <GavelIcon/>
+          </SideBarLinkItem>
+
+          <SideBarLinkItem isInternalLink={false}
+                           url={"http://risenesports.com/contact"}
+                           key={"nav-contact"}
+                           primaryText={"Contact Us"}>
+            <PhoneIcon/>
+        </SideBarLinkItem>
       </List>
 
       {/* Admin manage */}
       {
         false ? (
-        <Link to="/admin/codes">
-          <ListItem button key="nav-home">
-            <ListItemIcon>
-              <PhoneIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Manage Codes"} />
-          </ListItem>
-        </Link>
-      ) : null
+                <SideBarLinkItem  isInternalLink={true}
+                                  url={"/admin/codes"}
+                                  key={"nav-admin"}
+                                  primaryText={"Manage Codes"}>
+                    <PhoneIcon />
+                </SideBarLinkItem>
+        ) : null
       }
       <Divider />
     </Drawer>
