@@ -3,6 +3,7 @@ import PlayerStatModel from "../../../Common/models/playerstat.model";
 import {GameRoles} from "../../../Common/Interface/General/gameEnums";
 import {FindManyOptions,  MoreThanOrEqual} from "typeorm";
 import {combine} from "../../../Common/utils";
+import DenylistModel from "../../../Common/models/denylist.model";
 
 const minNumberOfGames = 4;
 
@@ -39,7 +40,7 @@ export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, r
        return flattenLeaderboard(leaderboard, collapseRoles);
     }
 
-    return leaderboard;
+    return await removeDenyListPlayers(leaderboard);
 }
 
 function flattenLeaderboard(playerStatsModel: PlayerStatModel[], collapseRoles?: boolean) {
@@ -59,4 +60,17 @@ function flattenLeaderboard(playerStatsModel: PlayerStatModel[], collapseRoles?:
 
     // Since we cant garuntee that N > 4 for ALL we need to filter
     return Array.from(flattenedLeaderboard.values()).filter(playerStatModel => playerStatModel.games >= minNumberOfGames);
+}
+
+async function removeDenyListPlayers(leaderboard: PlayerStatModel[]): Promise<PlayerStatModel[]>  {
+    let denyListPlayers: DenylistModel[] = await DenylistModel.find({})
+
+    if (denyListPlayers.length === 0) {
+        return leaderboard;
+    }
+
+    let denyListPuuids: string[] = denyListPlayers.map(denyListPlayer => denyListPlayer.playerPuuid);
+    return leaderboard.filter(playerstat => {
+        return !denyListPuuids.includes(playerstat.playerPuuid);
+    });
 }
