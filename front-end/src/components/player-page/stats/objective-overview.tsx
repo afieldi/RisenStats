@@ -54,16 +54,16 @@ export default function ObjectiveOverview(props: ChampionOverviewProps) {
     const dragonsStatsGeneratorToUse: BaseStatGenerator = shouldUseTotals ? StatGenerators.TOTAL_DRAGON : StatGenerators.DRAGON;
     const amountOfDecimals = shouldUseTotals ? 0 : 2;
     return (
-        <BaseRisenBox sx={{padding: "0px 16px 16px 16px"}}>
-
-            <Box sx={{display: "flex", flexDirection:"row", justifyContent:"space-between" }}>
-                <Typography sx={{paddingTop: "16px"}} fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="subtitle1">OBJECTIVES</Typography>
-                <Tooltip title={shouldUseTotals ? "Show Averages" : "Show Totals" }>
-                    <Switch sx={{marginTop: "8px"}} onChange={(event) => setShouldUseTotals(event.target.checked)} />
-                </Tooltip>
-            </Box>
-
-            <Divider sx={{marginBottom: 2}}/>
+        <BaseRisenBox
+            sx={{padding: "0px 16px 16px 16px"}}
+            title={
+                <Box sx={{display: "flex", flexDirection:"row", justifyContent:"space-between" }}>
+                    <Typography sx={{paddingTop: "16px"}} fontStyle="italic" fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="h5">OBJECTIVES</Typography>
+                    <Tooltip title={shouldUseTotals ? "Show Averages" : "Show Totals" }>
+                        <Switch sx={{marginTop: "8px"}} onChange={(event) => setShouldUseTotals(event.target.checked)} />
+                    </Tooltip>
+                </Box>
+            }>
 
             { hasStats &&
                 <Box>

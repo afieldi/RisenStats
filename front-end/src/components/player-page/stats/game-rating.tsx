@@ -18,11 +18,14 @@ export default function GameRating(props: GameRatingProps) {
 
     return (
         <Box sx={{maxWidth: 270, display: 'flex', flexDirection: 'column', rowGap: 2}}>
-            <BaseRisenBox sx={{minWidth: 230}}>
-                <Tooltip title={props.tooltip}>
-                    <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="subtitle2">{props.title.toUpperCase()}</Typography>
-                </Tooltip>
-                <Divider sx={{marginBottom: 2}}/>
+            <BaseRisenBox
+                sx={{minWidth: 230}}
+                title={
+                    <Tooltip title={props.tooltip}>
+                        <Typography fontFamily="Montserrat" color={theme.palette.info.light} fontStyle="italic" align="left" variant="subtitle2">{props.title.toUpperCase()}</Typography>
+                    </Tooltip>
+                }>
+
                 { !props.hasData &&
                     <Typography sx={{paddingTop: "10px"}} color={theme.palette.info.light} align="center" variant="h6">No Data</Typography>
                 }
