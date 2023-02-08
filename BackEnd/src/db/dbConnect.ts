@@ -11,6 +11,7 @@ import LeaderboardModel from '../../../Common/models/leaderboard.model'
 import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model'
 import PlayerStatModel from "../../../Common/models/playerstat.model";
 import { toSearchName } from '../../../Common/utils'
+import DenylistModel from "../../../Common/models/denylist.model";
 
 const POSTGRES_URI = process.env.POSTGRES_URI
 export const ALL_TOURNAMENT_GAMES_NAME = 'ALL TOURNAMENT GAMES'; // DO NOT TOUCH
@@ -44,6 +45,7 @@ const options = {
       SeasonModel,
       PlayerChampionStatsModel,
       PlayerStatModel,
+      DenylistModel,
     ]
   }
 }
