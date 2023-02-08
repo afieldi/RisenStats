@@ -54,6 +54,10 @@ export abstract class BaseStatGenerator {
         return total
     }
 
+    getStatSum(playerStatModels: PlayerStatModel[]) {
+        return playerStatModels.reduce((acc, curModel) => acc + this.getStatValue(curModel), 0);
+    }
+
     getStatString(playerStatsModels: PlayerStatModel[], decimals: number = 2): string {
         return `${this.formatNumber(this.getStatNumber(playerStatsModels), decimals)}` ;
     }

@@ -21,8 +21,7 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
     const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}G ${winRateProps.losses}L`
 
     return (
-        <BaseRisenBox sx={{minWidth: 280, minHeight: 280}}>
-            <Typography fontFamily="Montserrat" color={theme.palette.info.light} variant="h4">WIN RATE</Typography>
+        <BaseRisenBox sx={{minWidth: 280, minHeight: 280}} title="Win Rate">
             {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
             <PieChart width={240} height={200}>
                 <Pie

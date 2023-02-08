@@ -33,7 +33,7 @@ export default function PingOverview(props: PingOverviewProps) {
     const theme = useTheme() as Theme;
 
     let totalPings = 0
-    Object.keys(pings).forEach(key => totalPings += pings[key].getStatNumber(props.playerStats))
+    Object.keys(pings).forEach(key => totalPings += pings[key].getStatSum(props.playerStats))
 
     return (
         <BaseRisenBox sx={{minWidth: 240, maxWidth: 270, justifyContent:"space-between"}} title="Total Pings">
@@ -44,7 +44,7 @@ export default function PingOverview(props: PingOverviewProps) {
                 {
                     doesPlayerStatsObjectHaveData(props.playerStats) &&
                     Object.keys(pings)
-                        .sort((a, b) => pings[b].getStatNumber(props.playerStats) - pings[a].getStatNumber(props.playerStats))
+                        .sort((a, b) => pings[b].getStatSum(props.playerStats) - pings[a].getStatSum(props.playerStats))
                         .map((key) => {
                             return getPing(theme, key, pings[key], props.playerStats);
                         })
@@ -66,7 +66,7 @@ function getPing(theme: Theme, src: string, statGenerator: BaseStatGenerator, pl
             </Tooltip>
             <Box sx={{width: "30px"}}>
                 <Typography  fontFamily="Montserrat" align="center"
-                             variant="button">{abbreviateNumber(statGenerator.getStatNumber(playerStats))}</Typography>
+                             variant="button">{abbreviateNumber(statGenerator.getStatSum(playerStats))}</Typography>
             </Box>
 
         </Box>
