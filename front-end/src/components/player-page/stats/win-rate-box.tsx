@@ -18,7 +18,7 @@ export default function WinRateBox(winRateProps: WinRateBoxProps) {
     const data = [{name: 'Wins', value: winRateProps.wins, color: theme.palette.primary.dark},
         {name: 'Losses', value: winRateProps.losses, color: theme.palette.secondary.dark}]
     const winRate = calculateWR({totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses}, 1)
-    const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}G ${winRateProps.losses}L`
+    const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}W ${winRateProps.losses}L`
 
     return (
         <BaseRisenBox sx={{minWidth: 280, minHeight: 280}} title="Win Rate">
