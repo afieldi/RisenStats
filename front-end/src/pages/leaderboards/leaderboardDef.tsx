@@ -107,6 +107,17 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       description: 'Vision Score',
     },
     {
+      id: 'vspm',
+      align: 'left',
+      disablePadding: false,
+      label: 'VSPM',
+      active: false,
+      display: (item: LeaderboardType, theme: Theme) => (
+          <Typography>{item.vspm}</Typography>
+      ),
+      description: 'Average Vision Score Per Min',
+    },
+    {
       id: 'kpp',
       align: 'left',
       disablePadding: false,
@@ -259,6 +270,17 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
         <Typography>{item.games}</Typography>
       ),
       description: 'Total Games',
+    },
+    {
+      id: 'baitPings',
+      align: 'left',
+      disablePadding: false,
+      label: 'Bait Pings',
+      active: false,
+      display: (item: LeaderboardType, theme: Theme) => (
+          <Typography>{item.baitPings}</Typography>
+      ),
+      description: 'Total bait pings',
     },
   ];
 }

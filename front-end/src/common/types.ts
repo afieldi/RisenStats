@@ -22,6 +22,7 @@ export interface LeaderboardType {
   dpm: number;
   gpm: number;
   vs: number;
+  vspm: number;
   kpp: number;
   dmgp: number;
   deathPercent: number;
@@ -36,6 +37,7 @@ export interface LeaderboardType {
   csDiff15: number;
   csDiff25: number;
   games: number;
+  baitPings: number;
 }
 
 export enum SortOrder {

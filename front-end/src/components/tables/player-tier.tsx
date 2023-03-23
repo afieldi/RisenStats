@@ -25,6 +25,7 @@ function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
     dpm: roundTo(StatGenerators.DPM.getStatValue(stat)),
     gpm: roundTo(StatGenerators.GPM.getStatValue(stat)),
     vs: roundTo(stat.visionScore / stat.games),
+    vspm: roundTo(StatGenerators.AVERAGE_VSPM.getStatValue(stat)),
     kpp: roundTo(StatGenerators.KP_PERCENT.getStatValue(stat)),
     dmgp: roundTo(StatGenerators.DMG_PERCENT.getStatValue(stat)),
     deathPercent: roundTo(StatGenerators.DEATH_PERCENT.getStatValue(stat)),
@@ -38,6 +39,7 @@ function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
     xpDiff25: roundTo(StatGenerators.XP_DIFF_25.getStatValue(stat)),
     csDiff15: roundTo(StatGenerators.CS_DIFF_15.getStatValue(stat)),
     csDiff25: roundTo(StatGenerators.CS_DIFF_25.getStatValue(stat)),
+    baitPings: roundTo(StatGenerators.TOTAL_BAIT_PINGS.getStatValue(stat)),
     games: stat.games,
   }));
 }
