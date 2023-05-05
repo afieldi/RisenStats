@@ -1,10 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 
-interface HeaderColumns<T> {
-
-}
-
-
 interface TableProps<T extends string> {
   headers: T[];
   data: {[key in T]: string | number}[]
