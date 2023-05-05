@@ -209,18 +209,23 @@ function PlayerPage()
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <PlayerPageGeneral player={playerProfile?.overview} seasons={seasons} games={games} loadGamesConfig={loadGamesConfig}></PlayerPageGeneral>
+            <PlayerPageGeneral player={playerProfile?.overview}
+                               playerStats={playerStats}
+                               seasons={seasons}
+                               games={games}
+                               loadGamesConfig={loadGamesConfig}
+                               championData={championStats} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <PlayerPageChampions championData={championStats}
-                                 seasonConfig={{...loadGamesConfig.seasonConfig, seasons: activeSeasons}}
+                                 seasonConfig={{...loadGamesConfig.seasonConfig, seasons: seasons}}
                                  roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PlayerPageStats playerStats={playerStats}
                              playerPuuid={playerProfile?.overview.puuid}
                              leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
-                             seasonConfig={{...loadGamesConfig.seasonConfig, seasons: activeSeasons}}
+                             seasonConfig={{...loadGamesConfig.seasonConfig, seasons: seasons}}
                              roleConfig={loadGamesConfig.roleConfig}
                              championData={championStats}/>
           </TabPanel>

@@ -13,6 +13,11 @@ export async function GetRiotPlayerByPuuid(puuid: string): Promise<RiotSummonerD
   return await MakeRiotAPICall<RiotSummonerDto>(`/lol/summoner/v4/summoners/by-puuid/${encodeURIComponent(puuid)}`, 'GET')
 }
 
+export async function GetRiotPlayerBySummonerId(summonerId: string): Promise<RiotSummonerDto> {
+  return await MakeRiotAPICall<RiotSummonerDto>(`/lol/summoner/v4/summoners/${encodeURIComponent(summonerId)}`, 'GET')
+}
+
+
 export async function GetRiotLeagueBySummonerId(summonerId: string, queueName: string = 'RANKED_SOLO_5x5'): Promise<RiotLeagueEntryDto> {
   const leagues = await GetRiotLeaguesBySummonerId(summonerId)
   for (const league of leagues) {

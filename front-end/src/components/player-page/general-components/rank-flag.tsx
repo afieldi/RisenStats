@@ -20,13 +20,12 @@ export default function RankFlag({player, sx}: Props)
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         {
           league === "Unranked" ? null :
-          <Box sx={{height: 100, pr: 2, pl: 2}}>
+          <Box sx={{height: 160, pr: 2, pl: 2}}>
             <img src={`/images/ranks/Emblem_${league}.png`} style={{height: '100%'}}></img>
           </Box>
         }
         <Box sx={{flexGrow: 1, textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-          <Typography variant="h5" align="center" sx={{fontFamily: 'Montserrat'}}>{league} {player?.division}</Typography>
-          {/* <Typography>Better than me</Typography> */}
+          <Typography variant="subtitle1" align="center" sx={{fontFamily: 'Montserrat'}}>{league} {player?.division}</Typography>
         </Box>
       </Box>
     </BaseRisenBox>

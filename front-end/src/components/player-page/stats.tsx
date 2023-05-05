@@ -2,9 +2,9 @@ import React from "react";
 import {Box, Typography,} from "@mui/material";
 import PerformanceOverview from "./stats/performance-overview";
 import SeasonModel from "../../../../Common/models/season.model";
-import ChampionOverview from "./stats/champion-overview";
+import ChampionOverview from "../champion-overview/champion-overview";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
-import WinRateBox from "./stats/win-rate-box";
+import WinRateBox from "../charts/win-rate-box";
 import BaseRisenBox from "../risen-box/base-risen-box";
 import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
 import PlayerStatModel from "../../../../Common/models/playerstat.model";
@@ -64,7 +64,7 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
                         <GameRatingOverview playerStats={playerStats}
                                             roleId={!!roleConfig?.roleId ? roleConfig.roleId : GameRoles.ALL}/>
                         <PingOverview playerStats={playerStats}/>
-                        <BaseRisenBox>
+                        <BaseRisenBox hideDivider>
                             <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
                             <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
                         </BaseRisenBox>

@@ -36,6 +36,39 @@ export function riotTimestampToGameTime(time: number): string
   return `${min}:${String(Math.round(s)).padStart(2, '0')}`;
 }
 
+export function timeToTimeAgo(time: number): string {
+
+  var msPerMinute = 60 * 1000;
+  var msPerHour = msPerMinute * 60;
+  var msPerDay = msPerHour * 24;
+  var msPerMonth = msPerDay * 30;
+  var msPerYear = msPerDay * 365;
+
+  var elapsed = Date.now() - (riotTimestampToSeconds(time));
+  if (elapsed < msPerMinute) {
+    return Math.round(elapsed/1000) + ' seconds ago';
+  }
+
+  else if (elapsed < msPerHour) {
+    return Math.round(elapsed/msPerMinute) + ' minutes ago';
+  }
+
+  else if (elapsed < msPerDay ) {
+    return Math.round(elapsed/msPerHour ) + ' hours ago';
+  }
+
+  else if (elapsed < msPerMonth) {
+    return Math.round(elapsed/msPerDay) + ' days ago';
+  }
+
+  else if (elapsed < msPerYear) {
+    return  Math.round(elapsed/msPerMonth) + ' months ago';
+  }
+
+  return Math.round(elapsed/msPerYear) + ' years ago';
+
+}
+
 export function toPerMinute(value: number, riotTimestamp: number, rounded: number = 2): number {
   let m = riotTimestampToMinutes(riotTimestamp);
   return roundTo(value / m, rounded);

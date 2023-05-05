@@ -72,3 +72,8 @@ export enum Rank {
   C = "C",
   D = "D"
 }
+
+export interface LoadingData<T> {
+  loading: boolean;
+  data?: T;
+}

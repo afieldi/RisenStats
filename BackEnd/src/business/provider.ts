@@ -4,7 +4,6 @@ import { CreateRiotTournamentProvider } from '../external-api/provider'
 
 export async function CreateTournamentProvider(callback: string, region: string): Promise<ProviderModel> {
   const providerId = await CreateRiotTournamentProvider(callback, region)
-  console.log(providerId)
   return await CreateDbTournamentProvider(callback, providerId)
 }
 

@@ -1,7 +1,7 @@
 import { GetRiotPlayerByName, GetRiotLeagueBySummonerId, GetRiotPlayerByPuuid } from '../external-api/player'
 import PlayerModel from '../../../Common/models/player.model'
 import { DocumentNotFound } from '../../../Common/errors'
-import { CreateDbPlayerWithRiotPlayer, GetDbPlayerByPuuid, UpdateDbPlayer } from '../db/player'
+import { CreateDbPlayerWithRiotPlayer, GetDbPlayerByPuuid, GetPlayerDistinctSeasons, UpdateDbPlayer } from '../db/player'
 import GameModel from '../../../Common/models/game.model'
 import { GetRiotGamesByPlayerPuuid } from '../external-api/game'
 import { SaveDataByMatchId } from './games'
@@ -166,4 +166,8 @@ export async function GetPlayerDetailedGames(playerPuuid: string, pageSize = 0, 
     playerGame: game,
     game: gameSummaries[i]
   }))
+}
+
+export async function GetPlayerSeasons(playerPuuid: string): Promise<string[]> {
+  return (await GetPlayerDistinctSeasons(playerPuuid)).map(season => season.seasonId).filter(seasonId => !!seasonId);
 }

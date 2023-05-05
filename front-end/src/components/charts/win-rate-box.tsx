@@ -1,10 +1,10 @@
-import BaseRisenBox from "../../risen-box/base-risen-box";
+import BaseRisenBox from "../risen-box/base-risen-box";
 import {Cell, Label, Pie, PieChart, Tooltip} from "recharts";
 import React from "react";
 import {useTheme} from "@emotion/react";
 import {Theme, Typography} from "@mui/material";
 import "./win-rate-box.css"
-import {calculateWR} from "../../../../../Common/utils";
+import {calculateWR} from "../../../../Common/utils";
 
 interface WinRateBoxProps {
     wins: number;

@@ -70,3 +70,7 @@ a {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.hide-radio .MuiRadio-root {
+  display: none !important;
+}

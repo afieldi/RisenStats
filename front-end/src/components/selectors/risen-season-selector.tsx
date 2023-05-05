@@ -11,6 +11,7 @@ export interface RisenSeasonSelectorProps {
         seasonId: string,
         setSeasonId: (seasonId: string) => void,
         seasons?: SeasonModel[],
+        hiddenSeasons?: SeasonModel[],
     };
     hideAllGames: boolean
 }
@@ -25,14 +26,15 @@ export default function RisenSeasonSelector(props: RisenSeasonSelectorProps) {
                 value={props.seasonConfig?.seasonId}
                 label="Season"
                 onChange={props.callBack}
-                sx={{overflow: 'hidden'}}
+                sx={{overflow: 'hidden', width: '100%'}}
             >
                 <MenuItem value="RISEN">All Risen Games</MenuItem>
                 {
                     props.seasonConfig?.seasons?.map((season, index) => (
-                        <MenuItem key={index} value={season.id}>{season.seasonName}</MenuItem>
+                        <MenuItem key={index} value={season.id} hidden={!season.active}>{season.seasonName}</MenuItem>
                     ))
                 }
+
                 {!props.hideAllGames && <MenuItem value="ALL">All Tournament Games</MenuItem>}
             </Select>
         </FormControl>
