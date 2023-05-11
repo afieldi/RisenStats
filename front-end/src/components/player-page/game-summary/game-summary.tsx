@@ -66,8 +66,8 @@ function GameSummary({gameData, seasons}: Props)
             <ItemBox items={mainPlayer.items}></ItemBox>
           </Box>
 
-          <AllTeamInfo gameModel={gameData.game}/>
         </Box>
+        <AllTeamInfo gameModel={gameData.game}/>
       </Box>
     </BaseRisenBox>
   )

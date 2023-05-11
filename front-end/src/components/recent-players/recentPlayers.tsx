@@ -4,8 +4,9 @@ import { PlayerDetailedGame } from '../../../../Common/Interface/Internal/player
 import BaseRisenBox from '../risen-box/base-risen-box';
 import BaseTable from '../tables/base-table';
 import { roundTo } from '../../../../Common/utils';
+import { WithSx } from '../../common/types';
 
-interface RecentPlayerProps {
+interface RecentPlayerProps extends WithSx {
   recentGames: PlayerDetailedGame[];
 }
 
@@ -24,6 +25,7 @@ enum RecentPlayerTableHeaders {
 export default (props: RecentPlayerProps) => {
   const {
     recentGames,
+    sx,
   } = props;
 
   const teammatesMap: { [key: string]: TeammateStat } = {};
@@ -32,8 +34,9 @@ export default (props: RecentPlayerProps) => {
     const teammates = game.playerGame.teamId === 100 ?
       game.game.playersSummary.redPlayers : game.game.playersSummary.bluePlayers;
     teammates.map(player => {
-      if (player.playerName == game.playerGame.player.name)
+      if (player.playerName == game.playerGame.player.name) {
         return;
+      }
 
       if (!(player.playerName in teammatesMap)) {
         teammatesMap[player.playerName] = {
@@ -54,7 +57,7 @@ export default (props: RecentPlayerProps) => {
   }))
 
   return (
-    <BaseRisenBox title='Recent Teammates'>
+    <BaseRisenBox title='Recent Teammates' sx={sx}>
       <BaseTable 
         headers={Object.values(RecentPlayerTableHeaders) as RecentPlayerTableHeaders[]} 
         data={recentPlayerData}

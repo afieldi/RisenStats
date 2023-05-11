@@ -18,8 +18,9 @@ async function UpdateSummary() {
         console.log('handling game: ', game.gameId);
         for (const i in game.playersSummary.bluePlayers) {
             const id = game.playersSummary.bluePlayers[i].playerPuuid;
-            if (id === 'BOT')
+            if (id === 'BOT') {
                 continue;
+            }
             if (id.length === 78) {
                 continue;
             }
