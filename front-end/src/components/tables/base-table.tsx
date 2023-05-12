@@ -1,15 +1,19 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Paper, SxProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
 
 interface TableProps<T extends string> {
   headers: T[];
-  data: {[key in T]: string | number}[]
+  data: {[key in T]: string | number}[],
+  rowSx?: {[key in T]: SxProps<Theme>},
 }
 
 export default function BaseTable<T extends string>(props: TableProps<T>) {
   const {
     headers,
     data,
+    rowSx,
   } = props;
+
+  const rowSxNonNull = rowSx || {} as {[key in T]: SxProps<Theme>};
   return (
     <Paper>
       <TableContainer>
@@ -31,7 +35,7 @@ export default function BaseTable<T extends string>(props: TableProps<T>) {
                 <TableRow>
                   {
                     headers.map(header => (
-                      <TableCell>
+                      <TableCell sx={rowSxNonNull[header]}>
                         <Typography>{rowData[header]}</Typography>
                       </TableCell>
                     ))

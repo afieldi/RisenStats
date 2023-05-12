@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { SxProps, Theme, Typography } from '@mui/material';
 import React from 'react';
 import { PlayerDetailedGame } from '../../../../Common/Interface/Internal/player';
 import BaseRisenBox from '../risen-box/base-risen-box';
@@ -54,13 +54,21 @@ export default (props: RecentPlayerProps) => {
     Games: value.games.toString(),
     "W - L": `${value.wins} - ${value.games - value.wins}`,
     'Win Rate': `${roundTo((value.wins / value.games) * 100, 0)}%`,
-  }))
+  }));
+
+  const rowSx: {[key in RecentPlayerTableHeaders]: SxProps<Theme>} = {
+    Player: { width: '270px', overflow: 'hidden' },
+    "W - L": {},
+    "Win Rate": {},
+    Games: {},
+  };
 
   return (
     <BaseRisenBox title='Recent Teammates' sx={sx}>
       <BaseTable 
         headers={Object.values(RecentPlayerTableHeaders) as RecentPlayerTableHeaders[]} 
         data={recentPlayerData}
+        rowSx={rowSx}
       />
     </BaseRisenBox>
   );

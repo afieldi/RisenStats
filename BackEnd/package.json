@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.ts",
+    "dev": "nodemon --exec npx ts-node index.ts",
     "deploy": "npm run build && gcloud app deploy",
     "start": "node ./dist/BackEnd/index.js --prod",
     "build": "tsc -p .",
