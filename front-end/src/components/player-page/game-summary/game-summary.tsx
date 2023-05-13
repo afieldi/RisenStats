@@ -51,18 +51,12 @@ function GameSummary({gameData, seasons}: Props)
   const bgColor = playerWin ? theme.palette.risenVictory.main : theme.palette.risenDefeat.main;
   const timestamp = new Date();
   timestamp.setUTCMilliseconds(+gameData.game.gameStart + (+gameData.game.gameDuration * 1000));
-  const radarOptions = {
-    height: 100,
-    width: 100,
-    size: 50,
-    hideLabels: true
-  };
 
   return (
-    <BaseRisenBox sx={{bgcolor: bgColor, mb: 1}}>
+    <BaseRisenBox sx={{bgcolor: bgColor, mb: 1}} hideDivider>
       <Box sx={{display: "inline-flex", width: "100%", flexWrap: "wrap", justifyContent: "space-evenly", alignItems: "center"}}>
         <Box sx={{display: "inline-flex", justifyContent: "space-evenly", flexGrow: 1, flexWrap: 'wrap',}}>
-          <GameTimeInformation playerWin={playerWin} gameDuration={gameData.game.gameDuration}/>
+          <GameTimeInformation playerWin={playerWin} gameDuration={gameData.game.gameDuration} gameStart={gameData.game.gameStart} />
           <ChampionSetup mainPlayer={mainPlayer} gameType={gameData.game.gameType} seasonId={gameData.game.seasonId} seasons={seasons} />
 
           <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -72,16 +66,8 @@ function GameSummary({gameData, seasons}: Props)
             <ItemBox items={mainPlayer.items}></ItemBox>
           </Box>
 
-          <EndOfGameStatsSummary mainPlayer={mainPlayer}/>
-
-          <Hidden mdDown>
-            <Box sx={{pr: 1, flexGrow: 1, justifyContent: 'center', display: 'flex'}}>
-              <PlayerRadar games={[gameData]} options={radarOptions}></PlayerRadar>
-            </Box>
-          </Hidden>
-
-          <AllTeamInfo gameModel={gameData.game}/>
         </Box>
+        <AllTeamInfo gameModel={gameData.game}/>
       </Box>
     </BaseRisenBox>
   )

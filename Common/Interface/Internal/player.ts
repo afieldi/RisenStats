@@ -31,3 +31,7 @@ export interface PlayerChampionStatsRequest {
   risenOnly?: boolean;
   roleId?: GameRoles;
 }
+
+export interface PlayerSeasonsResponse {
+  seasons: string[];
+}

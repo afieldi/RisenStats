@@ -1,4 +1,4 @@
-import { PlayerChampionStatsRequest, PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
+import { PlayerChampionStatsRequest, PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, PlayerSeasonsResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
 import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
 import { MakeBackendCall } from './_call';
 import { GetPlayerStatsRequest, GetPlayerStatsResponse } from "../../../Common/Interface/Internal/playerstats";
@@ -59,4 +59,8 @@ export async function GetPlayerChampionStats(playerPuuid: string, seasonId?: num
 
 export async function GetPlayerStats(playerPuuid: string, seasonId?: number, roleId?: string, risenOnly?: boolean): Promise<GetPlayerStatsResponse> {
   return await MakeBackendCall<GetPlayerStatsRequest>(`/api/stats/player/by-puuid/${playerPuuid}`, "POST", {seasonId, roleId, risenOnly}) as GetPlayerStatsResponse;
+}
+
+export async function GetPlayerSeasons(playerPuuid: string): Promise<PlayerSeasonsResponse> {
+  return await MakeBackendCall(`/api/player/seasons/by-puuid/${playerPuuid}`, 'POST', {}) as PlayerSeasonsResponse;
 }

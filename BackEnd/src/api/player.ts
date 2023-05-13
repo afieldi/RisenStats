@@ -1,7 +1,7 @@
 import express, { Request, Router } from "express";
 import { TypedRequest, TypedResponse } from "../../../Common/Interface/Internal/responseUtil";
-import { PlayerChampionStatsRequest, PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, UpdatePlayerGamesResponse } from "../../../Common/Interface/Internal/player";
-import { CreateChampionStatDataByPuuid, GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, UpdateGamesByPlayerPuuid } from "../business/player";
+import { PlayerChampionStatsRequest, PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, PlayerSeasonsResponse, UpdatePlayerGamesResponse } from "../../../Common/Interface/Internal/player";
+import { CreateChampionStatDataByPuuid, GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, GetPlayerSeasons, UpdateGamesByPlayerPuuid } from "../business/player";
 import logger from "../../logger";
 import { DocumentNotFound } from "../../../Common/errors";
 import { GetDbChampionStatsByPlayerPuuid } from "../db/player";
@@ -74,5 +74,16 @@ router.post('/games/by-puuid/:playerPuuid', async(req: TypedRequest<GetGamesRequ
     res.status(500).send('Something went wrong')
   }
 })
+
+router.post('/seasons/by-puuid/:playerPuuid', async(req: Request, res: TypedResponse<PlayerSeasonsResponse>) => {
+  try {
+    res.json({
+      seasons: await GetPlayerSeasons(req.params.playerPuuid)
+    })
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
 
 export default router

@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import GameModel from "./game.model";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";
@@ -7,6 +7,7 @@ import SeasonModel from "./season.model";
 export default class PlayerGameModel extends BaseEntity
 {
   @PrimaryColumn('text')
+  @Index()
   playerPuuid: string;
 
   @ManyToOne(() => PlayerModel, { eager: true })
@@ -21,10 +22,12 @@ export default class PlayerGameModel extends BaseEntity
 
   // Duplicated from game for sorting
   @Column("bigint")
+  @Index()
   timestamp: number;
 
   // Duplicated from game for filtering
   @Column('integer', {nullable: true})
+  @Index()
   seasonId: number;
 
   @ManyToOne(() => SeasonModel)

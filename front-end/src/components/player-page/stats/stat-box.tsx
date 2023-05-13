@@ -24,7 +24,7 @@ export default function StatBox(statBoxProps: StatBoxProps) {
     const typographySize = statBoxProps.statTitle.length < 8 ? "subtitle2" : "caption";
 
     return (
-        <BaseRisenBox sx={{minWidth: 110, maxWidth: 110, minHeight: 110, maxHeight: 110}}>
+        <BaseRisenBox sx={{minWidth: 110, maxWidth: 110, minHeight: 110, maxHeight: 110}} hideDivider>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
                 {!statBoxProps.haveStatsLoaded &&
                     <Typography color={theme.palette.info.light} variant="subtitle2">

@@ -13,9 +13,6 @@ export class ApiError extends Error {
 }
 
 async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise<T> {
-  // const headers: HeadersInit = new Headers();
-  // headers.set('Content-Type', 'application/json');
-  // headers.set('X-Riot-Token', process.env.RIOT_API_KEY as string);
   const headers = {
     'Content-Type': 'application/json',
     'X-Riot-Token': process.env.RIOT_API_KEY

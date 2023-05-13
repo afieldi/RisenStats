@@ -73,7 +73,7 @@ function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
       championId: participant.championId,
       team: participant.teamId,
       playerName: participant.summonerName,
-      playerPuuid: participant.summonerId,
+      playerPuuid: participant.puuid,
       summoner1Id: participant.summoner1Id,
       summoner2Id: participant.summoner2Id,
       totalDamage: TotalDamageToChamps(participant),

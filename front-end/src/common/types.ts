@@ -1,3 +1,4 @@
+import { SxProps, Theme } from "@mui/material";
 import { GameRoles } from "../../../Common/Interface/General/gameEnums";
 
 export type TextAlign = 'inherit' | 'left' | 'center' | 'right' | 'justify' | undefined;
@@ -71,4 +72,13 @@ export enum Rank {
   B = "B",
   C = "C",
   D = "D"
+}
+
+export interface LoadingData<T> {
+  loading: boolean;
+  data?: T;
+}
+
+export interface WithSx {
+  sx?: SxProps<Theme>;
 }

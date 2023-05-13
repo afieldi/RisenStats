@@ -3,6 +3,7 @@ import {Box, Typography} from "@mui/material";
 import {GameTypeToString} from "../../../../../Common/utils";
 import React from "react";
 import SeasonModel from "../../../../../Common/models/season.model";
+import ImgBox from "../../risen-box/img-box";
 
 interface ChampionSetupProps {
     mainPlayer: PlayerGameModel
@@ -20,12 +21,15 @@ function ChampionSetup(championSetupProps: ChampionSetupProps) {
     } = championSetupProps;
     return <Box sx={{pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
         <Box sx={{display: "inline-flex"}}>
-            <Box sx={{pl: 1, pr: 1}}>
-                <img src={`/images/champions/icons/${mainPlayer.championId}_0.png`}
-                     alt={`${mainPlayer.championId}`}
-                     height="50px"
-                     width="50px"/>
-            </Box>
+            <ImgBox
+                sx={{ height:50, width: 50, overflow: 'hidden', mr: 1}}
+                alt={`${mainPlayer.championId}`}
+                src={`/images/champions/icons/${mainPlayer.championId}_0.png`}
+                height="50px"
+                width="50px"
+                text={mainPlayer.champLevel.toString()}
+            />
+
             <Box sx={{display: "flex", flexDirection: "column"}}>
                 <img src={`/images/summoner/${mainPlayer.summoner1Id}.png`}
                      alt={`${mainPlayer.summoner1Id}`}
@@ -48,7 +52,7 @@ function ChampionSetup(championSetupProps: ChampionSetupProps) {
             </Box>
         </Box>
         <Box>
-            <Typography variant="body2" sx={{fontSize: '12px', maxWidth: '115px'}} align="center">
+            <Typography variant="body2" sx={{fontSize: '12px', maxWidth: '115px', pt: 1}} align="center">
                 {GameTypeToString(gameType, seasonId, seasons)}
             </Typography>
         </Box>

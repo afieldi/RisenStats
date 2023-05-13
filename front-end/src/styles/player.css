@@ -1,10 +1,11 @@
 .player-names {
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .player-profile-picture {
   border: 2px #f45f00 solid;
   border-radius: 10px;
-  height: 100px;
+  height: 160px;
 }

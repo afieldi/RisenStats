@@ -7,6 +7,8 @@ import { GetAveragesFromObjects, GetCurrentEpcohMs, toSearchName } from '../../.
 import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection, SaveObjects } from './dbConnect'
 import log from '../../logger'
 import { GameRoles } from '../../../Common/Interface/General/gameEnums'
+import PlayerGameModel from '../../../Common/models/playergame.model'
+import SeasonModel from '../../../Common/models/season.model'
 
 export async function GetDbPlayerByPuuid(playerPuuid: string): Promise<PlayerModel> {
   await ensureConnection()
@@ -150,4 +152,13 @@ export async function GetPlayerPuuidsInSeason(seasonId: number, roleId: GameRole
   }
 
   return await PlayerModel.query(query, params) as PlayerData[]
+}
+
+interface SeasonData {
+  seasonId: string;
+}
+
+export async function GetPlayerDistinctSeasons(playerPuuid: string): Promise<SeasonData[]> {
+  await ensureConnection();
+  return (await PlayerGameModel.createQueryBuilder().select('"seasonId"').where('"playerPuuid" = :puuid', {puuid: playerPuuid}).distinct(true).getRawMany()) as SeasonData[];
 }
