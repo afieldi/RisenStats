@@ -1,6 +1,6 @@
-import {Box, Typography} from "@mui/material";
-import React from "react";
-import {riotTimestampToGameTime, timeToTimeAgo} from "../../../../../Common/utils";
+import { Box, Typography } from '@mui/material';
+import React from 'react';
+import { riotTimestampToGameTime, timeToTimeAgo } from '../../../../../Common/utils';
 
 interface GameTimeInformationProps {
     playerWin: boolean;
@@ -15,10 +15,10 @@ function GameTimeInformation(gameTimeInformationProps: GameTimeInformationProps)
         gameStart,
     } = gameTimeInformationProps;
     return (
-    <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', pr: '5px'}}>
-        <Box sx={{width: "80px"}}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', pr: '5px' }}>
+        <Box sx={{ width: '80px' }}>
             <Typography align="center">
-                {playerWin ? "Win" : "Loss"}
+                {playerWin ? 'Win' : 'Loss'}
             </Typography>
             <hr></hr>
             <Typography align="center" variant="body2">

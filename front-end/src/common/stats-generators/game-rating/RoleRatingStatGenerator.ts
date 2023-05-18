@@ -1,6 +1,6 @@
-import { GameRoles } from "../../../../../Common/Interface/General/gameEnums";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import { GameRatingStatGenerator } from "./GameRatingStatGenerator";
+import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
+import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 
 export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
   protected role;
@@ -9,7 +9,7 @@ export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
       GameRoles.TOP,
       GameRoles.BOTTOM,
       GameRoles.ALL,
-  ]
+  ];
 
   constructor(role: GameRoles) {
       super();
@@ -22,16 +22,16 @@ export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
         rating = this.getSoloLaneStatValue(playerStatsModel);
     }
     else if (this.role === GameRoles.JUNGLE) {
-        rating = this.getJunglerStatValue(playerStatsModel)
+        rating = this.getJunglerStatValue(playerStatsModel);
     } else {
-        rating = this.getSupportStatValue(playerStatsModel)
+        rating = this.getSupportStatValue(playerStatsModel);
     }
     return rating;
   }
 
-  abstract getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number
+  abstract getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number;
 
-  abstract getJunglerStatValue(playerStatsModel: PlayerStatModel): number
+  abstract getJunglerStatValue(playerStatsModel: PlayerStatModel): number;
 
-  abstract getSupportStatValue(playerStatsModel: PlayerStatModel): number
+  abstract getSupportStatValue(playerStatsModel: PlayerStatModel): number;
 }

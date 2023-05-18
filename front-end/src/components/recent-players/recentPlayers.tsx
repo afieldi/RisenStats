@@ -16,9 +16,9 @@ interface TeammateStat {
 }
 
 enum RecentPlayerTableHeaders {
-  Player = "Player",
-  Games = "Games",
-  WL = "W - L",
+  Player = 'Player',
+  Games = 'Games',
+  WL = 'W - L',
   WR = 'Win Rate',
 }
 
@@ -46,20 +46,20 @@ export default (props: RecentPlayerProps) => {
       }
       teammatesMap[player.playerName].games += 1;
       teammatesMap[player.playerName].wins += ((game.game.winner ? 100 : 200) === game.playerGame.teamId) ? 1 : 0;
-    })
+    });
   }
 
   const recentPlayerData: {[key in RecentPlayerTableHeaders]: string}[] = Object.entries(teammatesMap).map(([key, value], index) => ({
     Player: key,
     Games: value.games.toString(),
-    "W - L": `${value.wins} - ${value.games - value.wins}`,
+    'W - L': `${value.wins} - ${value.games - value.wins}`,
     'Win Rate': `${roundTo((value.wins / value.games) * 100, 0)}%`,
   }));
 
   const rowSx: {[key in RecentPlayerTableHeaders]: SxProps<Theme>} = {
     Player: { width: '270px', overflow: 'hidden' },
-    "W - L": {},
-    "Win Rate": {},
+    'W - L': {},
+    'Win Rate': {},
     Games: {},
   };
 
@@ -72,4 +72,4 @@ export default (props: RecentPlayerProps) => {
       />
     </BaseRisenBox>
   );
-}
+};

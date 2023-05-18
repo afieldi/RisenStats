@@ -26,7 +26,7 @@ export function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{pt: 2}}>
+        <Box sx={{ pt: 2 }}>
           {children}
         </Box>
       )}

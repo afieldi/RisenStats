@@ -22,7 +22,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       label: 'Role',
       active: true,
       display: (item: LeaderboardType, theme: Theme) => (
-        <img src={`/images/roles/${item.role}.png`} style={{height: '30px'}}></img>
+        <img src={`/images/roles/${item.role}.png`} style={{ height: '30px' }}></img>
       ),
     },
     {
@@ -33,7 +33,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       active: true,
       display: (item: LeaderboardType, theme: Theme) => (
         <Typography>
-          <div className="clickable" onClick={() => {goToPlayer(item.playerName)}}>
+          <div className="clickable" onClick={() => {goToPlayer(item.playerName);}}>
             {item.playerName}
           </div>
         </Typography>
@@ -49,7 +49,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
         const rank: Rank = OVERALL_GAME_RATING_OVERVIEW[item.role].getRatingFromNumber(item.tier);
         return (
           <Typography color={getRankColor(rank, theme)} align="left" variant="h5">{rank}</Typography>
-        )
+        );
       },
     },
     {
@@ -137,7 +137,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.dmgp}%`}</Typography>
       ),
-      description: "% of Team's Damage",
+      description: '% of Team\'s Damage',
     },
     {
       id: 'deathPercent',
@@ -148,7 +148,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.deathPercent}%`}</Typography>
       ),
-      description: "% of Team's Deaths",
+      description: '% of Team\'s Deaths',
     },
     {
       id: 'goldPercent',
@@ -159,7 +159,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.goldPercent}%`}</Typography>
       ),
-      description: "% of Team's Gold",
+      description: '% of Team\'s Gold',
     },
     {
       id: 'soloKills',
@@ -192,7 +192,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       display: (item: LeaderboardType, theme: Theme) => (
         <Typography>{`${item.vsPercent}%`}</Typography>
       ),
-      description: "% of Team's Vision Score",
+      description: '% of Team\'s Vision Score',
     },
     {
       id: 'gdDiff15',

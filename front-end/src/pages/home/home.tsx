@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Hidden, Typography, useTheme } from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import React, { KeyboardEvent } from 'react';
 
@@ -50,25 +50,25 @@ export default function Home() {
     }
   }
   return (
-    <Box className="full-height full-width" sx={{overflow: 'hidden'}}>
+    <Box className="full-height full-width" sx={{ overflow: 'hidden' }}>
       <Hidden mdDown>
-        <Box sx={{display: 'flex', flexDirection: 'row'}}>
-          <AngleBox sx={{backgroundColor: theme.palette.primary.main, color: theme.palette.info.light}} onClick={() => goTo('leaderboard')}>
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <AngleBox sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.info.light }} onClick={() => goTo('leaderboard')}>
             <Typography fontFamily="Montserrat" variant="h3">LEADERBOARDS</Typography>
           </AngleBox>
-          <AngleBox sx={{backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light}} onClick={() => goTo('search')}>
+          <AngleBox sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light }} onClick={() => goTo('search')}>
             <Typography fontFamily="Montserrat" variant="h3">PLAYER STATS</Typography>
           </AngleBox>
-          <AngleBox sx={{backgroundColor: 'black', color: theme.palette.info.light}} onClick={() => goTo('discord')}>
+          <AngleBox sx={{ backgroundColor: 'black', color: theme.palette.info.light }} onClick={() => goTo('discord')}>
             <Typography fontFamily="Montserrat" variant="h3">DISCORD</Typography>
           </AngleBox>
         </Box>
       </Hidden>
       <Hidden mdUp>
         <Container>
-          <Box sx={{display: 'flex', flexDirection: 'column'}}>
-            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: 3}}>
-              <img src="/images/logos/risen.png" style={{width: '70%'}}></img>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', pt: 3 }}>
+              <img src="/images/logos/risen.png" style={{ width: '70%' }}></img>
             </Box>
             <MobileBox variant='outlined' onClick={() => goTo('leaderboard')}>
               <Typography fontFamily="Montserrat" variant="h5">LEADERBOARDS</Typography>
@@ -83,5 +83,5 @@ export default function Home() {
         </Container>
       </Hidden>
     </Box>
-  )
+  );
 }

@@ -1,18 +1,18 @@
-import {ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection} from "./dbConnect";
-import PlayerStatModel from "../../../Common/models/playerstat.model";
-import {GameRoles} from "../../../Common/Interface/General/gameEnums";
-import {FindManyOptions,  MoreThanOrEqual} from "typeorm";
-import {combine} from "../../../Common/utils";
-import DenylistModel from "../../../Common/models/denylist.model";
+import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection } from './dbConnect';
+import PlayerStatModel from '../../../Common/models/playerstat.model';
+import { GameRoles } from '../../../Common/Interface/General/gameEnums';
+import { FindManyOptions,  MoreThanOrEqual } from 'typeorm';
+import { combine } from '../../../Common/utils';
+import DenylistModel from '../../../Common/models/denylist.model';
 
 const minNumberOfGames = 4;
 
 export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, risenOnly?: boolean, collapseRoles?: boolean): Promise<PlayerStatModel[]> {
     await ensureConnection();
 
-    let searchFilter: FindManyOptions<PlayerStatModel> = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID}};
+    let searchFilter: FindManyOptions<PlayerStatModel> = { where: { seasonId: ALL_TOURNAMENT_GAMES_ID } };
     if (roleId !== GameRoles.ALL) {
-        searchFilter = {where: {seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThanOrEqual(minNumberOfGames)}};
+        searchFilter = { where: { seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThanOrEqual(minNumberOfGames) } };
     }
 
     if (seasonId) {
@@ -34,7 +34,7 @@ export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, r
         };
     }
 
-    let leaderboard: PlayerStatModel[] = await PlayerStatModel.find(searchFilter)
+    let leaderboard: PlayerStatModel[] = await PlayerStatModel.find(searchFilter);
     // If the role is ALL combine the data into one object and return it.
     if (roleId == GameRoles.ALL) {
        return flattenLeaderboard(leaderboard, collapseRoles);
@@ -54,7 +54,7 @@ function flattenLeaderboard(playerStatsModel: PlayerStatModel[], collapseRoles?:
         if (!flattenedLeaderboard.has(key)) {
             flattenedLeaderboard.set(key, playerStat);
         } else {
-            flattenedLeaderboard.set(key, combine(playerStat, flattenedLeaderboard.get(key) as PlayerStatModel))
+            flattenedLeaderboard.set(key, combine(playerStat, flattenedLeaderboard.get(key) as PlayerStatModel));
         }
     }
 
@@ -63,7 +63,7 @@ function flattenLeaderboard(playerStatsModel: PlayerStatModel[], collapseRoles?:
 }
 
 async function removeDenyListPlayers(leaderboard: PlayerStatModel[]): Promise<PlayerStatModel[]>  {
-    let denyListPlayers: DenylistModel[] = await DenylistModel.find({})
+    let denyListPlayers: DenylistModel[] = await DenylistModel.find({});
 
     if (denyListPlayers.length === 0) {
         return leaderboard;

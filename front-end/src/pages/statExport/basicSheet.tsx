@@ -17,23 +17,23 @@ export default function BasicSheetExport() {
     setNGames(Number.parseInt(event.target.value));
   };
 
-  const handleClick = async () => {
+  const handleClick = async() => {
     setLoading(true);
     const playerNames = value.split(/\,|\n/);
     const data = await GetBasicSheetForPlayers(playerNames, nGames);
 
-    SaveBlob(data, "text.csv");
+    SaveBlob(data, 'text.csv');
     setLoading(false);
   };
 
   return (
     <Box>
       <Box>
-        <Typography variant="h2" sx={{pb: 1}}>
+        <Typography variant="h2" sx={{ pb: 1 }}>
           Player Averages Export
         </Typography>
       </Box>
-      <Box sx={{display: 'flex'}}>
+      <Box sx={{ display: 'flex' }}>
         <TextField
           id="outlined-multiline-static"
           label="Player Names"
@@ -41,7 +41,7 @@ export default function BasicSheetExport() {
           rows={2}
           value={value}
           onChange={handleChange}
-          sx={{flexGrow: 1, mr: 2}}
+          sx={{ flexGrow: 1, mr: 2 }}
         />
         <TextField
           id="outlined-multiline-static"
@@ -51,13 +51,13 @@ export default function BasicSheetExport() {
           type="number"
           value={nGames}
           onChange={handleGamesChange}
-          sx={{width: '150px', pr: 3}}
+          sx={{ width: '150px', pr: 3 }}
         />
         <hr></hr>
-        <LoadingButton sx={{width: '250px', ml: 3}} variant="outlined" onClick={handleClick} loading={loading}>
+        <LoadingButton sx={{ width: '250px', ml: 3 }} variant="outlined" onClick={handleClick} loading={loading}>
           Download
         </LoadingButton>
       </Box>
     </Box>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class KDAStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "KDA"
+        return 'KDA';
     }
 
     getToolTip(): string {
-        return "Kills + Assists / Deaths";
+        return 'Kills + Assists / Deaths';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

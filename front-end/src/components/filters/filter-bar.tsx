@@ -1,9 +1,9 @@
-import React from "react";
-import { Box, SelectChangeEvent } from "@mui/material";
-import RisenSeasonSelector from "../selectors/risen-season-selector";
-import RoleSelector from "../selectors/role-selector";
-import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
-import SeasonModel from "../../../../Common/models/season.model";
+import React from 'react';
+import { Box, SelectChangeEvent } from '@mui/material';
+import RisenSeasonSelector from '../selectors/risen-season-selector';
+import RoleSelector from '../selectors/role-selector';
+import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
+import SeasonModel from '../../../../Common/models/season.model';
 
 export interface FilterBarProps {
   seasonConfig?: {
@@ -21,10 +21,10 @@ export interface FilterBarProps {
 
 export default function FilterBar(props: FilterBarProps) {
   return (
-    <Box sx={{display: 'flex', columnGap: 2, flexWrap: 'wrap'}}>
+    <Box sx={{ display: 'flex', columnGap: 2, flexWrap: 'wrap' }}>
       <Box>
         <RisenSeasonSelector
-          callBack={(event: SelectChangeEvent) => { props.seasonConfig?.setSeasonId(event.target.value) }}
+          callBack={(event: SelectChangeEvent) => { props.seasonConfig?.setSeasonId(event.target.value); }}
           sx={{ minWidth: '200px', pt: 1, pb: 1 }}
           seasonConfig={props.seasonConfig}
           hideAllGames={!!props.hideAllGames} />
@@ -33,7 +33,7 @@ export default function FilterBar(props: FilterBarProps) {
         <RoleSelector
           sx={{ minWidth: '150px', pt: 1, pb: 1 }}
           initalValue={props.roleConfig?.roleId}
-          callBack={(event: SelectChangeEvent) => { props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]) }}
+          callBack={(event: SelectChangeEvent) => { props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]); }}
         />
       </Box>
       {props.children}

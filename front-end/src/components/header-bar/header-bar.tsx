@@ -1,5 +1,5 @@
 import React, { Dispatch, KeyboardEvent, SetStateAction } from 'react';
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Toolbar from '@mui/material/Toolbar';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
@@ -9,7 +9,7 @@ import { styled } from '@mui/material/styles';
 import SearchField from '../search-field/search-field';
 import { Box, Typography, Hidden, InputAdornment } from '@mui/material';
 import SignIn from '../signin/sign-in';
-import { DRAWER_WIDTH } from "../../common/constants";
+import { DRAWER_WIDTH } from '../../common/constants';
 
 interface AppBarProps {
   barOpen?: boolean,
@@ -39,7 +39,7 @@ interface Props {
   setOpen: Dispatch<SetStateAction<boolean>>,
 }
 
-export default function HeaderBar({open, setOpen}: Props) {
+export default function HeaderBar({ open, setOpen }: Props) {
   const navigate = useNavigate();
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -54,11 +54,11 @@ export default function HeaderBar({open, setOpen}: Props) {
   function doSearch()
   {
     const playerName = (document.getElementById(headerSearchId) as HTMLInputElement).value;
-    navigate(`player/${encodeURIComponent(playerName)}`)
+    navigate(`player/${encodeURIComponent(playerName)}`);
   }
 
   return (
-    <AppBar position="fixed" barOpen={open} sx={{bgcolor: '#12121200'}}>
+    <AppBar position="fixed" barOpen={open} sx={{ bgcolor: '#12121200' }}>
       <Toolbar>
           <IconButton
             color="inherit"
@@ -73,12 +73,12 @@ export default function HeaderBar({open, setOpen}: Props) {
             <MenuIcon />
           </IconButton>
         <Hidden smDown>
-          <Box sx={{flexGrow: 1, display: 'flex', pr: 2}}>
+          <Box sx={{ flexGrow: 1, display: 'flex', pr: 2 }}>
             <Link to="/">
-              <Box sx={{height: '50px', display: 'inline-flex', top: '10px'}} className="clickable-bg">
+              <Box sx={{ height: '50px', display: 'inline-flex', top: '10px' }} className="clickable-bg">
                 <img src="/images/logos/risen-small-white.png" width="60" height="50"></img>
                 <Hidden smDown>
-                  <Typography variant="h5" sx={{pt: 1.5, pl: 1}}>Risen Esports</Typography>
+                  <Typography variant="h5" sx={{ pt: 1.5, pl: 1 }}>Risen Esports</Typography>
                 </Hidden>
               </Box>
             </Link>
@@ -101,5 +101,5 @@ export default function HeaderBar({open, setOpen}: Props) {
         ></SearchField>
       </Toolbar>
     </AppBar>
-  )
+  );
 }

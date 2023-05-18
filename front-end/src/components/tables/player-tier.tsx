@@ -1,13 +1,13 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { GameRoles } from "../../../../Common/Interface/General/gameEnums";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
-import { roundTo } from "../../../../Common/utils";
-import { getFlattenedLeaderboard } from "../../api/leaderboards";
-import { TableColumn, SortOrder, LeaderboardType } from "../../common/types";
-import { StatGenerators, OVERALL_GAME_RATING_OVERVIEW } from "../../common/constants";
-import Loading from "../loading/loading";
-import SortableTableHead from "./helper-components/sortable-head";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import { roundTo } from '../../../../Common/utils';
+import { getFlattenedLeaderboard } from '../../api/leaderboards';
+import { TableColumn, SortOrder, LeaderboardType } from '../../common/types';
+import { StatGenerators, OVERALL_GAME_RATING_OVERVIEW } from '../../common/constants';
+import Loading from '../loading/loading';
+import SortableTableHead from './helper-components/sortable-head';
 interface PlayerTierTableProps {
   seasonId: string;
   roleId: GameRoles;
@@ -61,13 +61,13 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
   useEffect(() => {
     setLoadingStats(true);
     getFlattenedLeaderboard(
-      seasonId === "RISEN" ? undefined : Number(seasonId),
-      seasonId === "RISEN",
+      seasonId === 'RISEN' ? undefined : Number(seasonId),
+      seasonId === 'RISEN',
       roleId,
     ).then((data) => {
       sortPlayerStats(MapStatsToLeaderboard(data), sortCol, sortOrder);
       setLoadingStats(false);
-    })
+    });
   }, [seasonId, roleId]);
 
   const setNewSort = (newSortCol: keyof LeaderboardType) => {
@@ -82,7 +82,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
     }
     setSortCol(newSortCol);
     sortPlayerStats(playersStats, newSortCol, newSortOrder);
-  }
+  };
 
   const sortPlayerStats = (newStats: LeaderboardType[], passedCol: keyof LeaderboardType, passedOrder: SortOrder) => {
     setPlayersStats(newStats.sort((a, b) => {
@@ -93,10 +93,10 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
         retValue = -1;
       return retValue * (passedOrder === SortOrder.ASC ? 1 : -1);
     }));
-  }
+  };
 
   return (
-    <Box sx={{pb: 10}}>
+    <Box sx={{ pb: 10 }}>
       <Paper sx={{ width: '100%' }}>
         <TableContainer>
           <Table>
@@ -104,7 +104,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
               order={sortOrder}
               orderBy={sortCol}
               headCells={activeCols}
-              onRequestSort={(event: React.MouseEvent<unknown>, property) => {setNewSort(property)}}
+              onRequestSort={(event: React.MouseEvent<unknown>, property) => {setNewSort(property);}}
             />
             {
             loadingStats ? null :
@@ -128,7 +128,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
                             })
                           }
                       </TableRow>
-                    )
+                    );
                   })
                 }
               </TableBody>
@@ -137,8 +137,8 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
         </TableContainer>
       </Paper>
       {
-        loadingStats && <Loading sx={{pt: 2}} />
+        loadingStats && <Loading sx={{ pt: 2 }} />
       }
     </Box>
-  )
+  );
 }

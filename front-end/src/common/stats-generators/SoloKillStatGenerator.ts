@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class SoloKillStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "SKPG"
+        return 'SKPG';
     }
 
     getToolTip(): string {
-        return "Solo Kills Per Game";
+        return 'Solo Kills Per Game';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

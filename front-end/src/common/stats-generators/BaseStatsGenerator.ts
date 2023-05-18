@@ -1,5 +1,5 @@
-import { Theme } from "@mui/material";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { Theme } from '@mui/material';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export abstract class BaseStatGenerator {
 
@@ -17,16 +17,16 @@ export abstract class BaseStatGenerator {
         return theme.palette.text.primary;
     }
 
-    abstract getStatValue(playerStatsModel: PlayerStatModel): number
+    abstract getStatValue(playerStatsModel: PlayerStatModel): number;
 
-    abstract getStatTitle(): string
+    abstract getStatTitle(): string;
 
     abstract getToolTip(): string;
 
-    protected shouldInvertLeaderboard = false
+    protected shouldInvertLeaderboard = false;
 
     getNoDataValue(): String {
-        return ""
+        return '';
     }
 
     canLoadData(playerStatModels: PlayerStatModel[]): boolean {
@@ -35,7 +35,7 @@ export abstract class BaseStatGenerator {
 
     formatNumber(value: number, decimals: number = 2) : string {
         // We always want to keep the numbers below 6 characters to fit in the box
-        return value.toFixed(decimals).length > 6 ? value.toFixed(1) : value.toFixed(decimals)
+        return value.toFixed(decimals).length > 6 ? value.toFixed(1) : value.toFixed(decimals);
     }
 
     getSortValue(playerStatsModel: PlayerStatModel) {
@@ -43,7 +43,7 @@ export abstract class BaseStatGenerator {
     }
 
     getStatNumber(playerStatsModels: PlayerStatModel[]) {
-        let total = 0
+        let total = 0;
         let games = 0;
         for (let playerStatsModel of playerStatsModels) {
             const weight1 = games / (games + playerStatsModel.games);
@@ -51,7 +51,7 @@ export abstract class BaseStatGenerator {
             total = (total * weight1) + (weight2 * this.getStatValue(playerStatsModel));
             games += playerStatsModel.games;
         }
-        return total
+        return total;
     }
 
     getStatSum(playerStatModels: PlayerStatModel[]) {
@@ -65,7 +65,7 @@ export abstract class BaseStatGenerator {
     getSortedLeaderboard(unsortedLeaderboard: PlayerStatModel[]): PlayerStatModel[] {
         const sortedLeaderboard = unsortedLeaderboard.sort((o1, o2) => {
             return this.getSortValue(o2) - this.getSortValue(o1);
-        })
+        });
         return this.shouldInvertLeaderboard ?  sortedLeaderboard.reverse() : sortedLeaderboard;
     }
 

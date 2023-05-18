@@ -9,21 +9,21 @@ interface Props {
   losses: number,
 }
 
-export default function WinRatePieChart({height, width, wins, losses}: Props) {
+export default function WinRatePieChart({ height, width, wins, losses }: Props) {
   const data = [
     {
-      "name": "Wins",
-      "value": +wins
+      'name': 'Wins',
+      'value': +wins
     },
     {
-      "name": "Losses",
-      "value": +losses
+      'name': 'Losses',
+      'value': +losses
     }
   ];
   const COLORS = [
-    "#2039f5",
-    "#b80707"
-  ]
+    '#2039f5',
+    '#b80707'
+  ];
   return (
     <PieChart height={NonNone(height, 300)} width={NonNone(width, NonNone(height, 300))}>
       <Pie data={data} dataKey="value" nameKey="name" fill="#8884d8" outerRadius={NonNone(height, 300) * .5}>
@@ -32,5 +32,5 @@ export default function WinRatePieChart({height, width, wins, losses}: Props) {
       }
       </Pie>
     </PieChart>
-  )
+  );
 }

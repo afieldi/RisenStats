@@ -1,5 +1,5 @@
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
-import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import { PercentBaseStatGenerator } from './PercentBaseStatGenerator';
 
 export class DeathPercentStatGenerator extends PercentBaseStatGenerator {
 
@@ -9,11 +9,11 @@ export class DeathPercentStatGenerator extends PercentBaseStatGenerator {
     }
 
     getStatTitle(): string {
-        return "Death %"
+        return 'Death %';
     }
 
     getToolTip(): string {
-        return "Avg Share of Deaths per game";
+        return 'Avg Share of Deaths per game';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

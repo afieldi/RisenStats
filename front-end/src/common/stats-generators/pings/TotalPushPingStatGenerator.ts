@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from '../BaseStatsGenerator';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 
 export class TotalPushPingStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "TP"
+        return 'TP';
     }
 
     getToolTip(): string {
-        return "Push Pings";
+        return 'Push Pings';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

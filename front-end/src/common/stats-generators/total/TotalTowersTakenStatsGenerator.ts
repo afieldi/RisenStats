@@ -1,13 +1,13 @@
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import {TotalStatGenerator} from "./TotalStatGenerator";
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
+import { TotalStatGenerator } from './TotalStatGenerator';
 
 export class TotalTowersTakenStatsGenerator extends TotalStatGenerator {
     getStatTitle(): string {
-        return "TTT"
+        return 'TTT';
     }
 
     getToolTip(): string {
-        return "Total Towers taken";
+        return 'Total Towers taken';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

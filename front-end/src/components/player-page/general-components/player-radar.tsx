@@ -21,7 +21,7 @@ interface Props
   options: RadarOptions;
 }
 
-function PlayerRadar({sx, games, options}: Props)
+function PlayerRadar({ sx, games, options }: Props)
 {
   const nGames = games ? games?.length : 0;
   const theme = useTheme() as Theme;
@@ -50,42 +50,42 @@ function PlayerRadar({sx, games, options}: Props)
   }
   const data = [
     {
-      "subject": "KDA",
-      "A": Math.min(calculateKDA(playerValues) / 5, 1),
-      "trueValue": roundTo(calculateKDA(playerValues), 2),
-      "fullMark": 5
+      'subject': 'KDA',
+      'A': Math.min(calculateKDA(playerValues) / 5, 1),
+      'trueValue': roundTo(calculateKDA(playerValues), 2),
+      'fullMark': 5
     },
     {
-      "subject": "VS",
-      "A": Math.min(playerValues.vspm / 3, 1),
-      "trueValue": roundTo(playerValues.vspm, 2),
-      "fullMark": 3
+      'subject': 'VS',
+      'A': Math.min(playerValues.vspm / 3, 1),
+      'trueValue': roundTo(playerValues.vspm, 2),
+      'fullMark': 3
     },
     {
-      "subject": "KP%",
-      "A": Math.min(playerValues.kp / .8, 1),
-      "trueValue": roundTo(playerValues.kp*100, 0),
-      "fullMark": .8
+      'subject': 'KP%',
+      'A': Math.min(playerValues.kp / .8, 1),
+      'trueValue': roundTo(playerValues.kp*100, 0),
+      'fullMark': .8
     },
     {
-      "subject": "DD%",
-      "A": Math.min(playerValues.dpct / .35, 1),
-      "trueValue": roundTo(playerValues.dpct*100, 0),
-      "fullMark": .3
+      'subject': 'DD%',
+      'A': Math.min(playerValues.dpct / .35, 1),
+      'trueValue': roundTo(playerValues.dpct*100, 0),
+      'fullMark': .3
     },
     {
-      "subject": "DT%",
-      "A": Math.min(playerValues.dtpct / .3, 1),
-      "trueValue": roundTo(playerValues.dtpct*100, 0),
-      "fullMark": .3
+      'subject': 'DT%',
+      'A': Math.min(playerValues.dtpct / .3, 1),
+      'trueValue': roundTo(playerValues.dtpct*100, 0),
+      'fullMark': .3
     }
   ];
 
-  const whiteLabel = ({x, y, stroke, value}: {[key: string]: any}) => {
+  const whiteLabel = ({ x, y, stroke, value }: {[key: string]: any}) => {
     <div style={{ color: '#FFFFFF' }}>
       <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">{value}1</text>);
-    </div>
-  }
+    </div>;
+  };
 
   function customTick({ payload, x, y, textAnchor, stroke, radius }: {[key: string]: any}) {
     return (
@@ -118,10 +118,10 @@ function PlayerRadar({sx, games, options}: Props)
         text += '%';
       }
       return (
-        <Box sx={{backgroundColor: theme.palette.info.dark, p: .8, borderRadius: 3}}>
+        <Box sx={{ backgroundColor: theme.palette.info.dark, p: .8, borderRadius: 3 }}>
           <Typography>{text}</Typography>
         </Box>
-      )
+      );
     }
     return null;
   }
@@ -140,7 +140,7 @@ function PlayerRadar({sx, games, options}: Props)
         {/* <Radar name="Lily" dataKey="B" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} /> */}
       </RadarChart>
     </ResponsiveContainer>
-  )
+  );
 }
 
 export default PlayerRadar;

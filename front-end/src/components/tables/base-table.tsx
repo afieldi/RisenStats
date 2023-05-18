@@ -1,4 +1,4 @@
-import { Paper, SxProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
+import { Paper, SxProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from '@mui/material';
 
 interface TableProps<T extends string> {
   headers: T[];
@@ -47,5 +47,5 @@ export default function BaseTable<T extends string>(props: TableProps<T>) {
         </Table>
       </TableContainer>
     </Paper>
-  )
+  );
 }

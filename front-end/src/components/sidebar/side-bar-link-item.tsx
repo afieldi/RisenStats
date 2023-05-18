@@ -1,8 +1,8 @@
-import React from "react";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import {Link} from "react-router-dom";
+import React from 'react';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { Link } from 'react-router-dom';
 
 interface Props {
     isInternalLink: boolean
@@ -18,7 +18,7 @@ export default function SideBarLinkItem(props: Props) {
             <Link to={props.url}>
                 {getListItem(props.key, props.primaryText, props.children)}
             </Link>
-        )
+        );
     } else {
         return (
             <a href={props.url}>
@@ -36,6 +36,6 @@ function getListItem(key: string, primaryText: string, icon: React.ReactNode) {
             </ListItemIcon>
             <ListItemText primary={primaryText} />
         </ListItem>
-    )
+    );
 }
 

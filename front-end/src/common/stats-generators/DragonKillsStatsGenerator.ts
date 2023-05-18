@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class DragonKillsStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "DTPG"
+        return 'DTPG';
     }
 
     getToolTip(): string {
-        return "Average Dragons Taken Per Game";
+        return 'Average Dragons Taken Per Game';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

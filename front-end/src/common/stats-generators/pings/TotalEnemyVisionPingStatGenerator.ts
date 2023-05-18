@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from '../BaseStatsGenerator';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 
 export class TotalEnemyVisionPingStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "TEVP"
+        return 'TEVP';
     }
 
     getToolTip(): string {
-        return "Enemy Vision Pings";
+        return 'Enemy Vision Pings';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

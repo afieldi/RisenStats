@@ -1,9 +1,9 @@
-import {Box, Grid, Theme, Typography} from "@mui/material";
-import StatBox from "./stat-box";
-import React from "react";
-import {useTheme} from "@emotion/react";
-import {BaseStatGenerator} from "../../../common/stats-generators/BaseStatsGenerator";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
+import { Box, Grid, Theme, Typography } from '@mui/material';
+import StatBox from './stat-box';
+import React from 'react';
+import { useTheme } from '@emotion/react';
+import { BaseStatGenerator } from '../../../common/stats-generators/BaseStatsGenerator';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { StatGenerators } from '../../../common/constants';
 
 export interface PerformanceOverviewProps {
@@ -40,7 +40,7 @@ export default function PerformanceOverview(performanceOverviewProps: Performanc
     return(
         <Grid item xs={1} md={1}>
             <Typography fontFamily="Montserrat" color={theme.palette.info.light} align="left" variant="h4">PERFORMANCE OVERVIEW</Typography>
-            <Box sx={{display: "flex", columnGap: 1, rowGap: 2, flexWrap: "wrap"}}>
+            <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: 'wrap' }}>
                 { statsGenerators.map((statGenerator, index) =>
                         getStatBox(index, statGenerator, performanceOverviewProps)
                 )}
