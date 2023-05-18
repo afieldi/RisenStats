@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class DPGStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "DPG"
+        return 'DPG';
     }
 
     getToolTip(): string {
-        return "Damage Per Gold";
+        return 'Damage Per Gold';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

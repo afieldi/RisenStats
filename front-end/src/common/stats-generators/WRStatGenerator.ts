@@ -1,14 +1,14 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import { roundTo } from '../../../../Common/utils';
 
 export class WRStatGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "WR"
+        return 'WR';
     }
 
     getToolTip(): string {
-        return "Win Rate";
+        return 'Win Rate';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

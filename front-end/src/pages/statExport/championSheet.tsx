@@ -8,7 +8,7 @@ import { GetChampionStatsSheet } from '../../api/statExport';
 import { SaveBlob } from '../../common/utils';
 
 export default function ChampionSheetExport() {
-  const [season, setSeason] = useState<string>("RISEN");
+  const [season, setSeason] = useState<string>('RISEN');
   const [activeSeasons, setActiveSeasons] = useState<SeasonModel[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -23,11 +23,11 @@ export default function ChampionSheetExport() {
   };
 
 
-  const handleClick = async () => {
+  const handleClick = async() => {
     setLoading(true);
     const data = await GetChampionStatsSheet(season);
 
-    SaveBlob(data, "text.csv");
+    SaveBlob(data, 'text.csv');
     setLoading(false);
   };
 
@@ -35,13 +35,13 @@ export default function ChampionSheetExport() {
   return (
     <Box>
       <Box>
-        <Typography variant="h2" sx={{pb: 1}}>
+        <Typography variant="h2" sx={{ pb: 1 }}>
           Champion Stats Export
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <Box sx={{ pr: 2}}>
-            <FormControl sx={{minWidth: '300px'}}>
+        <Box sx={{ pr: 2 }}>
+            <FormControl sx={{ minWidth: '300px' }}>
               <InputLabel id="demo-simple-select-label">Season</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -51,17 +51,17 @@ export default function ChampionSheetExport() {
                 onChange={handleChange}
               >
                 {/* <MenuItem value={"ALL"}>All Seasons</MenuItem> */}
-                <MenuItem value={"RISEN"}>Risen Seasons</MenuItem>
+                <MenuItem value={'RISEN'}>Risen Seasons</MenuItem>
                 {
                   activeSeasons.map(s => <MenuItem value={s.id}>{s.seasonName}</MenuItem>)
                 }
               </Select>
             </FormControl>
           </Box>
-          <LoadingButton variant='outlined' sx={{width: '250px'}} onClick={handleClick} loading={loading}>
+          <LoadingButton variant='outlined' sx={{ width: '250px' }} onClick={handleClick} loading={loading}>
             Download
           </LoadingButton>
       </Box>
     </Box>
-  )
+  );
 }

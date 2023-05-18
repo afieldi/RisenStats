@@ -1,5 +1,5 @@
-import { SxProps, Theme } from "@mui/material";
-import { GameRoles } from "../../../Common/Interface/General/gameEnums";
+import { SxProps, Theme } from '@mui/material';
+import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 
 export type TextAlign = 'inherit' | 'left' | 'center' | 'right' | 'justify' | undefined;
 
@@ -66,12 +66,12 @@ export enum Dragons {
 }
 
 export enum Rank {
-  SPLUS = "S+",
-  S = "S",
-  A = "A",
-  B = "B",
-  C = "C",
-  D = "D"
+  SPLUS = 'S+',
+  S = 'S',
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D'
 }
 
 export interface LoadingData<T> {

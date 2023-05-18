@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import React from "react";
+import React from 'react';
 import MuiDrawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -9,13 +9,13 @@ import HomeIcon from '@mui/icons-material/Home';
 import GavelIcon from '@mui/icons-material/Gavel';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PersonIcon from '@mui/icons-material/Person';
-import {List } from '@mui/material';
+import { List } from '@mui/material';
 
-import { DRAWER_WIDTH } from "../../common/constants";
+import { DRAWER_WIDTH } from '../../common/constants';
 
 import theme from '../../styles/theme/darkTheme';
-import {Leaderboard} from "@mui/icons-material";
-import SideBarLinkItem from "./side-bar-link-item";
+import { Leaderboard } from '@mui/icons-material';
+import SideBarLinkItem from './side-bar-link-item';
 
 interface Props {
   open: boolean;
@@ -86,37 +86,37 @@ export function SideBar({ open, onClose }: Props) {
       <Divider />
       <List>
           <SideBarLinkItem  isInternalLink={true}
-                            url={"/"}
-                            key={"nav-home"}
-                            primaryText={"Home"}>
+                            url={'/'}
+                            key={'nav-home'}
+                            primaryText={'Home'}>
               <HomeIcon/>
           </SideBarLinkItem>
 
           <SideBarLinkItem  isInternalLink={true}
-                            url={"/search"}
-                            key={"nav-search"}
-                            primaryText={"Player Stats"}>
+                            url={'/search'}
+                            key={'nav-search'}
+                            primaryText={'Player Stats'}>
               <PersonIcon/>
           </SideBarLinkItem>
 
           <SideBarLinkItem  isInternalLink={true}
-                            url={"/leaderboard"}
-                            key={"nav-leaderboard"}
-                            primaryText={"Stats Leaderboards"}>
+                            url={'/leaderboard'}
+                            key={'nav-leaderboard'}
+                            primaryText={'Stats Leaderboards'}>
               <Leaderboard/>
           </SideBarLinkItem>
 
           <SideBarLinkItem  isInternalLink={false}
-                            url={"http://risenesports.com/leagues"}
-                            key={"nav-league"}
-                            primaryText={"League Info"}>
+                            url={'http://risenesports.com/leagues'}
+                            key={'nav-league'}
+                            primaryText={'League Info'}>
               <GavelIcon/>
           </SideBarLinkItem>
 
           <SideBarLinkItem isInternalLink={false}
-                           url={"http://risenesports.com/contact"}
-                           key={"nav-contact"}
-                           primaryText={"Contact Us"}>
+                           url={'http://risenesports.com/contact'}
+                           key={'nav-contact'}
+                           primaryText={'Contact Us'}>
             <PhoneIcon/>
         </SideBarLinkItem>
       </List>
@@ -125,14 +125,14 @@ export function SideBar({ open, onClose }: Props) {
       {
         false ? (
                 <SideBarLinkItem  isInternalLink={true}
-                                  url={"/admin/codes"}
-                                  key={"nav-admin"}
-                                  primaryText={"Manage Codes"}>
+                                  url={'/admin/codes'}
+                                  key={'nav-admin'}
+                                  primaryText={'Manage Codes'}>
                     <PhoneIcon />
                 </SideBarLinkItem>
         ) : null
       }
       <Divider />
     </Drawer>
-  )
+  );
 }

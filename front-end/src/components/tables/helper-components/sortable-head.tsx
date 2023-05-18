@@ -1,8 +1,8 @@
-import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Tooltip, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { visuallyHidden } from "@mui/utils";
-import React from "react";
-import { TableColumn, SortOrder } from "../../../common/types";
+import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Tooltip, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import { visuallyHidden } from '@mui/utils';
+import React from 'react';
+import { TableColumn, SortOrder } from '../../../common/types';
 
 
 interface EnhancedTableProps<T> {

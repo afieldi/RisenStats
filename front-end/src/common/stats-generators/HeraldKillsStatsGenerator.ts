@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class HeraldKillsStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "RHTPG"
+        return 'RHTPG';
     }
 
     getToolTip(): string {
-        return "Rift Herald Taken Per Game";
+        return 'Rift Herald Taken Per Game';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

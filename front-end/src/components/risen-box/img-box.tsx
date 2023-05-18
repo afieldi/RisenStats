@@ -41,7 +41,7 @@ export default function ImgBox(props: ImgBoxProps) {
     position: 'relative',
     lineHeight: '1em',
     bottom: '1.4em',
-  }
+  };
 
   const combinedSx = {
     height: height ?? 55,
@@ -56,10 +56,10 @@ export default function ImgBox(props: ImgBoxProps) {
             height={height}
             width={width}/>
       <Box sx={textTheme}>
-        <Typography sx={{bgcolor: theme.palette.risenBoxBg.main, padding: '0 3px', lineHeight: '1.3'}} color={theme.palette.info.light} variant="button">
+        <Typography sx={{ bgcolor: theme.palette.risenBoxBg.main, padding: '0 3px', lineHeight: '1.3' }} color={theme.palette.info.light} variant="button">
           {text}
         </Typography>
       </Box>
     </Box>
-  )
+  );
 }

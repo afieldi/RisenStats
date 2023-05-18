@@ -13,12 +13,12 @@ export default function BaseRisenBox(props: Props) {
   const { children, sx, ...other } = props;
   const theme = useTheme() as Theme;
 
-  let sxFinal: SxProps<Theme> = {...{
+  let sxFinal: SxProps<Theme> = { ...{
     p: 2,
     bgcolor: theme.palette.risenBoxBg.main,
     borderRadius: 1,
     flexWrap: 'wrap'
-  }, ...sx};
+  }, ...sx };
 
   let titleDisplay: React.ReactNode | null = null;
   if (props.title) {

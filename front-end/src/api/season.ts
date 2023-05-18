@@ -1,10 +1,10 @@
-import { GetSeasonsResponse } from "../../../Common/Interface/Internal/season";
-import { MakeBackendCall } from "./_call";
+import { GetSeasonsResponse } from '../../../Common/Interface/Internal/season';
+import { MakeBackendCall } from './_call';
 
 export async function GetActiveSeasons(): Promise<GetSeasonsResponse> {
-  return await MakeBackendCall("/api/season/get/active", "POST", {}) as GetSeasonsResponse;
+  return await MakeBackendCall('/api/season/get/active', 'POST', {}) as GetSeasonsResponse;
 }
 
 export async function GetAllSeasons(): Promise<GetSeasonsResponse> {
-  return await MakeBackendCall("/api/season/get/all", "POST", {}) as GetSeasonsResponse;
+  return await MakeBackendCall('/api/season/get/all', 'POST', {}) as GetSeasonsResponse;
 }

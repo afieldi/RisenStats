@@ -34,7 +34,7 @@ export default (props: PlayedSeasonsProps) => {
         data: response.seasons,
       }));
     }
-  }, [playerPuuid])
+  }, [playerPuuid]);
   return (
     <BaseRisenBox title={'Seasons'}>
       {
@@ -48,5 +48,5 @@ export default (props: PlayedSeasonsProps) => {
         )
       }
     </BaseRisenBox>
-  )
-}
+  );
+};

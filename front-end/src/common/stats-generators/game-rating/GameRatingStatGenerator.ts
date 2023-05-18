@@ -1,8 +1,8 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
-import {GameRoles} from "../../../../../Common/Interface/General/gameEnums";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import { sigmoid } from "../../../../../Common/utils";
-import { Rank } from "../../types";
+import { BaseStatGenerator } from '../BaseStatsGenerator';
+import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
+import { sigmoid } from '../../../../../Common/utils';
+import { Rank } from '../../types';
 
 export abstract class GameRatingStatGenerator extends BaseStatGenerator {
 
@@ -22,26 +22,26 @@ export abstract class GameRatingStatGenerator extends BaseStatGenerator {
 
         const midPoint = 70;
         const midStat = statValue - midPoint;
-        return (sigmoid(midStat, 16) * 70) + 30
+        return (sigmoid(midStat, 16) * 70) + 30;
     }
 
     getRatingFromNumber(rating: number): Rank {
         if(rating > 95) {
-            return Rank.SPLUS
+            return Rank.SPLUS;
         }
         else if(rating > 90) {
-            return Rank.S
+            return Rank.S;
         }
         else if(rating > 75) {
-            return Rank.A
+            return Rank.A;
         }
         else if(rating > 55) {
-            return Rank.B
+            return Rank.B;
         }
         else if(rating > 40) {
-            return Rank.C
+            return Rank.C;
         }
-        return Rank.D
+        return Rank.D;
     }
 
     getRating(playerStatsModel: PlayerStatModel[]): Rank {

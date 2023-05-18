@@ -1,13 +1,13 @@
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
-import {PercentBaseStatGenerator} from "./PercentBaseStatGenerator";
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import { PercentBaseStatGenerator } from './PercentBaseStatGenerator';
 
 export class DMGPercentStatGenerator extends PercentBaseStatGenerator {
     getStatTitle(): string {
-        return "DMG %"
+        return 'DMG %';
     }
 
     getToolTip(): string {
-        return "Damage Share";
+        return 'Damage Share';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

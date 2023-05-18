@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "./BaseStatsGenerator";
-import PlayerStatModel from "../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from './BaseStatsGenerator';
+import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class BaronKillsStatsGenerator extends BaseStatGenerator {
     getStatTitle(): string {
-        return "BTPG"
+        return 'BTPG';
     }
 
     getToolTip(): string {
-        return "Average Number Of Barons Taken Per Game";
+        return 'Average Number Of Barons Taken Per Game';
     }
 
     getStatValue(playerStatsModel: PlayerStatModel): number {

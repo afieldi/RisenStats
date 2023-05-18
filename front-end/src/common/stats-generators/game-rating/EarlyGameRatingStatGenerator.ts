@@ -1,15 +1,15 @@
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import {GameRatingStatGenerator} from "./GameRatingStatGenerator";
-import { RoleRatingStatGenerator } from "./RoleRatingStatGenerator";
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
+import { GameRatingStatGenerator } from './GameRatingStatGenerator';
+import { RoleRatingStatGenerator } from './RoleRatingStatGenerator';
 
 export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
 
     getStatTitle(): string {
-        return "Early Game Rating"
+        return 'Early Game Rating';
     }
 
     getToolTip(): string {
-        return "Rates you based on your early game stats";
+        return 'Rates you based on your early game stats';
     }
 
     getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number {

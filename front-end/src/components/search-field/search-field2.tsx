@@ -57,9 +57,9 @@ interface Props
   sx?: SxProps<Theme> | undefined;
 }
 
-export default function SearchField2({id, placeholder, onSubmit, sx, name}: Props)
+export default function SearchField2({ id, placeholder, onSubmit, sx, name }: Props)
 {
-  let resolvedPlaceholder: string = placeholder ? placeholder : "Search...";
+  let resolvedPlaceholder: string = placeholder ? placeholder : 'Search...';
   const theme = useTheme() as Theme;
   return (
     <TextField id={id}
@@ -96,5 +96,5 @@ export default function SearchField2({id, placeholder, onSubmit, sx, name}: Prop
     //     }}
     //   />
     // </Search>
-  )
+  );
 }

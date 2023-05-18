@@ -57,9 +57,9 @@ interface Props
   endAdornment?: ReactNode;
 }
 
-export default function SearchField({id, placeholder, onSubmit, sx, endAdornment}: Props)
+export default function SearchField({ id, placeholder, onSubmit, sx, endAdornment }: Props)
 {
-  let resolvedPlaceholder: string = placeholder ? placeholder : "Search...";
+  let resolvedPlaceholder: string = placeholder ? placeholder : 'Search...';
   const theme = useTheme() as Theme;
   return (
     <Search sx={sx} theme={theme}>
@@ -82,5 +82,5 @@ export default function SearchField({id, placeholder, onSubmit, sx, endAdornment
         endAdornment={endAdornment}
       />
     </Search>
-  )
+  );
 }

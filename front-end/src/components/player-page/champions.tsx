@@ -1,13 +1,13 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import React from "react";
-import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
-import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from "../../../../Common/utils";
-import { ChampionIdToName } from "../../common/utils";
-import WinRatePieChart from "../charts/winrate-pie";
-import SeasonModel from "../../../../Common/models/season.model";
-import {GameRoles} from "../../../../Common/Interface/General/gameEnums";
-import GamesFilter from "../filters/games-filter";
-import FilterBar from "../filters/filter-bar";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import React from 'react';
+import PlayerChampionStatsModel from '../../../../Common/models/playerchampionstats.model';
+import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from '../../../../Common/utils';
+import { ChampionIdToName } from '../../common/utils';
+import WinRatePieChart from '../charts/winrate-pie';
+import SeasonModel from '../../../../Common/models/season.model';
+import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
+import GamesFilter from '../filters/games-filter';
+import FilterBar from '../filters/filter-bar';
 
 interface Props {
   championData: PlayerChampionStatsModel[]
@@ -60,17 +60,17 @@ export default function PlayerPageChampions(props: Props) {
                 return (
                   <TableRow key={champData.championId}>
                     <TableCell>
-                      <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                         <img src={`/images/champions/icons/${champData.championId}_0.png`} height="35px" width="35px"></img>
-                        <Box sx={{display: 'flex', alignItems: 'center', pl: 1.5}}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', pl: 1.5 }}>
                           <Typography>{ChampionIdToName(champData.championId)}</Typography>
                         </Box>
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                         <WinRatePieChart wins={champData.totalWins} losses={champData.totalGames - champData.totalWins} height={25}></WinRatePieChart>
-                        <Typography sx={{pl: 1}}>{calculateWR(champData, 2)}%</Typography>
+                        <Typography sx={{ pl: 1 }}>{calculateWR(champData, 2)}%</Typography>
                       </Box>
                       {/* In Progress */}
                     </TableCell>
@@ -90,12 +90,12 @@ export default function PlayerPageChampions(props: Props) {
                       <Typography align="center">{champData.totalGames}</Typography>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })
             }
           </TableBody>
         </Table>
       </TableContainer>
     </Box>
-  )
+  );
 }

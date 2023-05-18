@@ -1,8 +1,8 @@
-import {useTheme} from "@emotion/react";
-import {Box, Grow, Theme, Typography} from "@mui/material";
-import React from "react";
-import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
-import ImgBox from "../risen-box/img-box";
+import { useTheme } from '@emotion/react';
+import { Box, Grow, Theme, Typography } from '@mui/material';
+import React from 'react';
+import PlayerChampionStatsModel from '../../../../Common/models/playerchampionstats.model';
+import ImgBox from '../risen-box/img-box';
 
 interface ChampionSummaryBoxProps {
     championData: PlayerChampionStatsModel
@@ -13,7 +13,7 @@ export default function ChampionSummaryBox(championOverviewProps: ChampionSummar
     const theme = useTheme() as Theme;
     return (
         <ImgBox
-            sx={{ height:55, width: 55}}
+            sx={{ height:55, width: 55 }}
             alt={`${championOverviewProps.championData.championId}`}
             src={`/images/champions/icons/${championOverviewProps.championData.championId}_0.png`}
             height="50px"
