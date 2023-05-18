@@ -48,20 +48,20 @@ export function getNumberWithSuffix(n: number): string {
 
 export function getRankColor(rank: Rank, theme: Theme) {
   switch (rank) {
-    case Rank.SPLUS:
-      return theme.palette.secondary.light;
-    case Rank.S:
-      return theme.palette.primary.dark;
-    case Rank.A:
-      return theme.palette.first.main;
-    case Rank.B:
-      return theme.palette.second.main;
-    case Rank.C:
-      return theme.palette.third.main;
-    case Rank.D:
-      return theme.palette.info.light;
-    default:
-      return theme.palette.info.light;
+  case Rank.SPLUS:
+    return theme.palette.secondary.light;
+  case Rank.S:
+    return theme.palette.primary.dark;
+  case Rank.A:
+    return theme.palette.first.main;
+  case Rank.B:
+    return theme.palette.second.main;
+  case Rank.C:
+    return theme.palette.third.main;
+  case Rank.D:
+    return theme.palette.info.light;
+  default:
+    return theme.palette.info.light;
   }
 }
 

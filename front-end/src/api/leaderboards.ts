@@ -5,10 +5,10 @@ import { GetLeaderboardRequest, GetLeaderboardResponse } from '../../../Common/I
 import PlayerStatModel from '../../../Common/models/playerstat.model';
 
 export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string, collapseRoles?: boolean) : Promise<PlayerStatModel[]> {
-    return (await GetLeaderboards(seasonId, risenOnly,  roleId, collapseRoles)).playerStats;
+  return (await GetLeaderboards(seasonId, risenOnly,  roleId, collapseRoles)).playerStats;
 }
 
 export async function GetLeaderboards(seasonId?: number, risenOnly?: boolean, roleId?: string, collapseRoles?: boolean): Promise<GetLeaderboardResponse> {
-    const role = GameRoles[roleId as keyof typeof GameRoles];
-    return await MakeBackendCall<GetLeaderboardRequest>('/api/stats/leaderboards/', 'POST', { seasonId, risenOnly, roleId: role, collapseRoles }) as GetLeaderboardResponse;
+  const role = GameRoles[roleId as keyof typeof GameRoles];
+  return await MakeBackendCall<GetLeaderboardRequest>('/api/stats/leaderboards/', 'POST', { seasonId, risenOnly, roleId: role, collapseRoles }) as GetLeaderboardResponse;
 }

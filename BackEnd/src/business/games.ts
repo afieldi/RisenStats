@@ -17,23 +17,23 @@ import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 
 export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
-    const existingObj = await GetDbGameByGameId(ToGameId(matchId));
-    if (existingObj) {
-        return existingObj;
-    }
+  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
+  if (existingObj) {
+    return existingObj;
+  }
 
-    const gameData = await GetRiotGameByMatchId(matchId);
-    if (gameData.info.participants.length !== 10) {
-        throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
-    }
+  const gameData = await GetRiotGameByMatchId(matchId);
+  if (gameData.info.participants.length !== 10) {
+    throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
+  }
 
-    const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
+  const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
 
-    if (updatePlayerStats) {
-        await updatePlayerStatsForGame(matchId);
-    }
+  if (updatePlayerStats) {
+    await updatePlayerStatsForGame(matchId);
+  }
 
-    return savedGameModel;
+  return savedGameModel;
 }
 
 export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDto): Promise<GameModel> {
@@ -150,7 +150,7 @@ async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, 
   }
 
   for (let currentDbPlayerStat of currentDbPlayerStats) {
-      updatedDbPlayerStats.push(aggregateStatsForRow(currentDbPlayerStat, playerGame, fullgame));
+    updatedDbPlayerStats.push(aggregateStatsForRow(currentDbPlayerStat, playerGame, fullgame));
   }
 
   await SaveObjects(updatedDbPlayerStats, PlayerStatModel);

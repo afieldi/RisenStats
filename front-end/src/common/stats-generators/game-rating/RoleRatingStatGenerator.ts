@@ -4,27 +4,27 @@ import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 
 export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
   protected role;
-    protected soloLanes = [
-      GameRoles.MIDDLE,
-      GameRoles.TOP,
-      GameRoles.BOTTOM,
-      GameRoles.ALL,
+  protected soloLanes = [
+    GameRoles.MIDDLE,
+    GameRoles.TOP,
+    GameRoles.BOTTOM,
+    GameRoles.ALL,
   ];
 
   constructor(role: GameRoles) {
-      super();
-      this.role = role;
+    super();
+    this.role = role;
   }
 
   getRawStatValue(playerStatsModel: PlayerStatModel): number  {
     let rating: number;
     if(this.soloLanes.includes(this.role)) {
-        rating = this.getSoloLaneStatValue(playerStatsModel);
+      rating = this.getSoloLaneStatValue(playerStatsModel);
     }
     else if (this.role === GameRoles.JUNGLE) {
-        rating = this.getJunglerStatValue(playerStatsModel);
+      rating = this.getJunglerStatValue(playerStatsModel);
     } else {
-        rating = this.getSupportStatValue(playerStatsModel);
+      rating = this.getSupportStatValue(playerStatsModel);
     }
     return rating;
   }
