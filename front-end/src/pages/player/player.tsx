@@ -193,7 +193,7 @@ function PlayerPage()
     <Container maxWidth="lg" sx={{ minHeight: '100vh' }}>
       <CssBaseline />
       <main>
-      <Box
+        <Box
           sx={{
             pt: 15,
             pb: 6,
@@ -210,24 +210,24 @@ function PlayerPage()
           </Box>
           <TabPanel value={value} index={0}>
             <PlayerPageGeneral player={playerProfile?.overview}
-                               playerStats={playerStats}
-                               seasons={seasons}
-                               games={games}
-                               loadGamesConfig={loadGamesConfig}
-                               championData={championStats} />
+              playerStats={playerStats}
+              seasons={seasons}
+              games={games}
+              loadGamesConfig={loadGamesConfig}
+              championData={championStats} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <PlayerPageChampions championData={championStats}
-                                 seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
-                                 roleConfig={loadGamesConfig.roleConfig}/>
+              seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
+              roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PlayerPageStats playerStats={playerStats}
-                             playerPuuid={playerProfile?.overview.puuid}
-                             leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
-                             seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
-                             roleConfig={loadGamesConfig.roleConfig}
-                             championData={championStats}/>
+              playerPuuid={playerProfile?.overview.puuid}
+              leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
+              seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
+              roleConfig={loadGamesConfig.roleConfig}
+              championData={championStats}/>
           </TabPanel>
         </Box>
       </main>

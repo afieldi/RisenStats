@@ -113,7 +113,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       label: 'VSPM',
       active: false,
       display: (item: LeaderboardType, theme: Theme) => (
-          <Typography>{item.vspm}</Typography>
+        <Typography>{item.vspm}</Typography>
       ),
       description: 'Average Vision Score Per Min',
     },
@@ -278,7 +278,7 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       label: 'Bait Pings',
       active: false,
       display: (item: LeaderboardType, theme: Theme) => (
-          <Typography>{item.baitPings}</Typography>
+        <Typography>{item.baitPings}</Typography>
       ),
       description: 'Total bait pings',
     },

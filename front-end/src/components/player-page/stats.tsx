@@ -31,47 +31,47 @@ interface PlayerPageStatsProps {
 }
 
 export default function PlayerPageStats(props: PlayerPageStatsProps) {
-    const {
-        seasonConfig,
-        roleConfig,
-        playerStats,
-        championData,
-        playerPuuid,
-        leaderboardData,
-    } = props;
-    let wins = 0;
-    let games = 0;
-    for (let playerStat of playerStats) {
-        wins += playerStat.win;
-        games += playerStat.games;
-    }
+  const {
+    seasonConfig,
+    roleConfig,
+    playerStats,
+    championData,
+    playerPuuid,
+    leaderboardData,
+  } = props;
+  let wins = 0;
+  let games = 0;
+  for (let playerStat of playerStats) {
+    wins += playerStat.win;
+    games += playerStat.games;
+  }
 
-    return (
-        <Box>
-            <FilterBar seasonConfig={seasonConfig} roleConfig={roleConfig}/>
-            <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-                <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-                    <WinRateBox hasData={doesPlayerStatsObjectHaveData(playerStats)} wins={wins} losses={games-wins}/>
-                    <ChampionOverview championData={championData}/>
-                    <ObjectiveOverview playerStats={playerStats}/>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-                    <PerformanceOverview    playerStats={playerStats}
-                                            playerPuuid={playerPuuid}
-                                            leaderboardStats={leaderboardData ?? []}
-                    />
-                    <Box sx={{ minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2 }}>
-                        <GameRatingOverview playerStats={playerStats}
-                                            roleId={!!roleConfig?.roleId ? roleConfig.roleId : GameRoles.ALL}/>
-                        <PingOverview playerStats={playerStats}/>
-                        <BaseRisenBox hideDivider>
-                            <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
-                            <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
-                        </BaseRisenBox>
-                    </Box>
-                </Box>
-            </Box>
+  return (
+    <Box>
+      <FilterBar seasonConfig={seasonConfig} roleConfig={roleConfig}/>
+      <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+        <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
+          <WinRateBox hasData={doesPlayerStatsObjectHaveData(playerStats)} wins={wins} losses={games-wins}/>
+          <ChampionOverview championData={championData}/>
+          <ObjectiveOverview playerStats={playerStats}/>
         </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
+          <PerformanceOverview    playerStats={playerStats}
+            playerPuuid={playerPuuid}
+            leaderboardStats={leaderboardData ?? []}
+          />
+          <Box sx={{ minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2 }}>
+            <GameRatingOverview playerStats={playerStats}
+              roleId={!!roleConfig?.roleId ? roleConfig.roleId : GameRoles.ALL}/>
+            <PingOverview playerStats={playerStats}/>
+            <BaseRisenBox hideDivider>
+              <Typography variant="subtitle1">THIS SECTION IS COMING SOON</Typography>
+              <Typography variant="subtitle1">DM soulbert#7829 with bugs/suggestions</Typography>
+            </BaseRisenBox>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
 
-    );
+  );
 }

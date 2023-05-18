@@ -13,29 +13,29 @@ interface Props {
 }
 
 export default function SideBarLinkItem(props: Props) {
-    if (props.isInternalLink) {
-        return (
-            <Link to={props.url}>
-                {getListItem(props.key, props.primaryText, props.children)}
-            </Link>
-        );
-    } else {
-        return (
-            <a href={props.url}>
-                {getListItem(props.key, props.primaryText, props.children)}
-            </a>
-        );
-    }
+  if (props.isInternalLink) {
+    return (
+      <Link to={props.url}>
+        {getListItem(props.key, props.primaryText, props.children)}
+      </Link>
+    );
+  } else {
+    return (
+      <a href={props.url}>
+        {getListItem(props.key, props.primaryText, props.children)}
+      </a>
+    );
+  }
 }
 
 function getListItem(key: string, primaryText: string, icon: React.ReactNode) {
-    return (
-        <ListItem button key={key}>
-            <ListItemIcon>
-                {icon}
-            </ListItemIcon>
-            <ListItemText primary={primaryText} />
-        </ListItem>
-    );
+  return (
+    <ListItem button key={key}>
+      <ListItemIcon>
+        {icon}
+      </ListItemIcon>
+      <ListItemText primary={primaryText} />
+    </ListItem>
+  );
 }
 

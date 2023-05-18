@@ -19,7 +19,7 @@ export default function ItemBox({ items, nCol }: Props) {
       {
         [...Array(6)].map((v, i) => {
           return (
-              i < nItems && items[i] > 0 ?
+            i < nItems && items[i] > 0 ?
               <Box sx={{ p: 0, height: '25px' }}><img src={`/images/items/${items[i]}.png`} style={{ height: '25px' }}></img></Box> :
               <Box sx={{ p: 0, height: '25px', width: '25px', bgcolor: '#b7b7b74f' }}></Box>
           );

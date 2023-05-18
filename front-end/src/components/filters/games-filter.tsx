@@ -36,18 +36,18 @@ export default function GamesFilter(props: Props) {
     <BaseRisenBox title="Filters" sx={{ ...props.sx }}>
       {
         props.useSeason && <RisenSeasonSelector
-            callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value);}}
-            sx={{ width: '100%', pt: 1, pb: 1, display: 'block' }}
-            seasonConfig={props.seasonConfig}
-            hideAllGames={!!props.hideAllGames}/>
+          callBack={(event: SelectChangeEvent) => {props.seasonConfig?.setSeasonId(event.target.value);}}
+          sx={{ width: '100%', pt: 1, pb: 1, display: 'block' }}
+          seasonConfig={props.seasonConfig}
+          hideAllGames={!!props.hideAllGames}/>
       }
       {
-          props.useRole && <RoleSelector
-              initalValue={props.roleConfig?.roleId}
-              sx={{ width: '100%', pt: 1, pb: 1, display: 'block' }}
-              callBack={(event: SelectChangeEvent) => {
-                              props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]);
-              }}/>
+        props.useRole && <RoleSelector
+          initalValue={props.roleConfig?.roleId}
+          sx={{ width: '100%', pt: 1, pb: 1, display: 'block' }}
+          callBack={(event: SelectChangeEvent) => {
+            props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]);
+          }}/>
       }
     </BaseRisenBox>
   );

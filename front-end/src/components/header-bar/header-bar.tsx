@@ -60,18 +60,18 @@ export default function HeaderBar({ open, setOpen }: Props) {
   return (
     <AppBar position="fixed" barOpen={open} sx={{ bgcolor: '#12121200' }}>
       <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: '36px',
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="start"
+          sx={{
+            marginRight: '36px',
+            ...(open && { display: 'none' }),
+          }}
+        >
+          <MenuIcon />
+        </IconButton>
         <Hidden smDown>
           <Box sx={{ flexGrow: 1, display: 'flex', pr: 2 }}>
             <Link to="/">
@@ -94,7 +94,7 @@ export default function HeaderBar({ open, setOpen }: Props) {
               <IconButton
                 onClick={doSearch}
                 edge='start' >
-                  <LoginIcon />
+                <LoginIcon />
               </IconButton>
             </InputAdornment>
           }

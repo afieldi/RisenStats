@@ -2,15 +2,15 @@ import { BaseStatGenerator } from './BaseStatsGenerator';
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
 
 export class ElderDragonKillsStatGenerator extends BaseStatGenerator {
-    getStatTitle(): string {
-        return 'EDTPG';
-    }
+  getStatTitle(): string {
+    return 'EDTPG';
+  }
 
-    getToolTip(): string {
-        return 'Elder Dragons Taken Per Game';
-    }
+  getToolTip(): string {
+    return 'Elder Dragons Taken Per Game';
+  }
 
-    getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.teamElderDragonKills / playerStatsModel.games;
-    }
+  getStatValue(playerStatsModel: PlayerStatModel): number {
+    return playerStatsModel.teamElderDragonKills / playerStatsModel.games;
+  }
 }

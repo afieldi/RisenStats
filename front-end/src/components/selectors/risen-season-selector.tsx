@@ -17,26 +17,26 @@ export interface RisenSeasonSelectorProps {
 }
 
 export default function RisenSeasonSelector(props: RisenSeasonSelectorProps) {
-    return (
-        <FormControl sx={props.sx}>
-            <InputLabel id="season-filter-select-label">Season</InputLabel>
-            <Select
-                labelId="season-filter-select-label"
-                id="season-simple-select"
-                value={props.seasonConfig?.seasonId}
-                label="Season"
-                onChange={props.callBack}
-                sx={{ overflow: 'hidden', width: '100%' }}
-            >
-                <MenuItem value="RISEN">All Risen Games</MenuItem>
-                {
-                    props.seasonConfig?.seasons?.map((season, index) => (
-                        <MenuItem key={index} value={season.id} hidden={!season.active}>{season.seasonName}</MenuItem>
-                    ))
-                }
+  return (
+    <FormControl sx={props.sx}>
+      <InputLabel id="season-filter-select-label">Season</InputLabel>
+      <Select
+        labelId="season-filter-select-label"
+        id="season-simple-select"
+        value={props.seasonConfig?.seasonId}
+        label="Season"
+        onChange={props.callBack}
+        sx={{ overflow: 'hidden', width: '100%' }}
+      >
+        <MenuItem value="RISEN">All Risen Games</MenuItem>
+        {
+          props.seasonConfig?.seasons?.map((season, index) => (
+            <MenuItem key={index} value={season.id} hidden={!season.active}>{season.seasonName}</MenuItem>
+          ))
+        }
 
-                {!props.hideAllGames && <MenuItem value="ALL">All Tournament Games</MenuItem>}
-            </Select>
-        </FormControl>
-    );
+        {!props.hideAllGames && <MenuItem value="ALL">All Tournament Games</MenuItem>}
+      </Select>
+    </FormControl>
+  );
 }

@@ -41,26 +41,26 @@ export default function ChampionSheetExport() {
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <Box sx={{ pr: 2 }}>
-            <FormControl sx={{ minWidth: '300px' }}>
-              <InputLabel id="demo-simple-select-label">Season</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={season.toString()}
-                label="Season"
-                onChange={handleChange}
-              >
-                {/* <MenuItem value={"ALL"}>All Seasons</MenuItem> */}
-                <MenuItem value={'RISEN'}>Risen Seasons</MenuItem>
-                {
-                  activeSeasons.map(s => <MenuItem value={s.id}>{s.seasonName}</MenuItem>)
-                }
-              </Select>
-            </FormControl>
-          </Box>
-          <LoadingButton variant='outlined' sx={{ width: '250px' }} onClick={handleClick} loading={loading}>
+          <FormControl sx={{ minWidth: '300px' }}>
+            <InputLabel id="demo-simple-select-label">Season</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={season.toString()}
+              label="Season"
+              onChange={handleChange}
+            >
+              {/* <MenuItem value={"ALL"}>All Seasons</MenuItem> */}
+              <MenuItem value={'RISEN'}>Risen Seasons</MenuItem>
+              {
+                activeSeasons.map(s => <MenuItem value={s.id}>{s.seasonName}</MenuItem>)
+              }
+            </Select>
+          </FormControl>
+        </Box>
+        <LoadingButton variant='outlined' sx={{ width: '250px' }} onClick={handleClick} loading={loading}>
             Download
-          </LoadingButton>
+        </LoadingButton>
       </Box>
     </Box>
   );
