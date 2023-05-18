@@ -13,39 +13,39 @@ interface WinRateBoxProps {
 }
 
 export default function WinRateBox(winRateProps: WinRateBoxProps) {
-    const theme = useTheme() as Theme;
+  const theme = useTheme() as Theme;
 
-    const data = [{ name: 'Wins', value: winRateProps.wins, color: theme.palette.primary.dark },
-        { name: 'Losses', value: winRateProps.losses, color: theme.palette.secondary.dark }];
-    const winRate = calculateWR({ totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses }, 1);
-    const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}W ${winRateProps.losses}L`;
+  const data = [{ name: 'Wins', value: winRateProps.wins, color: theme.palette.primary.dark },
+    { name: 'Losses', value: winRateProps.losses, color: theme.palette.secondary.dark }];
+  const winRate = calculateWR({ totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses }, 1);
+  const winsOverLoss = `${winRateProps.wins + winRateProps.losses}G ${winRateProps.wins}W ${winRateProps.losses}L`;
 
-    return (
-        <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1 }} title="Win Rate">
-            {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
-            <PieChart width={240} height={200} style={{ margin: 'auto' }}>
-                <Pie
-                    data={data}
-                    innerRadius={65}
-                    outerRadius={95}
-                    cx={'50%'}
-                    cy={'50%'}
-                    blendStroke={true}
-                    dataKey={'value'}>
-                    <Label value={winRate + '%'}
-                           position="centerBottom"
-                           className='label-top'
-                           style={{ fill: theme.palette.info.dark, fontSize: '35px' }}/>
-                    <Label value={winsOverLoss}
-                           position="centerTop"
-                           className='label'
-                           style={{ fill: theme.palette.info.dark }}/>
-                    {
-                        data.map((entry, index) => <Cell key={index} fill={entry.color}/>)
-                    }
-                </Pie>
-                <Tooltip/>
-            </PieChart>
-        </BaseRisenBox>
-    );
+  return (
+    <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1 }} title="Win Rate">
+      {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
+      <PieChart width={240} height={200} style={{ margin: 'auto' }}>
+        <Pie
+          data={data}
+          innerRadius={65}
+          outerRadius={95}
+          cx={'50%'}
+          cy={'50%'}
+          blendStroke={true}
+          dataKey={'value'}>
+          <Label value={winRate + '%'}
+            position="centerBottom"
+            className='label-top'
+            style={{ fill: theme.palette.info.dark, fontSize: '35px' }}/>
+          <Label value={winsOverLoss}
+            position="centerTop"
+            className='label'
+            style={{ fill: theme.palette.info.dark }}/>
+          {
+            data.map((entry, index) => <Cell key={index} fill={entry.color}/>)
+          }
+        </Pie>
+        <Tooltip/>
+      </PieChart>
+    </BaseRisenBox>
+  );
 }

@@ -40,7 +40,7 @@ export default function BaseRisenBox(props: Props) {
       }
       {
         props.hideDivider ? null :
-        <hr color={theme.palette.info.main}></hr>
+          <hr color={theme.palette.info.main}></hr>
       }
       {children}
     </Box>

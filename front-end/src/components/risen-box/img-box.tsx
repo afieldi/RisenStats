@@ -52,9 +52,9 @@ export default function ImgBox(props: ImgBoxProps) {
   return (
     <Box sx={combinedSx} >
       <img alt={alt}
-            src={src}
-            height={height}
-            width={width}/>
+        src={src}
+        height={height}
+        width={width}/>
       <Box sx={textTheme}>
         <Typography sx={{ bgcolor: theme.palette.risenBoxBg.main, padding: '0 3px', lineHeight: '1.3' }} color={theme.palette.info.light} variant="button">
           {text}

@@ -107,14 +107,14 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
               onRequestSort={(event: React.MouseEvent<unknown>, property) => {setNewSort(property);}}
             />
             {
-            loadingStats ? null :
-              <TableBody>
-                {
-                  playersStats.map((row, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        key={`row_${index}`}>
+              loadingStats ? null :
+                <TableBody>
+                  {
+                    playersStats.map((row, index) => {
+                      return (
+                        <TableRow
+                          hover
+                          key={`row_${index}`}>
                           {
                             activeCols.map((cell, j) => {
                               const displayValue = cell.id === 'rank' ? (
@@ -127,11 +127,11 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
                               );
                             })
                           }
-                      </TableRow>
-                    );
-                  })
-                }
-              </TableBody>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
             }
           </Table>
         </TableContainer>

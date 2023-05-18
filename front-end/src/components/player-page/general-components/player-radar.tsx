@@ -93,17 +93,17 @@ function PlayerRadar({ sx, games, options }: Props)
         className="recharts-layer recharts-polar-angle-axis-tick"
       >
         {/* <div > */}
-          <text
-            radius={radius}
-            stroke={stroke}
-            x={x}
-            y={y}
-            className="recharts-text recharts-polar-angle-axis-tick-value"
-            textAnchor={textAnchor}
-            style={{ fill: 'white', fontSize: 20 }}
-          >
-            {payload.value}
-          </text>
+        <text
+          radius={radius}
+          stroke={stroke}
+          x={x}
+          y={y}
+          className="recharts-text recharts-polar-angle-axis-tick-value"
+          textAnchor={textAnchor}
+          style={{ fill: 'white', fontSize: 20 }}
+        >
+          {payload.value}
+        </text>
 
         {/* </div> */}
       </g>

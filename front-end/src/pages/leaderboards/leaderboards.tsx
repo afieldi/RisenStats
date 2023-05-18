@@ -88,38 +88,38 @@ export default function Leaderboards() {
         hideAllGames={true}
         seasonConfig={{ seasonId, setSeasonId, seasons }}
         roleConfig={{ roleId, setRoleId }} >
-          <Box sx={{ flexGrow: 1 }}></Box>
-          <Box>
-            <Button aria-describedby={id} onClick={handleEdit} variant='contained' sx={{ height: '80%', top: '10%' }}>
+        <Box sx={{ flexGrow: 1 }}></Box>
+        <Box>
+          <Button aria-describedby={id} onClick={handleEdit} variant='contained' sx={{ height: '80%', top: '10%' }}>
               Edit Columns
-            </Button>
-            <Popper id={id} open={open} anchorEl={anchorEl}>
-              <BaseRisenBox sx={{ border: 1 }} title="Columns">
-                <FormGroup>
-                  <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: 'wrap', maxWidth: '350px' }}>
-                    {
-                      modifiedCells.map((cell, i) => {
-                        const label = cell.description ? (
-                          <Tooltip title={cell.description}>
-                            <Typography color={theme.palette.info.light}>{cell.label}</Typography>
-                          </Tooltip>
-                        ) : (
+          </Button>
+          <Popper id={id} open={open} anchorEl={anchorEl}>
+            <BaseRisenBox sx={{ border: 1 }} title="Columns">
+              <FormGroup>
+                <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: 'wrap', maxWidth: '350px' }}>
+                  {
+                    modifiedCells.map((cell, i) => {
+                      const label = cell.description ? (
+                        <Tooltip title={cell.description}>
                           <Typography color={theme.palette.info.light}>{cell.label}</Typography>
-                        );
-                        return (
-                          <FormControlLabel sx={{ width: '100px' }} control={<Checkbox checked={cell.active} onChange={() => flipColumn(i)} />} label={label} />
-                        );
-                      })
-                    }
-                  </Box>
-                  <Box sx={{ display: 'flex', columnGap: 1 }}>
-                    <Button variant='outlined' onClick={saveColumns}>Save</Button>
-                    <Button variant='outlined' onClick={() => setAnchorEl(null)}>Cancel</Button>
-                  </Box>
-                </FormGroup>
-              </BaseRisenBox>
-            </Popper>
-          </Box>
+                        </Tooltip>
+                      ) : (
+                        <Typography color={theme.palette.info.light}>{cell.label}</Typography>
+                      );
+                      return (
+                        <FormControlLabel sx={{ width: '100px' }} control={<Checkbox checked={cell.active} onChange={() => flipColumn(i)} />} label={label} />
+                      );
+                    })
+                  }
+                </Box>
+                <Box sx={{ display: 'flex', columnGap: 1 }}>
+                  <Button variant='outlined' onClick={saveColumns}>Save</Button>
+                  <Button variant='outlined' onClick={() => setAnchorEl(null)}>Cancel</Button>
+                </Box>
+              </FormGroup>
+            </BaseRisenBox>
+          </Popper>
+        </Box>
       </FilterBar>
       {playerTierTable}
     </Container>

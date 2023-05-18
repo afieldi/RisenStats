@@ -7,16 +7,16 @@ interface AllTeamInfoProps {
     gameModel: GameModel
 }
 function AllTeamInfo(allTeamInfoProps: AllTeamInfoProps) {
-    return (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <TeamInfo teamPlayers={allTeamInfoProps.gameModel.playersSummary.bluePlayers}
-                      gameId={allTeamInfoProps.gameModel.gameId}
-                      teamColor={TeamColor.BLUE}/>
-            <TeamInfo teamPlayers={allTeamInfoProps.gameModel.playersSummary.redPlayers}
-                      gameId={allTeamInfoProps.gameModel.gameId}
-                      teamColor={TeamColor.RED}/>
-        </Box>
-    );
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <TeamInfo teamPlayers={allTeamInfoProps.gameModel.playersSummary.bluePlayers}
+        gameId={allTeamInfoProps.gameModel.gameId}
+        teamColor={TeamColor.BLUE}/>
+      <TeamInfo teamPlayers={allTeamInfoProps.gameModel.playersSummary.redPlayers}
+        gameId={allTeamInfoProps.gameModel.gameId}
+        teamColor={TeamColor.RED}/>
+    </Box>
+  );
 }
 
 export default AllTeamInfo;

@@ -78,58 +78,58 @@ export function SideBar({ open, onClose }: Props) {
       <DrawerHeader theme={theme}>
         {
           open ?
-          <IconButton onClick={onClose}>
-          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </IconButton> : null
+            <IconButton onClick={onClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton> : null
         }
       </DrawerHeader>
       <Divider />
       <List>
-          <SideBarLinkItem  isInternalLink={true}
-                            url={'/'}
-                            key={'nav-home'}
-                            primaryText={'Home'}>
-              <HomeIcon/>
-          </SideBarLinkItem>
+        <SideBarLinkItem  isInternalLink={true}
+          url={'/'}
+          key={'nav-home'}
+          primaryText={'Home'}>
+          <HomeIcon/>
+        </SideBarLinkItem>
 
-          <SideBarLinkItem  isInternalLink={true}
-                            url={'/search'}
-                            key={'nav-search'}
-                            primaryText={'Player Stats'}>
-              <PersonIcon/>
-          </SideBarLinkItem>
+        <SideBarLinkItem  isInternalLink={true}
+          url={'/search'}
+          key={'nav-search'}
+          primaryText={'Player Stats'}>
+          <PersonIcon/>
+        </SideBarLinkItem>
 
-          <SideBarLinkItem  isInternalLink={true}
-                            url={'/leaderboard'}
-                            key={'nav-leaderboard'}
-                            primaryText={'Stats Leaderboards'}>
-              <Leaderboard/>
-          </SideBarLinkItem>
+        <SideBarLinkItem  isInternalLink={true}
+          url={'/leaderboard'}
+          key={'nav-leaderboard'}
+          primaryText={'Stats Leaderboards'}>
+          <Leaderboard/>
+        </SideBarLinkItem>
 
-          <SideBarLinkItem  isInternalLink={false}
-                            url={'http://risenesports.com/leagues'}
-                            key={'nav-league'}
-                            primaryText={'League Info'}>
-              <GavelIcon/>
-          </SideBarLinkItem>
+        <SideBarLinkItem  isInternalLink={false}
+          url={'http://risenesports.com/leagues'}
+          key={'nav-league'}
+          primaryText={'League Info'}>
+          <GavelIcon/>
+        </SideBarLinkItem>
 
-          <SideBarLinkItem isInternalLink={false}
-                           url={'http://risenesports.com/contact'}
-                           key={'nav-contact'}
-                           primaryText={'Contact Us'}>
-            <PhoneIcon/>
+        <SideBarLinkItem isInternalLink={false}
+          url={'http://risenesports.com/contact'}
+          key={'nav-contact'}
+          primaryText={'Contact Us'}>
+          <PhoneIcon/>
         </SideBarLinkItem>
       </List>
 
       {/* Admin manage */}
       {
         false ? (
-                <SideBarLinkItem  isInternalLink={true}
-                                  url={'/admin/codes'}
-                                  key={'nav-admin'}
-                                  primaryText={'Manage Codes'}>
-                    <PhoneIcon />
-                </SideBarLinkItem>
+          <SideBarLinkItem  isInternalLink={true}
+            url={'/admin/codes'}
+            key={'nav-admin'}
+            primaryText={'Manage Codes'}>
+            <PhoneIcon />
+          </SideBarLinkItem>
         ) : null
       }
       <Divider />

@@ -56,16 +56,16 @@ function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, championDa
         seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons.filter(season => season.active) }}
         roleConfig={loadGamesConfig.roleConfig} />
       <Box sx={{ display: 'flex', flexWrap: useMediaQuery(theme.breakpoints.up('sm')) ? 'nowrap' : 'wrap' }}>
-          <StyledFlexBox>
-            <RankFlag sx={{ minWidth: '170px', flexGrow: 1 }} player={player}></RankFlag>
-            <WinRateBox hasData={results.wins > 0 || results.losses > 0} {...results} />
-            <ChampionOverview championData={championData}  sx={{ width: '100%' }}/>
-            {/* <PlayedSeasons playerPuuid={player?.puuid} setSeason={loadGamesConfig.seasonConfig.setSeasonId} allSeasons={seasons} /> */}
-            <Hidden smDown>
-              <RecentPlayers sx={{ width: '100%' }} recentGames={games} />
-            </Hidden>
-          </StyledFlexBox>
-          <GameSummaryList gameList={games} loadGamesConfig={loadGamesConfig} seasons={seasons} sx={{ minWidth: useMediaQuery(theme.breakpoints.up('sm')) ? '585px' : '371px' }}></GameSummaryList>
+        <StyledFlexBox>
+          <RankFlag sx={{ minWidth: '170px', flexGrow: 1 }} player={player}></RankFlag>
+          <WinRateBox hasData={results.wins > 0 || results.losses > 0} {...results} />
+          <ChampionOverview championData={championData}  sx={{ width: '100%' }}/>
+          {/* <PlayedSeasons playerPuuid={player?.puuid} setSeason={loadGamesConfig.seasonConfig.setSeasonId} allSeasons={seasons} /> */}
+          <Hidden smDown>
+            <RecentPlayers sx={{ width: '100%' }} recentGames={games} />
+          </Hidden>
+        </StyledFlexBox>
+        <GameSummaryList gameList={games} loadGamesConfig={loadGamesConfig} seasons={seasons} sx={{ minWidth: useMediaQuery(theme.breakpoints.up('sm')) ? '585px' : '371px' }}></GameSummaryList>
       </Box>
     </Box>
   );

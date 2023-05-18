@@ -12,15 +12,15 @@ interface ChampionOverviewProps {
 }
 
 export default function ChampionOverview(championOverviewProps: ChampionOverviewProps) {
-    const theme = useTheme() as Theme;
+  const theme = useTheme() as Theme;
 
-    return (
-        <BaseRisenBox title="CHAMPIONS" sx={championOverviewProps.sx}>
-            <Box sx={{ display: 'flex', columnGap: 1, rowGap: 1, flexWrap: 'wrap' }}>
-                { championOverviewProps.championData.map((champData, index) =>
-                    <ChampionSummaryBox key={index} championData={champData}/>
-                )}
-            </Box>
-        </BaseRisenBox>
-    );
+  return (
+    <BaseRisenBox title="CHAMPIONS" sx={championOverviewProps.sx}>
+      <Box sx={{ display: 'flex', columnGap: 1, rowGap: 1, flexWrap: 'wrap' }}>
+        { championOverviewProps.championData.map((champData, index) =>
+          <ChampionSummaryBox key={index} championData={champData}/>
+        )}
+      </Box>
+    </BaseRisenBox>
+  );
 }
