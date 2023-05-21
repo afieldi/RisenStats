@@ -1,26 +1,32 @@
-import { Box, Button, Container, Grid, Hidden, Typography, useTheme } from '@mui/material';
+import { Box, Button, Container, Grid, Hidden, InputBase, Typography, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import React, { KeyboardEvent } from 'react';
 
-const AngleBox = styled(Box)`
-  height: 100vh;
-  width: 34%;
-  transition: .5s;
-  transform: skewX(-10deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-position: center;
-  background-repeat: repeat-y;
-  filter: grayscale(30%);
-  &:hover {
-    filter: grayscale(0%);
-    color: white;
-    width: 50%;
-    cursor: pointer;
-  }
-`;
+interface AngleBoxProps {
+  dark: String,
+  light: String
+}
+
+const AngleBox = styled(Box)((theme: AngleBoxProps) => ({
+  'height': '100vh',
+  'width': '34%',
+  'transition': '.5s',
+  'transform': 'skewX(-10deg)',
+  'display': 'flex',
+  'flex-direction': 'column',
+  'justify-content': 'center',
+  'background-position': 'center',
+  'background-repeat': 'repeat-y',
+  'filter': 'grayscale(30%)',
+  '&:hover': {
+    'filter': 'grayscale(0%)',
+    'color': 'white',
+    'width': '50%',
+    'cursor': 'pointer',
+  },
+  'background-image': `linear-gradient(321deg, ${theme.dark} 0%, ${theme.light} 74%)`
+}));
 
 const MobileBox = styled(Button)`
   margin-top: 10px;
@@ -49,17 +55,18 @@ export default function Home() {
       navigate(newUrl);
     }
   }
+
   return (
     <Box className="full-height full-width" sx={{ overflow: 'hidden' }}>
       <Hidden mdDown>
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-          <AngleBox sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.info.light }} onClick={() => goTo('leaderboard')}>
+          <AngleBox light={theme.palette.primary.main} dark={theme.palette.primary.dark} sx={{ backgroundColor: theme.palette.primary.main, color: theme.palette.info.light }} onClick={() => goTo('leaderboard')}>
             <Typography fontFamily="Montserrat" variant="h3">LEADERBOARDS</Typography>
           </AngleBox>
-          <AngleBox sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light }} onClick={() => goTo('search')}>
+          <AngleBox light={theme.palette.secondary.main} dark={theme.palette.secondary.dark} theme={{ dark: theme.palette.primary.main, light: theme.palette.info.light }} sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light }} onClick={() => goTo('search')}>
             <Typography fontFamily="Montserrat" variant="h3">PLAYER STATS</Typography>
           </AngleBox>
-          <AngleBox sx={{ backgroundColor: 'black', color: theme.palette.info.light }} onClick={() => goTo('discord')}>
+          <AngleBox light={theme.palette.websiteBackground.main} dark={theme.palette.websiteBackground.dark} theme={theme.palette.primary.main} sx={{ backgroundColor: 'black', color: theme.palette.info.light }} onClick={() => goTo('discord')}>
             <Typography fontFamily="Montserrat" variant="h3">DISCORD</Typography>
           </AngleBox>
         </Box>
