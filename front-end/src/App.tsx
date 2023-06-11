@@ -13,6 +13,7 @@ import Error404 from './pages/errors/404';
 import StatExport from './pages/statExport/statExport';
 import Leaderboards from './pages/leaderboards/leaderboards';
 import SearchPage from './pages/search/search';
+import Rosters from './pages/rosters/rosters';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -32,6 +33,7 @@ function App() {
             <Route path="/404" element={<Error404 />}></Route>
             <Route path="/statexport" element={<StatExport />}></Route>
             <Route path="/leaderboard" element={<Leaderboards />}></Route>
+            <Route path="/rosters" element={<Rosters />}></Route>
           </Routes>
         </div>
       </ThemeProvider>

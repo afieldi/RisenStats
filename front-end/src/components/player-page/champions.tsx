@@ -1,7 +1,7 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import React from "react";
 import PlayerChampionStatsModel from "../../../../Common/models/playerchampionstats.model";
-import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from "../../../../Common/utils";
+import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, roundTo, toPerMinute } from "../../../../Common/utils";
 import { ChampionIdToName } from "../../common/utils";
 import WinRatePieChart from "../charts/winrate-pie";
 import SeasonModel from "../../../../Common/models/season.model";
@@ -81,10 +81,10 @@ export default function PlayerPageChampions(props: Props) {
                       <Typography align="center">{riotTimestampToGameTime(gameTime)}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography align="center">{toPerMinute(champData.averageDamageDealt, gameTime)}</Typography>
+                      <Typography align="center">{roundTo(toPerMinute(champData.averageDamageDealt, gameTime), 0)}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography align="center">{toPerMinute(champData.averageGoldEarned, gameTime)}</Typography>
+                      <Typography align="center">{roundTo(toPerMinute(champData.averageGoldEarned, gameTime), 0)}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography align="center">{champData.totalGames}</Typography>
