@@ -1,5 +1,5 @@
 ### Setup
-1. Run `npm install` in `Backend`, and `front-end`
+1. Run `npm install` in `Backend`, `front-end` and `Common`
 2. Ensure that you have `.env.development` setup in `Backend`. Build it based on `.env.example` or ask the repos owner.
 3. Ensure that you have `.env.development` setup in `front-end`. Build it based on `.env.example`. For this one you can just copy it over.
 4. Run `npm run update` in `front-end`
