@@ -1,18 +1,18 @@
-import { GetDbPlayerGamesByPlayerPuuid } from '../db/games'
-import PlayerModel from '../../../Common/models/player.model'
-import { getDbPlayerByname } from '../db/player'
-import { GetAveragesFromObjects } from '../../../Common/utils'
+import { GetDbPlayerGamesByPlayerPuuid } from '../db/games';
+import PlayerModel from '../../../Common/models/player.model';
+import { getDbPlayerByname } from '../db/player';
+import { GetAveragesFromObjects } from '../../../Common/utils';
 
-const width = 400 // px
-const height = 400 // px
-const backgroundColour = 'white' // Uses https://www.w3schools.com/tags/canvas_fillstyle.asp
+const width = 400; // px
+const height = 400; // px
+const backgroundColour = 'white'; // Uses https://www.w3schools.com/tags/canvas_fillstyle.asp
 
 export async function CreatePlayerRadarWithPlayer(playerObject: PlayerModel, games: number = 20): Promise<String> {
-  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, undefined, games)
+  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, undefined, games);
   const averages = GetAveragesFromObjects(dbGames, [
     'kda', 'damageShare', 'damageTakenOnTeamPercentage',
     'visionScorePerMinute', 'killParticipation'
-  ])
+  ]);
   const data = {
     labels: [
       'KDA', 'DD%', 'DT%', 'VSPM', 'KP%'
@@ -30,7 +30,7 @@ export async function CreatePlayerRadarWithPlayer(playerObject: PlayerModel, gam
         pointHoverBorderColor: 'rgb(255, 99, 132)'
       }
     ]
-  }
+  };
   const config = {
     type: 'radar',
     data,
@@ -41,11 +41,11 @@ export async function CreatePlayerRadarWithPlayer(playerObject: PlayerModel, gam
         }
       }
     }
-  }
-  return 'Failed'
+  };
+  return 'Failed';
 }
 
 export async function CreatePlayerRadarWithName(playerName: string, games: number = 20): Promise<String> {
-  const player = await getDbPlayerByname(playerName)
-  return await CreatePlayerRadarWithPlayer(player, games)
+  const player = await getDbPlayerByname(playerName);
+  return await CreatePlayerRadarWithPlayer(player, games);
 }

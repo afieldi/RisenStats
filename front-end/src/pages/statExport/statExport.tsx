@@ -1,10 +1,10 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, useTheme } from "@mui/material";
-import { Container } from "@mui/system";
-import React, { useState } from "react";
-import { TabPanel } from "../../components/tab-panel/tab-panel";
-import BasicSheetExport from "./basicSheet";
-import ChampionSheetExport from "./championSheet";
-import SeasonPlayersSheet from "./seasonPlayersSheet";
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography, useTheme } from '@mui/material';
+import { Container } from '@mui/system';
+import React, { useState } from 'react';
+import { TabPanel } from '../../components/tab-panel/tab-panel';
+import BasicSheetExport from './basicSheet';
+import ChampionSheetExport from './championSheet';
+import SeasonPlayersSheet from './seasonPlayersSheet';
 
 export default function StatExport() {
   const theme = useTheme();
@@ -14,14 +14,14 @@ export default function StatExport() {
     setExportItem(Number.parseInt(event.target.value));
   };
   return (
-    <Container sx={{pt: 10, minHeight: '100vh', color: theme.palette.info.light}}>
+    <Container sx={{ pt: 10, minHeight: '100vh', color: theme.palette.info.light }}>
       <Box>
         <Typography variant="h1" color={theme.palette.info.light}>
           Stat Exporting
         </Typography>
       </Box>
       <hr></hr>
-      <Box sx={{display: 'flex', justifyContent: 'space-evenly'}}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
         <Box>
           <Typography>
             Please select the type of stats that you want to export from the options below
@@ -46,7 +46,7 @@ export default function StatExport() {
         </Box>
         <hr></hr>
         <Box>
-          <FormControl sx={{minWidth: '300px'}}>
+          <FormControl sx={{ minWidth: '300px' }}>
             <InputLabel id="demo-simple-select-label">Export Type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -73,5 +73,5 @@ export default function StatExport() {
         <SeasonPlayersSheet />
       </TabPanel>
     </Container>
-  )
+  );
 }

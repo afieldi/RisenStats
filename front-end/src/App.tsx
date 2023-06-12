@@ -19,11 +19,11 @@ function App() {
   const [open, setOpen] = React.useState(false);
   const handleDrawerClose = () => {
     setOpen(false);
-  }
+  };
   return (
     <Router>
       <ThemeProvider theme={darkTheme}>
-        <div className="App" style={{paddingLeft: '65px'}}>
+        <div className="App" style={{ paddingLeft: '65px' }}>
           <HeaderBar open={open} setOpen={setOpen}></HeaderBar>
           <SideBar open={open} onClose={handleDrawerClose}></SideBar>
           <Routes>

@@ -57,9 +57,9 @@ interface Props
   sx?: SxProps<Theme> | undefined;
 }
 
-export default function SearchField2({id, placeholder, onSubmit, sx, name}: Props)
+export default function SearchField2({ id, placeholder, onSubmit, sx, name }: Props)
 {
-  let resolvedPlaceholder: string = placeholder ? placeholder : "Search...";
+  let resolvedPlaceholder: string = placeholder ? placeholder : 'Search...';
   const theme = useTheme() as Theme;
   return (
     <TextField id={id}
@@ -76,25 +76,25 @@ export default function SearchField2({id, placeholder, onSubmit, sx, name}: Prop
           ev.preventDefault();
         }
       }}
-      />
+    />
 
-    // <Search sx={sx} theme={theme}>
-    //   <SearchIconWrapper>
-    //     <SearchIcon />
-    //   </SearchIconWrapper>
-    //   <StyledInputBase
-    //     placeholder={resolvedPlaceholder}
-    //     inputProps={{ 'aria-label': 'search' }}
-    //     onKeyPress={(ev) => {
-    //       if (ev.key === 'Enter') {
-    //         if (onSubmit)
-    //         {
-    //           onSubmit(ev);
-    //         }
-    //         ev.preventDefault();
-    //       }
-    //     }}
-    //   />
-    // </Search>
-  )
+  // <Search sx={sx} theme={theme}>
+  //   <SearchIconWrapper>
+  //     <SearchIcon />
+  //   </SearchIconWrapper>
+  //   <StyledInputBase
+  //     placeholder={resolvedPlaceholder}
+  //     inputProps={{ 'aria-label': 'search' }}
+  //     onKeyPress={(ev) => {
+  //       if (ev.key === 'Enter') {
+  //         if (onSubmit)
+  //         {
+  //           onSubmit(ev);
+  //         }
+  //         ev.preventDefault();
+  //       }
+  //     }}
+  //   />
+  // </Search>
+  );
 }

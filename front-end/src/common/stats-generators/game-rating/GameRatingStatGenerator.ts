@@ -1,13 +1,13 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
-import {GameRoles} from "../../../../../Common/Interface/General/gameEnums";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
-import { sigmoid } from "../../../../../Common/utils";
-import { Rank } from "../../types";
+import { BaseStatGenerator } from '../BaseStatsGenerator';
+import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
+import { sigmoid } from '../../../../../Common/utils';
+import { Rank } from '../../types';
 
 export abstract class GameRatingStatGenerator extends BaseStatGenerator {
 
-    normalizeStatValue(statValue: number): number {
-        /*
+  normalizeStatValue(statValue: number): number {
+    /*
             We are using the sigmoid function for this. I'm using 110 as a soft max (95% of max score),
             and 30 as a minimum score (5% of max score).
 
@@ -20,39 +20,39 @@ export abstract class GameRatingStatGenerator extends BaseStatGenerator {
             Then I set the floor to be 30 and ceiling to be 100. I don't want anyone to feel too bad
         */
 
-        const midPoint = 70;
-        const midStat = statValue - midPoint;
-        return (sigmoid(midStat, 16) * 70) + 30
-    }
+    const midPoint = 70;
+    const midStat = statValue - midPoint;
+    return (sigmoid(midStat, 16) * 70) + 30;
+  }
 
-    getRatingFromNumber(rating: number): Rank {
-        if(rating > 95) {
-            return Rank.SPLUS
-        }
-        else if(rating > 90) {
-            return Rank.S
-        }
-        else if(rating > 75) {
-            return Rank.A
-        }
-        else if(rating > 55) {
-            return Rank.B
-        }
-        else if(rating > 40) {
-            return Rank.C
-        }
-        return Rank.D
+  getRatingFromNumber(rating: number): Rank {
+    if(rating > 95) {
+      return Rank.SPLUS;
     }
+    else if(rating > 90) {
+      return Rank.S;
+    }
+    else if(rating > 75) {
+      return Rank.A;
+    }
+    else if(rating > 55) {
+      return Rank.B;
+    }
+    else if(rating > 40) {
+      return Rank.C;
+    }
+    return Rank.D;
+  }
 
-    getRating(playerStatsModel: PlayerStatModel[]): Rank {
-        const rating = this.getStatNumber(playerStatsModel);
-        return this.getRatingFromNumber(rating);
-    }
+  getRating(playerStatsModel: PlayerStatModel[]): Rank {
+    const rating = this.getStatNumber(playerStatsModel);
+    return this.getRatingFromNumber(rating);
+  }
 
     abstract getRawStatValue(playerStatsModel: PlayerStatModel): number;
 
     getStatValue(playerStatsModel: PlayerStatModel): number {
-        const rating = this.getRawStatValue(playerStatsModel);
-        return this.normalizeStatValue(rating);
+      const rating = this.getRawStatValue(playerStatsModel);
+      return this.normalizeStatValue(rating);
     }
 }

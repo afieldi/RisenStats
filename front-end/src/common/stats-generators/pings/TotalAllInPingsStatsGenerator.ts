@@ -1,16 +1,16 @@
-import {BaseStatGenerator} from "../BaseStatsGenerator";
-import PlayerStatModel from "../../../../../Common/models/playerstat.model";
+import { BaseStatGenerator } from '../BaseStatsGenerator';
+import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 
 export class TotalAllInPingsStatsGenerator extends BaseStatGenerator {
-    getStatTitle(): string {
-        return "TAIP"
-    }
+  getStatTitle(): string {
+    return 'TAIP';
+  }
 
-    getToolTip(): string {
-        return "All In Pings";
-    }
+  getToolTip(): string {
+    return 'All In Pings';
+  }
 
-    getStatValue(playerStatsModel: PlayerStatModel): number {
-        return playerStatsModel.allInPings;
-    }
+  getStatValue(playerStatsModel: PlayerStatModel): number {
+    return playerStatsModel.allInPings;
+  }
 }

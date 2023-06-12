@@ -1,8 +1,8 @@
-import React from "react";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import {Link} from "react-router-dom";
+import React from 'react';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { Link } from 'react-router-dom';
 
 interface Props {
     isInternalLink: boolean
@@ -13,29 +13,29 @@ interface Props {
 }
 
 export default function SideBarLinkItem(props: Props) {
-    if (props.isInternalLink) {
-        return (
-            <Link to={props.url}>
-                {getListItem(props.key, props.primaryText, props.children)}
-            </Link>
-        )
-    } else {
-        return (
-            <a href={props.url}>
-                {getListItem(props.key, props.primaryText, props.children)}
-            </a>
-        );
-    }
+  if (props.isInternalLink) {
+    return (
+      <Link to={props.url}>
+        {getListItem(props.key, props.primaryText, props.children)}
+      </Link>
+    );
+  } else {
+    return (
+      <a href={props.url}>
+        {getListItem(props.key, props.primaryText, props.children)}
+      </a>
+    );
+  }
 }
 
 function getListItem(key: string, primaryText: string, icon: React.ReactNode) {
-    return (
-        <ListItem button key={key}>
-            <ListItemIcon>
-                {icon}
-            </ListItemIcon>
-            <ListItemText primary={primaryText} />
-        </ListItem>
-    )
+  return (
+    <ListItem button key={key}>
+      <ListItemIcon>
+        {icon}
+      </ListItemIcon>
+      <ListItemText primary={primaryText} />
+    </ListItem>
+  );
 }
 

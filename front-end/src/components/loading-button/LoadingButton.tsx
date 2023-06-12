@@ -1,5 +1,5 @@
-import { Button, SxProps, Theme } from "@mui/material";
-import React from "react";
+import { Button, SxProps, Theme } from '@mui/material';
+import React from 'react';
 
 interface Props
 {
@@ -7,8 +7,8 @@ interface Props
   children?: React.ReactNode;
   onClick?: () => void;
   loading?: boolean;
-  variant?: "contained" | "outlined" | "text";
-  color?: "primary" | "secondary" | "inherit" | "error" | "warning" | "info" | "success";
+  variant?: 'contained' | 'outlined' | 'text';
+  color?: 'primary' | 'secondary' | 'inherit' | 'error' | 'warning' | 'info' | 'success';
 }
 
 export default function LoadingButton({ sx, children, onClick, loading, variant, color }: Props)
@@ -21,7 +21,7 @@ export default function LoadingButton({ sx, children, onClick, loading, variant,
       color={color}
       sx={{
         ...sx,
-        cursor: loading ? "not-allowed" : "pointer",
+        cursor: loading ? 'not-allowed' : 'pointer',
         opacity: loading ? 0.5 : 1,
       }}
     >

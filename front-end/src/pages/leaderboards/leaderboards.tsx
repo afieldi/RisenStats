@@ -16,7 +16,7 @@ import { getAllHeadCells } from './leaderboardDef';
 export default function Leaderboards() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [seasonId, setSeasonId] = useState<string>("RISEN");
+  const [seasonId, setSeasonId] = useState<string>('RISEN');
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
   useEffect(() => {
@@ -33,8 +33,8 @@ export default function Leaderboards() {
 
 
   const goToPlayer = (playerName: string) => {
-    navigate(`/player/${toSearchName(playerName)}`)
-  }
+    navigate(`/player/${toSearchName(playerName)}`);
+  };
 
   const headCells = getAllHeadCells(goToPlayer);
 
@@ -48,7 +48,7 @@ export default function Leaderboards() {
   const saveColumns = () => {
     setActiveCells(modifiedCells.filter(cell => cell.active));
     setAnchorEl(null);
-  }
+  };
 
   const flipColumn = (i: number) => {
     setModifiedCells(modifiedCells.map((cell, j) => {
@@ -56,11 +56,11 @@ export default function Leaderboards() {
         return {
           ...cell,
           active: !cell.active
-        }
+        };
       }
       return cell;
     }));
-  }
+  };
 
   const playerTierTable = useMemo(() => (
     <PlayerTierTable
@@ -70,7 +70,7 @@ export default function Leaderboards() {
   ), [seasonId, roleId, activeCells]);
 
   return (
-    <Container maxWidth='lg' sx={{pt: 10, minHeight: '100vh', color: theme.palette.info.light}}>
+    <Container maxWidth='lg' sx={{ pt: 10, minHeight: '100vh', color: theme.palette.info.light }}>
       <Box>
         <Hidden mdDown>
           <Typography fontFamily="Montserrat" variant="h1" color={theme.palette.info.light}>
@@ -86,42 +86,42 @@ export default function Leaderboards() {
       <hr />
       <FilterBar
         hideAllGames={true}
-        seasonConfig={{seasonId, setSeasonId, seasons}}
-        roleConfig={{roleId, setRoleId}} >
-          <Box sx={{flexGrow: 1}}></Box>
-          <Box>
-            <Button aria-describedby={id} onClick={handleEdit} variant='contained' sx={{height: '80%', top: '10%'}}>
+        seasonConfig={{ seasonId, setSeasonId, seasons }}
+        roleConfig={{ roleId, setRoleId }} >
+        <Box sx={{ flexGrow: 1 }}></Box>
+        <Box>
+          <Button aria-describedby={id} onClick={handleEdit} variant='contained' sx={{ height: '80%', top: '10%' }}>
               Edit Columns
-            </Button>
-            <Popper id={id} open={open} anchorEl={anchorEl}>
-              <BaseRisenBox sx={{border: 1}} title="Columns">
-                <FormGroup>
-                  <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: "wrap", maxWidth: '350px' }}>
-                    {
-                      modifiedCells.map((cell, i) => {
-                        const label = cell.description ? (
-                          <Tooltip title={cell.description}>
-                            <Typography color={theme.palette.info.light}>{cell.label}</Typography>
-                          </Tooltip>
-                        ) : (
+          </Button>
+          <Popper id={id} open={open} anchorEl={anchorEl}>
+            <BaseRisenBox sx={{ border: 1 }} title="Columns">
+              <FormGroup>
+                <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: 'wrap', maxWidth: '350px' }}>
+                  {
+                    modifiedCells.map((cell, i) => {
+                      const label = cell.description ? (
+                        <Tooltip title={cell.description}>
                           <Typography color={theme.palette.info.light}>{cell.label}</Typography>
-                        )
-                        return (
-                          <FormControlLabel sx={{width: '100px'}} control={<Checkbox checked={cell.active} onChange={() => flipColumn(i)} />} label={label} />
-                        )
-                      })
-                    }
-                  </Box>
-                  <Box sx={{display: 'flex', columnGap: 1}}>
-                    <Button variant='outlined' onClick={saveColumns}>Save</Button>
-                    <Button variant='outlined' onClick={() => setAnchorEl(null)}>Cancel</Button>
-                  </Box>
-                </FormGroup>
-              </BaseRisenBox>
-            </Popper>
-          </Box>
+                        </Tooltip>
+                      ) : (
+                        <Typography color={theme.palette.info.light}>{cell.label}</Typography>
+                      );
+                      return (
+                        <FormControlLabel sx={{ width: '100px' }} control={<Checkbox checked={cell.active} onChange={() => flipColumn(i)} />} label={label} />
+                      );
+                    })
+                  }
+                </Box>
+                <Box sx={{ display: 'flex', columnGap: 1 }}>
+                  <Button variant='outlined' onClick={saveColumns}>Save</Button>
+                  <Button variant='outlined' onClick={() => setAnchorEl(null)}>Cancel</Button>
+                </Box>
+              </FormGroup>
+            </BaseRisenBox>
+          </Popper>
+        </Box>
       </FilterBar>
       {playerTierTable}
     </Container>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import { getDbPlayerByname, GetDbPlayerByPuuid, GetPlayerPuuidsInSeason } from "../db/player";
-import PlayerModel from "../../../Common/models/player.model";
-import {BoolToNumber, GetAveragesFromObjects, NonNone, ObjectArrayToCsv} from "../../../Common/utils";
-import {GetDbGameByGameId, GetDbPlayerGamesByPlayerPuuid} from "../db/games";
-import { GameRoles } from "../../../Common/Interface/General/gameEnums";
-import {ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, SaveObjects} from "../db/dbConnect";
-import {BaseEntity} from "typeorm";
-import PlayerStatModel from "../../../Common/models/playerstat.model";
-import PlayerGameModel from "../../../Common/models/playergame.model";
-import GameModel from "../../../Common/models/game.model";
-import logger from "../../logger";
+import { getDbPlayerByname, GetDbPlayerByPuuid, GetPlayerPuuidsInSeason } from '../db/player';
+import PlayerModel from '../../../Common/models/player.model';
+import { BoolToNumber, GetAveragesFromObjects, NonNone, ObjectArrayToCsv } from '../../../Common/utils';
+import { GetDbGameByGameId, GetDbPlayerGamesByPlayerPuuid } from '../db/games';
+import { GameRoles } from '../../../Common/Interface/General/gameEnums';
+import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, SaveObjects } from '../db/dbConnect';
+import { BaseEntity } from 'typeorm';
+import PlayerStatModel from '../../../Common/models/playerstat.model';
+import PlayerGameModel from '../../../Common/models/playergame.model';
+import GameModel from '../../../Common/models/game.model';
+import logger from '../../logger';
 
 const tableCombineCols = [
   'kills', 'deaths', 'assists', 'kills15', 'deaths15', 'assists15', 'goldEarned', 'totalMinionsKilled',
@@ -20,19 +20,19 @@ const tableCombineCols = [
   'csDiff25','xpDiff','xpDiff15','xpDiff25',
   'firstTowerKill', 'firstTowerAssist', 'turretKills', 'doubleKills', 'tripleKills', 'quadraKills',
   'pentaKills', 'damagePerGold', 'soloKills', 'gameLength', 'baronTakedowns'
-]
+];
 
 export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
-  logger.info("Updating Player Stats")
+  logger.info('Updating Player Stats');
   const playerGames = await GetDbPlayerGamesByPlayerPuuid(playerPuuid);
 
   // Create Object to store the stats
   // Primary key is risenSeason, second key is role
-  let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>()
+  let playerStatModelMap: Map<Number, Map<String, PlayerStatModel>> = new Map<Number, Map<String, PlayerStatModel>>();
 
   function aggregateGame(playerGame: PlayerGameModel, seasonId: number, fullGame: GameModel) {
     if (!playerStatModelMap.has(seasonId)) {
-      playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>())
+      playerStatModelMap.set(seasonId, new Map<String, PlayerStatModel>());
     }
 
     const rowsBySeasons = playerStatModelMap.get(seasonId);
@@ -42,11 +42,11 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
     }
 
     const currentRow = rowsBySeasons.get(playerGame.lobbyPosition);
-    rowsBySeasons.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame))
+    rowsBySeasons.set(playerGame.lobbyPosition, aggregateStatsForRow(currentRow, playerGame, fullGame));
   }
 
   for (const playerGame of playerGames) {
-    const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true)
+    const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
     for (let seasonId of getSeasonsToUpdate(playerGame)) {
       aggregateGame(playerGame, seasonId, fullGame);
     }
@@ -59,11 +59,11 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   // Get the keys for all the leagues the player has played in
   for (let key of playerStatModelMap.keys()) {
 
-    let risenLeaguePlayerStatModel: Map<String, PlayerStatModel> = playerStatModelMap.get(key)
+    let risenLeaguePlayerStatModel: Map<String, PlayerStatModel> = playerStatModelMap.get(key);
     // Get the stats for all the roles the player has played in said league
 
     for (let roleKey of risenLeaguePlayerStatModel.keys()) {
-      objsToSave.push(risenLeaguePlayerStatModel.get(roleKey))
+      objsToSave.push(risenLeaguePlayerStatModel.get(roleKey));
     }
   }
   await SaveObjects(objsToSave, PlayerStatModel);
@@ -81,9 +81,9 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
 export function getSeasonsToUpdate(playerGame: PlayerGameModel) : number[] {
   let seasons: number[] = [ALL_TOURNAMENT_GAMES_ID];
   if (playerGame.seasonId) {
-    seasons.push(playerGame.seasonId, ALL_RISEN_GAMES_ID)
+    seasons.push(playerGame.seasonId, ALL_RISEN_GAMES_ID);
   }
-  return seasons
+  return seasons;
 }
 
 export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: number) {
@@ -150,7 +150,7 @@ export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: nu
     visionClearedPings:  0,
     commandPings: 0,
     dangerPings: 0,
-    "12AssistStreakCount": 0,
+    '12AssistStreakCount': 0,
     abilityUses: 0,
     acesBefore15Minutes: 0,
     alliedJungleMonsterKills: 0,
@@ -347,7 +347,7 @@ export function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGa
   currentRow.visionClearedPings += NonNone(game.visionClearedPings);
   currentRow.commandPings += NonNone(game.commandPings);
   currentRow.dangerPings += NonNone(game.dangerPings);
-  currentRow["12AssistStreakCount"] += NonNone(game["12AssistStreakCount"], 0);
+  currentRow['12AssistStreakCount'] += NonNone(game['12AssistStreakCount'], 0);
   currentRow.abilityUses += NonNone(game.abilityUses, 0);
   currentRow.acesBefore15Minutes += NonNone(game.acesBefore15Minutes, 0);
   currentRow.alliedJungleMonsterKills += NonNone(game.alliedJungleMonsterKills, 0);
@@ -481,7 +481,7 @@ export function getTotalsForGame(currentRow: PlayerStatModel, game: PlayerGameMo
     return currentRow;
   }
 
-  const teammates: PlayerGameModel[] = fullGame.players.filter((teammateGame) => game.teamId === teammateGame.teamId)
+  const teammates: PlayerGameModel[] = fullGame.players.filter((teammateGame) => game.teamId === teammateGame.teamId);
 
   teammates.forEach((teammate) => {
     currentRow.totalKillsOfTeam += NonNone(teammate.kills, 0);
@@ -494,36 +494,36 @@ export function getTotalsForGame(currentRow: PlayerStatModel, game: PlayerGameMo
     currentRow.totalTrueDamageDealtToChampionsOfTeam += NonNone(teammate.trueDamageDealtToChampions, 0);
     currentRow.totalDamageDealtToChampionsOfTeam += NonNone(teammate.totalDamageDealtToChampions, 0);
     currentRow.totalVisionScoreOfTeam += NonNone(teammate.visionScore, 0);
-  })
+  });
   return currentRow;
 }
 
 export async function GeneratePlayersCsv(playerNames: string[], games: number = 20): Promise<string> {
-  const items: any[] = []
+  const items: any[] = [];
   for (const playerName of playerNames) {
-    const playerObj = await getDbPlayerByname(playerName)
-    items.push(await GeneratePlayerRow(playerObj, games))
+    const playerObj = await getDbPlayerByname(playerName);
+    items.push(await GeneratePlayerRow(playerObj, games));
   }
-  return ObjectArrayToCsv(items, tableCombineCols)
+  return ObjectArrayToCsv(items, tableCombineCols);
 }
 
 export async function GeneratePlayerRow(playerObject: PlayerModel, games: number = 20, seasonId?: number, roleId?: GameRoles): Promise<{ [key: string]: any }> {
-  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, seasonId, games, 0, roleId)
-  const averages: { [key: string]: any } = GetAveragesFromObjects(dbGames, tableCombineCols)
-  averages.name = playerObject.name
-  averages.totalGames = dbGames.length
-  return averages
+  const dbGames = await GetDbPlayerGamesByPlayerPuuid(playerObject.puuid, false, seasonId, games, 0, roleId);
+  const averages: { [key: string]: any } = GetAveragesFromObjects(dbGames, tableCombineCols);
+  averages.name = playerObject.name;
+  averages.totalGames = dbGames.length;
+  return averages;
 }
 
 export async function GeneratePlayersCsvByFilter(seasonId: number, risenOnly: boolean, roleId?: GameRoles): Promise<string> {
-  const items: any[] = []
+  const items: any[] = [];
 
-  const players = await GetPlayerPuuidsInSeason(seasonId, roleId, risenOnly)
+  const players = await GetPlayerPuuidsInSeason(seasonId, roleId, risenOnly);
   for (const player of players) {
-    const playerObj = await GetDbPlayerByPuuid(player.playerPuuid)
-    items.push(await GeneratePlayerRow(playerObj, 0, seasonId, roleId))
+    const playerObj = await GetDbPlayerByPuuid(player.playerPuuid);
+    items.push(await GeneratePlayerRow(playerObj, 0, seasonId, roleId));
   }
-  return ObjectArrayToCsv(items, tableCombineCols)
+  return ObjectArrayToCsv(items, tableCombineCols);
 }
 
 
