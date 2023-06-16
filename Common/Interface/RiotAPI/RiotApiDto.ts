@@ -192,7 +192,7 @@ export interface RiotParticipantChallengesDto
   controlWardsPlaced: number;
   damagePerMinute: number;
   damageTakenOnTeamPercentage: number;
-  dancedWithRiftHerald: boolean;
+  dancedWithRiftHerald: number;
   deathsByEnemyChamps: number;
   dodgeSkillShotsSmallWindow: number;
   doubleAces: number;

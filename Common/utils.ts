@@ -273,3 +273,11 @@ export function sigmoid(z: number, k: number) {
 export function doesPlayerStatsObjectHaveData(playerStats: PlayerStatModel[]): boolean {
   return !!playerStats.length;
 }
+
+export function getTotalCS(playerStatsModel: PlayerStatModel | PlayerGameModel): number {
+  return playerStatsModel.totalMinionsKilled + playerStatsModel.enemyJungleMonsterKills + playerStatsModel.alliedJungleMonsterKills;
+}
+
+export function deepCopy<T>(object: T): T {
+  return JSON.parse(JSON.stringify(object)) as T;
+}

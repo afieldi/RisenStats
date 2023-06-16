@@ -410,8 +410,8 @@ export default class PlayerGameModel extends BaseEntity
   @Column("real")
   damageTakenOnTeamPercentage: number;
 
-  @Column("boolean")
-  dancedWithRiftHerald: boolean;
+  @Column("smallint", { default: 0 })
+  dancedWithRiftHerald: number;
 
   @Column("smallint")
   deathsByEnemyChamps: number;
