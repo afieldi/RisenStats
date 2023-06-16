@@ -360,7 +360,7 @@ export function aggregateStatsForRow(currentRow: PlayerStatModel, game: PlayerGa
   currentRow.controlWardsPlaced += NonNone(game.controlWardsPlaced, 0);
   currentRow.damagePerMinute += NonNone(game.damagePerMinute, 0);
   currentRow.damageTakenOnTeamPercentage += NonNone(game.damageTakenOnTeamPercentage, 0);
-  currentRow.dancedWithRiftHerald += BoolToNumber(game.dancedWithRiftHerald);
+  currentRow.dancedWithRiftHerald += game.dancedWithRiftHerald;
   currentRow.deathsByEnemyChamps += NonNone(game.deathsByEnemyChamps, 0);
   currentRow.dodgeSkillShotsSmallWindow += NonNone(game.dodgeSkillShotsSmallWindow, 0);
   currentRow.doubleAces += NonNone(game.doubleAces, 0);

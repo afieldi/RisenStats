@@ -2,7 +2,7 @@ import { CreateDbGame, CreateDbPlayerGameNoSave, GetDbGameByGameId, GetDbPlayerG
 import { GameSummaryPlayer, GameSummaryPlayers, TeamSumStat, TeamSumStats } from '../../../Common/Interface/Database/game';
 import { RiotMatchDto, RiotParticipantDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import GameModel from '../../../Common/models/game.model';
-import { ToGameId, TotalDamageToChamps } from '../../../Common/utils';
+import { ToGameId, ToMatchId, TotalDamageToChamps } from '../../../Common/utils';
 import { GetRiotGameByMatchId, GetRiotTimelineByMatchId } from '../external-api/game';
 import { ProcessTimeline } from './timeline';
 import { BaseEntity } from 'typeorm';
@@ -16,16 +16,27 @@ import { aggregateStatsForRow, createInitialPlayerStatModel, getSeasonsToUpdate 
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 
-export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
-  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
-  if (existingObj) {
-    return existingObj;
-  }
-
+async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
   if (gameData.info.participants.length !== 10) {
     throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
   }
+  return gameData;
+}
+
+export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
+  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
+  if (existingObj) {
+    const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+    if (playerGames.length !== 10) {
+      const foundPlayers = new Set<string>();
+      playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
+      await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
+    }
+    return existingObj;
+  }
+
+  const gameData = await GetGameDataByMatchId(matchId);
 
   const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
 
@@ -58,6 +69,38 @@ export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDt
 
   for (let i = 0; i < gameData.info.participants.length; i++) {
     const participant = gameData.info.participants[i];
+    const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
+    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i));
+  }
+  await SaveObjects(objsToSave);
+  return gameObj;
+}
+
+// Something has gone wrong with saving the game. The game itself has been saved, but the player games aren't.
+// Do this to fix it. 
+export async function UpdatePlayersInSingleMatchById(gameObj: GameModel, gameData: RiotMatchDto, foundPlayers: Set<string>): Promise<GameModel> {
+  let seasonId = null;
+
+  if (gameData.info.tournamentCode) {
+    seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId;
+  }
+
+  const timelineData = await GetRiotTimelineByMatchId(ToMatchId(gameObj.gameId));
+
+  const timelineStats = ProcessTimeline(timelineData);
+  const teamSumStats = SumTeamInfo(gameData.info.participants);
+
+  // Now create the players
+  await CreateDbPlayersWithParticipantData(gameData.info.participants);
+
+  const objsToSave: PlayerGameModel[] = [];
+
+  for (let i = 0; i < gameData.info.participants.length; i++) {
+    const participant = gameData.info.participants[i];
+    if (foundPlayers.has(participant.puuid)) {
+      continue;
+    }
+
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
     objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i));
   }
