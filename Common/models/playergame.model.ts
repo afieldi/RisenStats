@@ -30,6 +30,9 @@ export default class PlayerGameModel extends BaseEntity
   @Index()
   seasonId: number;
 
+  @Column('integer', {nullable: true})
+  risenTeamId: number;
+
   @ManyToOne(() => SeasonModel)
   season: SeasonModel;
 
