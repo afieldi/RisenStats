@@ -69,8 +69,8 @@ async function buildPlayersInTeams(seasonId: number, teamId: number, playersName
   for (let puuid of playerPuuids) {
     let playerToAdd = PlayerTeamModel.create({
       playerPuuid: puuid,
-      seasonId: seasonId,
-      teamId: teamId,
+      teamSeasonId: seasonId,
+      teamTeamId: teamId,
     });
     rows.push(playerToAdd);
   }
@@ -124,6 +124,7 @@ function parseSheet(sheetPath: String): RisenSheetRow[] {
   });
 }
 
-let sheet = 'Rampage2023.csv'; // Needs to be in same dir as this file
-let seasonId= 17;
+let sheet = 'Dominate2023.csv'; // Needs to be in same dir as this file
+let seasonId= 19;
+
 addLeague(seasonId, sheet);

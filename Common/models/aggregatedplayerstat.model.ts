@@ -31,7 +31,7 @@ export default class AggregatedPlayerStatModel extends BaseEntity
     @ManyToOne(() => TeamModel)
     team: TeamModel
     @Column("integer", {nullable: true})
-    teamId: number
+    teamTeamId: number
 
     @Column("integer")
     games: number;

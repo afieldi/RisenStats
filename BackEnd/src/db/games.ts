@@ -35,7 +35,7 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     timestampAdded: GetCurrentEpcohMs(),
 
     playerPuuid: riotPlayer.puuid,
-    risenTeamId: !!teamId ? teamId : null,
+    risenTeamTeamId: !!teamId ? teamId : null,
 
     championId: riotPlayer.championId,
     teamId: riotPlayer.teamId,

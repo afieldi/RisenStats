@@ -4,6 +4,7 @@ import { ensureConnection, SaveObjects } from '../src/db/dbConnect';
 import PlayerGameModel from '../../Common/models/playergame.model';
 import PlayerTeamModel from '../../Common/models/playerteam.model';
 import { getDbPlayerTeamPlayerPuuid } from '../src/db/playerteam';
+import TeamModel from '../../Common/models/team.model';
 
 // Only using these 3 seasons for backfill since its the only one where i can garuntee the rosters/names are up to date
 const validSeasons: number[] = [17, 18, 19]; // ramp, unst, dom
@@ -15,8 +16,8 @@ async function addTeamsToGameModel(seasonId: number) {
     console.log(`Updating Game ${game.gameGameId}, Player ${game.playerPuuid}, Season: ${game.seasonId}`);
     let team = await getTeam(seasonId, game.playerPuuid);
 
-    if (team == null) {
-      game.risenTeamId = team;
+    if (team != null) {
+      game.risenTeamTeamId = team;
     } else {
       noTeamCount++;
     }
@@ -28,11 +29,11 @@ async function addTeamsToGameModel(seasonId: number) {
 }
 
 async function getTeam(seasonId: number, puuid: string) :  Promise<number> {
-  let teamModel = await PlayerTeamModel.findOne({ where: { seasonId: seasonId, playerPuuid: puuid } });
+  let teamModel = await PlayerTeamModel.findOne({ where: { teamSeasonId: seasonId, playerPuuid: puuid } });
   if (!teamModel) {
     return null;
   }
-  return teamModel.teamId;
+  return teamModel.teamTeamId;
 }
 
 async function run() {

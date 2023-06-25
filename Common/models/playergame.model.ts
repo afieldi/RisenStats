@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn
 import GameModel from "./game.model";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";
+import TeamModel from "./team.model";
 
 @Entity({ name: "player_game" })
 export default class PlayerGameModel extends BaseEntity
@@ -30,8 +31,14 @@ export default class PlayerGameModel extends BaseEntity
   @Index()
   seasonId: number;
 
+  @ManyToOne(() => TeamModel)
+  @JoinColumn([
+    { name: "seasonId", referencedColumnName: "seasonId" },
+    { name: "risenTeamTeamId", referencedColumnName: "teamId" }
+  ])
+  risenTeam: TeamModel;
   @Column('integer', {nullable: true})
-  risenTeamId: number;
+  risenTeamTeamId: number;
 
   @ManyToOne(() => SeasonModel)
   season: SeasonModel;
