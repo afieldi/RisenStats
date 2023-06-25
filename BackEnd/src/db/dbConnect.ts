@@ -12,9 +12,6 @@ import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats
 import PlayerStatModel from '../../../Common/models/playerstat.model';
 import { toSearchName } from '../../../Common/utils';
 import DenylistModel from '../../../Common/models/denylist.model';
-import PlayerTeamModel from '../../../Common/models/playerteam.model';
-import TeamModel from '../../../Common/models/team.model';
-import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
 
 const POSTGRES_URI = process.env.POSTGRES_URI;
 export const ALL_TOURNAMENT_GAMES_NAME = 'ALL TOURNAMENT GAMES'; // DO NOT TOUCH
@@ -49,9 +46,6 @@ const options = {
       PlayerChampionStatsModel,
       PlayerStatModel,
       DenylistModel,
-      PlayerTeamModel,
-      TeamModel,
-      AggregatedPlayerStatModel,
     ]
   }
 };

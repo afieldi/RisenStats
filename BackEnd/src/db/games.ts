@@ -20,7 +20,7 @@ const roleOrder = [
 ];
 
 export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj: GameModel,
-  timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number, lobbyOrder: number, teamId?: number): PlayerGameModel {
+  timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number, lobbyOrder: number): PlayerGameModel {
 
   if (!riotPlayer.challenges) {
     const d = new Date(0);
@@ -28,17 +28,16 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     logger.warn(`Game ${gameObj.gameId} has no challenge stats. Probably too old. Game start: ${d.toUTCString()}`);
   }
 
-
   const shortPlayerData = {
     game: gameObj,
     timestamp: gameObj.gameStart,
     timestampAdded: GetCurrentEpcohMs(),
 
     playerPuuid: riotPlayer.puuid,
-    risenTeamId: !!teamId ? teamId : null,
 
     championId: riotPlayer.championId,
     teamId: riotPlayer.teamId,
+
     seasonId,
 
     championTransform: riotPlayer.championTransform,
