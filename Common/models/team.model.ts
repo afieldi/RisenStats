@@ -16,9 +16,6 @@ export default class TeamModel extends BaseEntity {
     loss: number
     @Column("text")
     abbreviation: string
-    @Column("text")
-    opgg: string
     @Column("boolean")
     wonSeason: boolean
-
 }

@@ -1,5 +1,5 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn} from "typeorm";
-import PlayerModel from "./player.model";
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn} from 'typeorm';
+import PlayerModel from './player.model';
 
 @Entity({ name: "player_team_model" })
 export default class PlayerTeamModel extends BaseEntity {

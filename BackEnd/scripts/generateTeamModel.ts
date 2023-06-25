@@ -41,7 +41,6 @@ async function buildTeam(seasonId: number, displayName: string, abbreviation: st
     loss: 0,
     abbreviation: abbreviation,
     wonSeason: false,
-    opgg: opgg,
   });
 
   let rows : TeamModel[] = [];
