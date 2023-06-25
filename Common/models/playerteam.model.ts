@@ -1,5 +1,7 @@
 import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn} from 'typeorm';
 import PlayerModel from './player.model';
+import SeasonModel from "./season.model";
+import TeamModel from "./team.model";
 
 @Entity({ name: "player_team_model" })
 export default class PlayerTeamModel extends BaseEntity {
@@ -8,8 +10,14 @@ export default class PlayerTeamModel extends BaseEntity {
     player: PlayerModel;
     @PrimaryColumn('text')
     playerPuuid: string;
+
+    @ManyToOne(() => SeasonModel)
+    teamSeason: SeasonModel;
     @PrimaryColumn("integer")
-    seasonId: number
+    teamSeasonId: number;
+
+    @ManyToOne(() => TeamModel)
+    team: TeamModel;
     @PrimaryColumn("integer")
-    teamId: number
+    teamTeamId: number;
 }

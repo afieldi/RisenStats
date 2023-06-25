@@ -1,10 +1,13 @@
-import {BaseEntity, Column, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import SeasonModel from "./season.model";
 
 @Entity({ name: "team_model" })
 export default class TeamModel extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     teamId: number
+    @ManyToOne(() => SeasonModel)
+    season: SeasonModel;
     @Index()
     @PrimaryColumn("integer")
     seasonId: number

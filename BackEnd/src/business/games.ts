@@ -9,12 +9,13 @@ import { BaseEntity } from 'typeorm';
 import { CreateDbPlayersWithParticipantData } from '../db/player';
 import { SaveObjects } from '../db/dbConnect';
 import { GetDbCode } from '../db/codes';
-import { GetDbPlayerStatsByPlayerPuuid } from '../db/playerstats';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
-import PlayerStatModel from '../../../Common/models/playerstat.model';
 import { aggregateStatsForRow, createInitialPlayerStatModel, getSeasonsToUpdate } from './playerstats';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
+import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
+import PlayerStatModel from '../../../Common/models/playerstat.model';
+import { GetDbPlayerStatsByPlayerPuuid } from '../db/playerstats';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -70,7 +71,8 @@ export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDt
   for (let i = 0; i < gameData.info.participants.length; i++) {
     const participant = gameData.info.participants[i];
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i));
+    const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
+    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
   return gameObj;
@@ -101,8 +103,10 @@ export async function UpdatePlayersInSingleMatchById(gameObj: GameModel, gameDat
       continue;
     }
 
+    const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
+
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i));
+    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
   return gameObj;
@@ -179,12 +183,12 @@ export async function updatePlayerStatsForGame(matchId: string) {
 
   for (let playerGame of allPlayersGames) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
+    const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
     for (let number of getSeasonsToUpdate(playerGame)) {
       await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, false);
     }
   }
 }
-
 async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, playerPuuid: string, seasonId: number, roleId: GameRoles, risenOnly: boolean) {
   let currentDbPlayerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(playerPuuid, seasonId, roleId, risenOnly);
   let updatedDbPlayerStats: PlayerStatModel[] = [];
