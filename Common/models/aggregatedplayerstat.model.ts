@@ -25,12 +25,12 @@ export default class AggregatedPlayerStatModel extends BaseEntity
     season: SeasonModel;
 
     @Index()
-    @PrimaryColumn("integer")
+    @Column("integer")
     championId: number
 
     @ManyToOne(() => TeamModel)
     team: TeamModel
-    @Column("integer", {nullable: true})
+    @Column("integer")
     teamId: number
 
     @Column("integer")
