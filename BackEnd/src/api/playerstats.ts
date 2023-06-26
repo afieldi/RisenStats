@@ -1,5 +1,5 @@
-import express, { json, Request, Router } from 'express';
-import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from '../business/playerstats';
+import express, { Router } from 'express';
+import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from '../business/exportplayerstats';
 import {
   GetPlayerStatsRequest,
   GetPlayerStatsResponse,
@@ -7,10 +7,11 @@ import {
 } from '../../../Common/Interface/Internal/playerstats';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
 import logger from '../../logger';
-import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
+import { GetGamesRequest } from '../../../Common/Interface/Internal/games';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
-import { GetDbPlayerStatsByPlayerPuuid } from '../db/playerstats';
 import PlayerStatModel from '../../../Common/models/playerstat.model';
+import { GetDbAggregatedPlayerStatsByPlayerPuuid } from '../db/playerstats';
+
 
 const router: Router = express.Router();
 
@@ -50,9 +51,34 @@ router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetPlayerStatsRequ
     const seasonId = req.body.seasonId;
     const roleId = req.body.roleId as GameRoles;
     const risenOnly = req.body.risenOnly;
-    const playerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(req.params.playerPuuid, seasonId, roleId, risenOnly);
+
+    // TODO pass in correct teamId/championId when its ready
+    const playerStats: PlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(req.params.playerPuuid, null, null, seasonId, roleId);
+
+    // TODO: Remove this when we pass in champId/TeamId, this logic should be handled by the frontend.
+    // This code is just here for backwards compadibility while we cutover to the new code
+    let mergedPlayerStats: Map<String, PlayerStatModel> = new Map<String, PlayerStatModel>();
+
+    for (let playerStat of playerStats) {
+      const key = `${req.params.playerPuuid}-${seasonId}-${roleId}`;
+      if(mergedPlayerStats.has(key)) {
+        let model = mergedPlayerStats.get(key);
+        for (let key of Object.keys(model)) {
+          // @ts-ignore
+          if(typeof model[key] === 'string') {
+            continue;
+          }
+          // @ts-ignore
+          model[key] += playerStat[key];
+        }
+        mergedPlayerStats.set(key, model);
+      } else {
+        mergedPlayerStats.set(key, playerStat);
+      }
+    }
+
     res.json({
-      playerStats
+      playerStats: Array.from(mergedPlayerStats.values())
     });
   }
   catch (error) {

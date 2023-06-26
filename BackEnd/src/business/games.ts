@@ -10,12 +10,10 @@ import { CreateDbPlayersWithParticipantData } from '../db/player';
 import { SaveObjects } from '../db/dbConnect';
 import { GetDbCode } from '../db/codes';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
-import { aggregateStatsForRow, createInitialPlayerStatModel, getSeasonsToUpdate } from './playerstats';
+import { getSeasonsToUpdate, updateStatsFor } from './playerstats';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
-import PlayerStatModel from '../../../Common/models/playerstat.model';
-import { GetDbPlayerStatsByPlayerPuuid } from '../db/playerstats';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -185,20 +183,7 @@ export async function updatePlayerStatsForGame(matchId: string) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
     const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
     for (let number of getSeasonsToUpdate(playerGame)) {
-      await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, false);
+      await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, teamId);
     }
   }
-}
-async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, playerPuuid: string, seasonId: number, roleId: GameRoles, risenOnly: boolean) {
-  let currentDbPlayerStats: PlayerStatModel[] = await GetDbPlayerStatsByPlayerPuuid(playerPuuid, seasonId, roleId, risenOnly);
-  let updatedDbPlayerStats: PlayerStatModel[] = [];
-  if (currentDbPlayerStats.length === 0) {
-    currentDbPlayerStats.push(createInitialPlayerStatModel(playerGame, seasonId));
-  }
-
-  for (let currentDbPlayerStat of currentDbPlayerStats) {
-    updatedDbPlayerStats.push(aggregateStatsForRow(currentDbPlayerStat, playerGame, fullgame));
-  }
-
-  await SaveObjects(updatedDbPlayerStats, PlayerStatModel);
 }

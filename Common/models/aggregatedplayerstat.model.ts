@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn} from "typeorm";
+import {BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn} from "typeorm";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";
 import TeamModel from "./team.model";
@@ -29,6 +29,10 @@ export default class AggregatedPlayerStatModel extends BaseEntity
     championId: number
 
     @ManyToOne(() => TeamModel)
+    @JoinColumn([
+        { name: "seasonId", referencedColumnName: "seasonId" },
+        { name: "teamTeamId", referencedColumnName: "teamId" }
+    ])
     team: TeamModel
     @Column("integer", {nullable: true})
     teamTeamId: number

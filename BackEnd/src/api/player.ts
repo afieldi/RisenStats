@@ -1,14 +1,14 @@
 import express, { Request, Router } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
 import { PlayerChampionStatsRequest, PlayerChampionStatsResponse, PlayerGamesResponse, PlayerOverviewResponse, PlayerSeasonsResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
-import { CreateChampionStatDataByPuuid, GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, GetPlayerSeasons, UpdateGamesByPlayerPuuid } from '../business/player';
+import { GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, GetPlayerSeasons, UpdateGamesByPlayerPuuid } from '../business/player';
 import logger from '../../logger';
 import { DocumentNotFound } from '../../../Common/errors';
-import { GetDbChampionStatsByPlayerPuuid } from '../db/player';
 import { NonNone } from '../../../Common/utils';
 import { GetGamesRequest } from '../../../Common/Interface/Internal/games';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { CreatePlayerStatsByPuuid } from '../business/playerstats';
+import { GetDBChampionStatsByPlayerPuuid } from '../db/playerstats';
 
 const router: Router = express.Router();
 
@@ -16,7 +16,6 @@ router.post('/update/by-puuid/:playerPuuid', async(req: Request, res: TypedRespo
   logger.info(`Player update by puuid ${req.params.playerPuuid}`);
   try {
     const updatedGames = await UpdateGamesByPlayerPuuid(req.params.playerPuuid);
-    await CreateChampionStatDataByPuuid(req.params.playerPuuid);
     await CreatePlayerStatsByPuuid(req.params.playerPuuid);
     res.json(updatedGames);
   } catch (error) {
@@ -50,7 +49,7 @@ router.post('/summary/by-name/:playerName', async(req: Request, res: TypedRespon
 router.post('/champions/by-puuid/:playerPuuid', async(req:TypedRequest<PlayerChampionStatsRequest>, res: TypedResponse<PlayerChampionStatsResponse>) => {
   logger.info(`Getting champion stats for player: ${req.params.playerPuuid}`);
   try {
-    const champData = await GetDbChampionStatsByPlayerPuuid(req.params.playerPuuid, req.body.seasonId, req.body.risenOnly, GameRoles[req.body.roleId as keyof typeof GameRoles]);
+    const champData = await GetDBChampionStatsByPlayerPuuid(req.params.playerPuuid, req.body.seasonId,  GameRoles[req.body.roleId as keyof typeof GameRoles], req.body.risenOnly);
     res.json({
       champions: champData
     });
