@@ -10,7 +10,8 @@
     "start": "node ./dist/BackEnd/index.js --prod",
     "build": "tsc -p .",
     "lint": "npx eslint src\\**\\*.ts",
-    "lint:fix": "npx eslint src\\**\\*.ts --fix"
+    "lint:fix": "npx eslint src\\**\\*.ts --fix",
+    "gcp-build": ""
   },
   "author": "",
   "license": "ISC",
