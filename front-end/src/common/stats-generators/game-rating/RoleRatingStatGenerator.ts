@@ -1,6 +1,7 @@
 import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { GameRatingStatGenerator } from './GameRatingStatGenerator';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
   protected role;
@@ -16,7 +17,7 @@ export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
     this.role = role;
   }
 
-  getRawStatValue(playerStatsModel: PlayerStatModel): number  {
+  getRawStatValue(playerStatsModel: AggregatedPlayerStatModel): number  {
     let rating: number;
     if(this.soloLanes.includes(this.role)) {
       rating = this.getSoloLaneStatValue(playerStatsModel);
@@ -29,9 +30,9 @@ export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
     return rating;
   }
 
-  abstract getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number;
+  abstract getSoloLaneStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 
-  abstract getJunglerStatValue(playerStatsModel: PlayerStatModel): number;
+  abstract getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 
-  abstract getSupportStatValue(playerStatsModel: PlayerStatModel): number;
+  abstract getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 }

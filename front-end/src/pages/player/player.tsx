@@ -19,6 +19,7 @@ import { GetActiveSeasons, GetAllSeasons } from '../../api/season';
 import PlayerPageStats from '../../components/player-page/stats';
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import { getFlattenedLeaderboard } from '../../api/leaderboards';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 function PlayerPage()
 {
@@ -34,8 +35,8 @@ function PlayerPage()
   const [playerProfile, setPlayerProfile] = useState<PlayerOverviewResponse>();
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
-  const [playerStats, setPlayerStats] = useState<PlayerStatModel[]>([]);
-  const [fullLeaderboard, setFullLeaderboard] = useState<Map<string, Map<GameRoles, PlayerStatModel[]>>>(new Map<string, Map<GameRoles, PlayerStatModel[]>>());
+  const [playerStats, setPlayerStats] = useState<AggregatedPlayerStatModel[]>([]);
+  const [fullLeaderboard, setFullLeaderboard] = useState<Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>>(new Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>());
   const [seasonId, setSeasonId] = useState<string>('RISEN');
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
@@ -81,10 +82,10 @@ function PlayerPage()
       return;
     }
     try {
-      let cachedLeaderboard: Map<string, Map<GameRoles, PlayerStatModel[]>> = new Map<string, Map<GameRoles, PlayerStatModel[]>>(fullLeaderboard); // Need to create new object to trigger rerender
+      let cachedLeaderboard: Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>> = new Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>(fullLeaderboard); // Need to create new object to trigger rerender
       let numberSeasonId = seasonId === 'RISEN' ? undefined : Number(seasonId);
 
-      let roleMaps: Map<GameRoles, PlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, PlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, PlayerStatModel[]>;
+      let roleMaps: Map<GameRoles, AggregatedPlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, AggregatedPlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, AggregatedPlayerStatModel[]>;
       if (roleMaps.has(roleId)) {
         return;
       }
@@ -123,7 +124,10 @@ function PlayerPage()
     }
     try {
       let numberSeasonId = seasonId === 'RISEN' ? undefined : Number(seasonId);
-      const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId, seasonId === 'RISEN');
+      let teamId = undefined; // TODO hook this in to some component
+      let championId = undefined; // TODO hook this in to some component
+      const stats = await GetPlayerStats(profile.overview.puuid, numberSeasonId, roleId, teamId, championId, seasonId === 'RISEN');
+
       setPlayerStats(stats.playerStats);
     }
     catch (error) {
@@ -141,7 +145,7 @@ function PlayerPage()
 
   function onUpdatePlayer() {
     // When a player reloads thier profile, reset all the cached leaderboards and reget from API
-    setFullLeaderboard(new Map<string, Map<GameRoles, PlayerStatModel[]>>());
+    setFullLeaderboard(new Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>());
     loadLeaderboards();
   }
 

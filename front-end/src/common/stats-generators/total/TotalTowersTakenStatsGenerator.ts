@@ -1,5 +1,6 @@
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { TotalStatGenerator } from './TotalStatGenerator';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export class TotalTowersTakenStatsGenerator extends TotalStatGenerator {
   getStatTitle(): string {
@@ -10,7 +11,7 @@ export class TotalTowersTakenStatsGenerator extends TotalStatGenerator {
     return 'Total Towers taken';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return playerStatsModel.turretTakedowns;
   }
 }

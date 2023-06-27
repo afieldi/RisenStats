@@ -1,5 +1,6 @@
 import { BaseStatGenerator } from './BaseStatsGenerator';
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export class KDAStatGenerator extends BaseStatGenerator {
   getStatTitle(): string {
@@ -10,7 +11,7 @@ export class KDAStatGenerator extends BaseStatGenerator {
     return 'Kills + Assists / Deaths';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return (playerStatsModel.kills + playerStatsModel.assists) /
             (playerStatsModel.deaths === 0 ? 1 : playerStatsModel.deaths);
   }

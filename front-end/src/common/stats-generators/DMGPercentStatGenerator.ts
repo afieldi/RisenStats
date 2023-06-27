@@ -1,5 +1,6 @@
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import { PercentBaseStatGenerator } from './PercentBaseStatGenerator';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export class DMGPercentStatGenerator extends PercentBaseStatGenerator {
   getStatTitle(): string {
@@ -10,7 +11,7 @@ export class DMGPercentStatGenerator extends PercentBaseStatGenerator {
     return 'Damage Share';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return playerStatsModel.totalDamageDealtToChampions / playerStatsModel.totalDamageDealtToChampionsOfTeam * 100;
   }
 }

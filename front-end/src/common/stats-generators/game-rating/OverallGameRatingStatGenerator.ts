@@ -3,6 +3,7 @@ import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 
 import { BaseStatGenerator } from '../BaseStatsGenerator';
 import { RoleRatingStatGenerator } from './RoleRatingStatGenerator';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export class OverallGameRatingStatGenerator extends GameRatingStatGenerator {
 
@@ -23,7 +24,7 @@ export class OverallGameRatingStatGenerator extends GameRatingStatGenerator {
     return 'Factors in your early + late game rating + how much you win overall';
   }
 
-  getRawStatValue(playerStatsModel: PlayerStatModel): number {
+  getRawStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const wins = 3 * playerStatsModel.win;
     const loss = 3 * (playerStatsModel.games - playerStatsModel.win);
     return  ((this.midGame.getRawStatValue(playerStatsModel) * 0.4) + (this.lateGame.getRawStatValue(playerStatsModel) * 0.6))

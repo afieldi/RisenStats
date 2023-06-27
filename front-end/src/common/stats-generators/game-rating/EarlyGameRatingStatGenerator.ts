@@ -1,6 +1,7 @@
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 import { RoleRatingStatGenerator } from './RoleRatingStatGenerator';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
 
@@ -12,7 +13,7 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     return 'Rates you based on your early game stats';
   }
 
-  getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number {
+  getSoloLaneStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const cs = 0.7 * (playerStatsModel.laneMinionsFirst10Minutes/playerStatsModel.games  - 60);
     const kills = (7.5 * playerStatsModel.kills15) / playerStatsModel.games;
     const assists = (4.5 * playerStatsModel.assists15) / playerStatsModel.games;
@@ -28,7 +29,7 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     return cs + kills + assists + deaths + turretPlats + fb + csDiff + xpDiff + quickTurret + wardsPlaced + wardsKilled;
   }
 
-  getSupportStatValue(playerStatsModel: PlayerStatModel): number {
+  getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kills = 7.5 * playerStatsModel.kills15;
     const assists = 5.5 * playerStatsModel.assists15;
     const deaths = -4.5 * playerStatsModel.deaths15; // Dieing on support is less valueable than dieng on carry
@@ -42,7 +43,7 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     return  (kills + assists + deaths + turretPlats + fb + goldDiff + xpDiff + wardsPlaced + wardsKilled) / playerStatsModel.games;
   }
 
-  getJunglerStatValue(playerStatsModel: PlayerStatModel): number {
+  getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kills = 7.5 * playerStatsModel.kills15;
     const assists = 7.5 * playerStatsModel.assists15;
     const deaths = -7.5 * playerStatsModel.deaths15;

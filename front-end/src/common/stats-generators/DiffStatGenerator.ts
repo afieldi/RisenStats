@@ -1,5 +1,5 @@
 import { BaseStatGenerator } from './BaseStatsGenerator';
-import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export enum DiffEnum {
     CS = 'CS',
@@ -7,23 +7,23 @@ export enum DiffEnum {
     XP = 'XP',
 }
 
-const goldDiffResolver: Record<15 | 25, (x: PlayerStatModel) => number> = {
-  15 : (model: PlayerStatModel) => model.goldDiff15,
-  25 : (model: PlayerStatModel) => model.goldDiff25
+const goldDiffResolver: Record<15 | 25, (x: AggregatedPlayerStatModel) => number> = {
+  15 : (model: AggregatedPlayerStatModel) => model.goldDiff15,
+  25 : (model: AggregatedPlayerStatModel) => model.goldDiff25
 };
 
 
-const xpDiffResolver: Record<15 | 25, (x: PlayerStatModel) => number> =  {
-  15: (model: PlayerStatModel) => model.xpDiff15,
-  25: (model: PlayerStatModel) => model.xpDiff25
+const xpDiffResolver: Record<15 | 25, (x: AggregatedPlayerStatModel) => number> =  {
+  15: (model: AggregatedPlayerStatModel) => model.xpDiff15,
+  25: (model: AggregatedPlayerStatModel) => model.xpDiff25
 };
 
-const csDiffResolver: Record<15 | 25, (x: PlayerStatModel) => number> = {
-  15: (model: PlayerStatModel) => model.csDiff15,
-  25: (model: PlayerStatModel) => model.csDiff25,
+const csDiffResolver: Record<15 | 25, (x: AggregatedPlayerStatModel) => number> = {
+  15: (model: AggregatedPlayerStatModel) => model.csDiff15,
+  25: (model: AggregatedPlayerStatModel) => model.csDiff25,
 };
 
-const diffResolvers: Record<DiffEnum,  Record<15 | 25, (x: PlayerStatModel) => number>> = {
+const diffResolvers: Record<DiffEnum,  Record<15 | 25, (x: AggregatedPlayerStatModel) => number>> = {
   GOLD: goldDiffResolver,
   XP: xpDiffResolver,
   CS: csDiffResolver
@@ -33,7 +33,7 @@ export class DiffStatGenerator extends BaseStatGenerator {
 
   protected atValue: number;
   protected diffValue: DiffEnum;
-  protected resolver: (x: PlayerStatModel) => number;
+  protected resolver: (x: AggregatedPlayerStatModel) => number;
 
   constructor(diffValue: DiffEnum, atValue: 15 | 25) {
     super();
@@ -42,7 +42,7 @@ export class DiffStatGenerator extends BaseStatGenerator {
     if(diffResolvers[diffValue]?.[atValue]) {
       this.resolver = diffResolvers[diffValue][atValue];
     } else {
-      this.resolver = (model: PlayerStatModel) => {return model.goldDiff;};
+      this.resolver = (model: AggregatedPlayerStatModel) => {return model.goldDiff;};
     }
   }
 
@@ -58,7 +58,7 @@ export class DiffStatGenerator extends BaseStatGenerator {
     return `${this.diffValue} diff vs your lane opponent @${this.atValue} mins`;
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return this.resolver(playerStatsModel) /  playerStatsModel.games;
   }
 }

@@ -1,5 +1,6 @@
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import { PercentBaseStatGenerator } from './PercentBaseStatGenerator';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export class DeathPercentStatGenerator extends PercentBaseStatGenerator {
 
@@ -16,7 +17,7 @@ export class DeathPercentStatGenerator extends PercentBaseStatGenerator {
     return 'Avg Share of Deaths per game';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return  (playerStatsModel.deaths/ playerStatsModel.totalDeathsOfTeam) * 100;
   }
 }

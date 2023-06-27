@@ -14,12 +14,13 @@ import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import FilterBar from '../filters/filter-bar';
 import RecentPlayers from '../recent-players/recentPlayers';
 import PlayedSeasons from '../played-seasons/playedSeasons';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 interface Props {
   games: PlayerDetailedGame[],
   player?: PlayerModel,
   seasons: SeasonModel[],
-  playerStats: PlayerStatModel[],
+  playerStats: AggregatedPlayerStatModel[],
   championData: PlayerChampionStatsModel[],
   loadGamesConfig: {
     callback: (newPlayer: boolean) => void,

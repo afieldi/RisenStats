@@ -1,5 +1,6 @@
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import { PercentBaseStatGenerator } from './PercentBaseStatGenerator';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export class GoldShareStatGenerator extends PercentBaseStatGenerator {
   getStatTitle(): string {
@@ -10,7 +11,7 @@ export class GoldShareStatGenerator extends PercentBaseStatGenerator {
     return 'Avg Share of the gold per game';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return  playerStatsModel.goldEarned/playerStatsModel.totalGoldOfTeam * 100;
   }
 }

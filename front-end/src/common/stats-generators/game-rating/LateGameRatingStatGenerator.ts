@@ -2,6 +2,7 @@ import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 import { riotTimestampToMinutes } from '../../../../../Common/utils';
 import { RoleRatingStatGenerator } from './RoleRatingStatGenerator';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
 
@@ -13,7 +14,7 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     return 'Rates you based on your lategame stats';
   }
 
-  getSoloLaneStatValue(playerStatsModel: PlayerStatModel): number {
+  getSoloLaneStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kda = 2.5 * (playerStatsModel.kda / playerStatsModel.games);
     const cspm = 3.5 * ((playerStatsModel.totalMinionsKilled + playerStatsModel.enemyJungleMonsterKills + playerStatsModel.alliedJungleMonsterKills) /  riotTimestampToMinutes(playerStatsModel.gameLength) - 5);
     const dpg = 20 * ((playerStatsModel.totalDamageDealtToChampions / playerStatsModel.goldEarned) / playerStatsModel.games);
@@ -31,7 +32,7 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     return (kda + cspm + dpg + carryStat + wardsKilled + wardsPlaced + objDMG + turretTakedowns + csDiff + xpDiff);
   }
 
-  getSupportStatValue(playerStatsModel: PlayerStatModel): number {
+  getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kills = 2.5 * (playerStatsModel.kills / playerStatsModel.games);
     const assists = 1.5 * (playerStatsModel.assists / playerStatsModel.games);
     const deaths = -2 * (playerStatsModel.deaths / playerStatsModel.games); // Dieing on support is less valueable than dieng on carry
@@ -46,7 +47,7 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     return kills + assists + deaths + xpDiff + wardsPlaced + wardsKilled + controlWards + killParticipation + vspm + quickSupportQuest;
   }
 
-  getJunglerStatValue(playerStatsModel: PlayerStatModel): number {
+  getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kda = 2.5 * (playerStatsModel.kda / playerStatsModel.games);
     const csDiff = 0.5 * (playerStatsModel.csDiff / playerStatsModel.games);
     const xpDiff = 0.01 * (playerStatsModel.xpDiff / playerStatsModel.games);
