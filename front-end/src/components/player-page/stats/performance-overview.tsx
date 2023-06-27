@@ -5,10 +5,11 @@ import { useTheme } from '@emotion/react';
 import { BaseStatGenerator } from '../../../common/stats-generators/BaseStatsGenerator';
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { StatGenerators } from '../../../common/constants';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export interface PerformanceOverviewProps {
-    playerStats: PlayerStatModel[]
-    leaderboardStats: PlayerStatModel[]
+    playerStats: AggregatedPlayerStatModel[]
+    leaderboardStats: AggregatedPlayerStatModel[]
     playerPuuid?: string
 }
 
@@ -50,7 +51,7 @@ export default function PerformanceOverview(performanceOverviewProps: Performanc
 }
 
 function getStatBox(index: number, statGenerator: BaseStatGenerator, performanceOverviewProps: PerformanceOverviewProps) {
-  let sorted: PlayerStatModel[] = statGenerator.getSortedLeaderboard(performanceOverviewProps.leaderboardStats);
+  let sorted: AggregatedPlayerStatModel[] = statGenerator.getSortedLeaderboard(performanceOverviewProps.leaderboardStats);
 
   const average = sorted.reduce((total, next) => total + statGenerator.getStatValue(next), 0) / sorted.length;
 

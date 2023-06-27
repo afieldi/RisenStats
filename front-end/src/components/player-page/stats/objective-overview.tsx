@@ -6,10 +6,11 @@ import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { BaseStatGenerator } from '../../../common/stats-generators/BaseStatsGenerator';
 import { StatGenerators } from '../../../common/constants';
 import { AllObjectives, Dragons, Objectives } from '../../../common/types';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 
 interface ChampionOverviewProps {
-    playerStats: PlayerStatModel[]
+    playerStats: AggregatedPlayerStatModel[]
 }
 
 // We need to do this because i couldnt find all the files we need as SVGs. So some of the files are in .svg format while some are in .png format
@@ -81,7 +82,7 @@ export default function ObjectiveOverview(props: ChampionOverviewProps) {
   );
 }
 
-function ObjectiveStat(objectiveType: Objectives, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[], amountOfDecimals: number) {
+function ObjectiveStat(objectiveType: Objectives, statGenerator: BaseStatGenerator, playerStats: AggregatedPlayerStatModel[], amountOfDecimals: number) {
   return (
     <Box key={statGenerator.getStatTitle()}>
       <Tooltip title={objectiveType} sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent:'center' }}>
@@ -97,7 +98,7 @@ function ObjectiveStat(objectiveType: Objectives, statGenerator: BaseStatGenerat
 }
 
 // Need a sperate component for dragons since we use all 6 icons for 1 stat
-function getDragonObjectiveStat(statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[], amountOfDecimals: number) {
+function getDragonObjectiveStat(statGenerator: BaseStatGenerator, playerStats: AggregatedPlayerStatModel[], amountOfDecimals: number) {
   return (
     <Box sx={{ display: 'flex', rowGap: 1, flexDirection:'column' }}>
       <Tooltip title={'Dragons'}>

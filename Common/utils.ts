@@ -4,6 +4,7 @@ import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
 import PlayerChampionStatsModel from "./models/playerchampionstats.model";
 import PlayerStatModel from "./models/playerstat.model";
 import SeasonModel from "./models/season.model";
+import AggregatedPlayerStatModel from "./models/aggregatedplayerstat.model";
 
 export function toSearchName(name: string): string
 {
@@ -258,7 +259,7 @@ export function ObjectArrayToCsv(objects: { [key: string]: any }[], headers?: st
   return [dictionaryKeys.join(','), ...dictValuesAsCsv].join('\n');
 }
 
-export function combine(object1: PlayerStatModel, object2: PlayerStatModel): PlayerStatModel {
+export function combine(object1: AggregatedPlayerStatModel, object2: AggregatedPlayerStatModel): AggregatedPlayerStatModel {
   for (const key in object1) {
     // @ts-ignore Typescript being stupid here. Just let me do this
     object1[key] += NonNone(object2[key], 0);
@@ -270,11 +271,11 @@ export function sigmoid(z: number, k: number) {
   return 1 / (1 + Math.exp(-z/k));
 }
 
-export function doesPlayerStatsObjectHaveData(playerStats: PlayerStatModel[]): boolean {
+export function doesPlayerStatsObjectHaveData(playerStats: AggregatedPlayerStatModel[]): boolean {
   return !!playerStats.length;
 }
 
-export function getTotalCS(playerStatsModel: PlayerStatModel | PlayerGameModel): number {
+export function getTotalCS(playerStatsModel: AggregatedPlayerStatModel | PlayerGameModel): number {
   return playerStatsModel.totalMinionsKilled + playerStatsModel.enemyJungleMonsterKills + playerStatsModel.alliedJungleMonsterKills;
 }
 

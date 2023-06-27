@@ -1,5 +1,6 @@
 import { BaseStatGenerator } from './BaseStatsGenerator';
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export class HeraldKillsStatsGenerator extends BaseStatGenerator {
   getStatTitle(): string {
@@ -10,7 +11,7 @@ export class HeraldKillsStatsGenerator extends BaseStatGenerator {
     return 'Rift Herald Taken Per Game';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return playerStatsModel.riftHeraldTakedowns / playerStatsModel.games;
   }
 }

@@ -1,5 +1,6 @@
 import { Theme } from '@mui/material';
 import PlayerStatModel from '../../../../Common/models/playerstat.model';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 export abstract class BaseStatGenerator {
 
@@ -17,7 +18,7 @@ export abstract class BaseStatGenerator {
     return theme.palette.text.primary;
   }
 
-    abstract getStatValue(playerStatsModel: PlayerStatModel): number;
+    abstract getStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 
     abstract getStatTitle(): string;
 
@@ -29,7 +30,7 @@ export abstract class BaseStatGenerator {
       return '';
     }
 
-    canLoadData(playerStatModels: PlayerStatModel[]): boolean {
+    canLoadData(playerStatModels: AggregatedPlayerStatModel[]): boolean {
       return playerStatModels.length > 0;
     }
 
@@ -38,11 +39,11 @@ export abstract class BaseStatGenerator {
       return value.toFixed(decimals).length > 6 ? value.toFixed(1) : value.toFixed(decimals);
     }
 
-    getSortValue(playerStatsModel: PlayerStatModel) {
+    getSortValue(playerStatsModel: AggregatedPlayerStatModel) {
       return this.getStatValue(playerStatsModel);
     }
 
-    getStatNumber(playerStatsModels: PlayerStatModel[]) {
+    getStatNumber(playerStatsModels: AggregatedPlayerStatModel[]) {
       let total = 0;
       let games = 0;
       for (let playerStatsModel of playerStatsModels) {
@@ -54,22 +55,22 @@ export abstract class BaseStatGenerator {
       return total;
     }
 
-    getStatSum(playerStatModels: PlayerStatModel[]) {
+    getStatSum(playerStatModels: AggregatedPlayerStatModel[]) {
       return playerStatModels.reduce((acc, curModel) => acc + this.getStatValue(curModel), 0);
     }
 
-    getStatString(playerStatsModels: PlayerStatModel[], decimals: number = 2): string {
+    getStatString(playerStatsModels: AggregatedPlayerStatModel[], decimals: number = 2): string {
       return `${this.formatNumber(this.getStatNumber(playerStatsModels), decimals)}` ;
     }
 
-    getSortedLeaderboard(unsortedLeaderboard: PlayerStatModel[]): PlayerStatModel[] {
+    getSortedLeaderboard(unsortedLeaderboard: AggregatedPlayerStatModel[]): AggregatedPlayerStatModel[] {
       const sortedLeaderboard = unsortedLeaderboard.sort((o1, o2) => {
         return this.getSortValue(o2) - this.getSortValue(o1);
       });
       return this.shouldInvertLeaderboard ?  sortedLeaderboard.reverse() : sortedLeaderboard;
     }
 
-    getPositionInLeaderboard(value: number, sortedLeaderboard: PlayerStatModel[]): number {
+    getPositionInLeaderboard(value: number, sortedLeaderboard: AggregatedPlayerStatModel[]): number {
       for (const i in sortedLeaderboard) {
         if (value >= this.getStatValue(sortedLeaderboard[i])) {
           return +i+1;

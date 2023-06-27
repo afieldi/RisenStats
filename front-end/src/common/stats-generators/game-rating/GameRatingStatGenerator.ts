@@ -3,6 +3,7 @@ import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { sigmoid } from '../../../../../Common/utils';
 import { Rank } from '../../types';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export abstract class GameRatingStatGenerator extends BaseStatGenerator {
 
@@ -44,14 +45,14 @@ export abstract class GameRatingStatGenerator extends BaseStatGenerator {
     return Rank.D;
   }
 
-  getRating(playerStatsModel: PlayerStatModel[]): Rank {
+  getRating(playerStatsModel: AggregatedPlayerStatModel[]): Rank {
     const rating = this.getStatNumber(playerStatsModel);
     return this.getRatingFromNumber(rating);
   }
 
-    abstract getRawStatValue(playerStatsModel: PlayerStatModel): number;
+    abstract getRawStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 
-    getStatValue(playerStatsModel: PlayerStatModel): number {
+    getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
       const rating = this.getRawStatValue(playerStatsModel);
       return this.normalizeStatValue(rating);
     }

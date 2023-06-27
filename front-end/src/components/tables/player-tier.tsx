@@ -8,13 +8,14 @@ import { TableColumn, SortOrder, LeaderboardType } from '../../common/types';
 import { StatGenerators, OVERALL_GAME_RATING_OVERVIEW } from '../../common/constants';
 import Loading from '../loading/loading';
 import SortableTableHead from './helper-components/sortable-head';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 interface PlayerTierTableProps {
   seasonId: string;
   roleId: GameRoles;
   activeCols: TableColumn<LeaderboardType>[];
 };
 
-function MapStatsToLeaderboard(data: PlayerStatModel[]): LeaderboardType[] {
+function MapStatsToLeaderboard(data: AggregatedPlayerStatModel[]): LeaderboardType[] {
   return data.map((stat, i) => ({
     rank: +i+1,
     playerName: stat.player.name,

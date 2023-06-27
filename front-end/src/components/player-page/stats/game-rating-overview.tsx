@@ -5,10 +5,11 @@ import { EARLY_GAME_RATING_BY_ROLE, LATE_GAME_RATING_BY_ROLE, OVERALL_GAME_RATIN
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
 import { doesPlayerStatsObjectHaveData } from '../../../../../Common/utils';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 
 interface GameRatingOverviewProps {
-    playerStats: PlayerStatModel[]
+    playerStats: AggregatedPlayerStatModel[]
     roleId: GameRoles,
 }
 

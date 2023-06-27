@@ -12,7 +12,8 @@ import FilterBar from '../filters/filter-bar';
 import ObjectiveOverview from './stats/objective-overview';
 import GameRatingOverview from './stats/game-rating-overview';
 import PingOverview from './stats/ping-overview';
-import { doesPlayerStatsObjectHaveData } from '../../../../Common/utils';
+import { combine, deepCopy, doesPlayerStatsObjectHaveData } from '../../../../Common/utils';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -25,8 +26,8 @@ interface PlayerPageStatsProps {
         setRoleId: (roleId: GameRoles) => void,
     };
     championData: PlayerChampionStatsModel[]
-    playerStats: PlayerStatModel[]
-    leaderboardData?: PlayerStatModel[]
+    playerStats: AggregatedPlayerStatModel[]
+    leaderboardData?: AggregatedPlayerStatModel[]
     playerPuuid?: string
 }
 
@@ -34,11 +35,18 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
   const {
     seasonConfig,
     roleConfig,
-    playerStats,
     championData,
     playerPuuid,
     leaderboardData,
   } = props;
+
+  // This page does not care about a per champion breakdown right now, so merge the data so its by role.
+  // This page also doesnt care about a per team breakdown right now, so merge the team data away
+  let playerStats = deepCopy(props.playerStats); // DeepCopy is needed for some react state BS
+  if (roleConfig) {
+    playerStats = mergePlayerStats(seasonConfig.seasonId, roleConfig?.roleId, playerStats);
+  }
+
   let wins = 0;
   let games = 0;
   for (let playerStat of playerStats) {
@@ -72,6 +80,20 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
         </Box>
       </Box>
     </Box>
-
   );
+}
+
+function mergePlayerStats(seasonId: string, roleId: GameRoles, playerStatsWithChampions: AggregatedPlayerStatModel[]): AggregatedPlayerStatModel[] {
+  let mergedPlayerStats: Map<String, AggregatedPlayerStatModel> = new Map<String, AggregatedPlayerStatModel>();
+
+  for (let playerStat of playerStatsWithChampions) {
+    const key = `${seasonId}-${roleId}`;
+    if(mergedPlayerStats.has(key)) {
+      mergedPlayerStats.set(key, combine(playerStat, mergedPlayerStats.get(key) as AggregatedPlayerStatModel));
+    } else {
+      mergedPlayerStats.set(key, playerStat);
+    }
+  }
+
+  return Array.from(mergedPlayerStats.values());
 }

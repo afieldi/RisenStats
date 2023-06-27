@@ -7,9 +7,10 @@ import { StatGenerators } from '../../../common/constants';
 import { BaseStatGenerator } from '../../../common/stats-generators/BaseStatsGenerator';
 import { doesPlayerStatsObjectHaveData } from '../../../../../Common/utils';
 import { abbreviateNumber } from '../../../common/utils';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 interface PingOverviewProps {
-    playerStats: PlayerStatModel[]
+    playerStats: AggregatedPlayerStatModel[]
 }
 
 const pings: Record<string, BaseStatGenerator> = {
@@ -58,7 +59,7 @@ export default function PingOverview(props: PingOverviewProps) {
   );
 }
 
-function getPing(theme: Theme, src: string, statGenerator: BaseStatGenerator, playerStats: PlayerStatModel[]) {
+function getPing(theme: Theme, src: string, statGenerator: BaseStatGenerator, playerStats: AggregatedPlayerStatModel[]) {
   return (
     <Box key={statGenerator.getStatTitle()}>
       <Tooltip title={statGenerator.getToolTip()} sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent:'center' }}>

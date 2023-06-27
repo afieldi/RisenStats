@@ -5,6 +5,7 @@ import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import PlayerStatModel from '../../../Common/models/playerstat.model';
 import { GetLeaderboardRequest, GetLeaderboardResponse } from '../../../Common/Interface/Internal/leaderboard';
 import { GetDbLeaderboards } from '../db/leaderboards';
+import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
 
 const router: Router = express.Router();
 
@@ -15,7 +16,7 @@ router.post('/', async(req: TypedRequest<GetLeaderboardRequest>, res: TypedRespo
     const roleId = req.body.roleId as GameRoles;
     const risenOnly = req.body.risenOnly;
     const collapseRoles = !!req.body.collapseRoles;
-    const playerStats: PlayerStatModel[] = await GetDbLeaderboards(seasonId, roleId, risenOnly, collapseRoles);
+    const playerStats: AggregatedPlayerStatModel[] = await GetDbLeaderboards(seasonId, roleId, risenOnly, collapseRoles);
     res.json({
       playerStats
     });

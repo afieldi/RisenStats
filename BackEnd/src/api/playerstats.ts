@@ -11,6 +11,7 @@ import { GetGamesRequest } from '../../../Common/Interface/Internal/games';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import PlayerStatModel from '../../../Common/models/playerstat.model';
 import { GetDbAggregatedPlayerStatsByPlayerPuuid } from '../db/playerstats';
+import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
 
 
 const router: Router = express.Router();
@@ -51,34 +52,13 @@ router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetPlayerStatsRequ
     const seasonId = req.body.seasonId;
     const roleId = req.body.roleId as GameRoles;
     const risenOnly = req.body.risenOnly;
+    const teamId = req.body.teamId;
+    const championId = req.body.championId;
 
-    // TODO pass in correct teamId/championId when its ready
-    const playerStats: PlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(req.params.playerPuuid, null, null, seasonId, roleId);
-
-    // TODO: Remove this when we pass in champId/TeamId, this logic should be handled by the frontend.
-    // This code is just here for backwards compadibility while we cutover to the new code
-    let mergedPlayerStats: Map<String, PlayerStatModel> = new Map<String, PlayerStatModel>();
-
-    for (let playerStat of playerStats) {
-      const key = `${req.params.playerPuuid}-${seasonId}-${roleId}`;
-      if(mergedPlayerStats.has(key)) {
-        let model = mergedPlayerStats.get(key);
-        for (let key of Object.keys(model)) {
-          // @ts-ignore
-          if(typeof model[key] === 'string') {
-            continue;
-          }
-          // @ts-ignore
-          model[key] += playerStat[key];
-        }
-        mergedPlayerStats.set(key, model);
-      } else {
-        mergedPlayerStats.set(key, playerStat);
-      }
-    }
+    const playerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(req.params.playerPuuid, teamId, championId, seasonId, roleId);
 
     res.json({
-      playerStats: Array.from(mergedPlayerStats.values())
+      playerStats
     });
   }
   catch (error) {

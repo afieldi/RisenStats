@@ -1,7 +1,8 @@
 import PlayerStatModel from "../../models/playerstat.model";
+import AggregatedPlayerStatModel from "../../models/aggregatedplayerstat.model";
 
 export interface GetLeaderboardResponse {
-    playerStats: PlayerStatModel[]
+    playerStats: AggregatedPlayerStatModel[]
 }
 
 export interface GetLeaderboardRequest {

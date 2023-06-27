@@ -1,5 +1,6 @@
 import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { TotalStatGenerator } from './TotalStatGenerator';
+import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
 export class TotalElderDragonKillsStatGenerator extends TotalStatGenerator {
   getStatTitle(): string {
@@ -10,7 +11,7 @@ export class TotalElderDragonKillsStatGenerator extends TotalStatGenerator {
     return 'Total Elder Dragons Taken';
   }
 
-  getStatValue(playerStatsModel: PlayerStatModel): number {
+  getStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     return playerStatsModel.teamElderDragonKills;
   }
 }

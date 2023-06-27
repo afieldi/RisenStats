@@ -57,8 +57,8 @@ export async function GetPlayerChampionStats(playerPuuid: string, seasonId?: num
   return await MakeBackendCall<PlayerChampionStatsRequest>(`/api/player/champions/by-puuid/${playerPuuid}`, 'POST', { seasonId, risenOnly, roleId: role }) as PlayerChampionStatsResponse;
 }
 
-export async function GetPlayerStats(playerPuuid: string, seasonId?: number, roleId?: string, risenOnly?: boolean): Promise<GetPlayerStatsResponse> {
-  return await MakeBackendCall<GetPlayerStatsRequest>(`/api/stats/player/by-puuid/${playerPuuid}`, 'POST', { seasonId, roleId, risenOnly }) as GetPlayerStatsResponse;
+export async function GetPlayerStats(playerPuuid: string, seasonId?: number, roleId?: string, teamId?: number, championId?: number, risenOnly?: boolean): Promise<GetPlayerStatsResponse> {
+  return await MakeBackendCall<GetPlayerStatsRequest>(`/api/stats/player/by-puuid/${playerPuuid}`, 'POST', { seasonId, roleId, teamId, championId, risenOnly }) as GetPlayerStatsResponse;
 }
 
 export async function GetPlayerSeasons(playerPuuid: string): Promise<PlayerSeasonsResponse> {

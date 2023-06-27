@@ -3,8 +3,9 @@ import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { MakeBackendCall } from './_call';
 import { GetLeaderboardRequest, GetLeaderboardResponse } from '../../../Common/Interface/Internal/leaderboard';
 import PlayerStatModel from '../../../Common/models/playerstat.model';
+import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
 
-export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string, collapseRoles?: boolean) : Promise<PlayerStatModel[]> {
+export async function getFlattenedLeaderboard(seasonId?: number, risenOnly?: boolean, roleId?: string, collapseRoles?: boolean) : Promise<AggregatedPlayerStatModel[]> {
   return (await GetLeaderboards(seasonId, risenOnly,  roleId, collapseRoles)).playerStats;
 }
 
