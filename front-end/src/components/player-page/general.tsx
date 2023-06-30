@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, Box, Hidden, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, styled, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Hidden, styled, useTheme, useMediaQuery } from '@mui/material';
 import GameSummaryList from './game-summary/game-summary-list';
 import RankFlag from './general-components/rank-flag';
 import { PlayerDetailedGame } from '../../../../Common/Interface/Internal/player';
@@ -7,13 +7,10 @@ import PlayerModel from '../../../../Common/models/player.model';
 
 import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import PlayerChampionStatsModel from '../../../../Common/models/playerchampionstats.model';
 import ChampionOverview from '../champion-overview/champion-overview';
 import WinRateBox from '../charts/win-rate-box';
-import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import FilterBar from '../filters/filter-bar';
 import RecentPlayers from '../recent-players/recentPlayers';
-import PlayedSeasons from '../played-seasons/playedSeasons';
 import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 interface Props {
@@ -21,7 +18,6 @@ interface Props {
   player?: PlayerModel,
   seasons: SeasonModel[],
   playerStats: AggregatedPlayerStatModel[],
-  championData: PlayerChampionStatsModel[],
   loadGamesConfig: {
     callback: (newPlayer: boolean) => void,
     status: boolean,
@@ -45,7 +41,7 @@ const StyledFlexBox = styled(Box)(({ theme }) => ({
   'align-content': 'flex-start',
 }));
 
-function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, championData, playerStats }: Props)
+function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, playerStats }: Props)
 {
   games = games ?? [];
   const results = { wins: 0, losses: 0 };
@@ -60,7 +56,7 @@ function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, championDa
         <StyledFlexBox>
           <RankFlag sx={{ minWidth: '170px', flexGrow: 1 }} player={player}></RankFlag>
           <WinRateBox hasData={results.wins > 0 || results.losses > 0} {...results} />
-          <ChampionOverview championData={championData}  sx={{ width: '100%' }}/>
+          <ChampionOverview playerStats={playerStats}  sx={{ width: '100%' }}/>
           {/* <PlayedSeasons playerPuuid={player?.puuid} setSeason={loadGamesConfig.seasonConfig.setSeasonId} allSeasons={seasons} /> */}
           <Hidden smDown>
             <RecentPlayers sx={{ width: '100%' }} recentGames={games} />

@@ -1,10 +1,9 @@
 import PlayerGameModel from "./models/playergame.model";
 import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
-import PlayerChampionStatsModel from "./models/playerchampionstats.model";
-import PlayerStatModel from "./models/playerstat.model";
 import SeasonModel from "./models/season.model";
 import AggregatedPlayerStatModel from "./models/aggregatedplayerstat.model";
+import {GameRoles} from "./Interface/General/gameEnums";
 
 export function toSearchName(name: string): string
 {
@@ -109,12 +108,6 @@ export function calculateWR(data: WRProps, rounded = 2): number
     return 100;
   }
   return roundTo(data.totalWins*100/data.totalGames, rounded);
-}
-
-export function calculateChampionKDA(data: PlayerChampionStatsModel, decimals: number = 2): number
-{
-  if (+data.totalDeaths === 0) return +data.totalKills + +data.totalAssists;
-  return roundTo((+data.totalKills + +data.totalAssists) / +data.totalDeaths, decimals);
 }
 
 export function calculateCS(data: PlayerGameModel): number
@@ -281,4 +274,20 @@ export function getTotalCS(playerStatsModel: AggregatedPlayerStatModel | PlayerG
 
 export function deepCopy<T>(object: T): T {
   return JSON.parse(JSON.stringify(object)) as T;
+}
+
+export function mergePlayerStats(seasonId: string, roleId: GameRoles, playerStatsWithChampions: AggregatedPlayerStatModel[],
+                          keyFnc: (seasonId: string, roleId: GameRoles, teamId: number, championId: number) => string): AggregatedPlayerStatModel[] {
+
+  let mergedPlayerStats: Map<String, AggregatedPlayerStatModel> = new Map<String, AggregatedPlayerStatModel>();
+
+  for (let playerStat of playerStatsWithChampions) {
+    const key = keyFnc(seasonId, roleId, playerStat.teamTeamId, playerStat.championId);
+    if(mergedPlayerStats.has(key)) {
+      mergedPlayerStats.set(key, combine(playerStat, mergedPlayerStats.get(key) as AggregatedPlayerStatModel));
+    } else {
+      mergedPlayerStats.set(key, playerStat);
+    }
+  }
+  return Array.from(mergedPlayerStats.values());
 }

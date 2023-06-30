@@ -8,12 +8,8 @@ import { SaveDataByMatchId } from './games';
 import { PlayerDetailedGame, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
 import logger from '../../logger';
 import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from '../db/games';
-import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model';
-import { NonNone, roundTo } from '../../../Common/utils';
-import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, SaveObjects } from '../db/dbConnect';
 import { ApiError } from '../external-api/_call';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
-import PlayerGameModel from '../../../Common/models/playergame.model';
 
 export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
   try {

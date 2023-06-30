@@ -3,7 +3,6 @@ import StatBox from './stat-box';
 import React from 'react';
 import { useTheme } from '@emotion/react';
 import { BaseStatGenerator } from '../../../common/stats-generators/BaseStatsGenerator';
-import PlayerStatModel from '../../../../../Common/models/playerstat.model';
 import { StatGenerators } from '../../../common/constants';
 import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
