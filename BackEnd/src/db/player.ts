@@ -2,13 +2,11 @@ import { DocumentNotFound } from '../../../Common/errors';
 import { RiotLeagueEntryDto, RiotParticipantDto, RiotSummonerDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import GameModel from '../../../Common/models/game.model';
 import PlayerModel from '../../../Common/models/player.model';
-import PlayerChampionStatsModel from '../../../Common/models/playerchampionstats.model';
 import { GetAveragesFromObjects, GetCurrentEpcohMs, toSearchName } from '../../../Common/utils';
-import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection, SaveObjects } from './dbConnect';
+import { ensureConnection, SaveObjects } from './dbConnect';
 import log from '../../logger';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import PlayerGameModel from '../../../Common/models/playergame.model';
-import SeasonModel from '../../../Common/models/season.model';
 
 export async function GetDbPlayerByPuuid(playerPuuid: string): Promise<PlayerModel> {
   await ensureConnection();
@@ -99,42 +97,6 @@ export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDt
 
   await playerDto.save();
   return playerDto;
-}
-
-export async function GetDbChampionStatsByPlayerPuuid(playerPuuid: string, seasonId?: number, risenOnly?: boolean, role?: GameRoles): Promise<PlayerChampionStatsModel[]> {
-  await ensureConnection();
-  const sumCols = [
-    'totalKills',
-    'totalWins',
-    'totalGames',
-    'totalAssists',
-    'totalDeaths',
-    'totalMinionsKilled',
-    'totalNeutralMinionsKilled',
-    'averageDamageDealt',
-    'averageDamageTaken',
-    'averageGoldEarned',
-    'totalDoubleKills',
-    'totalTripleKills',
-    'totalQuadraKills',
-    'totalPentaKills',
-    'averageGameDuration'
-  ];
-  const seasonFilter = `playerchampionstats."seasonId" = $${2} AND `;
-  const seasonIdFilter = seasonId ? seasonId : ( risenOnly ? ALL_RISEN_GAMES_ID : ALL_TOURNAMENT_GAMES_ID );
-
-  const useRole = role && role !== GameRoles.ALL;
-  let paramCount = 3;
-  const roleFilter = useRole ? `playerchampionstats."position" = $${paramCount} AND ` : '';
-  if (useRole) paramCount++;
-  else role = undefined;
-
-  const outerSelect = sumCols.map(col => col.includes('average') ? `AVG(champStat."${col}") as "${col}"` : `SUM(champStat."${col}") as "${col}"`).join(', ');
-
-  return await PlayerChampionStatsModel.query(
-    `SELECT ${outerSelect}, champStat."championId" FROM (SELECT * FROM playerchampionstats WHERE ${seasonFilter}${roleFilter}"playerchampionstats"."playerPuuid" = $1) as champStat GROUP BY champStat."championId"`,
-    [playerPuuid, seasonIdFilter, role].filter(val => !!val)
-  ) as PlayerChampionStatsModel[];
 }
 
 interface PlayerData {

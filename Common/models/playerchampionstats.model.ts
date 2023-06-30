@@ -1,4 +1,3 @@
-import { GameRoles } from "../Interface/General/gameEnums";
 import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import PlayerModel from "./player.model";
 import SeasonModel from "./season.model";

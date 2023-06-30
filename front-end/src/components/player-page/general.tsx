@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Grid, Box, Hidden, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, styled, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Hidden, styled, useTheme, useMediaQuery } from '@mui/material';
 import GameSummaryList from './game-summary/game-summary-list';
 import RankFlag from './general-components/rank-flag';
 import { PlayerDetailedGame } from '../../../../Common/Interface/Internal/player';
@@ -7,13 +7,10 @@ import PlayerModel from '../../../../Common/models/player.model';
 
 import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import PlayerChampionStatsModel from '../../../../Common/models/playerchampionstats.model';
 import ChampionOverview from '../champion-overview/champion-overview';
 import WinRateBox from '../charts/win-rate-box';
-import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import FilterBar from '../filters/filter-bar';
 import RecentPlayers from '../recent-players/recentPlayers';
-import PlayedSeasons from '../played-seasons/playedSeasons';
 import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
 interface Props {
