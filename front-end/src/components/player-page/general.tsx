@@ -21,7 +21,6 @@ interface Props {
   player?: PlayerModel,
   seasons: SeasonModel[],
   playerStats: AggregatedPlayerStatModel[],
-  championData: PlayerChampionStatsModel[],
   loadGamesConfig: {
     callback: (newPlayer: boolean) => void,
     status: boolean,
@@ -45,7 +44,7 @@ const StyledFlexBox = styled(Box)(({ theme }) => ({
   'align-content': 'flex-start',
 }));
 
-function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, championData, playerStats }: Props)
+function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, playerStats }: Props)
 {
   games = games ?? [];
   const results = { wins: 0, losses: 0 };
@@ -60,7 +59,7 @@ function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, championDa
         <StyledFlexBox>
           <RankFlag sx={{ minWidth: '170px', flexGrow: 1 }} player={player}></RankFlag>
           <WinRateBox hasData={results.wins > 0 || results.losses > 0} {...results} />
-          <ChampionOverview championData={championData}  sx={{ width: '100%' }}/>
+          <ChampionOverview playerStats={playerStats}  sx={{ width: '100%' }}/>
           {/* <PlayedSeasons playerPuuid={player?.puuid} setSeason={loadGamesConfig.seasonConfig.setSeasonId} allSeasons={seasons} /> */}
           <Hidden smDown>
             <RecentPlayers sx={{ width: '100%' }} recentGames={games} />

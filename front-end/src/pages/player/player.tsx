@@ -1,23 +1,21 @@
 import { useTheme } from '@emotion/react';
-import { Container, CssBaseline, Box, Typography, Tab, Tabs, Theme } from '@mui/material';
+import { Container, CssBaseline, Box, Tab, Tabs, Theme } from '@mui/material';
 import PlayerPageHeader from '../../components/player-page/header';
 import React from 'react';
 import { tabLabelProps, TabPanel } from '../../components/tab-panel/tab-panel';
 import PlayerPageGeneral from '../../components/player-page/general';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { GetDetailedPlayerGames, GetPlayerChampionStats, GetPlayerProfile, GetPlayerStats } from '../../api/player';
+import { GetDetailedPlayerGames, GetPlayerProfile, GetPlayerStats } from '../../api/player';
 import { PlayerDetailedGame, PlayerOverviewResponse } from '../../../../Common/Interface/Internal/player';
 
 import '../../styles/player.css';
 import { ApiError } from '../../api/_call';
 import PlayerPageChampions from '../../components/player-page/champions';
-import PlayerChampionStatsModel from '../../../../Common/models/playerchampionstats.model';
 import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import { GetActiveSeasons, GetAllSeasons } from '../../api/season';
+import { GetAllSeasons } from '../../api/season';
 import PlayerPageStats from '../../components/player-page/stats';
-import PlayerStatModel from '../../../../Common/models/playerstat.model';
 import { getFlattenedLeaderboard } from '../../api/leaderboards';
 import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
 
@@ -34,7 +32,6 @@ function PlayerPage()
   const [loadingGames, setLoadingGames] = useState(false);
   const [playerProfile, setPlayerProfile] = useState<PlayerOverviewResponse>();
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
-  const [championStats, setChampionStats] = useState<PlayerChampionStatsModel[]>([]);
   const [playerStats, setPlayerStats] = useState<AggregatedPlayerStatModel[]>([]);
   const [fullLeaderboard, setFullLeaderboard] = useState<Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>>(new Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>());
   const [seasonId, setSeasonId] = useState<string>('RISEN');
@@ -87,6 +84,7 @@ function PlayerPage()
 
       let roleMaps: Map<GameRoles, AggregatedPlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, AggregatedPlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, AggregatedPlayerStatModel[]>;
       if (roleMaps.has(roleId)) {
+        console.log('Leaderboard already exists not grabbing from API');
         return;
       }
 
@@ -98,21 +96,6 @@ function PlayerPage()
     }
     catch (error) {
       console.error('An error occured while trying to load leaderboards');
-    }
-  }
-
-  async function loadChampionStats(profile: PlayerOverviewResponse | undefined) {
-    profile = profile ? profile : playerProfile;
-    if (profile) {
-      // setLoadingGames(true);
-      try {
-        const stats = await GetPlayerChampionStats(profile.overview.puuid, Number(seasonId), seasonId === 'RISEN', roleId);
-        stats.champions.sort((a, b) => b.totalGames - a.totalGames);
-        setChampionStats(stats.champions);
-      }
-      catch (error) {
-
-      }
     }
   }
 
@@ -153,7 +136,6 @@ function PlayerPage()
     loadPlayerProfile().then(profile => {
       setPlayerProfile(profile);
       loadMoreGames(true, profile);
-      loadChampionStats(profile);
       loadPlayerStats(profile);
       loadLeaderboards();
     }, (err: any) => {
@@ -164,7 +146,6 @@ function PlayerPage()
   useEffect(() => {
     loadMoreGames(true);
     loadPlayerStats(playerProfile);
-    loadChampionStats(playerProfile);
     loadLeaderboards();
   }, [seasonId, roleId]);
 
@@ -218,10 +199,10 @@ function PlayerPage()
               seasons={seasons}
               games={games}
               loadGamesConfig={loadGamesConfig}
-              championData={championStats} />
+            />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PlayerPageChampions championData={championStats}
+            <PlayerPageChampions playerStats={playerStats}
               seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
               roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
@@ -230,8 +211,7 @@ function PlayerPage()
               playerPuuid={playerProfile?.overview.puuid}
               leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
               seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
-              roleConfig={loadGamesConfig.roleConfig}
-              championData={championStats}/>
+              roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
         </Box>
       </main>

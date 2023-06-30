@@ -1,16 +1,19 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React from 'react';
-import PlayerChampionStatsModel from '../../../../Common/models/playerchampionstats.model';
-import { calculateChampionKDA, calculateWR, riotTimestampToGameTime, toPerMinute } from '../../../../Common/utils';
+import {
+  riotTimestampToGameTime,
+  roundTo,
+} from '../../../../Common/utils';
 import { ChampionIdToName } from '../../common/utils';
 import WinRatePieChart from '../charts/winrate-pie';
 import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import GamesFilter from '../filters/games-filter';
 import FilterBar from '../filters/filter-bar';
+import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
+import { StatGenerators } from '../../common/constants';
 
 interface Props {
-  championData: PlayerChampionStatsModel[]
+  playerStats: AggregatedPlayerStatModel[]
   seasonConfig: {
     seasonId: string,
     setSeasonId: (seasonId: string) => void,
@@ -23,6 +26,9 @@ interface Props {
 }
 
 export default function PlayerPageChampions(props: Props) {
+
+  props.playerStats.sort((a, b) => {return b.games - a.games;});
+
   return (
     <Box>
       <FilterBar seasonConfig={props.seasonConfig} roleConfig={props.roleConfig}/>
@@ -55,8 +61,8 @@ export default function PlayerPageChampions(props: Props) {
           </TableHead>
           <TableBody>
             {
-              props.championData.map((champData: PlayerChampionStatsModel) => {
-                const gameTime = Number.parseInt(champData.averageGameDuration.toString());
+              props.playerStats.map((champData: AggregatedPlayerStatModel) => {
+                const gameTime = Number.parseInt(champData.gameLength.toString());
                 return (
                   <TableRow key={champData.championId}>
                     <TableCell>
@@ -69,25 +75,25 @@ export default function PlayerPageChampions(props: Props) {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                        <WinRatePieChart wins={champData.totalWins} losses={champData.totalGames - champData.totalWins} height={25}></WinRatePieChart>
-                        <Typography sx={{ pl: 1 }}>{calculateWR(champData, 2)}%</Typography>
+                        <WinRatePieChart wins={champData.win} losses={champData.games - champData.win} height={25}></WinRatePieChart>
+                        <Typography sx={{ pl: 1 }}>{roundTo(StatGenerators.WR.getStatValue(champData))}%</Typography>
                       </Box>
                       {/* In Progress */}
                     </TableCell>
                     <TableCell>
-                      <Typography align="center">{calculateChampionKDA(champData, 2)}:1</Typography>
+                      <Typography align="center">{StatGenerators.KDA.getStatString([champData])}:1</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography align="center">{riotTimestampToGameTime(gameTime)}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography align="center">{toPerMinute(champData.averageDamageDealt, gameTime)}</Typography>
+                      <Typography align="center">{StatGenerators.DPM.getStatString([champData])}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography align="center">{toPerMinute(champData.averageGoldEarned, gameTime)}</Typography>
+                      <Typography align="center">{StatGenerators.GPM.getStatString([champData])}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography align="center">{champData.totalGames}</Typography>
+                      <Typography align="center">{champData.games}</Typography>
                     </TableCell>
                   </TableRow>
                 );
