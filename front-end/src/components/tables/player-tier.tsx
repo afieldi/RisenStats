@@ -62,8 +62,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
   useEffect(() => {
     setLoadingStats(true);
     getFlattenedLeaderboard(
-      seasonId === 'RISEN' ? undefined : Number(seasonId),
-      seasonId === 'RISEN',
+      Number(seasonId),
       roleId,
     ).then((data) => {
       sortPlayerStats(MapStatsToLeaderboard(data), sortCol, sortOrder);
