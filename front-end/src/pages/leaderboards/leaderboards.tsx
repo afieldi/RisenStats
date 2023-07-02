@@ -121,7 +121,8 @@ export default function Leaderboards() {
           </Popper>
         </Box>
       </FilterBar>
-      {playerTierTable}
+      {seasonId === 'RISEN' && <Typography variant="h5">SELECT A SEASON TO GET STARTED</Typography>}
+      {seasonId !== 'RISEN' && playerTierTable}
     </Container>
   );
 }

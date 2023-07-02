@@ -1,33 +1,26 @@
-import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection } from './dbConnect';
+import { ALL_TOURNAMENT_GAMES_ID, ensureConnection } from './dbConnect';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { FindManyOptions, MoreThanOrEqual } from 'typeorm';
 import { combine } from '../../../Common/utils';
-import DenylistModel from '../../../Common/models/denylist.model';
 import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
+import logger from '../../logger';
 
 const minNumberOfGames = 4;
 
-export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, risenOnly?: boolean, collapseRoles?: boolean): Promise<AggregatedPlayerStatModel[]> {
+// TODO for later:
+// Make a selector in the LB page for season/role
+// Dont allow for all risen
+// seasonId must be a real season
+// role must be a real role
+export async function GetDbLeaderboardsBySeasonIdAndRole(seasonId: number, roleId: GameRoles): Promise<AggregatedPlayerStatModel[]> {
   await ensureConnection();
 
-  let searchFilter: FindManyOptions<AggregatedPlayerStatModel> = { where: { seasonId: ALL_TOURNAMENT_GAMES_ID } };
-  if (roleId !== GameRoles.ALL) {
-    searchFilter = { where: { seasonId: ALL_TOURNAMENT_GAMES_ID, games: MoreThanOrEqual(minNumberOfGames) } };
-  }
+  // We dont check for game count here since the DB is split by champions, we need to wait for everything to be
+  //  aggregated before we can filter by game count
+  let searchFilter: FindManyOptions<AggregatedPlayerStatModel> = { where: { seasonId: seasonId } };
 
-  if (seasonId) {
-    searchFilter['where'] = {
-      ...searchFilter['where'],
-      seasonId: seasonId
-    };
-  }
-  else if (risenOnly) {
-    searchFilter['where'] = {
-      ...searchFilter['where'],
-      seasonId: ALL_RISEN_GAMES_ID,
-    };
-  }
-  if (roleId && roleId !== GameRoles.ALL) {
+  // If gamerole is ALL return all roles and we will aggregate below.
+  if (roleId !== GameRoles.ALL) {
     searchFilter['where'] = {
       ...searchFilter['where'],
       lobbyPosition: GameRoles[roleId]
@@ -36,17 +29,17 @@ export async function GetDbLeaderboards(seasonId?: number, roleId?: GameRoles, r
 
   let leaderboard: AggregatedPlayerStatModel[] = await AggregatedPlayerStatModel.find(searchFilter);
   // If the role is ALL combine the data into one object and return it.
-  return flattenLeaderboard(leaderboard, roleId == GameRoles.ALL || collapseRoles);
+  let flattenedLeaderboard = flattenLeaderboard(leaderboard);
+  logger.info(flattenedLeaderboard.length);
+  // Filter out players without the required amount of games
+  return flattenedLeaderboard.filter(playerStatModel => playerStatModel.games >= minNumberOfGames);
 }
 
-function flattenLeaderboard(playerStatsModel: AggregatedPlayerStatModel[], collapseRoles?: boolean) {
+function flattenLeaderboard(playerStatsModel: AggregatedPlayerStatModel[]) {
   let flattenedLeaderboard: Map<String, AggregatedPlayerStatModel> = new Map();
+
   for (let playerStat of playerStatsModel) {
-    let key = playerStat.playerPuuid;
-    if (!collapseRoles) {
-      // If we don't want to collapse roles, return an entry for each lobby position
-      key += '_' + playerStat.lobbyPosition;
-    }
+    let key = `${playerStat.playerPuuid}`;
     if (!flattenedLeaderboard.has(key)) {
       flattenedLeaderboard.set(key, playerStat);
     } else {
@@ -54,19 +47,5 @@ function flattenLeaderboard(playerStatsModel: AggregatedPlayerStatModel[], colla
     }
   }
 
-  // Since we cant garuntee that N > 4 for ALL we need to filter
-  return Array.from(flattenedLeaderboard.values()).filter(playerStatModel => playerStatModel.games >= minNumberOfGames);
-}
-
-async function removeDenyListPlayers(leaderboard: AggregatedPlayerStatModel[]): Promise<AggregatedPlayerStatModel[]>  {
-  let denyListPlayers: DenylistModel[] = await DenylistModel.find({});
-
-  if (denyListPlayers.length === 0) {
-    return leaderboard;
-  }
-
-  let denyListPuuids: string[] = denyListPlayers.map(denyListPlayer => denyListPlayer.playerPuuid);
-  return leaderboard.filter(playerstat => {
-    return !denyListPuuids.includes(playerstat.playerPuuid);
-  });
+  return Array.from(flattenedLeaderboard.values());
 }

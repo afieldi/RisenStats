@@ -75,12 +75,14 @@ function PlayerPage()
   }
 
   async function loadLeaderboards() {
+    console.log('Trying to load the leaderboards');
+
     if (seasonId === 'ALL' || seasonId === 'RISEN') {
       return;
     }
+
     try {
       let cachedLeaderboard: Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>> = new Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>(fullLeaderboard); // Need to create new object to trigger rerender
-      let numberSeasonId = seasonId === 'RISEN' ? undefined : Number(seasonId);
 
       let roleMaps: Map<GameRoles, AggregatedPlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, AggregatedPlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, AggregatedPlayerStatModel[]>;
       if (roleMaps.has(roleId)) {
@@ -88,11 +90,12 @@ function PlayerPage()
         return;
       }
 
-      const stats = await getFlattenedLeaderboard(numberSeasonId,seasonId === 'RISEN',  roleId, true);
+      console.log('Reloading leaderboards from API');
+
+      const stats = await getFlattenedLeaderboard(Number(seasonId), roleId);
       roleMaps.set(roleId, stats);
       cachedLeaderboard.set(seasonId, roleMaps);
       setFullLeaderboard(cachedLeaderboard);
-
     }
     catch (error) {
       console.error('An error occured while trying to load leaderboards');

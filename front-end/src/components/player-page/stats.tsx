@@ -28,7 +28,7 @@ interface PlayerPageStatsProps {
     playerPuuid?: string
 }
 
-const byRole = (seasonId: string, roleId: GameRoles, teamId: number, championId: number) => {
+const byRole = (seasonId: number, roleId: GameRoles, teamId: number, championId: number) => {
   return `${seasonId}-${roleId}-${championId}`;
 };
 
@@ -45,7 +45,7 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
   // This page also doesnt care about a per team breakdown right now, so merge the team data away
   let playerStatsByRole = deepCopy(props.playerStats); // DeepCopy is needed for some react state BS
   if (roleConfig) {
-    playerStatsByRole = mergePlayerStats(seasonConfig.seasonId, roleConfig.roleId, deepCopy(playerStats), byRole);
+    playerStatsByRole = mergePlayerStats(deepCopy(playerStats), byRole);
   }
 
   let wins = 0;

@@ -253,7 +253,11 @@ export function ObjectArrayToCsv(objects: { [key: string]: any }[], headers?: st
 }
 
 export function combine(object1: AggregatedPlayerStatModel, object2: AggregatedPlayerStatModel): AggregatedPlayerStatModel {
+  const dontCombineKeys = ["playerPuuid", "seasonId", "lobbyPosition", "championId"]
   for (const key in object1) {
+    if (dontCombineKeys.includes(key)) {
+      continue;
+    }
     // @ts-ignore Typescript being stupid here. Just let me do this
     object1[key] += NonNone(object2[key], 0);
   }
@@ -276,13 +280,13 @@ export function deepCopy<T>(object: T): T {
   return JSON.parse(JSON.stringify(object)) as T;
 }
 
-export function mergePlayerStats(seasonId: string, roleId: GameRoles, playerStatsWithChampions: AggregatedPlayerStatModel[],
-                          keyFnc: (seasonId: string, roleId: GameRoles, teamId: number, championId: number) => string): AggregatedPlayerStatModel[] {
+export function mergePlayerStats(playerStatsWithChampions: AggregatedPlayerStatModel[],
+                          keyFnc: (seasonId: number, roleId: GameRoles, teamId: number, championId: number) => string): AggregatedPlayerStatModel[] {
 
   let mergedPlayerStats: Map<String, AggregatedPlayerStatModel> = new Map<String, AggregatedPlayerStatModel>();
 
   for (let playerStat of playerStatsWithChampions) {
-    const key = keyFnc(seasonId, roleId, playerStat.teamTeamId, playerStat.championId);
+    const key = keyFnc(playerStat.seasonId, playerStat.lobbyPosition as GameRoles, playerStat.teamTeamId, playerStat.championId);
     if(mergedPlayerStats.has(key)) {
       mergedPlayerStats.set(key, combine(playerStat, mergedPlayerStats.get(key) as AggregatedPlayerStatModel));
     } else {
