@@ -13,6 +13,7 @@ import Error404 from './pages/errors/404';
 import StatExport from './pages/statExport/statExport';
 import Leaderboards from './pages/leaderboards/leaderboards';
 import SearchPage from './pages/search/search';
+import LeaguePage from './pages/risenLeague/league';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -29,6 +30,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
             <Route path="/player/:playerName" element={<Player />}></Route>
+            <Route path="/leagues/:leagueName" element={<LeaguePage />}></Route>
             <Route path="/404" element={<Error404 />}></Route>
             <Route path="/statexport" element={<StatExport />}></Route>
             <Route path="/leaderboard" element={<Leaderboards />}></Route>
