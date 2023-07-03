@@ -355,3 +355,9 @@ export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<Play
   }
   return await PlayerGameModel.find(filter);
 }
+
+export async function GetDbGamesBySeasonId(seasonId: number ): Promise<PlayerGameModel[]> {
+  await ensureConnection();
+  let filter: FindManyOptions<PlayerGameModel> = { where: { seasonId: seasonId } };
+  return await PlayerGameModel.find(filter);
+}

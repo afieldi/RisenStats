@@ -1,8 +1,8 @@
 import express, { Router, Request } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
-import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
+import { GetGamesBySeasonIdResponse, GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
 import logger from '../../logger';
-import { GetDbGamesByPlayerPuuid } from '../db/games';
+import { GetDbGamesByPlayerPuuid, GetDbGamesBySeasonId } from '../db/games';
 import { RiotMatchCallbackDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import { SaveDataByMatchId } from '../business/games';
 import { ToMatchId } from '../../../Common/utils';
@@ -28,6 +28,21 @@ router.post('/callback', async(req: TypedRequest<RiotMatchCallbackDto>, res) => 
   try {
     await SaveDataByMatchId(ToMatchId(req.body.gameId), true);
     res.json('Success');
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.post('/by-seasonId/:seasonId', async(req: Request, res: TypedResponse<GetGamesBySeasonIdResponse>) => {
+  logger.info(`Get games by seasonId ${req.params.seasonId}`);
+  try {
+    const seasonId = Number(req.params.seasonId);
+    const games = await GetDbGamesBySeasonId(seasonId);
+    logger.debug(`Got some games: ${games.length}`);
+    res.json({
+      games: games
+    });
   } catch (error) {
     logger.error(error);
     res.status(500).send('Something went wrong');
