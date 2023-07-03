@@ -6,7 +6,9 @@ import SideWinrateBox from './side-winrate-box';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import ChampionPickRate from './champion-pick-rate';
 import TeamListBox from './teams-list';
+import { darken } from '@mui/system/colorManipulator';
 
+const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
     seasonId: number;
     games: PlayerGameModel[]
@@ -64,4 +66,12 @@ function buildChamps(games: PlayerGameModel[]): Map<GameRoles, Map<number, numbe
   }
   
   return champsCountByRole;
+}
+
+// The gradient function used for boxes on this page
+export function getGradient(background: string) {
+  if (gradientsEnabled) {
+    return `linear-gradient(to right, ${background} 0%, ${darken(background, 0.4)} 100%)`;
+  }
+  return `linear-gradient(to right, ${background} 100%, ${background} 100%)`;
 }

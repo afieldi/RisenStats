@@ -5,6 +5,7 @@ import ChampionSummaryBox from '../champion-overview/champion-summary-box';
 import React, { useState } from 'react';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import RoleSelector from '../selectors/role-selector';
+import { getGradient } from './general';
 
 interface ChampionOverviewProps {
     champsPlayedByRole: Map<GameRoles, Map<number, number>>
@@ -18,8 +19,9 @@ export default function ChampionPickRate(props: ChampionOverviewProps) {
   let champsPlayed = getChampsPlayed(props.champsPlayedByRole, selectedGameRoles);
   champsPlayed = new Map([...champsPlayed.entries()].sort((a, b) => b[1] - a[1]));
 
+  // TODO fix the gradiant so the numbers fit nicely
   return (
-    <BaseRisenBox title={getTitleHeader(theme, champsPlayed.size, selectedGameRoles, setSelectedGameRoles)}>
+    <BaseRisenBox sx={{ background: getGradient(theme.palette.risenBoxBg.main) }} title={getTitleHeader(theme, champsPlayed.size, selectedGameRoles, setSelectedGameRoles)}>
       <Box sx={{ display: 'flex', columnGap: 1, rowGap: 1, flexWrap: 'wrap' }}>
         { Array.from(champsPlayed.keys()).map((championId,  index) =>
           <ChampionSummaryBox key={index} championId={championId} games={champsPlayed.get(championId) as number}/>

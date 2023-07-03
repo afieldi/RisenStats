@@ -4,6 +4,8 @@ import { calculateWR } from '../../../../Common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
 import { Cell, Label, Pie, PieChart, Tooltip } from 'recharts';
 import React from 'react';
+import { darken } from '@mui/system/colorManipulator';
+import { getGradient } from './general';
 
 export interface SideWinRateBoxProps {
     redWins: number;
@@ -20,10 +22,8 @@ export default function SideWinrateBox(props: SideWinRateBoxProps) {
   ];
   const totalGames = props.redWins + props.blueWins;
   //  const winRate = calculateWR({ totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses }, 1);
-  const winsOverLoss = 'AAAAA';
-
   return (
-    <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1 }} title="Side Win Rate">
+    <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1, background: getGradient(theme.palette.risenBoxBg.main) }} title="Side Win Rate">
       {!props.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
       <PieChart width={240} height={200} style={{ margin: 'auto' }}>
         <Pie
