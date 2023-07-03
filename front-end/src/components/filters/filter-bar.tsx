@@ -32,6 +32,7 @@ export default function FilterBar(props: FilterBarProps) {
       <Box>
         <RoleSelector
           sx={{ minWidth: '150px', pt: 1, pb: 1 }}
+          imageSize={45}
           initalValue={props.roleConfig?.roleId}
           callBack={(event: SelectChangeEvent) => { props.roleConfig?.setRoleId(GameRoles[event.target.value as keyof typeof GameRoles]); }}
         />

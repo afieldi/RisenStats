@@ -8,12 +8,15 @@ import { Theme } from '@mui/material/styles';
 export interface RoleSelectorProps {
     callBack: (event: SelectChangeEvent) => any
     initalValue?: GameRoles;
-    sx?: SxProps<Theme>
+    sx?: SxProps<Theme>;
+    imageSize: number;
+    exclude? : GameRoles[]
 }
 
 export default function RoleSelector(props: RoleSelectorProps) {
   const currentValue = props.initalValue;
   const NoCheckRadio = <Radio icon={<Box sx={{ display: 'none' }} />} checkedIcon={<Box sx={{ width: '100%', height: '100%', position: 'absolute' }} />} disableRipple />;
+  const excludedRoles = props.exclude ? props.exclude : [];
 
   const commonFilter = {
     flexGrow: 1,
@@ -34,14 +37,16 @@ export default function RoleSelector(props: RoleSelectorProps) {
         className="hide-radio"
         onChange={props.callBack}>
         {
-          Object.keys(GameRoles).map((gameRole, index) => (
-            <FormControlLabel
-              value={gameRole}
-              control={NoCheckRadio}
-              disableTypography={true}
-              sx={currentValue == gameRole ? selectedFilter : commonFilter}
-              label={<img height="45px" width="45px" src={`/images/roles/${gameRole}.png`}></img>} />
-          ))
+          Object.keys(GameRoles)
+            .filter(role => !excludedRoles.includes(role as GameRoles))
+            .map((gameRole, index) => (
+              <FormControlLabel
+                value={gameRole}
+                control={NoCheckRadio}
+                disableTypography={true}
+                sx={currentValue == gameRole ? selectedFilter : commonFilter}
+                label={<img height={`${props.imageSize}px`} width={`${props.imageSize}px`} src={`/images/roles/${gameRole}.png`}></img>} />
+            ))
         }
 
       </RadioGroup>
