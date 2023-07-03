@@ -5,8 +5,10 @@ import TeamModel from '../../../../Common/models/team.model';
 import SideWinrateBox from './side-winrate-box';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import ChampionPickRate from './champion-pick-rate';
+import TeamListBox from './teams-list';
 
 export interface LeaguePageGeneralStatsProps {
+    seasonId: number;
     games: PlayerGameModel[]
     teams: TeamModel[]
 }
@@ -21,6 +23,7 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
     <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
       <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
         <SideWinrateBox redWins={sideWinrates.redWin} blueWins={sideWinrates.blueWin} hasData={true}></SideWinrateBox>
+        <TeamListBox seasonId={props.seasonId} teams={props.teams}></TeamListBox>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
@@ -37,9 +40,13 @@ function buildWinrate(games: PlayerGameModel[]) {
     if (gamesChecked.has(game.gameGameId)) {
       continue;
     }
-    blueWin += game.teamId == 200 && game.win ? 1 : 0;
-    redWin += game.teamId == 100 && game.win ? 1 : 0;
-    gamesChecked.add(game.gameGameId);
+
+    // Only add the game if we found the winning game
+    if (game.win) {
+      blueWin += game.teamId == 200 ? 1 : 0;
+      redWin += game.teamId == 100 ? 1 : 0;
+      gamesChecked.add(game.gameGameId);
+    }
   }
   return { blueWin: blueWin, redWin: redWin };
 }

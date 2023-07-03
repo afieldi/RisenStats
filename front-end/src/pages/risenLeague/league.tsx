@@ -81,7 +81,7 @@ function LeaguePage() {
         <Box sx={{ pt: 15, pb: 6, }}>
           <LeaguePageHeader name={season?.seasonName as string}/>
           <hr></hr>
-          <LeaguePageGeneralStats teams={teams} games={leagueGames}></LeaguePageGeneralStats>
+          <LeaguePageGeneralStats seasonId={season?.id as number} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
         </Box>
       </main>
     </Container>
