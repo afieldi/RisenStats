@@ -253,7 +253,7 @@ export function ObjectArrayToCsv(objects: { [key: string]: any }[], headers?: st
 }
 
 export function combine(object1: AggregatedPlayerStatModel, object2: AggregatedPlayerStatModel): AggregatedPlayerStatModel {
-  const dontCombineKeys = ["player", "playerPuuid", "seasonId", "lobbyPosition", "championId", "team", "teamTeamId"]
+  const dontCombineKeys = ["player", "playerPuuid", "seasonId", "season", "lobbyPosition", "championId", "team", "teamTeamId"]
   for (const key in object1) {
     if (dontCombineKeys.includes(key)) {
       continue;
