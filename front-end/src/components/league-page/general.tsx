@@ -7,6 +7,7 @@ import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import ChampionPickRate from './champion-pick-rate';
 import TeamListBox from './teams-list';
 import { darken } from '@mui/system/colorManipulator';
+import LeagueStats from './league-stats';
 
 const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
@@ -19,15 +20,20 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
 {
 
   const champsPlayed: Map<GameRoles, Map<number, number>> = buildChamps(props.games);
-  const sideWinrates = buildWinrate(props.games);
+  const leagueStats = buildLeagueStats(props.games);
+  const sideWinrate = buildWinrate(props.games);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
       <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-        <SideWinrateBox redWins={sideWinrates.redWin} blueWins={sideWinrates.blueWin} hasData={true}></SideWinrateBox>
+        <SideWinrateBox redWins={sideWinrate.redWin} blueWins={sideWinrate.blueWin} hasData={true}></SideWinrateBox>
         <TeamListBox seasonId={props.seasonId} teams={props.teams}></TeamListBox>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
+        <LeagueStats kills={leagueStats.kills}
+          uniqueChampions={buildUniqueChamps(champsPlayed)}
+          totalDurationRiotTimestamp={leagueStats.totalDuration}
+          totalGames={leagueStats.totalGames}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
       </Box>
     </Box>
@@ -50,7 +56,29 @@ function buildWinrate(games: PlayerGameModel[]) {
       gamesChecked.add(game.gameGameId);
     }
   }
-  return { blueWin: blueWin, redWin: redWin };
+  return { blueWin, redWin };
+}
+
+function buildLeagueStats(games: PlayerGameModel[]) {
+  let gamesChecked: Set<number> = new Set<number>();
+  let kills = 0;
+  let deaths = 0;
+  let totalGames = 0;
+  let totalDuration = 0;
+
+  for(let game of games) {
+    // Only add these stats once per a given match
+    if (!gamesChecked.has(game.gameGameId)) {
+      totalDuration += game.gameLength;
+      totalGames +=1;
+    }
+    kills += game.kills;
+    deaths += game.deaths;
+
+
+    gamesChecked.add(game.gameGameId);
+  }
+  return { kills, deaths, totalGames, totalDuration };
 }
 
 function buildChamps(games: PlayerGameModel[]): Map<GameRoles, Map<number, number>> {
@@ -66,6 +94,14 @@ function buildChamps(games: PlayerGameModel[]): Map<GameRoles, Map<number, numbe
   }
   
   return champsCountByRole;
+}
+
+function buildUniqueChamps(champsPlayed: Map<GameRoles, Map<number, number>>) {
+  let mergedMap = new Map();
+  for (let key of champsPlayed.keys()) {
+    mergedMap = new Map([...Array.from(mergedMap.entries()), ...Array.from((champsPlayed.get(key) as Map<number, number>).entries())]);
+  }
+  return mergedMap.size;
 }
 
 // The gradient function used for boxes on this page
