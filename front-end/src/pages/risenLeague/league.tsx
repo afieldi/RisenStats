@@ -14,12 +14,17 @@ import { getGamesBySeasonId } from '../../api/games';
 function LeaguePage() {
   let { leagueName } = useParams();
 
+  const [loading, setLoading] = useState(true);
   const [season, setSeason] = useState<SeasonModel>();
   const [teams, setTeams] = useState<TeamModel[]>([]);
   const [leagueGames, setLeagueGames] = useState<PlayerGameModel[]>([]);
 
   const [loadingGames, setLoadingGames] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
+
+  function isLoadingData() {
+    return loadingTeams || loadingTeams || loading;
+  }
 
   async function loadSeason(): Promise<SeasonModel> {
     if (!leagueName) {
@@ -70,6 +75,7 @@ function LeaguePage() {
       .then(async seasonResponse => {
         await loadLeagueGames(seasonResponse.id);
         await loadTeamsForLeague(seasonResponse.id);
+        setLoading(false);
       })
       .catch(err => errorOnLoad(err));
   }, []);
@@ -81,7 +87,9 @@ function LeaguePage() {
         <Box sx={{ pt: 15, pb: 6, }}>
           <LeaguePageHeader name={season?.seasonName as string}/>
           <hr></hr>
-          <LeaguePageGeneralStats seasonId={season?.id as number} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
+          {
+            !isLoadingData() && <LeaguePageGeneralStats seasonId={season?.id as number} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
+          }
         </Box>
       </main>
     </Container>

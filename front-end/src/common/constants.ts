@@ -137,3 +137,20 @@ export const OVERALL_GAME_RATING_OVERVIEW: Record<GameRoles, GameRatingStatGener
   SUPPORT: StatGenerators.OVERALL_GAME_RATING_SUPPORT,
   JUNGLE: StatGenerators.OVERALL_GAME_RATING_JUNGLER
 };
+
+export const PING_SRC = {
+  ALL_IN : '/images/game/pings/all_in.png',
+  ASSIST : '/images/game/pings/assist.png'  ,
+  PING : '/images/game/pings/ping.png'  ,
+  BAIT: '/images/game/pings/bait.png'  ,
+  MIA : '/images/game/pings/mia.png' ,
+  AREA_IS_WARDED: '/images/game/pings/area_is_warded.png',
+  CAUTION : '/images/game/pings/caution.png',
+  HOLD : '/images/game/pings/hold.png',
+  NEED_WARD: '/images/game/pings/need_ward.png',
+  ON_MY_WAY: '/images/game/pings/on_my_way.png',
+  PUSH: '/images/game/pings/push.png',
+  CLEARED: '/images/game/pings/cleared.png',
+  COMMAND: '/images/game/pings/command.png',
+  DANGER: '/images/game/pings/danger.png',
+};

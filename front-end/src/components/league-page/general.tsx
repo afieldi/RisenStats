@@ -8,6 +8,7 @@ import ChampionPickRate from './champion-pick-rate';
 import TeamListBox from './teams-list';
 import { darken } from '@mui/system/colorManipulator';
 import LeagueStats from './league-stats';
+import LeaguePings from './league-pings';
 
 const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
@@ -35,6 +36,9 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
           totalDurationRiotTimestamp={leagueStats.totalDuration}
           totalGames={leagueStats.totalGames}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
+        <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+          {/*<LeaguePings games={props.games}/>*/}
+        </Box>
       </Box>
     </Box>
   );
