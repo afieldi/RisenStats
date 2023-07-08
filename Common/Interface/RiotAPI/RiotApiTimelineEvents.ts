@@ -16,6 +16,22 @@ export enum RiotTimelineEventType
   ELITE_MONSTER_KILL = <any>"ELITE_MONSTER_KILL",
 }
 
+export enum MonsterSubType {
+  CHEMTECH_DRAGON = "CHEMTECH_DRAGON",
+  FIRE_DRAGON = "FIRE_DRAGON",
+  HEXTECH_DRAGON = "HEXTECH_DRAGON",
+  WATER_DRAGON = "WATER_DRAGON",
+  AIR_DRAGON = "AIR_DRAGON",
+  EARTH_DRAGON = "EARTH_DRAGON",
+  ELDER_DRAGON = "ELDER_DRAGON "
+}
+
+export enum MonsterType {
+  BARON_NASHOR ="BARON_NASHOR",
+  RIFTHERALD = "RIFTHERALD",
+  DRAGON = "DRAGON"
+}
+
 export interface RiotTimelineEvent
 {
   type: RiotTimelineEventType;
@@ -123,7 +139,7 @@ export interface RiotTimelineEventEliteMonsterKill extends RiotTimelineEvent
   assistingParticipantIds: string[];
   killerId: number;
   killerTeamId: number;
-  monsterSubType: string;
-  monsterType: string;
+  monsterSubType: MonsterSubType;
+  monsterType: MonsterType;
   position: { x: number; y: number };
 }

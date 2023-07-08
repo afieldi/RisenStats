@@ -48,4 +48,14 @@ export interface TimelineParticipantStats
   xpDiff: number;
   xpDiff15: number;
   xpDiff25: number;
+
+  oceanDragonKills: number,
+  cloudDragonKills: number,
+  mountainDragonKills: number,
+  infernalDragonKills: number,
+  hextechDragonKills: number,
+  chemtechDragonKills: number,
+  elderDragonKills: number,
+  baronKills: number,
+  riftHeraldKills: number,
 }
