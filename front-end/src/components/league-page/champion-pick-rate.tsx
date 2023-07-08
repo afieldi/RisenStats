@@ -4,8 +4,8 @@ import BaseRisenBox from '../risen-box/base-risen-box';
 import ChampionSummaryBox from '../champion-overview/champion-summary-box';
 import React, { useState } from 'react';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import RoleSelector from '../selectors/role-selector';
 import { getGradient } from './general';
+import SmallRoleSelector from '../selectors/small-role-selector';
 
 interface ChampionOverviewProps {
     champsPlayedByRole: Map<GameRoles, Map<number, number>>
@@ -19,9 +19,8 @@ export default function ChampionPickRate(props: ChampionOverviewProps) {
   let champsPlayed = getChampsPlayed(props.champsPlayedByRole, selectedGameRoles);
   champsPlayed = new Map([...champsPlayed.entries()].sort((a, b) => b[1] - a[1]));
 
-  // TODO fix the gradiant so the numbers fit nicely
   return (
-    <BaseRisenBox sx={{ background: getGradient(theme.palette.risenBoxBg.main) }} title={getTitleHeader(theme, champsPlayed.size, selectedGameRoles, setSelectedGameRoles)}>
+    <BaseRisenBox sx={{ background: getGradient(theme.palette.risenBoxBg.main), pt: 0 }} title={getTitleHeader(theme, champsPlayed.size, selectedGameRoles, setSelectedGameRoles)}>
       <Box sx={{ display: 'flex', columnGap: 1, rowGap: 1, flexWrap: 'wrap' }}>
         { Array.from(champsPlayed.keys()).map((championId,  index) =>
           <ChampionSummaryBox key={index} championId={championId} games={champsPlayed.get(championId) as number}/>
@@ -34,10 +33,8 @@ export default function ChampionPickRate(props: ChampionOverviewProps) {
 function getTitleHeader(theme: Theme, unique: number, selectedGameRoles: GameRoles, setSelectedGameRoles: (value: (((prevState: GameRoles) => GameRoles) | GameRoles)) => void) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-      <Box>
-        <Typography fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{`Champions Picked: ${unique}`}</Typography>
-      </Box>
-      <RoleSelector
+      <Typography sx={{ marginTop: 2 }} fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{`Champions Picked: ${unique}`}</Typography>
+      <SmallRoleSelector
         exclude={[GameRoles.ALL]}
         imageSize={30}
         sx={{ minWidth: '100px', pt: 1, pb: 0 }}
