@@ -8,7 +8,6 @@ import ChampionPickRate from './champion-pick-rate';
 import TeamListBox from './teams-list';
 import { darken } from '@mui/system/colorManipulator';
 import LeagueStats from './league-stats';
-import LeaguePings from './league-pings';
 import LeagueDragons from './league-dragons';
 import LeagueChampionWinrates from './league-champ-winrates';
 
@@ -23,69 +22,23 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
 {
 
   const champsPlayed: Map<GameRoles, Map<number, number>> = buildChamps(props.games);
-  const leagueStats = buildLeagueStats(props.games);
-  const sideWinrate = buildWinrate(props.games);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+    <Box sx={{ pt: 1, display: 'flex', flexDirection: 'row', columnGap: 3 }}>
       <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-        <SideWinrateBox redWins={sideWinrate.redWin} blueWins={sideWinrate.blueWin} hasData={true}></SideWinrateBox>
-        <TeamListBox seasonId={props.seasonId} teams={props.teams}></TeamListBox>
+        <SideWinrateBox games={props.games}/>
+        <TeamListBox seasonId={props.seasonId} teams={props.teams}/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-        <LeagueStats kills={leagueStats.kills}
-          uniqueChampions={buildUniqueChamps(champsPlayed)}
-          totalDurationRiotTimestamp={leagueStats.totalDuration}
-          totalGames={leagueStats.totalGames}/>
-        <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
+        <LeagueStats games={props.games} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
+        <ChampionPickRate champsPlayedByRole={champsPlayed}/>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-          <LeagueDragons games={props.games}></LeagueDragons>
-          <LeagueChampionWinrates games={props.games}></LeagueChampionWinrates>
+          <LeagueDragons games={props.games}/>
+          <LeagueChampionWinrates games={props.games}/>
         </Box>
       </Box>
     </Box>
   );
-}
-
-function buildWinrate(games: PlayerGameModel[]) {
-  let gamesChecked: Set<number> = new Set<number>();
-  let blueWin = 0;
-  let redWin = 0;
-  for(let game of games) {
-    if (gamesChecked.has(game.gameGameId)) {
-      continue;
-    }
-
-    // Only add the game if we found the winning game
-    if (game.win) {
-      blueWin += game.teamId == 200 ? 1 : 0;
-      redWin += game.teamId == 100 ? 1 : 0;
-      gamesChecked.add(game.gameGameId);
-    }
-  }
-  return { blueWin, redWin };
-}
-
-function buildLeagueStats(games: PlayerGameModel[]) {
-  let gamesChecked: Set<number> = new Set<number>();
-  let kills = 0;
-  let deaths = 0;
-  let totalGames = 0;
-  let totalDuration = 0;
-
-  for(let game of games) {
-    // Only add these stats once per a given match
-    if (!gamesChecked.has(game.gameGameId)) {
-      totalDuration += game.gameLength;
-      totalGames +=1;
-    }
-    kills += game.kills;
-    deaths += game.deaths;
-
-
-    gamesChecked.add(game.gameGameId);
-  }
-  return { kills, deaths, totalGames, totalDuration };
 }
 
 function buildChamps(games: PlayerGameModel[]): Map<GameRoles, Map<number, number>> {

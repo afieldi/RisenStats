@@ -6,25 +6,25 @@ import { Cell, Label, Pie, PieChart, Tooltip } from 'recharts';
 import React from 'react';
 import { darken } from '@mui/system/colorManipulator';
 import { getGradient } from './general';
+import PlayerGameModel from '../../../../Common/models/playergame.model';
 
 export interface SideWinRateBoxProps {
-    redWins: number;
-    blueWins: number;
-    hasData: boolean;
+    games: PlayerGameModel[]
 }
 
 export default function SideWinrateBox(props: SideWinRateBoxProps) {
   const theme = useTheme() as Theme;
 
+  const sideWinrate = buildWinrate(props.games);
+
   const data = [
-    { name: 'Blue Wins', value: props.blueWins, color: '#010144' },
-    { name: 'Red Wins', value: props.redWins, color: '#640713' }
+    { name: 'Blue Wins', value: sideWinrate.blueWin, color: '#010144' },
+    { name: 'Red Wins', value: sideWinrate.redWin, color: '#640713' }
   ];
-  const totalGames = props.redWins + props.blueWins;
+  const totalGames = sideWinrate.redWin + sideWinrate.blueWin;
   //  const winRate = calculateWR({ totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses }, 1);
   return (
     <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1, background: getGradient(theme.palette.risenBoxBg.main) }} title="Side Win Rate">
-      {!props.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
       <PieChart width={240} height={200} style={{ margin: 'auto' }}>
         <Pie
           data={data}
@@ -50,4 +50,23 @@ export default function SideWinrateBox(props: SideWinRateBoxProps) {
       </PieChart>
     </BaseRisenBox>
   );
+}
+
+function buildWinrate(games: PlayerGameModel[]) {
+  let gamesChecked: Set<number> = new Set<number>();
+  let blueWin = 0;
+  let redWin = 0;
+  for(let game of games) {
+    if (gamesChecked.has(game.gameGameId)) {
+      continue;
+    }
+
+    // Only add the game if we found the winning game
+    if (game.win) {
+      blueWin += game.teamId == 200 ? 1 : 0;
+      redWin += game.teamId == 100 ? 1 : 0;
+      gamesChecked.add(game.gameGameId);
+    }
+  }
+  return { blueWin, redWin };
 }
