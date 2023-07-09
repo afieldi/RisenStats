@@ -9,7 +9,8 @@ import TeamListBox from './teams-list';
 import { darken } from '@mui/system/colorManipulator';
 import LeagueStats from './league-stats';
 import LeaguePings from './league-pings';
-import LeagueLeaderboard from './league-leaderboard';
+import LeagueDragons from './league-dragons';
+import LeagueChampionWinrates from './league-champ-winrates';
 
 const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
@@ -38,8 +39,8 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
           totalGames={leagueStats.totalGames}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-          {/*<LeaguePings games={props.games}/>*/}
-          <LeagueLeaderboard teams={props.teams} games={props.games}></LeagueLeaderboard>
+          <LeagueDragons games={props.games}></LeagueDragons>
+          <LeagueChampionWinrates games={props.games}></LeagueChampionWinrates>
         </Box>
       </Box>
     </Box>

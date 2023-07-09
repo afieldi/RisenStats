@@ -10,7 +10,7 @@ import { IsNull, Not } from 'typeorm';
 async function backFillObjectiveStats(): Promise<any> {
   console.log('Trying a backfill!');
   await ensureConnection();
-  let res = await PlayerGameModel.createQueryBuilder().select('"gameGameId"').where('"seasonId" IS NOT NULL').distinct(true).getRawMany();
+  let res = await PlayerGameModel.createQueryBuilder().select('"gameGameId"').where('"seasonId" IS NOT NULL').where('"oceanDragonKills" IS NULL').distinct(true).getRawMany();
   let completed = 0;
   for (let gameModel of res) {
     try {
@@ -51,7 +51,7 @@ async function backFillObjectiveStats(): Promise<any> {
 async function backfillNonRisen(): Promise<any> {
   console.log('Trying a backfill!');
   await ensureConnection();
-  let res: PlayerGameModel[] = await PlayerGameModel.find({ where: { seasonId: IsNull() } });
+  let res: PlayerGameModel[] = await PlayerGameModel.find({ where: { seasonId: IsNull(), oceanDragonKills: IsNull() } });
   let completed = 0;
   let batch: PlayerGameModel[] = [];
   for (let pGame of res) {
