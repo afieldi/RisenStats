@@ -220,6 +220,26 @@ export default class PlayerGameModel extends BaseEntity
   @Column("int", { array: true })
   xpMap: number[];
 
+  // Objectives
+  @Column("smallint")
+  oceanDragonKills: number;
+  @Column("smallint")
+  cloudDragonKills: number;
+  @Column("smallint")
+  mountainDragonKills: number;
+  @Column("smallint")
+  infernalDragonKills: number;
+  @Column("smallint")
+  hextechDragonKills: number;
+  @Column("smallint")
+  chemtechDragonKills: number;
+  @Column("smallint")
+  elderDragonKills: number;
+  @Column("smallint")
+  baronKills: number;
+  @Column("smallint")
+  riftHeraldKills: number;
+
   // Diff
   @Column("boolean")
   has15Diff: boolean;

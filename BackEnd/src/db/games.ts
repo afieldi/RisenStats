@@ -133,6 +133,17 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     xpDiff15: timelineStats.xpDiff15,
     xpDiff25: timelineStats.xpDiff25,
 
+    // Objectives
+    elderDragonKills: timelineStats.elderDragonKills,
+    baronKills: timelineStats.baronKills,
+    riftHeraldKills: timelineStats.riftHeraldKills,
+    infernalDragonKills: timelineStats.infernalDragonKills,
+    oceanDragonKills: timelineStats.oceanDragonKills,
+    mountainDragonKills: timelineStats.mountainDragonKills,
+    cloudDragonKills: timelineStats.cloudDragonKills,
+    chemtechDragonKills: timelineStats.chemtechDragonKills,
+    hextechDragonKills: timelineStats.hextechDragonKills,
+
     items: [
       riotPlayer.item0,
       riotPlayer.item1,
@@ -191,6 +202,8 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     damageShare: NonNone(riotPlayer.challenges?.teamDamagePercentage),
     visionShare: riotPlayer.visionScore / teamStats.totalVision,
     killParticipation: NonNone(riotPlayer.challenges?.killParticipation),
+
+
   };
 
   const challenges = riotPlayer.challenges ?? {};
