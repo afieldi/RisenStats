@@ -1,6 +1,16 @@
 import { TimelineParticipantStats } from '../../../Common/Interface/Database/timeline';
-import { RiotTimelineDto, RiotTimelineParticipantFrameDataDto, RiotTimelineParticipantFrameDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
-import { RiotTimelineEvent, RiotTimelineEventChampionKillDto } from '../../../Common/Interface/RiotAPI/RiotApiTimelineEvents';
+import {
+  RiotTimelineDto,
+  RiotTimelineParticipantFrameDataDto,
+  RiotTimelineParticipantFrameDto
+} from '../../../Common/Interface/RiotAPI/RiotApiDto';
+import {
+  MonsterSubType,
+  MonsterType,
+  RiotTimelineEvent,
+  RiotTimelineEventChampionKillDto,
+  RiotTimelineEventEliteMonsterKill
+} from '../../../Common/Interface/RiotAPI/RiotApiTimelineEvents';
 import logger from '../../logger';
 import * as utils from '../../../Common/utils';
 
@@ -54,6 +64,16 @@ function DefaultTimelineStats(): TimelineParticipantStats {
     xpDiff: 0,
     xpDiff15: 0,
     xpDiff25: 0,
+
+    oceanDragonKills: 0,
+    cloudDragonKills: 0,
+    mountainDragonKills: 0,
+    infernalDragonKills: 0,
+    hextechDragonKills: 0,
+    chemtechDragonKills: 0,
+    elderDragonKills: 0,
+    riftHeraldKills: 0,
+    baronKills: 0,
   } as TimelineParticipantStats;
 }
 
@@ -113,7 +133,48 @@ function ProcessEvents(allParticipants: TimelineParticipantStats[], events: Riot
       }
     } else if (utils.EventIsChampionKill(event)) {
       HandleChampionKill(allParticipants, event);
+    } else if (utils.EventIsEliteMonsterKill(event)) {
+      HandleEliteMosterKill(allParticipants, event);
     }
+  }
+}
+
+function HandleEliteMosterKill(allParticipants: TimelineParticipantStats[], event: RiotTimelineEventEliteMonsterKill) {
+  const id = event.killerId - 1;
+  if (id < 0 || id >= 10) {
+    logger.debug('Invalid killer id for elite moster kill: ' + id);
+    return;
+  }
+  if (event.monsterType == MonsterType.DRAGON) {
+    if(event.monsterSubType == MonsterSubType.AIR_DRAGON) {
+      allParticipants[id].cloudDragonKills += 1;
+    }
+    if(event.monsterSubType == MonsterSubType.CHEMTECH_DRAGON) {
+      allParticipants[id].chemtechDragonKills += 1;
+    }
+    if(event.monsterSubType == MonsterSubType.HEXTECH_DRAGON) {
+      allParticipants[id].hextechDragonKills += 1;
+    }
+    if(event.monsterSubType == MonsterSubType.FIRE_DRAGON) {
+      allParticipants[id].infernalDragonKills += 1;
+    }
+    if(event.monsterSubType == MonsterSubType.WATER_DRAGON) {
+      allParticipants[id].oceanDragonKills += 1;
+    }
+    if(event.monsterSubType == MonsterSubType.EARTH_DRAGON) {
+      allParticipants[id].mountainDragonKills += 1;
+    }
+    if(event.monsterSubType == MonsterSubType.ELDER_DRAGON) {
+      allParticipants[id].elderDragonKills += 1;
+    }
+  }
+
+  if(event.monsterType == MonsterType.BARON_NASHOR) {
+    allParticipants[id].baronKills += 1;
+  }
+
+  if(event.monsterType == MonsterType.RIFTHERALD) {
+    allParticipants[id].riftHeraldKills += 1;
   }
 }
 
