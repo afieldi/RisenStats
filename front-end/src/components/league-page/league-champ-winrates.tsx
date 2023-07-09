@@ -9,6 +9,9 @@ import { roundTo } from '../../../../Common/utils';
 interface LeagueChampionWinrates {
     games: PlayerGameModel[]
 }
+
+const amountOfChampsToShow = 6;
+
 export default function LeagueChampionWinrates(props: LeagueChampionWinrates) {
   const theme = useTheme() as Theme;
 
@@ -21,12 +24,10 @@ export default function LeagueChampionWinrates(props: LeagueChampionWinrates) {
     .sort((a, b) => b.winrate - a.winrate)
     .filter(champ => champ.games >= 4);
 
-  console.log(sortedWinrates);
-
   return (
     <Box sx={{ minWidth: 560, minHeight: 280, display: 'flex', columnGap: 2, rowGap: 1, flexWrap: 'wrap' }}>
-      { getChampionWinrateCard('Highest Winrate Champs',  sortedWinrates.slice(0, 6) ) }
-      { getChampionWinrateCard('Lowest Winrate Champs', sortedWinrates.slice(-6).reverse()) }
+      { getChampionWinrateCard('Highest Winrate Champs',  sortedWinrates.slice(0, amountOfChampsToShow) ) }
+      { getChampionWinrateCard('Lowest Winrate Champs', sortedWinrates.slice(-amountOfChampsToShow).reverse()) }
     </Box>
   );
 }
@@ -45,7 +46,6 @@ function getChampionWinrateCard(titleString: string, orderedWinrate: {championId
         {orderedWinrate.map((champ, index) => row(champ.championId, champ.winrate * 100, champ.games, index))}
       </Box>
       <Box sx={{ p: 1, borderRadius: '0px 0px 4px 4px', background: getGradient(theme.palette.risenBoxBg.main) }}/>
-
     </Box>
   );
 }
