@@ -36,6 +36,9 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
           <LeagueDragons games={props.games}/>
           <LeagueChampionWinrates games={props.games}/>
         </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+
+        </Box>
       </Box>
     </Box>
   );

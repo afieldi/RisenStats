@@ -1,10 +1,14 @@
 import { Box, Theme, Typography, useTheme } from '@mui/material';
-import { getGradient } from './general';
 import React from 'react';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
-import ImgBox from '../risen-box/img-box';
-import { darken } from '@mui/system/colorManipulator';
 import { roundTo } from '../../../../Common/utils';
+import {
+  buildImageBasedLeaderboardRowProps,
+  buildTextBasedLeaderboardHeader,
+  LeaderboardRowProps,
+  RowMainValue
+} from './leaderboard/row';
+import LeaderboardCard from './leaderboard/leaderboardCard';
 
 interface LeagueChampionWinrates {
     games: PlayerGameModel[]
@@ -32,56 +36,31 @@ export default function LeagueChampionWinrates(props: LeagueChampionWinrates) {
   );
 }
 
-// TODO maybe this can be refactored to use the teamslist card?
 function getChampionWinrateCard(titleString: string, orderedWinrate: {championId: number, wins: number, games: number, winrate: number}[]) {
   const theme = useTheme() as Theme;
+
+  let ordereredLeaderboardRowProps: LeaderboardRowProps[] = [];
+  for (let orderedWinrateElement of orderedWinrate) {
+
+    let rowMainValue: RowMainValue = {
+      value: roundTo(orderedWinrateElement.winrate * 100, 1),
+      formatter: (value) => `${value}%`
+    };
+
+    ordereredLeaderboardRowProps.push(buildImageBasedLeaderboardRowProps(
+      `/images/champions/icons/${orderedWinrateElement.championId}_0.png`, `
+          ${orderedWinrateElement.championId}`,
+      orderedWinrateElement.games,
+      rowMainValue,
+      theme,
+      (v, theme) => ''));
+  }
+
+  const leaderboardHeaders = buildTextBasedLeaderboardHeader('Champion', 'Games', 'Win Rate', theme);
+  const title = <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='subtitle1' align='left' color={theme.palette.info.main}>{titleString}</Typography>;
+
   return (
-    <Box sx={{ minWidth: 100, minHeight: 280, flexGrow: 1 }}>
-      <Box sx={{ p: 0.5, borderRadius: '4px 4px 0px 0px', background: getGradient(theme.palette.risenBoxBg.main)  }}>
-        <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='subtitle1' align='left' color={theme.palette.info.main}>{titleString}</Typography>
-        <hr/>
-      </Box>
-      <Box sx={{ background: getGradient(theme.palette.risenBoxBg.main) }}>
-        {header(darken(theme.palette.risenBoxBg.main, 0))}
-        {orderedWinrate.map((champ, index) => row(champ.championId, champ.winrate * 100, champ.games, index))}
-      </Box>
-      <Box sx={{ p: 1, borderRadius: '0px 0px 4px 4px', background: getGradient(theme.palette.risenBoxBg.main) }}/>
-    </Box>
-  );
-}
-
-function row(championId: number, winrate: number, games: number, index: number) {
-  const theme = useTheme() as Theme;
-
-  const background =  index % 2 === 0 ? darken(theme.palette.risenBoxBg.main, 0.13) : darken(theme.palette.risenBoxBg.main, 0);
-
-  return (
-    <Box sx={{ pt: 0.5, pb: 0.5, paddingLeft: 2, display: 'flex', flexDirection: 'row', justifyContent:'space-between', background: getGradient(background) }}>
-      <ImgBox
-        sx={{ height:25, width: 25 }}
-        alt={`${championId}`}
-        src={`/images/champions/icons/${championId}_0.png`}
-        height="25px"
-        width="25px"
-      />
-      <Box sx={{ minWidth: 70, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Typography sx={{ minWidth: 80 }} variant='body2' align='center' color={theme.palette.info.main}>{games}</Typography>
-        <Typography sx={{ minWidth: 60, paddingRight: 1 }} fontWeight="bold" variant='body2' align='center' >{`${roundTo(winrate, 1)}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function header(bgColor: string) {
-  const theme = useTheme() as Theme;
-  return (
-    <Box sx={{ pt: 0.5, pb: 0.5, display: 'flex', flexDirection: 'row', justifyContent:'space-between', background: getGradient(bgColor) }}>
-      <Typography sx={{ minWidth: 60, paddingLeft: 2 }} variant='subtitle2' align='left' color={theme.palette.info.main}>Champion</Typography>
-      <Box sx={{ minWidth: 70, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Typography sx={{ minWidth: 60 }} variant='subtitle2' align='left' color={theme.palette.info.main}>Games</Typography>
-        <Typography sx={{ minWidth: 60, paddingRight: 1 }} variant='subtitle2' align='left' color={theme.palette.info.main}>Win Rate</Typography>
-      </Box>
-    </Box>
+    <LeaderboardCard width={100} height={280} sortedRowProps={ordereredLeaderboardRowProps} header={leaderboardHeaders} title={title}/>
   );
 }
 

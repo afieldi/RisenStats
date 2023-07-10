@@ -1,10 +1,8 @@
 import { useTheme } from '@emotion/react';
-import { Theme, Typography } from '@mui/material';
-import { calculateWR } from '../../../../Common/utils';
+import { Theme } from '@mui/material';
 import BaseRisenBox from '../risen-box/base-risen-box';
 import { Cell, Label, Pie, PieChart, Tooltip } from 'recharts';
 import React from 'react';
-import { darken } from '@mui/system/colorManipulator';
 import { getGradient } from './general';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 
@@ -24,7 +22,7 @@ export default function SideWinrateBox(props: SideWinRateBoxProps) {
   const totalGames = sideWinrate.redWin + sideWinrate.blueWin;
   //  const winRate = calculateWR({ totalWins: winRateProps.wins, totalGames: winRateProps.wins + winRateProps.losses }, 1);
   return (
-    <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1, background: getGradient(theme.palette.risenBoxBg.main) }} title="Side Win Rate">
+    <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, background: getGradient(theme.palette.risenBoxBg.main) }} title="Side Win Rate">
       <PieChart width={240} height={200} style={{ margin: 'auto' }}>
         <Pie
           data={data}
