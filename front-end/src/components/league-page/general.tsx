@@ -10,6 +10,7 @@ import { darken } from '@mui/system/colorManipulator';
 import LeagueStats from './league-stats';
 import LeagueDragons from './league-dragons';
 import LeagueChampionWinrates from './league-champ-winrates';
+import TeamLeaderboards from './team-leaderboards';
 
 const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
@@ -37,7 +38,7 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
           <LeagueChampionWinrates games={props.games}/>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-
+          <TeamLeaderboards games={props.games} teams={props.teams}></TeamLeaderboards>
         </Box>
       </Box>
     </Box>
