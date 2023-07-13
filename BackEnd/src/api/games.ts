@@ -29,6 +29,7 @@ router.post('/callback', async(req: TypedRequest<RiotMatchCallbackDto>, res) => 
     await SaveDataByMatchId(ToMatchId(req.body.gameId), true);
     res.json('Success');
   } catch (error) {
+    logger.error(`Something went wrong for callback for matchId: ${req.body.gameId}`);
     logger.error(error);
     res.status(500).send('Something went wrong');
   }

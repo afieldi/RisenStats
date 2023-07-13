@@ -17,6 +17,7 @@ import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
+  logger.info(`Getting Game data by matchId for match ${matchId}`);
   if (gameData.info.participants.length !== 10) {
     throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
   }
@@ -26,6 +27,7 @@ async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
 export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
   const existingObj = await GetDbGameByGameId(ToGameId(matchId));
   if (existingObj) {
+    logger.info(`Object already exits for match ${matchId}`);
     const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
     if (playerGames.length !== 10) {
       const foundPlayers = new Set<string>();
@@ -35,6 +37,7 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
     return existingObj;
   }
 
+  logger.info(`Game was not found in the DB for matchId: ${matchId}`);
   const gameData = await GetGameDataByMatchId(matchId);
 
   const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
