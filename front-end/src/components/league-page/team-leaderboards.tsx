@@ -92,7 +92,7 @@ export function getLeaderboardCardProps(leaderboardStats: Map<number, Leaderboar
 
   // CSD15
   const sortedEntriesCSD15 = [...leaderboardStats.entries()]
-    .sort((a, b) => b[1].csDiff15ByTeam - a[1].csDiff15ByTeam)
+    .sort((a, b) => (b[1].csDiff15ByTeam / b[1].totalGamesByTeam) - (a[1].csDiff15ByTeam / a[1].totalGamesByTeam))
     .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('CSD15', {
@@ -105,7 +105,7 @@ export function getLeaderboardCardProps(leaderboardStats: Map<number, Leaderboar
 
   // Average GameTime
   const sortedEntriesAvgGameTime = [...leaderboardStats.entries()]
-    .sort((a, b) => a[1].totalGameLength - b[1].totalGameLength)
+    .sort((a, b) => (a[1].totalGameLength/a[1].totalGamesByTeam) - (b[1].totalGameLength/b[1].totalGamesByTeam))
     .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Game Time', {
@@ -118,7 +118,7 @@ export function getLeaderboardCardProps(leaderboardStats: Map<number, Leaderboar
 
   // GoldDiff15
   const sortedEntriesGD15 = [...leaderboardStats.entries()]
-    .sort((a, b) => b[1].goldDiff15ByTeam - a[1].goldDiff15ByTeam)
+    .sort((a, b) => ((b[1].goldDiff15ByTeam/b[1].totalGamesByTeam) - (a[1].goldDiff15ByTeam/a[1].totalGamesByTeam)))
     .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('GD15', {
