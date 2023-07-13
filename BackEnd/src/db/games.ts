@@ -1,4 +1,4 @@
-import { Between, DeepPartial, FindManyOptions, FindOneOptions, In, IsNull, Not } from 'typeorm';
+import { Between, DeepPartial, FindManyOptions, FindOneOptions, In, IsNull, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from 'typeorm';
 import { GameSummaryPlayers, TeamSumStat } from '../../../Common/Interface/Database/game';
 import { TimelineParticipantStats } from '../../../Common/Interface/Database/timeline';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
@@ -240,6 +240,46 @@ export async function GetDbGameByGameId(gameId: number, expandGames: boolean = f
     players: expandGames
   };
   return await GameModel.findOne(searchFilter);
+}
+
+interface GetDbPlayerGamesOptions {
+  seasonId?: number;
+  timeStart?: number;
+  timeEnd?: number;
+}
+
+export async function GetDbPlayerGames(options: GetDbPlayerGamesOptions) {
+  const {
+    seasonId,
+    timeEnd,
+    timeStart,
+  } = options;
+
+  const searchFilter: FindManyOptions<PlayerGameModel> = { where: { } };
+
+  if (seasonId) {
+    searchFilter.where = {
+      ...searchFilter.where,
+      seasonId,
+    };
+  }
+  
+  if (timeEnd) {
+    searchFilter.where = {
+      ...searchFilter.where,
+      timestamp: LessThanOrEqual(timeEnd),
+    };
+  }
+
+  if (timeStart) {
+    searchFilter.where = {
+      ...searchFilter.where,
+      timestamp: MoreThanOrEqual(timeStart),
+    };
+  }
+
+  await ensureConnection();
+  return await PlayerGameModel.find(searchFilter);
 }
 
 export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOnly: boolean = false, seasonId: number = undefined, pageSize = 0, pageNumber = 0, roleId?: GameRoles): Promise<PlayerGameModel[]> {

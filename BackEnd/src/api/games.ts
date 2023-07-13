@@ -1,8 +1,8 @@
 import express, { Router, Request } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
-import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
+import { GetGamesByDateRequest, GetGamesByDateResponse, GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
 import logger from '../../logger';
-import { GetDbGamesByPlayerPuuid } from '../db/games';
+import { GetDbGamesByDate, GetDbGamesByPlayerPuuid, GetDbPlayerGamesByDate } from '../db/games';
 import { RiotMatchCallbackDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import { SaveDataByMatchId } from '../business/games';
 import { ToMatchId } from '../../../Common/utils';
@@ -17,6 +17,28 @@ router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetGamesRequest>, 
     res.json({
       games
     });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.post('/by-date', async(req: TypedRequest<GetGamesByDateRequest>, res: TypedResponse<GetGamesByDateResponse>) => {
+  try {
+    const {
+      endDate,
+      startDate,
+      pageNumber,
+      pageSize,
+      risenOnly,
+      seasonId
+    } = req.body;
+
+    logger.info(`Getting games from ${startDate} to ${startDate}`);
+    res.json({
+      games: await GetDbGamesByDate(startDate, endDate, risenOnly, seasonId, pageNumber, pageSize),
+      playerGames: await GetDbPlayerGamesByDate(startDate, endDate, risenOnly, seasonId, pageNumber, pageSize)
+    })
   } catch (error) {
     logger.error(error);
     res.status(500).send('Something went wrong');

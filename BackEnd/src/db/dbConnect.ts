@@ -56,6 +56,10 @@ const options = {
   }
 };
 
+export function IsRealSeasonId(seasonId: number) {
+  return !(!!seasonId && seasonId === ALL_RISEN_GAMES_ID || seasonId === ALL_TOURNAMENT_GAMES_ID);
+}
+
 function entitiesChanged(prevEntities: any[], newEntities: any[]): boolean {
   if (prevEntities.length !== newEntities.length) return true;
 
