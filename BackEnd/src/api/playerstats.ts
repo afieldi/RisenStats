@@ -1,6 +1,8 @@
 import express, { Router } from 'express';
 import { GeneratePlayersCsv, GeneratePlayersCsvByFilter } from '../business/exportplayerstats';
 import {
+  GetPlayerStatsByDateAndSeasonRequest,
+  GetPlayerStatsByDateAndSeasonResponse,
   GetPlayerStatsRequest,
   GetPlayerStatsResponse,
   PlayerStatsTableRequest
@@ -12,6 +14,7 @@ import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import PlayerStatModel from '../../../Common/models/playerstat.model';
 import { GetDbAggregatedPlayerStatsByPlayerPuuid } from '../db/playerstats';
 import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
+import { GetPlayerStatsByTimeAndSeason } from '../business/playerstats';
 
 
 const router: Router = express.Router();
@@ -49,16 +52,36 @@ router.post('/by-season', async(req: TypedRequest<GetGamesRequest>, res: TypedRe
 router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetPlayerStatsRequest>, res: TypedResponse<GetPlayerStatsResponse>) => {
   logger.info(`Get player stats by player puuid ${req.params.playerPuuid}`);
   try {
-    const seasonId = req.body.seasonId;
     const roleId = req.body.roleId as GameRoles;
-    const risenOnly = req.body.risenOnly;
-    const teamId = req.body.teamId;
-    const championId = req.body.championId;
+    const {
+      seasonId,
+      teamId,
+      championId,
+      risenOnly,
+    } = req.body;
 
     const playerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(req.params.playerPuuid, teamId, championId, seasonId, roleId);
 
     res.json({
       playerStats
+    });
+  }
+  catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong while fetching playerstatmodel');
+  }
+});
+
+router.post('/by-date', async(req: TypedRequest<GetPlayerStatsByDateAndSeasonRequest>, res: TypedResponse<GetPlayerStatsByDateAndSeasonResponse>) => {
+  logger.info(`Get player stats between ${req.body.timeStart} and ${req.body.timeEnd}`);
+  try {
+    const {
+      seasonId,
+      timeEnd,
+      timeStart
+    } = req.body;
+    res.json({
+      playerStats: await GetPlayerStatsByTimeAndSeason(seasonId, timeStart, timeEnd),
     });
   }
   catch (error) {

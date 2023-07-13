@@ -3,7 +3,7 @@ import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
 import SeasonModel from "./models/season.model";
 import AggregatedPlayerStatModel from "./models/aggregatedplayerstat.model";
-import {GameRoles} from "./Interface/General/gameEnums";
+import { GameRoles } from "./Interface/General/gameEnums";
 
 export function toSearchName(name: string): string
 {
