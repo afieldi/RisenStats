@@ -14,6 +14,7 @@ import StatExport from './pages/statExport/statExport';
 import Leaderboards from './pages/leaderboards/leaderboards';
 import SearchPage from './pages/search/search';
 import LeaguePage from './pages/risenLeague/league';
+import TeamPage from './pages/risenTeam/team';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -34,6 +35,7 @@ function App() {
             <Route path="/404" element={<Error404 />}></Route>
             <Route path="/statexport" element={<StatExport />}></Route>
             <Route path="/leaderboard" element={<Leaderboards />}></Route>
+            <Route path="/leagues/:leagueName/:teamName" element={<TeamPage />}></Route>
           </Routes>
         </div>
       </ThemeProvider>

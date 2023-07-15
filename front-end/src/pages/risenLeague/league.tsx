@@ -66,6 +66,10 @@ function LeaguePage() {
     setLoadingTeams(false);
   }
 
+  function canDisplayStats(): boolean {
+    return season !== undefined;
+  }
+
   function errorOnLoad(err: Error) {
     // TODO make this set some flag that displays an error message
   }
@@ -88,7 +92,7 @@ function LeaguePage() {
           <LeaguePageHeader name={season?.seasonName as string}/>
           <hr></hr>
           {
-            !isLoadingData() && <LeaguePageGeneralStats seasonId={season?.id as number} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
+            !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
           }
         </Box>
       </main>

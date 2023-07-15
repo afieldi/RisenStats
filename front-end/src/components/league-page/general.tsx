@@ -11,10 +11,11 @@ import LeagueStats from './league-stats';
 import LeagueDragons from './league-dragons';
 import LeagueChampionWinrates from './league-champ-winrates';
 import TeamLeaderboards from './team-leaderboards';
+import SeasonModel from '../../../../Common/models/season.model';
 
 const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
-    seasonId: number;
+    season: SeasonModel;
     games: PlayerGameModel[]
     teams: TeamModel[]
 }
@@ -28,7 +29,7 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
     <Box sx={{ pt: 1, display: 'flex', flexDirection: 'row', columnGap: 3 }}>
       <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
         <SideWinrateBox games={props.games}/>
-        <TeamListBox seasonId={props.seasonId} teams={props.teams}/>
+        <TeamListBox teams={props.teams}/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
         <LeagueStats games={props.games} uniqueChampions={buildUniqueChamps(champsPlayed)}/>

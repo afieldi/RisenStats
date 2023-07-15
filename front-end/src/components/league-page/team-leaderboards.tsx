@@ -4,13 +4,14 @@ import React from 'react';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 import TeamModel from '../../../../Common/models/team.model';
 import {
-  buildTextBasedLeaderboardHeader, buildTextBasedLeaderboardRowProps,
+  buildTextBasedLeaderboardHeader, buildTextBasedLeaderboardRowPropsWithRedirect,
   LeaderboardRowProps,
   RowMainValue
 } from './leaderboard/row';
 import { riotTimestampToGameTime, roundTo } from '../../../../Common/utils';
 import LeaderboardCard from './leaderboard/leaderboardCard';
 import { Box } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 export interface TeamLeaderboardProps {
     games: PlayerGameModel[]
@@ -65,6 +66,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
 
 export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map<number, TeamModel>) {
   const theme = useTheme() as Theme;
+  const navigate = useNavigate();
 
   const leaderboardHeaders = buildTextBasedLeaderboardHeader('Name', 'Games', props.lbColumnTitle, theme);
 
@@ -72,11 +74,12 @@ export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map
 
   props.orderedleaderboard.forEach((value, key) => {
     let team = teamMap.get(key) as TeamModel;
+
     let mainValue: RowMainValue = {
       value: props.mainValueCalculator(value),
       formatter: props.formatter
     };
-    leaderboardRows.push(buildTextBasedLeaderboardRowProps(team.abbreviation, `${roundTo(value.totalGamesByTeam/5, 0)}`, mainValue, theme, colorChoser));
+    leaderboardRows.push(buildTextBasedLeaderboardRowPropsWithRedirect(team.abbreviation, `${roundTo(value.totalGamesByTeam/5, 0)}`, mainValue, theme, colorChoser, () => navigate(`${team.abbreviation}`)));
   });
 
   let title = <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='h6' align='left' color={theme.palette.info.main}>{props.titleOfCard}</Typography>;

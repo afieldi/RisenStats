@@ -37,6 +37,23 @@ export function buildTextBasedLeaderboardRowProps(identifier: string, games: str
   };
 }
 
+export function buildTextBasedLeaderboardRowPropsWithRedirect(identifier: string,
+  games: string,
+  mainValue: RowMainValue,
+  theme: Theme,
+  mainValueColorChooser: (value: number, theme: Theme) => string,
+  onClick: () => void): LeaderboardRowProps {
+
+  const identifierTypography = <Typography sx={{ paddingLeft: 2, '&:hover': { color: '#f8c164', cursor: 'pointer' } }} fontWeight="bold" variant='body2' align='left' onClick={onClick}>{identifier}</Typography>;
+  const gamesTypography= <Typography sx={{ minWidth: 80 }} variant='body2' align='center' color={theme.palette.info.main}>{games}</Typography>;
+  const mainValueElement = <Typography sx={{ minWidth: 60, paddingRight: 1  }} fontWeight="bold" variant='body2' align='center' color={mainValueColorChooser(mainValue.value, theme)}>{mainValue.formatter(mainValue.value)}</Typography>;
+  return {
+    gamesElement: gamesTypography,
+    identifierElement: identifierTypography,
+    mainValueElement: mainValueElement
+  };
+}
+
 export function buildImageBasedLeaderboardRowProps(src: string, alt: string, games: number, mainValue: RowMainValue, theme: Theme, mainValueColorChooser: (value: number, theme: Theme) => string): LeaderboardRowProps {
   const identifierImg = <ImgBox
     sx={{ height:25, width: 25, pl:2 }}
