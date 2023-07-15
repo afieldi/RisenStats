@@ -37,7 +37,7 @@ interface LeaderboardStats {
 }
 
 const colorChoser = (v: number, theme: Theme) => '';
-
+const howManyRowsToDisplay = 6;
 export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const theme = useTheme() as Theme;
 
@@ -47,7 +47,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
     teamMap.set(team.teamId, team);
   }
 
-  const leaderboardCardProps = getLeaderboardCardProps(leaderboardStats, 6);
+  const leaderboardCardProps = getLeaderboardCardProps(leaderboardStats, howManyRowsToDisplay);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column',  flexWrap: 'wrap', rowGap: 0.5, maxWidth: 840 }}>
