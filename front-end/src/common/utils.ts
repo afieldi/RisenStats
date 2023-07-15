@@ -88,16 +88,16 @@ export function getRankColorByPercent(percent: number, theme: Theme) {
     return theme.palette.secondary.light;
   }
   if(percent < 95 && percent >= 80) {
-    return theme.palette.primary.dark;
-  }
-  if(percent < 80 && percent >= 65) {
     return theme.palette.first.main;
   }
-  if(percent < 65 && percent >= 50) {
+  if(percent < 80 && percent >= 65) {
     return theme.palette.second.main;
   }
-  if(percent < 50 && percent >= 35) {
+  if(percent < 65 && percent >= 50) {
     return theme.palette.third.main;
+  }
+  if(percent < 50 && percent >= 35) {
+    return theme.palette.primary.dark;
   }
   return theme.palette.info.dark;
 }
