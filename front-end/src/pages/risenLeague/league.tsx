@@ -1,4 +1,4 @@
-import { Container, CssBaseline } from '@mui/material';
+import { Container, CssBaseline, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box } from '@mui/system';
@@ -21,6 +21,7 @@ function LeaguePage() {
 
   const [loadingGames, setLoadingGames] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   function isLoadingData() {
     return loadingTeams || loadingTeams || loading;
@@ -32,6 +33,9 @@ function LeaguePage() {
     }
 
     const response = await getSeasonBySearchName(leagueName as string);
+    if (!response.season) {
+      throw Error('Season Not Found');
+    }
     setSeason(response.season);
     return response.season;
   }
@@ -61,7 +65,9 @@ function LeaguePage() {
 
     setLoadingTeams(true);
     let response = await getLeagueTeamsBySeasonId(seasonId);
-    // TODO some error handling here if no teams returned
+    if (response.teams.length < 1) {
+      throw Error('No teams found!');
+    }
     setTeams(response.teams);
     setLoadingTeams(false);
   }
@@ -71,7 +77,11 @@ function LeaguePage() {
   }
 
   function errorOnLoad(err: Error) {
-    // TODO make this set some flag that displays an error message
+    setErrorMessage(err.message);
+  }
+
+  function hasErrorToDisplay(): boolean {
+    return errorMessage != null && errorMessage.length > 0;
   }
 
   useEffect(() => {
@@ -89,10 +99,13 @@ function LeaguePage() {
       <CssBaseline />
       <main>
         <Box sx={{ pt: 15, pb: 6, }}>
+          {
+            hasErrorToDisplay() && <Typography fontFamily="Montserrat" variant='h5' align='left'>{errorMessage}</Typography>
+          }
           <LeaguePageHeader name={season?.seasonName as string}/>
           <hr></hr>
           {
-            !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
+            !hasErrorToDisplay() && !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
           }
         </Box>
       </main>

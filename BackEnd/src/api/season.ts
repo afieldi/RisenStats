@@ -53,7 +53,7 @@ router.post('/get', async(req: TypedRequest<GetSeasonRequest>, res: TypedRespons
     
     const season = await GetSeasonBySearchName(seasonSearchName);
     res.json({
-      season
+      season: season
     });
   } catch (error) {
     logger.error(error);
