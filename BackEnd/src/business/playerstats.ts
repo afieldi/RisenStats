@@ -1,6 +1,6 @@
 import { BoolToNumber, NonNone } from '../../../Common/utils';
-import { GetDbGameByGameId, GetDbPlayerGamesByPlayerPuuid } from '../db/games';
-import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, SaveObjects } from '../db/dbConnect';
+import { GetDbGameByGameId, GetDbPlayerGames, GetDbPlayerGamesByPlayerPuuid } from '../db/games';
+import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, IsRealSeasonId, SaveObjects } from '../db/dbConnect';
 import { BaseEntity } from 'typeorm';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import GameModel from '../../../Common/models/game.model';
@@ -11,17 +11,27 @@ import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { GetDbAggregatedPlayerStatsByPlayerPuuid } from '../db/playerstats';
 
 export async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, playerPuuid: string, seasonId: number, roleId: GameRoles, teamId: number) {
-  let currentDbPlayerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid, teamId, seasonId, playerGame.championId);
+  let currentDbPlayerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid, teamId, playerGame.championId, seasonId, roleId);
   let updatedDbPlayerStats: AggregatedPlayerStatModel[] = [];
   if (currentDbPlayerStats.length === 0) {
-    currentDbPlayerStats.push(createInitialPlayerStatModel(playerGame, seasonId, teamId));
+    currentDbPlayerStats.push(CreateInitialPlayerStatModel(playerGame, seasonId, IsRealSeasonId(seasonId) ? teamId : null));
   }
 
   for (let currentDbPlayerStat of currentDbPlayerStats) {
-    updatedDbPlayerStats.push(aggregateStatsForRow(currentDbPlayerStat, playerGame, fullgame));
+    updatedDbPlayerStats.push(AggregateStatsForRow(currentDbPlayerStat, playerGame, fullgame));
   }
 
   await SaveObjects(updatedDbPlayerStats, AggregatedPlayerStatModel);
+}
+
+export function AggregateGame(playerGame: PlayerGameModel, seasonId: number, teamId: number, champId: number, fullGame: GameModel, playerStatMap: Map<String, AggregatedPlayerStatModel>) {
+  let key = `${seasonId}_${teamId}_${champId}_${playerGame.lobbyPosition}`;
+  
+  if (!playerStatMap.has(key)) {
+    playerStatMap.set(key, CreateInitialPlayerStatModel(playerGame, seasonId, teamId));
+  }
+
+  playerStatMap.set(key, AggregateStatsForRow(playerStatMap.get(key), playerGame, fullGame));
 }
 
 export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
@@ -32,34 +42,17 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   // Primary key is {risenSeason}_{TeamId}_{ChampId}_{Role}
   let playerStatMap: Map<String, AggregatedPlayerStatModel> = new Map<String, AggregatedPlayerStatModel>();
 
-  function aggregateGame(playerGame: PlayerGameModel, seasonId: number, teamId: number, champId: number, fullGame: GameModel) {
-    let key = `${seasonId}_${teamId}_${champId}_${playerGame.lobbyPosition}`;
-    
-    if (!playerStatMap.has(key)) {
-      playerStatMap.set(key, createInitialPlayerStatModel(playerGame, seasonId, teamId));
-    }
-
-    playerStatMap.set(key, aggregateStatsForRow(playerStatMap.get(key), playerGame, fullGame));
-  }
-
   for (const playerGame of playerGames) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
     const champId = playerGame.championId;
     for (let seasonId of getSeasonsToUpdate(playerGame)) {
-      let teamId = await getDbPlayerTeamPlayerPuuid(playerPuuid, seasonId);
-      aggregateGame(playerGame, seasonId, teamId, champId, fullGame);
+      const teamId = await getDbPlayerTeamPlayerPuuid(playerPuuid, seasonId);
+      AggregateGame(playerGame, seasonId, teamId, champId, fullGame, playerStatMap);
     }
   }
 
   // Save the rows to the DB
-  // const objsToSave = Object.values(stats);
-  const objsToSave: BaseEntity[] = [];
-
-  // Get all the rows to save.
-  for (let key of playerStatMap.keys()) {
-    let playerStatModelRow: AggregatedPlayerStatModel = playerStatMap.get(key);
-    objsToSave.push(playerStatModelRow);
-  }
+  const objsToSave: BaseEntity[] = Array.from(playerStatMap.values());
 
   await SaveObjects(objsToSave, AggregatedPlayerStatModel);
   return objsToSave;
@@ -81,7 +74,23 @@ export function getSeasonsToUpdate(playerGame: PlayerGameModel) : number[] {
   return seasons;
 }
 
-export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: number, teamId: number) {
+export async function GetPlayerStatsByTimeAndSeason(seasonId: number, timeStart: number, timeEnd: number): Promise<AggregatedPlayerStatModel[]> {
+  const playerGames = await GetDbPlayerGames({ seasonId, timeEnd, timeStart});
+
+  const playerMap: { [key: string]: AggregatedPlayerStatModel } = {};
+
+  for (const game of playerGames) {
+    if (!playerMap[game.playerPuuid]) {
+      playerMap[game.playerPuuid] = CreateInitialPlayerStatModel(game, seasonId, 0); // give garbage team id. This will NOT be saved
+      playerMap[game.playerPuuid].player = game.player;
+    }
+    playerMap[game.playerPuuid] = AggregateStatsForRow(playerMap[game.playerPuuid], game, game.game);
+  }
+
+  return Object.values(playerMap);
+}
+
+export function CreateInitialPlayerStatModel(game: PlayerGameModel, seasonId: number, teamId: number) {
   return AggregatedPlayerStatModel.create({
     playerPuuid: game.playerPuuid, // Key
     seasonId: seasonId, // Key
@@ -284,7 +293,7 @@ export function createInitialPlayerStatModel(game: PlayerGameModel, seasonId: nu
   });
 }
 
-function aggregateStatsForRow(currentRow: AggregatedPlayerStatModel, game: PlayerGameModel, fullGame: GameModel): AggregatedPlayerStatModel {
+export function AggregateStatsForRow(currentRow: AggregatedPlayerStatModel, game: PlayerGameModel, fullGame: GameModel): AggregatedPlayerStatModel {
   currentRow.games += 1;
   currentRow.kills += NonNone(game.kills, 0);
   currentRow.deaths += NonNone(game.deaths, 0);
@@ -494,6 +503,3 @@ function getTotalsForGame(currentRow: AggregatedPlayerStatModel, game: PlayerGam
   });
   return currentRow;
 }
-
-
-

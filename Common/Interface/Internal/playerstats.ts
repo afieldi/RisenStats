@@ -17,3 +17,13 @@ export interface GetPlayerStatsRequest {
   championId?: number,
   risenOnly?: boolean;
 }
+
+export interface GetPlayerStatsByDateAndSeasonRequest {
+  seasonId: number;
+  timeStart: number;
+  timeEnd: number;
+}
+
+export interface GetPlayerStatsByDateAndSeasonResponse {
+  playerStats: AggregatedPlayerStatModel[];
+}
