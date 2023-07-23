@@ -31,7 +31,7 @@ async function buildTeam(seasonId: number, displayName: string, abbreviation: st
   await ensureConnection();
   let team = await findTeam(displayName, abbreviation, seasonId);
 
-  if(await findTeam(displayName, abbreviation, seasonId)) {
+  if(team) {
     console.log(`the team: ${displayName} already exists! Updating instead`);
     team.seasonId = seasonId;
     team.displayName = displayName;

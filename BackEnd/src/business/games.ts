@@ -27,12 +27,20 @@ async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
 export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
   const existingObj = await GetDbGameByGameId(ToGameId(matchId));
   if (existingObj) {
+
+    // If its a game for a risen season then update the teams.
+    if (existingObj.seasonId) {
+      await buildRisenTeams();
+    }
+
     const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+
     if (playerGames.length !== 10) {
       const foundPlayers = new Set<string>();
       playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
       await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
     }
+
     return existingObj;
   }
 
@@ -41,7 +49,6 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
   const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
 
   if (updatePlayerStats) {
-    await buildRisenTeams();
     await updatePlayerStatsForGame(matchId);
   }
 

@@ -10,7 +10,7 @@ router.post('/by-seasonId/:seasonId', async(req: TypedRequest<GetTeamsRequest>, 
   try {
     logger.info(`Getting the teams for seasonId: ${req.params.seasonId}`);
     const seasonId = Number(req.params.seasonId);
-    const response= await GetTeamsBySeasonId(seasonId);
+    const response = await GetTeamsBySeasonId(seasonId);
     res.json({
       teams: response
     });
