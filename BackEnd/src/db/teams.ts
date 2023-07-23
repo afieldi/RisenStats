@@ -9,3 +9,8 @@ export async function GetDbteamsBySeasonId(seasonId: number): Promise<TeamModel[
 
   return await TeamModel.find(searchFilter);
 }
+
+export async function GetDbTeamsByTeamName(teamName: string, ABBR: string, seasonId: number): Promise<TeamModel> {
+  await ensureConnection();
+  return await TeamModel.findOne({ where: { displayName: teamName, abbreviation: ABBR, seasonId: seasonId  } });
+}

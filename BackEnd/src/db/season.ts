@@ -4,6 +4,7 @@ import { ensureConnection } from './dbConnect';
 import { toSearchName } from '../../../Common/utils';
 import { GetDbTournamentProvider } from './provider';
 import ProviderModel from '../../../Common/models/provider.model';
+import { IsNull, Not } from 'typeorm';
 
 export async function GetDbSeasons(active: boolean): Promise<SeasonModel[]> {
   await ensureConnection();
@@ -44,4 +45,9 @@ export async function GetDbSeasonById(id: number): Promise<SeasonModel> {
     throw new DocumentNotFound(`Season with id ${id} not found`);
   }
   return obj;
+}
+
+export async function GetDbActiveSeasonWithSheets(): Promise<SeasonModel[]> {
+  await ensureConnection();
+  return await SeasonModel.find({ where: { active: true, googleSheetId: Not(IsNull()), googleSheetParserType: Not(IsNull()) } });
 }

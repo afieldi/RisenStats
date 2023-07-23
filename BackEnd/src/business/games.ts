@@ -14,6 +14,7 @@ import { getSeasonsToUpdate, updateStatsFor } from './playerstats';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
+import { buildRisenTeams } from './teams';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -40,6 +41,7 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
   const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
 
   if (updatePlayerStats) {
+    await buildRisenTeams();
     await updatePlayerStatsForGame(matchId);
   }
 

@@ -24,4 +24,10 @@ export default class SeasonModel extends BaseEntity
 
   @Column("integer")
   tourneyId: number;
+
+  @Column('varchar', {nullable: true})
+  googleSheetId: string;
+
+  @Column('varchar', {nullable: true})
+  googleSheetParserType: string;
 }
