@@ -104,6 +104,9 @@ interface WRProps {
 
 export function calculateWR(data: WRProps, rounded = 2): number
 {
+  if (data.totalGames == 0) {
+    return 0;
+  }
   if (data.totalGames === data.totalWins) {
     return 100;
   }

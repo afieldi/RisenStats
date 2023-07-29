@@ -22,3 +22,6 @@ export interface GetGamesByDateResponse {
   games: GameModel[];
   playerGames: PlayerGameModel[];
 }
+export interface GetGamesBySeasonIdResponse {
+  games: PlayerGameModel[]
+}

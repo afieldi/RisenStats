@@ -12,3 +12,11 @@ export interface CreateSeasonRequest {
 export interface GetSeasonResponse {
   season: SeasonModel;
 }
+
+export interface GetSeasonResponse {
+  season: SeasonModel;
+}
+
+export interface GetSeasonRequest {
+  searchName: string;
+}

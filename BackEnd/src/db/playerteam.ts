@@ -14,3 +14,8 @@ export async function getDbPlayerTeamPlayerPuuid(playerPuuid: string, seasonId: 
 
   return playerTeam.teamTeamId;
 }
+
+export async function getDBPlayerTeamPlayer(playerPuuid: string, seasonId: number): Promise<PlayerTeamModel> {
+  await ensureConnection();
+  return await PlayerTeamModel.findOne({ where: { playerPuuid: playerPuuid, teamSeasonId: seasonId  } });
+}

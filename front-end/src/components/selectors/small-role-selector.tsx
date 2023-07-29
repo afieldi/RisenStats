@@ -1,32 +1,24 @@
-import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent } from '@mui/material';
+import { Box, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
+
 import React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
+import { RoleSelectorProps } from './role-selector';
 
-
-export interface RoleSelectorProps {
-    callBack: (event: SelectChangeEvent) => any
-    initalValue?: GameRoles;
-    sx?: SxProps<Theme>;
-    imageSize: number;
-    exclude? : GameRoles[]
-}
-
-export default function RoleSelector(props: RoleSelectorProps) {
+export default function SmallRoleSelector(props: RoleSelectorProps) {
   const currentValue = props.initalValue;
   const NoCheckRadio = <Radio icon={<Box sx={{ display: 'none' }} />} checkedIcon={<Box sx={{ width: '100%', height: '100%', position: 'absolute' }} />} disableRipple />;
   const excludedRoles = props.exclude ? props.exclude : [];
 
-  const commonFilter = {
+  const notSelected = {
     flexGrow: 1,
     margin: 0,
     justifyContent: 'space-evenly',
     height: '50px',
+    filter: 'grayscale(100%)'
   };
   const selectedFilter = {
-    ...commonFilter,
-    backgroundColor: 'rgb(255 255 255 / 11%)',
+    ...notSelected,
+    filter: 'grayscale(0%)'
   };
   return (
     <FormControl sx={props.sx}>
@@ -44,13 +36,11 @@ export default function RoleSelector(props: RoleSelectorProps) {
                 value={gameRole}
                 control={NoCheckRadio}
                 disableTypography={true}
-                sx={currentValue == gameRole ? selectedFilter : commonFilter}
+                sx={currentValue == gameRole ? selectedFilter : notSelected}
                 label={<img height={`${props.imageSize}px`} width={`${props.imageSize}px`} src={`/images/roles/${gameRole}.png`}></img>} />
             ))
         }
-
       </RadioGroup>
     </FormControl>
   );
 }
-

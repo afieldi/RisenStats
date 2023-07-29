@@ -14,6 +14,7 @@ import { getSeasonsToUpdate, updateStatsFor } from './playerstats';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
+import { buildRisenTeams } from './teams';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -26,12 +27,20 @@ async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
 export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
   const existingObj = await GetDbGameByGameId(ToGameId(matchId));
   if (existingObj) {
+
+    // If its a game for a risen season then update the teams.
+    if (existingObj.seasonId) {
+      await buildRisenTeams();
+    }
+
     const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+
     if (playerGames.length !== 10) {
       const foundPlayers = new Set<string>();
       playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
       await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
     }
+
     return existingObj;
   }
 

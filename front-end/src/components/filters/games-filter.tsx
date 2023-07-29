@@ -43,6 +43,7 @@ export default function GamesFilter(props: Props) {
       }
       {
         props.useRole && <RoleSelector
+          imageSize={45}
           initalValue={props.roleConfig?.roleId}
           sx={{ width: '100%', pt: 1, pb: 1, display: 'block' }}
           callBack={(event: SelectChangeEvent) => {

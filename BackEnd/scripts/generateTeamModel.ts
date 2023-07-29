@@ -12,8 +12,8 @@ const path = require('path');
 type RisenSheetRow = {
   teamName: string,
   abrv: string,
-  win: number
-  loss: number
+  win: string
+  loss: string
   top: string
   jungle: string,
   mid: string,
@@ -29,16 +29,27 @@ type RisenSheetRow = {
 
 async function buildTeam(seasonId: number, displayName: string, abbreviation: string, win: number, loss: number, opgg: string) {
   await ensureConnection();
-  if(await findTeam(displayName, abbreviation, seasonId)) {
-    console.log(`the team: ${displayName} already exists! Skipping`);
+  let team = await findTeam(displayName, abbreviation, seasonId);
+
+  if(team) {
+    console.log(`the team: ${displayName} already exists! Updating instead`);
+    team.seasonId = seasonId;
+    team.displayName = displayName;
+    team.win = win;
+    team.loss = loss;
+    team.abbreviation = abbreviation;
+    team.wonSeason = false;
+    let rows : TeamModel[] = [];
+    rows.push(team);
+    await SaveObjects(rows, TeamModel);
     return;
   }
 
   let teamToAdd = TeamModel.create({
     seasonId: seasonId,
     displayName: displayName,
-    win: 0,
-    loss: 0,
+    win: win,
+    loss: loss,
     abbreviation: abbreviation,
     wonSeason: false,
   });
@@ -64,14 +75,20 @@ async function buildPlayersInTeams(seasonId: number, teamId: number, playersName
     }
   }
 
-  // Generate the players on the team
+  // Generate/Update the players on the team
   let rows : PlayerTeamModel[] = [];
   for (let puuid of playerPuuids) {
-    let playerToAdd = PlayerTeamModel.create({
-      playerPuuid: puuid,
-      teamSeasonId: seasonId,
-      teamTeamId: teamId,
-    });
+    let playerToAdd = await findPlayer(puuid);
+    if (playerToAdd) {
+      playerToAdd.teamSeasonId = seasonId;
+      playerToAdd.teamTeamId = teamId;
+    } else {
+      playerToAdd = PlayerTeamModel.create({
+        playerPuuid: puuid,
+        teamSeasonId: seasonId,
+        teamTeamId: teamId,
+      });
+    }
     rows.push(playerToAdd);
   }
 
@@ -84,7 +101,8 @@ async function addLeague(seasonId: number, sheet: string) {
 
   // Generate the team;
   for (let row of rows) {
-    await buildTeam(seasonId, row.teamName, row.abrv, row.win, row.loss, row.multigg);
+    console.log(row.teamName, row.abrv, row.win, row.loss, row.multigg);
+    await buildTeam(seasonId, row.teamName, row.abrv, +row.win, +row.loss, row.multigg);
   }
 
   console.log('Finished Generating The Team');
@@ -104,27 +122,27 @@ async function findTeam(teamName: string, ABBR: string, seasonId: number): Promi
   return await TeamModel.findOne({ where: { displayName: teamName, abbreviation: ABBR, seasonId: seasonId  } });
 }
 
+async function findPlayer(playerPuuid: string) {
+  await ensureConnection();
+  return await PlayerTeamModel.findOne({ where: { playerPuuid: playerPuuid  } });
+}
+
 function parseSheet(sheetPath: String): RisenSheetRow[] {
   const csvFilePath = path.resolve(__dirname, sheetPath);
 
-  const headers = ['teamName', 'abrv', 'W', 'L', 'top', 'jungle', 'mid', 'adc', 'support', 'sub1', 'sub2','sub3','sub4', 'sub5', 'multigg'];
+  const headers = ['teamName', 'abrv', 'win', 'loss', 'top', 'jungle', 'mid', 'adc', 'support', 'sub1', 'sub2','sub3','sub4', 'sub5', 'multigg'];
 
   const fileContent = fs.readFileSync(csvFilePath, { encoding: 'utf-8' });
 
   return parse(fileContent, {
     delimiter: ',',
     columns: headers,
-    fromLine: 2,
-    cast: (columnValue, context) => {
-      if (context.column === 'W' || context.column === 'L') {
-        return parseInt(columnValue, 10);
-      }
-      return columnValue;
-    },
+    fromLine: 2
   });
 }
 
-let sheet = 'Dominate2023.csv'; // Needs to be in same dir as this file
-let seasonId= 19;
+let sheets = [ { s: 'Dominate2023.csv', id: 19 }, { s:'Rampage2023.csv', id: 17 }, { s: 'Unstoppable2023.csv', id: 18 }]; // Needs to be in same dir as this file
 
-addLeague(seasonId, sheet);
+for (let sheet of sheets) {
+  addLeague(sheet.id, sheet.s);
+}
