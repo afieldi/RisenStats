@@ -3,6 +3,7 @@ import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 import { riotTimestampToMinutes } from '../../../../../Common/utils';
 import { RoleRatingStatGenerator } from './RoleRatingStatGenerator';
 import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
+import PlayerGameModel from '../../../../../Common/models/playergame.model';
 
 export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
 
@@ -32,10 +33,33 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     return (kda + cspm + dpg + carryStat + wardsKilled + wardsPlaced + objDMG + turretTakedowns + csDiff + xpDiff);
   }
 
+  getSoloLaneStatValueGameModel(playerGameModels: PlayerGameModel[]): number {
+    let total = 0;
+
+    for (const playerGameModel of playerGameModels) {
+      const kda = 2.5 * playerGameModel.kda;
+      const cspm = 3.5 * ((playerGameModel.totalMinionsKilled + playerGameModel.enemyJungleMonsterKills + playerGameModel.alliedJungleMonsterKills) /  riotTimestampToMinutes(playerGameModel.gameLength) - 5);
+      const dpg = 20 * (playerGameModel.totalDamageDealtToChampions / playerGameModel.goldEarned);
+      const wardsPlaced = 0.5 * (playerGameModel.wardsPlaced);
+      const wardsKilled = 2 * (playerGameModel.wardsKilled);
+      const objDMG = 0.001 * (playerGameModel.damageDealtToObjectives);
+      const turretTakedowns = 3 * (playerGameModel.turretTakedowns);
+      const csDiff = 0.3 * (playerGameModel.csDiff);
+      const xpDiff = 0.01 * (playerGameModel.xpDiff);
+  
+      const dpm = 0.025 *  (playerGameModel.totalDamageDealtToChampions / riotTimestampToMinutes(playerGameModel.gameLength));
+      const dmgTankedPM = 0.03 * (playerGameModel.totalDamageTaken / riotTimestampToMinutes(playerGameModel.gameLength));
+      const carryStat = this.calculateCarryStat(dpm, dmgTankedPM);
+      total += (kda + cspm + dpg + carryStat + wardsKilled + wardsPlaced + objDMG + turretTakedowns + csDiff + xpDiff);
+    }
+
+    return total / playerGameModels.length;
+  }
+
   getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kills = 2.5 * (playerStatsModel.kills / playerStatsModel.games);
     const assists = 1.5 * (playerStatsModel.assists / playerStatsModel.games);
-    const deaths = -2 * (playerStatsModel.deaths / playerStatsModel.games); // Dieing on support is less valueable than dieng on carry
+    const deaths = -2 * (playerStatsModel.deaths / playerStatsModel.games); // Dying on support is less valueable than dieng on carry
     const xpDiff = 0.005 * (playerStatsModel.xpDiff / playerStatsModel.games);
     const wardsPlaced = 0.1 * (playerStatsModel.wardsPlaced / playerStatsModel.games);
     const wardsKilled = 2 * (playerStatsModel.wardsKilled / playerStatsModel.games);
@@ -45,6 +69,26 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     const quickSupportQuest = 4 * (playerStatsModel.completeSupportQuestInTime / playerStatsModel.games);
 
     return kills + assists + deaths + xpDiff + wardsPlaced + wardsKilled + controlWards + killParticipation + vspm + quickSupportQuest;
+  }
+
+  getSupportStatValueGameModel(playerGameModels: PlayerGameModel[]): number {
+    let total = 0;
+    for (const playerGameModel of playerGameModels) {
+      const kills = 2.5 * (playerGameModel.kills);
+      const assists = 1.5 * (playerGameModel.assists);
+      const deaths = -2 * (playerGameModel.deaths); // Dying on support is less valueable than dieng on carry
+      const xpDiff = 0.005 * (playerGameModel.xpDiff);
+      const wardsPlaced = 0.1 * (playerGameModel.wardsPlaced);
+      const wardsKilled = 2 * (playerGameModel.wardsKilled);
+      const controlWards = 0.5 * (playerGameModel.controlWardsPlaced);
+      const killParticipation = 20 * (playerGameModel.killParticipation);
+      const vspm = 25 * ((playerGameModel.visionScorePerMinute) - 1);
+      const quickSupportQuest = 4 * (playerGameModel.completeSupportQuestInTime ? 1 : 0);
+      total += kills + assists + deaths + xpDiff + wardsPlaced + wardsKilled + controlWards + killParticipation + vspm + quickSupportQuest;
+    }
+
+
+    return total / playerGameModels.length;
   }
 
   getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
@@ -61,6 +105,26 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     const steals = 20 * (playerStatsModel.epicMonsterSteals / playerStatsModel.games);
 
     return  kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals;
+  }
+
+  getJunglerStatValueGameModel(playerGameModels: PlayerGameModel[]): number {
+    let total = 0;
+    for (const playerGameModel of playerGameModels) {
+      const kda = 2.5 * playerGameModel.kda;
+      const csDiff = 0.5 * playerGameModel.csDiff;
+      const xpDiff = 0.01 * (playerGameModel.xpDiff);
+      const wardsPlaced = 1.5 * (playerGameModel.wardsPlaced);
+      const wardsKilled = 3 * (playerGameModel.wardsKilled);
+      const visionScorePerMinute = 10 * ((playerGameModel.visionScorePerMinute) - 0.5);
+      const perfectSoul = 30 * (playerGameModel.perfectDragonSoulsTaken);
+      const regularDragons = 7 * (playerGameModel.dragonTakedowns);
+      const heraldTakedowns = 5 *  (playerGameModel.riftHeraldTakedowns);
+      const barons = 10 * (playerGameModel.baronTakedowns);
+      const steals = 20 * (playerGameModel.epicMonsterSteals);
+      total += kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals;
+    }
+
+    return total / playerGameModels.length;
   }
 
   private calculateCarryStat(dpm: number, dmgTankedPM: number) {

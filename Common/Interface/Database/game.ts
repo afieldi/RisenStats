@@ -15,6 +15,9 @@ export interface GameSummaryPlayer {
   totalGold: number;
   totalCS: number;
   totalVision: number;
+  kills: number;
+  deaths: number;
+  assists: number;
 }
 
 export interface TeamSumStat

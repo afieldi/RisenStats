@@ -134,7 +134,10 @@ function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
       totalGold: participant.goldEarned,
       totalCS: participant.totalMinionsKilled + participant.neutralMinionsKilled,
       totalVision: participant.visionScore,
-      position: participant.role === 'SUPPORT' ? participant.role : participant.lane
+      position: participant.role === 'SUPPORT' ? participant.role : participant.lane,
+      kills: participant.kills,
+      deaths: participant.deaths,
+      assists: participant.assists,
     } as GameSummaryPlayer;
     if (participant.teamId === 100) {
       redPlayers.push(player);

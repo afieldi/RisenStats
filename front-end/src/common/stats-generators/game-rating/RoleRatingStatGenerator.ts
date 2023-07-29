@@ -1,5 +1,5 @@
 import { GameRoles } from '../../../../../Common/Interface/General/gameEnums';
-import PlayerStatModel from '../../../../../Common/models/playerstat.model';
+import PlayerGameModel from '../../../../../Common/models/playergame.model';
 import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
 
@@ -35,4 +35,10 @@ export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
   abstract getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 
   abstract getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
+
+  // abstract getSoloLaneStatValueGameModel(playerGameModels: PlayerGameModel[]): number;
+
+  // abstract getJunglerStatValueGameModel(playerGameModels: PlayerGameModel[]): number;
+
+  // abstract getSupportStatValueGameModel(playerGameModels: PlayerGameModel[]): number;
 }

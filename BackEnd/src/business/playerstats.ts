@@ -361,7 +361,7 @@ export function AggregateStatsForRow(currentRow: AggregatedPlayerStatModel, game
   currentRow.blastConeOppositeOpponentCount += NonNone(game.blastConeOppositeOpponentCount, 0);
   currentRow.bountyGold += NonNone(game.bountyGold, 0);
   currentRow.buffsStolen += NonNone(game.buffsStolen, 0);
-  currentRow.completeSupportQuestInTime += BoolToNumber(game.completeSupportQuestInTime);
+  currentRow.completeSupportQuestInTime += NonNone(game.completeSupportQuestInTime);
   currentRow.controlWardTimeCoverageInRiverOrEnemyHalf += NonNone(game.controlWardTimeCoverageInRiverOrEnemyHalf, 0);
   currentRow.controlWardsPlaced += NonNone(game.controlWardsPlaced, 0);
   currentRow.damagePerMinute += NonNone(game.damagePerMinute, 0);

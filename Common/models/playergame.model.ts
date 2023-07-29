@@ -92,10 +92,10 @@ export default class PlayerGameModel extends BaseEntity
   assists25: number;
 
   // Income
-  @Column("smallint")
+  @Column("integer")
   goldEarned: number;
 
-  @Column("smallint")
+  @Column("integer")
   goldSpent: number;
 
   @Column("smallint")
@@ -425,8 +425,8 @@ export default class PlayerGameModel extends BaseEntity
   @Column("smallint")
   buffsStolen: number;
 
-  @Column("boolean")
-  completeSupportQuestInTime: boolean;
+  @Column("smallint")
+  completeSupportQuestInTime: number;
 
   @Column("real")
   controlWardTimeCoverageInRiverOrEnemyHalf: number;

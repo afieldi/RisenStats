@@ -6,6 +6,7 @@ export interface Props {
   children?: React.ReactNode;
   sx?: SxProps<Theme> | undefined;
   title?: React.ReactNode | string;
+  subtitle?: React.ReactNode | string;
   hideDivider?: boolean;
 }
 
@@ -21,6 +22,7 @@ export default function BaseRisenBox(props: Props) {
   }, ...sx };
 
   let titleDisplay: React.ReactNode | null = null;
+  let subtitleDisplay: React.ReactNode | null = null;
   if (props.title) {
     if (typeof props.title === 'string') {
       titleDisplay = (
@@ -33,10 +35,26 @@ export default function BaseRisenBox(props: Props) {
       titleDisplay = props.title;
     }
   }
+
+  if (props.subtitle) {
+    if (typeof props.subtitle === 'string') {
+      subtitleDisplay = (
+        <Box>
+          <Typography fontFamily="Montserrat" fontStyle="italic" variant='subtitle1' align='left' color={theme.palette.info.main}>{props.subtitle.toUpperCase()}</Typography>
+        </Box>
+      );
+    }
+    else {
+      subtitleDisplay = props.subtitle;
+    }
+  }
   return (
     <Box sx={sxFinal}>
       {
         titleDisplay
+      }
+      {
+        subtitleDisplay
       }
       {
         props.hideDivider ? null :

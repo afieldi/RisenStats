@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env.development' });
+dotenv.config({ path: './.env.development' });
 import TeamModel from '../../Common/models/team.model';
 import { ensureConnection, SaveObjects } from '../src/db/dbConnect';
 import PlayerTeamModel from '../../Common/models/playerteam.model';
 import { parse } from 'csv-parse/sync';
 import * as fs from 'fs';
 import { GetOrCreatePlayerOverviewByName } from '../src/business/player';
+import { buildRisenTeams } from '../src/business/teams';
 
 const path = require('path');
 
@@ -137,12 +138,20 @@ function parseSheet(sheetPath: String): RisenSheetRow[] {
   return parse(fileContent, {
     delimiter: ',',
     columns: headers,
-    fromLine: 2
+    fromLine: 2,
+    cast: (columnValue: string, context) => {
+      if (context.column === 'W' || context.column === 'L') {
+        return parseInt(columnValue, 10);
+      }
+      return columnValue;
+    },
   });
 }
 
-let sheets = [ { s: 'Dominate2023.csv', id: 19 }, { s:'Rampage2023.csv', id: 17 }, { s: 'Unstoppable2023.csv', id: 18 }]; // Needs to be in same dir as this file
+// let sheets = [ { s: 'Dominate2023.csv', id: 19 }, { s:'Rampage2023.csv', id: 17 }, { s: 'Unstoppable2023.csv', id: 18 }]; // Needs to be in same dir as this file
 
-for (let sheet of sheets) {
-  addLeague(sheet.id, sheet.s);
-}
+// for (let sheet of sheets) {
+//   addLeague(sheet.id, sheet.s);
+// }
+buildRisenTeams();
+console.log("wheee");

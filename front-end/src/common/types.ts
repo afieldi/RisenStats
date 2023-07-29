@@ -82,3 +82,15 @@ export interface LoadingData<T> {
 export interface WithSx {
   sx?: SxProps<Theme>;
 }
+
+export interface TotalTeamStats {
+  kills: number;
+  deaths: number;
+  assists: number;
+}
+
+export interface RedAndBlueStats {
+  red: TotalTeamStats;
+  blue: TotalTeamStats;
+  total: TotalTeamStats;
+}

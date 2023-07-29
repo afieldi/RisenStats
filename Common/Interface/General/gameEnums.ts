@@ -6,3 +6,8 @@ export enum GameRoles {
   SUPPORT = "SUPPORT",
   ALL = "ALL"
 }
+
+export enum GameSide {
+  BLUE = 'BLUE',
+  RED = 'RED',
+}
