@@ -274,7 +274,6 @@ export default function WeeklyBest() {
 
 
   const topBannerWidth = 170; // Bruh idk. Sometimes there are 1px misalignments. 149 seems to work. 150 is bad
-  // console.log(theme);
   return (
     <Container>
       <Box>

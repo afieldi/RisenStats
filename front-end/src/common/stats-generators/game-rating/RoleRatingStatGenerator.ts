@@ -35,10 +35,4 @@ export abstract class RoleRatingStatGenerator extends GameRatingStatGenerator {
   abstract getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
 
   abstract getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number;
-
-  // abstract getSoloLaneStatValueGameModel(playerGameModels: PlayerGameModel[]): number;
-
-  // abstract getJunglerStatValueGameModel(playerGameModels: PlayerGameModel[]): number;
-
-  // abstract getSupportStatValueGameModel(playerGameModels: PlayerGameModel[]): number;
 }

@@ -33,12 +33,7 @@ export default function PlayerChampBanner(props: PlayerChampBanners) {
         <Box>
           <Typography align='left' fontFamily="Montserrat">{position}</Typography>
         </Box>
-        <Box sx={{ height: 300, overflow: 'hidden', width: 190, clipPath: 'polygon(0 0, 75% 0, 100% 100%, 25% 100%)', backgroundImage: `url(/images/champions/profile/${championPortraitId}_0.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          {/* <ImgBox
-            src={'/images/champions/splash/1_0.jpg'}
-            height={'400px'}
-          /> */}
-        </Box>
+        <Box sx={{ height: 300, overflow: 'hidden', width: 190, clipPath: 'polygon(0 0, 75% 0, 100% 100%, 25% 100%)', backgroundImage: `url(/images/champions/profile/${championPortraitId}_0.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         <Box>
           <Typography align='right' fontFamily="Montserrat">{stats.player.name}</Typography>
           <Typography align='right' fontFamily="Montserrat">{stats.kills}/{stats.deaths}/{stats.assists}</Typography>
