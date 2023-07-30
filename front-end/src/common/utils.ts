@@ -1,6 +1,8 @@
 import championsMap from '../data/champions_map.json';
 import { Theme } from '@mui/material';
-import { Rank } from './types';
+import { Rank, RedAndBlueStats, TotalTeamStats } from './types';
+import { GameRoles, GameSide } from '../../../Common/Interface/General/gameEnums';
+import GameModel from '../../../Common/models/game.model';
 
 
 export function ChampionIdToName(championId: number): string {
@@ -100,4 +102,40 @@ export function getRankColorByPercent(percent: number, theme: Theme) {
     return theme.palette.primary.dark;
   }
   return theme.palette.info.dark;
+}
+
+export function getRoleIcon(role: GameRoles | string): string {
+  return `/images/roles/${role.valueOf()}.png`;
+}
+
+export function getSingleTeamStats(gameModel: GameModel, team: GameSide): TotalTeamStats {
+  const teamPlayers = team === GameSide.RED ? gameModel.playersSummary.redPlayers : gameModel.playersSummary.bluePlayers;
+  const sumStats: TotalTeamStats = {
+    kills: 0,
+    deaths: 0,
+    assists: 0,
+  };
+
+  teamPlayers.map(player => {
+    sumStats.kills += player.kills;
+    sumStats.deaths += player.deaths;
+    sumStats.assists += player.assists;
+  });
+
+  return sumStats;
+}
+
+export function getTeamStats(gameModel: GameModel): RedAndBlueStats {
+  const sideStats = {
+    blue: getSingleTeamStats(gameModel, GameSide.BLUE),
+    red: getSingleTeamStats(gameModel, GameSide.RED)
+  };
+  return {
+    ...sideStats,
+    total: {
+      kills: sideStats.blue.kills + sideStats.red.kills,
+      deaths: sideStats.blue.deaths + sideStats.red.deaths,
+      assists: sideStats.blue.assists + sideStats.red.assists,
+    },
+  };
 }

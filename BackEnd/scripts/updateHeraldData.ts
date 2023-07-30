@@ -8,10 +8,13 @@ import { ToMatchId } from "../../Common/utils";
 async function UpdateSummary() {
   await ensureConnection();
   const gameRes = await GameModel.find();
-
   for (const game of gameRes) {
-    await SaveDataByMatchId(ToMatchId(game.gameId));
-    console.log("saved game: ", game.gameId);
+    try {
+      await SaveDataByMatchId(ToMatchId(game.gameId));
+      console.log("saved game: ", game.gameId);
+    } catch (error) {
+      console.error("GAME IS FUCKED: ", game.gameId)
+    }
   }
 }
 

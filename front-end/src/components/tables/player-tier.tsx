@@ -9,6 +9,8 @@ import { StatGenerators, OVERALL_GAME_RATING_OVERVIEW } from '../../common/const
 import Loading from '../loading/loading';
 import SortableTableHead from './helper-components/sortable-head';
 import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
+
 interface PlayerTierTableProps {
   seasonId: string;
   roleId: GameRoles;
@@ -62,7 +64,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
   useEffect(() => {
     setLoadingStats(true);
     getFlattenedLeaderboard(
-      Number(seasonId),
+      seasonId === DEFAULT_RISEN_SEASON_ID ? 0 : Number(seasonId),
       roleId,
     ).then((data) => {
       sortPlayerStats(MapStatsToLeaderboard(data), sortCol, sortOrder);

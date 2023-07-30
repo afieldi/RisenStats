@@ -7,6 +7,7 @@ import { ensureConnection, SaveObjects } from './dbConnect';
 import log from '../../logger';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import PlayerGameModel from '../../../Common/models/playergame.model';
+import { In } from 'typeorm';
 
 export async function GetDbPlayerByPuuid(playerPuuid: string): Promise<PlayerModel> {
   await ensureConnection();
@@ -50,8 +51,17 @@ export async function CreateDbPlayerWithRiotPlayer(player: RiotSummonerDto, solo
 
 export async function CreateDbPlayersWithParticipantData(participants: RiotParticipantDto[]): Promise<PlayerModel[]> {
   await ensureConnection();
+
+  const playerPuuids = participants.map(p => p.puuid);
+
+  const existingPlayers = await PlayerModel.find({ where: { puuid: In(playerPuuids) } });
+  const existingPlayersMap: { [puuid: string]: PlayerModel } = {};
+  existingPlayers.forEach(player => existingPlayersMap[player.puuid] = player);
+
   const playerObjs = [];
   for (const participant of participants) {
+    const currentPlayer = existingPlayersMap[participant.puuid];
+
     playerObjs.push(PlayerModel.create({
       puuid: participant.puuid,
       name: participant.summonerName,
@@ -59,14 +69,14 @@ export async function CreateDbPlayersWithParticipantData(participants: RiotParti
       profileIconId: participant.profileIcon ? participant.profileIcon : 0,
       summonerLevel: participant.summonerLevel ? participant.summonerLevel : 0,
       searchName: toSearchName(participant.summonerName),
-      league: 'UNRANKED',
-      division: 'I',
-      refreshedAt: 0,
-      winRate: 0,
-      kda: 0,
-      killsPerGame: 0,
-      deathsPerGame: 0,
-      assistsPerGame: 0
+      league: currentPlayer?.league ?? 'UNRANKED',
+      division: currentPlayer?.division ?? 'I',
+      refreshedAt: currentPlayer?.refreshedAt ?? 0,
+      winRate: currentPlayer?.winRate ?? 0,
+      kda: currentPlayer?.kda ?? 0,
+      killsPerGame: currentPlayer?.killsPerGame ?? 0,
+      deathsPerGame: currentPlayer?.deathsPerGame ?? 0,
+      assistsPerGame: currentPlayer?.assistsPerGame ?? 0
     }));
   }
   await SaveObjects(playerObjs);

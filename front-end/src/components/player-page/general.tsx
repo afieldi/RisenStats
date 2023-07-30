@@ -45,7 +45,7 @@ function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, playerStat
 {
   games = games ?? [];
   const results = { wins: 0, losses: 0 };
-  playerStats.map(cur => results[cur.win ? 'wins' : 'losses'] += 1, );
+  games.map(cur => results[cur.playerGame.win ? 'wins' : 'losses'] += 1);
   const theme = useTheme();
   return (
     <Box>

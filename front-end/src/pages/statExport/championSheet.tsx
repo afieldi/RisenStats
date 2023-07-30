@@ -6,9 +6,10 @@ import { useEffect } from 'react';
 import LoadingButton from '../../components/loading-button/LoadingButton';
 import { GetChampionStatsSheet } from '../../api/statExport';
 import { SaveBlob } from '../../common/utils';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
 
 export default function ChampionSheetExport() {
-  const [season, setSeason] = useState<string>('RISEN');
+  const [season, setSeason] = useState<string>(DEFAULT_RISEN_SEASON_ID);
   const [activeSeasons, setActiveSeasons] = useState<SeasonModel[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -51,7 +52,7 @@ export default function ChampionSheetExport() {
               onChange={handleChange}
             >
               {/* <MenuItem value={"ALL"}>All Seasons</MenuItem> */}
-              <MenuItem value={'RISEN'}>Risen Seasons</MenuItem>
+              <MenuItem value={DEFAULT_RISEN_SEASON_ID}>Risen Seasons</MenuItem>
               {
                 activeSeasons.map(s => <MenuItem value={s.id}>{s.seasonName}</MenuItem>)
               }

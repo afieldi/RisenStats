@@ -33,10 +33,12 @@ function TeamInfo(teamInfoProps: TeamInfoProps) {
       teamInfoProps.teamPlayers.map((player, i) => {
         return (
           <Box key={`${teamInfoProps.teamColor}-${teamInfoProps.gameId}-${i}`}
-            sx={{ display: 'inline-flex',
+            sx={{ 
+              display: 'inline-flex',
               height: '1.2em',
               fontStretch: 'condensed',
-              flexDirection: rowType
+              flexDirection: rowType,
+              columnGap: '2px'
             }}>
             <Box sx={{ width: '15px', flexShrink: '0' }}>
               <img src={`/images/champions/icons/${player.championId}_0.png`}
@@ -44,7 +46,7 @@ function TeamInfo(teamInfoProps: TeamInfoProps) {
                 height="15px"
                 width="15px"/>
             </Box>
-            <Box sx={{ overflow: 'hidden', width: '75px' }}>
+            <Box sx={{ overflow: 'hidden' }}>
               <Link to={`/player/${encodeURIComponent(player.playerName)}`}>
                 <Typography variant="body2" align={alignment} className="clickable-bg no-overflow player-names">
                   {player.playerName}

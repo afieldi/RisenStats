@@ -3,6 +3,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import React from 'react';
 import SeasonModel from '../../../../Common/models/season.model';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
 
 export interface RisenSeasonSelectorProps {
     callBack: (event: SelectChangeEvent) => any
@@ -28,7 +29,7 @@ export default function RisenSeasonSelector(props: RisenSeasonSelectorProps) {
         onChange={props.callBack}
         sx={{ overflow: 'hidden', width: '100%' }}
       >
-        <MenuItem value="RISEN">All Risen Games</MenuItem>
+        <MenuItem value={DEFAULT_RISEN_SEASON_ID}>All Risen Games</MenuItem>
         {
           props.seasonConfig?.seasons?.map((season, index) => (
             <MenuItem key={index} value={season.id} hidden={!season.active}>{season.seasonName}</MenuItem>

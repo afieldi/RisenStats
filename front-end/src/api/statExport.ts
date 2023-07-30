@@ -1,5 +1,6 @@
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { GetGamesRequest } from '../../../Common/Interface/Internal/games';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../Common/constants';
 import { MakeBackendCall } from './_call';
 
 export async function GetBasicSheetForPlayers(playerNames: string[], games: number) {
@@ -14,7 +15,7 @@ export async function GetSeasonPlayersStatsSheet(seasonId: string, roleId: GameR
   const params: GetGamesRequest = {
     roleId
   };
-  if (seasonId === 'RISEN') {
+  if (seasonId === DEFAULT_RISEN_SEASON_ID) {
     params.risenOnly = true;
   }
   else {

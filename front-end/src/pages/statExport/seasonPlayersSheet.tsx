@@ -7,10 +7,11 @@ import { GetSeasonPlayersStatsSheet } from '../../api/statExport';
 import { SaveBlob } from '../../common/utils';
 import GamesFilter from '../../components/filters/games-filter';
 import LoadingButton from '../../components/loading-button/LoadingButton';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
 
 export default function SeasonPlayersSheet() {
   const [loading, setLoading] = useState(false);
-  const [seasonId, setSeasonId] = useState('RISEN');
+  const [seasonId, setSeasonId] = useState(DEFAULT_RISEN_SEASON_ID);
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
 

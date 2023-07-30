@@ -11,12 +11,13 @@ import { useNavigate } from 'react-router-dom';
 import { toSearchName } from '../../../../Common/utils';
 import BaseRisenBox from '../../components/risen-box/base-risen-box';
 import { getAllHeadCells } from './leaderboardDef';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
 
 
 export default function Leaderboards() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [seasonId, setSeasonId] = useState<string>('RISEN');
+  const [seasonId, setSeasonId] = useState<string>(DEFAULT_RISEN_SEASON_ID);
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
   useEffect(() => {

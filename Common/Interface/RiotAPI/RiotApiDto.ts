@@ -187,7 +187,7 @@ export interface RiotParticipantChallengesDto
   blastConeOppositeOpponentCount: number;
   bountyGold: number;
   buffsStolen: number;
-  completeSupportQuestInTime: boolean;
+  completeSupportQuestInTime: number;
   controlWardTimeCoverageInRiverOrEnemyHalf: number;
   controlWardsPlaced: number;
   damagePerMinute: number;

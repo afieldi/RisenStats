@@ -44,7 +44,6 @@ export async function GetTeamsBySeasonId(seasonId: number): Promise<TeamModel[]>
 
 export async function buildRisenTeams() {
   let sheetName = 'Teams and Standings';
-
   let seasonsWithSheets = await GetDbActiveSeasonWithSheets();
   for (let seasonsWithSheet of seasonsWithSheets) {
     let sheet = await GetGoogleSheet(seasonsWithSheet.googleSheetId, sheetName);

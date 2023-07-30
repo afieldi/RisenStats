@@ -1,7 +1,8 @@
 import { PlayerGamesResponse, PlayerOverviewResponse, PlayerSeasonsResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
 import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
 import { MakeBackendCall } from './_call';
-import { GetPlayerStatsRequest, GetPlayerStatsResponse } from '../../../Common/Interface/Internal/playerstats';
+import { GetPlayerStatsByDateAndSeasonRequest, GetPlayerStatsByDateAndSeasonResponse, GetPlayerStatsRequest, GetPlayerStatsResponse } from '../../../Common/Interface/Internal/playerstats';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../Common/constants';
 
 export async function GetPlayerProfile(playerName: string): Promise<PlayerOverviewResponse> {
   return await MakeBackendCall(`/api/player/summary/by-name/${playerName}`, 'POST', {}) as PlayerOverviewResponse;
@@ -13,7 +14,7 @@ export async function GetPlayerGames(playerPuuid: string, seasonId: string): Pro
     risenOnly: false,
   };
   if (seasonId) {
-    if (seasonId === 'RISEN') {
+    if (seasonId === DEFAULT_RISEN_SEASON_ID) {
       params['risenOnly'] = true;
     }
     else if (seasonId === 'ALL') {}
@@ -33,7 +34,7 @@ export async function GetDetailedPlayerGames(playerPuuid: string, page: number, 
     roleId,
   };
   if (seasonId) {
-    if (seasonId === 'RISEN') {
+    if (seasonId === DEFAULT_RISEN_SEASON_ID) {
       params['risenOnly'] = true;
     }
     else if (seasonId === 'ALL') {}
@@ -57,4 +58,8 @@ export async function GetPlayerStats(playerPuuid: string, seasonId?: number, rol
 
 export async function GetPlayerSeasons(playerPuuid: string): Promise<PlayerSeasonsResponse> {
   return await MakeBackendCall(`/api/player/seasons/by-puuid/${playerPuuid}`, 'POST', {}) as PlayerSeasonsResponse;
+}
+
+export async function GetPlayerStatsByTimeAndSeason(seasonId: number, timeStart: number, timeEnd: number): Promise<GetPlayerStatsByDateAndSeasonResponse> {
+  return await MakeBackendCall<GetPlayerStatsByDateAndSeasonRequest>('/api/stats/player/by-date', 'POST', { seasonId, timeEnd, timeStart }) as GetPlayerStatsByDateAndSeasonResponse;
 }

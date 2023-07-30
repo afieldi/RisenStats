@@ -25,18 +25,17 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     const quickTurret = (30 * playerStatsModel.quickFirstTurret) / playerStatsModel.games;
     const wardsPlaced = (2.5 * playerStatsModel.wardsPlaced15) / playerStatsModel.games;
     const wardsKilled = (6 * playerStatsModel.wardsKilled15) / playerStatsModel.games;
-
     return cs + kills + assists + deaths + turretPlats + fb + csDiff + xpDiff + quickTurret + wardsPlaced + wardsKilled;
   }
 
   getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kills = 7.5 * playerStatsModel.kills15;
     const assists = 5.5 * playerStatsModel.assists15;
-    const deaths = -4.5 * playerStatsModel.deaths15; // Dieing on support is less valueable than dieng on carry
+    const deaths = -4.5 * playerStatsModel.deaths15; // Dying on support is less valueable than dying on carry
     const turretPlats = 4 * playerStatsModel.turretPlatesTaken;
     const fb = 20 * playerStatsModel.firstBloodTakedown;
     const goldDiff = 0.02 * playerStatsModel.goldDiff15;
-    const xpDiff = 0.11 * playerStatsModel.xpDiff15 ;
+    const xpDiff = 0.11 * playerStatsModel.xpDiff15;
     const wardsPlaced = 3 * playerStatsModel.wardsPlaced15;
     const wardsKilled = 8 * playerStatsModel.wardsKilled15;
 

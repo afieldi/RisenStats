@@ -67,7 +67,7 @@ function GameSummary({ gameData, seasons }: Props)
           </Box>
 
         </Box>
-        <AllTeamInfo gameModel={gameData.game}/>
+        <AllTeamInfo gameModel={gameData.game} sx={{ width: '150px' }} />
       </Box>
     </BaseRisenBox>
   );

@@ -3,6 +3,7 @@ import { GameRatingStatGenerator } from './GameRatingStatGenerator';
 import { riotTimestampToMinutes } from '../../../../../Common/utils';
 import { RoleRatingStatGenerator } from './RoleRatingStatGenerator';
 import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedplayerstat.model';
+import PlayerGameModel from '../../../../../Common/models/playergame.model';
 
 export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
 
@@ -35,7 +36,7 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
   getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
     const kills = 2.5 * (playerStatsModel.kills / playerStatsModel.games);
     const assists = 1.5 * (playerStatsModel.assists / playerStatsModel.games);
-    const deaths = -2 * (playerStatsModel.deaths / playerStatsModel.games); // Dieing on support is less valueable than dieng on carry
+    const deaths = -2 * (playerStatsModel.deaths / playerStatsModel.games); // Dying on support is less valueable than dieng on carry
     const xpDiff = 0.005 * (playerStatsModel.xpDiff / playerStatsModel.games);
     const wardsPlaced = 0.1 * (playerStatsModel.wardsPlaced / playerStatsModel.games);
     const wardsKilled = 2 * (playerStatsModel.wardsKilled / playerStatsModel.games);

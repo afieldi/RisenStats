@@ -15,6 +15,7 @@ interface ImgBoxProps {
   text?: string;
   src: string;
   alt?: string;
+  border?: string;
   location?: ImagePositions; // defaults to bottom right
   sx?: SxProps<Theme> | undefined;
 }
@@ -23,6 +24,7 @@ export default function ImgBox(props: ImgBoxProps) {
   const {
     src,
     alt,
+    border,
     height,
     width,
     text,
@@ -43,9 +45,10 @@ export default function ImgBox(props: ImgBoxProps) {
     bottom: '1.4em',
   };
 
-  const combinedSx = {
+  const combinedSx: SxProps<Theme> = {
     height: height ?? 55,
     width: width ?? (height ?? 55),
+    position: 'relative',
     ...sx
   };
 
@@ -60,6 +63,11 @@ export default function ImgBox(props: ImgBoxProps) {
           {text}
         </Typography>
       </Box>
+      {
+        border && (
+          <Box sx={{ width, height, position: 'absolute', border, top: 0, left: 0 }} />
+        )
+      }
     </Box>
   );
 }

@@ -18,6 +18,7 @@ import { GetAllSeasons } from '../../api/season';
 import PlayerPageStats from '../../components/player-page/stats';
 import { getFlattenedLeaderboard } from '../../api/leaderboards';
 import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
+import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
 
 function PlayerPage()
 {
@@ -34,7 +35,7 @@ function PlayerPage()
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
   const [playerStats, setPlayerStats] = useState<AggregatedPlayerStatModel[]>([]);
   const [fullLeaderboard, setFullLeaderboard] = useState<Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>>(new Map<string, Map<GameRoles, AggregatedPlayerStatModel[]>>());
-  const [seasonId, setSeasonId] = useState<string>('RISEN');
+  const [seasonId, setSeasonId] = useState<string>(DEFAULT_RISEN_SEASON_ID);
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
   async function loadPlayerProfile() {
@@ -75,9 +76,7 @@ function PlayerPage()
   }
 
   async function loadLeaderboards() {
-    console.log('Trying to load the leaderboards');
-
-    if (seasonId === 'ALL' || seasonId === 'RISEN') {
+    if (seasonId === 'ALL' || seasonId === DEFAULT_RISEN_SEASON_ID) {
       return;
     }
 
@@ -86,7 +85,6 @@ function PlayerPage()
 
       let roleMaps: Map<GameRoles, AggregatedPlayerStatModel[]> = !cachedLeaderboard.has(seasonId) ? new Map<GameRoles, AggregatedPlayerStatModel[]>() : cachedLeaderboard.get(seasonId) as Map<GameRoles, AggregatedPlayerStatModel[]>;
       if (roleMaps.has(roleId)) {
-        console.log('Leaderboard already exists not grabbing from API');
         return;
       }
 
@@ -206,14 +204,14 @@ function PlayerPage()
           </TabPanel>
           <TabPanel value={value} index={1}>
             <PlayerPageChampions playerStats={playerStats}
-              seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
+              seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons.filter(season => season.active) }}
               roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PlayerPageStats playerStats={playerStats}
               playerPuuid={playerProfile?.overview.puuid}
               leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
-              seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons }}
+              seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons.filter(season => season.active) }}
               roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
         </Box>

@@ -34,6 +34,7 @@ async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise
       return await _MakeAPICall(url, method, body);
     } else {
       const responseText = await response.json();
+      logger.error(`API call failed. Code: ${response.status} Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)}`);
       throw new ApiError(`API call failed. Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)} Headers: ${JSON.stringify(headers)}`, response.status, responseText);
     }
   }, (err: any) => {
