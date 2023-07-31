@@ -148,10 +148,8 @@ function parseSheet(sheetPath: String): RisenSheetRow[] {
   });
 }
 
-// let sheets = [ { s: 'Dominate2023.csv', id: 19 }, { s:'Rampage2023.csv', id: 17 }, { s: 'Unstoppable2023.csv', id: 18 }]; // Needs to be in same dir as this file
+let sheets = [ { s: 'Dominate2023.csv', id: 19 }, { s:'Rampage2023.csv', id: 17 }, { s: 'Unstoppable2023.csv', id: 18 }]; // Needs to be in same dir as this file
 
-// for (let sheet of sheets) {
-//   addLeague(sheet.id, sheet.s);
-// }
-buildRisenTeams();
-console.log("wheee");
+for (let sheet of sheets) {
+  addLeague(sheet.id, sheet.s);
+}
