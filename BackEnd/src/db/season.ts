@@ -47,7 +47,12 @@ export async function GetDbSeasonById(id: number): Promise<SeasonModel> {
   return obj;
 }
 
-export async function GetDbActiveSeasonWithSheets(): Promise<SeasonModel[]> {
+export async function GetDbActiveSeasonsWithSheets(): Promise<SeasonModel[]> {
   await ensureConnection();
   return await SeasonModel.find({ where: { active: true, googleSheetId: Not(IsNull()), googleSheetParserType: Not(IsNull()) } });
+}
+
+export async function GetDbActiveSeasonWithSheets(seasonId: number): Promise<SeasonModel[]> {
+  await ensureConnection();
+  return await SeasonModel.find({ where: { active: true, id: seasonId, googleSheetId: Not(IsNull()), googleSheetParserType: Not(IsNull()) } });
 }

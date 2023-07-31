@@ -29,8 +29,8 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
   if (existingObj) {
 
     // If its a game for a risen season then update the teams.
-    if (existingObj.seasonId) {
-      await buildRisenTeams();
+    if (existingObj.seasonId && updatePlayerStats) {
+      await buildRisenTeams(existingObj.seasonId);
     }
 
     const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
@@ -46,7 +46,16 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
 
   const gameData = await GetGameDataByMatchId(matchId);
 
-  const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData);
+  let seasonId = null;
+  if (gameData.info.tournamentCode) {
+    seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId;
+  }
+
+  if (seasonId && updatePlayerStats) {
+    await buildRisenTeams(seasonId);
+  }
+
+  const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData, seasonId);
 
   if (updatePlayerStats) {
     await updatePlayerStatsForGame(matchId);
@@ -55,13 +64,7 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
   return savedGameModel;
 }
 
-export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDto): Promise<GameModel> {
-  let seasonId = null;
-
-  if (gameData.info.tournamentCode) {
-    seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId;
-  }
-
+export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDto, seasonId: number): Promise<GameModel> {
   const timelineData = await GetRiotTimelineByMatchId(matchId);
 
   const timelineStats = ProcessTimeline(timelineData);
