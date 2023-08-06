@@ -298,3 +298,10 @@ export function mergePlayerStats(playerStatsWithChampions: AggregatedPlayerStatM
   }
   return Array.from(mergedPlayerStats.values());
 }
+
+export function getSeasonWithLeaguePage(seasons: SeasonModel[], seasonId?: string): SeasonModel {
+  if(seasonId == null) {
+    return null;
+  }
+  return seasons.find(season => season.id.toString() === seasonId.toString() && season.active && season.googleSheetParserType !== null && season.googleSheetId !== null);
+}
