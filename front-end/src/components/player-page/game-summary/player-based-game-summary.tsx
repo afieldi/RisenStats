@@ -43,7 +43,7 @@ function _getPlayerFromGameData(playerName: string, gameData: GameModel): GameSu
 }
 
 
-function GameSummary({ gameData, seasons }: Props)
+function PlayerBasedGameSummary({ gameData, seasons }: Props)
 {
   const theme = useTheme() as Theme;
   const mainPlayer = gameData.playerGame;
@@ -73,4 +73,4 @@ function GameSummary({ gameData, seasons }: Props)
   );
 }
 
-export default GameSummary;
+export default PlayerBasedGameSummary;

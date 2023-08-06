@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Box, Button, SxProps, Theme } from '@mui/material';
-import GameSummary from './game-summary';
+import PlayerBasedGameSummary from './player-based-game-summary';
 import GameModel from '../../../../../Common/models/game.model';
 import { PlayerDetailedGame, PlayerOverviewResponse } from '../../../../../Common/Interface/Internal/player';
 import LoadingButton from '../../loading-button/LoadingButton';
@@ -17,14 +17,14 @@ interface Props
   sx?: SxProps<Theme>;
 }
 
-function GameSummaryList({ gameList, loadGamesConfig, seasons, sx }: Props)
+function PlayerBasedGameSummaryList({ gameList, loadGamesConfig, seasons, sx }: Props)
 {
   if (!gameList) { gameList = []; }
   return (
     <Container sx={{ pr: 0, pl: 0, ...sx }}>
       {gameList.map((game, i) => {
         return (
-          <GameSummary key={`game-${i}`} gameData={game} seasons={seasons}></GameSummary>
+          <PlayerBasedGameSummary key={`game-${i}`} gameData={game} seasons={seasons}></PlayerBasedGameSummary>
         );
       })}
       <Box>
@@ -34,4 +34,4 @@ function GameSummaryList({ gameList, loadGamesConfig, seasons, sx }: Props)
   );
 }
 
-export default GameSummaryList;
+export default PlayerBasedGameSummaryList;
