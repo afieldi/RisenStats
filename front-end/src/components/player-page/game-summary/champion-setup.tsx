@@ -1,9 +1,10 @@
 import PlayerGameModel from '../../../../../Common/models/playergame.model';
 import { Box, Typography } from '@mui/material';
-import { GameTypeToString } from '../../../../../Common/utils';
+import { GameTypeToString, getSeasonWithLeaguePage } from '../../../../../Common/utils';
 import React from 'react';
 import SeasonModel from '../../../../../Common/models/season.model';
 import ImgBox from '../../risen-box/img-box';
+import { useNavigate } from 'react-router-dom';
 
 interface ChampionSetupProps {
     mainPlayer: PlayerGameModel
@@ -13,12 +14,25 @@ interface ChampionSetupProps {
 }
 
 function ChampionSetup(championSetupProps: ChampionSetupProps) {
+
+  const navigate = useNavigate();
+
   const {
     mainPlayer,
     gameType,
     seasonId,
     seasons,
   } = championSetupProps;
+
+  const season = getSeasonWithLeaguePage(championSetupProps.seasons, championSetupProps.seasonId?.toString());
+
+  const onClickSeasonName = () => {
+    if (!season) {
+      return;
+    }
+    navigate(`/leagues/${season.searchname}`);
+  };
+
   return <Box sx={{ pr: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
     <Box sx={{ display: 'inline-flex' }}>
       <ImgBox
@@ -52,7 +66,7 @@ function ChampionSetup(championSetupProps: ChampionSetupProps) {
       </Box>
     </Box>
     <Box>
-      <Typography variant="body2" sx={{ fontSize: '12px', maxWidth: '115px', pt: 1 }} align="center">
+      <Typography variant="body2" sx={{ fontSize: '12px', maxWidth: '115px', pt: 1, cursor: !!season ? 'pointer' : 'cursor' }} onClick={onClickSeasonName} align="center">
         {GameTypeToString(gameType, seasonId, seasons)}
       </Typography>
     </Box>

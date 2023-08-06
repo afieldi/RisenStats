@@ -99,11 +99,14 @@ function LeaguePage() {
       <CssBaseline />
       <main>
         <Box sx={{ pt: 15, pb: 6, }}>
-          {
-            hasErrorToDisplay() && <Typography fontFamily="Montserrat" variant='h5' align='left'>{errorMessage}</Typography>
-          }
           <LeaguePageHeader name={season?.seasonName as string}/>
           <hr></hr>
+          {
+            hasErrorToDisplay() &&
+              <Box sx={{ pt: 5, display: 'flex', justifyContent: 'space-evenly' }}>
+                <Typography fontFamily="Montserrat" variant='h4' align='left'>{errorMessage}</Typography>
+              </Box>
+          }
           {
             !hasErrorToDisplay() && !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
           }

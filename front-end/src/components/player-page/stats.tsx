@@ -12,6 +12,7 @@ import GameRatingOverview from './stats/game-rating-overview';
 import PingOverview from './stats/ping-overview';
 import { deepCopy, doesPlayerStatsObjectHaveData, mergePlayerStats } from '../../../../Common/utils';
 import AggregatedPlayerStatModel from '../../../../Common/models/aggregatedplayerstat.model';
+import LeaguePageIngress from './general-components/league-page-ingress';
 
 interface PlayerPageStatsProps {
     seasonConfig: {
@@ -57,7 +58,10 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
 
   return (
     <Box>
-      <FilterBar seasonConfig={seasonConfig} roleConfig={roleConfig}/>
+      <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3, justifyContent: 'space-between' }}>
+        <FilterBar seasonConfig={seasonConfig} roleConfig={roleConfig}/>
+        <LeaguePageIngress selectSeasonId={seasonConfig.seasonId} seasons={seasonConfig.seasons}/>
+      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
         <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
           <WinRateBox hasData={doesPlayerStatsObjectHaveData(playerStatsByRole)} wins={wins} losses={games-wins}/>
