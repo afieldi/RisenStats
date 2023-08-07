@@ -60,7 +60,7 @@ function getChampionWinrateCard(titleString: string, orderedWinrate: {championId
   const title = <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='subtitle1' align='left' color={theme.palette.info.main}>{titleString}</Typography>;
 
   return (
-    <LeaderboardCard width={100} height={280} sortedRowProps={ordereredLeaderboardRowProps} header={leaderboardHeaders} title={title}/>
+    <LeaderboardCard sx={{ maxWidth: 270 }} sortedRowProps={ordereredLeaderboardRowProps} header={leaderboardHeaders} title={title}/>
   );
 }
 

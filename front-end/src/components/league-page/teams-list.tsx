@@ -2,8 +2,6 @@ import { useTheme } from '@emotion/react';
 import { Theme, Typography } from '@mui/material';
 import React from 'react';
 import TeamModel from '../../../../Common/models/team.model';
-import { Box } from '@mui/system';
-import { darken } from '@mui/system/colorManipulator';
 import { calculateWR } from '../../../../Common/utils';
 import { getRankColorByPercent } from '../../common/utils';
 import LeaderboardCard from './leaderboard/leaderboardCard';
@@ -43,6 +41,6 @@ export default function TeamListBox(props: TeamsListProps) {
   let title = <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='h6' align='left' color={theme.palette.info.main}>TEAMS</Typography>;
 
   return (
-    <LeaderboardCard width={280} height={280} sortedRowProps={leaderboardRows} header={leaderboardHeaders} title={title}/>
+    <LeaderboardCard sx={{ minWidth: 280, maxWidth: 280, minHeight: 280 }} sortedRowProps={leaderboardRows} header={leaderboardHeaders} title={title}/>
   );
 }

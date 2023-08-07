@@ -50,15 +50,17 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const leaderboardCardProps = getLeaderboardCardProps(leaderboardStats, howManyRowsToDisplay);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column',  flexWrap: 'wrap', rowGap: 0.5, maxWidth: 840 }}>
-      <Box sx={{ p: 0.2, display: 'flex', flexDirection: 'column', minWidth: 840 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column',  flexWrap: 'wrap', rowGap: 0.5, maxWidth: '100%' }}>
+      <Box sx={{ p: 0.2, display: 'flex', flexDirection: 'column', minWidth: 880 }}>
         <Typography fontFamily="Montserrat" variant='h4' align='left'>Team Leaderboards</Typography>
         <hr style={{ width: '100%' }}></hr>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-        { TeamLeaderboardCard(leaderboardCardProps.get('Game Time') as TeamLeaderboardCardProps, teamMap)}
-        { TeamLeaderboardCard(leaderboardCardProps.get('CSD15') as TeamLeaderboardCardProps, teamMap)}
-        { TeamLeaderboardCard(leaderboardCardProps.get('GD15') as TeamLeaderboardCardProps, teamMap)}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
+        {
+          [...leaderboardCardProps.keys()].map(key => {
+            return TeamLeaderboardCard(leaderboardCardProps.get(key) as TeamLeaderboardCardProps, teamMap);
+          })
+        }
       </Box>
     </Box>
   );
@@ -85,7 +87,7 @@ export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map
   let title = <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='h6' align='left' color={theme.palette.info.main}>{props.titleOfCard}</Typography>;
 
   return (
-    <LeaderboardCard width={280} height={280} sortedRowProps={leaderboardRows} header={leaderboardHeaders} title={title}/>
+    <LeaderboardCard sx={{ minWidth: 270, maxWidth: 275, minHeight: 280, maxHeight: 320 }} sortedRowProps={leaderboardRows} header={leaderboardHeaders} title={title}/>
   );
 }
 
@@ -132,6 +134,45 @@ export function getLeaderboardCardProps(leaderboardStats: Map<number, Leaderboar
     formatter: (v: number) => `${v}`
   });
 
+  // Average Dragons
+  const sortedEntriesDragons = [...leaderboardStats.entries()]
+    .sort((a, b) => ((b[1].totalDragonsByTeam/b[1].totalGamesByTeam) - (a[1].totalDragonsByTeam/a[1].totalGamesByTeam)))
+    .slice(0, howManyToDisplay);
+
+  leaderboardCardProps.set('Dragons', {
+    titleOfCard: 'Average Dragons',
+    lbColumnTitle: 'Drags',
+    orderedleaderboard: new Map(sortedEntriesDragons),
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalDragonsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    formatter: (v: number) => `${v}`
+  });
+
+  // Average Rift
+  const sortedEntriesRiftHerald = [...leaderboardStats.entries()]
+    .sort((a, b) => ((b[1].riftHeraldKillsByTeam/b[1].totalGamesByTeam) - (a[1].riftHeraldKillsByTeam/a[1].totalGamesByTeam)))
+    .slice(0, howManyToDisplay);
+
+  leaderboardCardProps.set('Rift Heralds', {
+    titleOfCard: 'Average Rift Heralds',
+    lbColumnTitle: 'Herald',
+    orderedleaderboard: new Map(sortedEntriesRiftHerald),
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.riftHeraldKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    formatter: (v: number) => `${v}`
+  });
+
+  // Average Rift
+  const sortedEntriesBarons = [...leaderboardStats.entries()]
+    .sort((a, b) => ((b[1].baronKillsByTeam/b[1].totalGamesByTeam) - (a[1].baronKillsByTeam/a[1].totalGamesByTeam)))
+    .slice(0, howManyToDisplay);
+
+  leaderboardCardProps.set('Baron', {
+    titleOfCard: 'Average Baron',
+    lbColumnTitle: 'Barons',
+    orderedleaderboard: new Map(sortedEntriesBarons),
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.baronKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    formatter: (v: number) => `${v}`
+  });
+
   return leaderboardCardProps;
 }
 
@@ -168,10 +209,8 @@ function buildLeaderboardStats(games: PlayerGameModel[]): Map<number, Leaderboar
         goldDiff15ByTeam: existingStats.goldDiff15ByTeam + game.goldDiff15,
         csDiff15ByTeam: existingStats.csDiff15ByTeam + game.csDiff15,
       };
-
       leaderboardStatsMap.set(risenTeamTeamId, updatedStats);
     }
   }
-
   return leaderboardStatsMap;
 }
