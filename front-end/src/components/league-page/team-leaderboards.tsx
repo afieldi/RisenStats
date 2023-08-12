@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 export interface TeamLeaderboardProps {
     games: PlayerGameModel[]
-    teams: TeamModel[]
+    teams: Map<number, TeamModel>
 }
 
 export interface TeamLeaderboardCardProps {
@@ -42,10 +42,6 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const theme = useTheme() as Theme;
 
   const leaderboardStats = buildLeaderboardStats(props.games);
-  let teamMap: Map<number, TeamModel> = new Map();
-  for (let team of props.teams) {
-    teamMap.set(team.teamId, team);
-  }
 
   const leaderboardCardProps = getLeaderboardCardProps(leaderboardStats, howManyRowsToDisplay);
 
@@ -58,7 +54,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
         {
           [...leaderboardCardProps.keys()].map(key => {
-            return TeamLeaderboardCard(leaderboardCardProps.get(key) as TeamLeaderboardCardProps, teamMap);
+            return TeamLeaderboardCard(leaderboardCardProps.get(key) as TeamLeaderboardCardProps, props.teams);
           })
         }
       </Box>
@@ -165,8 +161,8 @@ export function getLeaderboardCardProps(leaderboardStats: Map<number, Leaderboar
     .sort((a, b) => ((b[1].baronKillsByTeam/b[1].totalGamesByTeam) - (a[1].baronKillsByTeam/a[1].totalGamesByTeam)))
     .slice(0, howManyToDisplay);
 
-  leaderboardCardProps.set('Baron', {
-    titleOfCard: 'Average Baron',
+  leaderboardCardProps.set('Barons', {
+    titleOfCard: 'Average Barons',
     lbColumnTitle: 'Barons',
     orderedleaderboard: new Map(sortedEntriesBarons),
     mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.baronKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players

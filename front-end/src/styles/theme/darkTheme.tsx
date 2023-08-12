@@ -38,10 +38,12 @@ const darkTheme = createTheme({
       main: '#1e1e1e'
     },
     risenVictory: {
-      main: '#0e304d'
+      main: '#0e304d',
+      light: '#12578f'
     },
     risenDefeat: {
-      main: '#4b2222'
+      main: '#4b2222',
+      light: '#882a2a'
     },
     first: {
       main: '#FFA500',
