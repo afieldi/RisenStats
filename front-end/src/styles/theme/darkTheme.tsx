@@ -12,6 +12,7 @@ declare module '@mui/material/styles'
     nth: PaletteOptions['primary'];
     tertiary: PaletteOptions['primary'];
     websiteBackground: PaletteOptions['primary'];
+    hoverTeam: PaletteOptions['primary'];
   }
 
   interface Palette {
@@ -24,6 +25,7 @@ declare module '@mui/material/styles'
     nth: Palette['primary'];
     tertiary: Palette['primary'];
     websiteBackground: Palette['primary'];
+    hoverTeam: Palette['primary'];
   }
 
   interface TypeBackground {
@@ -74,6 +76,9 @@ const darkTheme = createTheme({
     websiteBackground: {
       main: '#161616',
       dark: '#000000'
+    },
+    hoverTeam: {
+      main: '#f8c164'
     }
   }
 });

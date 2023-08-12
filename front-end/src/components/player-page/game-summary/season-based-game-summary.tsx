@@ -5,6 +5,7 @@ import { Box, Theme, Typography } from '@mui/material';
 import AllTeamInfo from './all-team-info';
 import React from 'react';
 import { getGradient } from '../../league-page/general';
+import { useNavigate } from 'react-router-dom';
 
 interface SeasonBasedGameSummaryProps {
     blueTeamAbbreviation: string,
@@ -12,9 +13,9 @@ interface SeasonBasedGameSummaryProps {
     match: GameModel,
 }
 
-export function SeasonBasedGameSummary(props: SeasonBasedGameSummaryProps)
-{
+export function SeasonBasedGameSummary(props: SeasonBasedGameSummaryProps) {
   const theme = useTheme() as Theme;
+  const navigate = useNavigate();
 
   const blueWin = props.match.winner;
   const bgColor = blueWin ? theme.palette.risenVictory.light : theme.palette.risenDefeat.light;
@@ -24,8 +25,22 @@ export function SeasonBasedGameSummary(props: SeasonBasedGameSummaryProps)
 
   return (
     <Box sx={{ p: 1, borderRadius: '4px', background: getGradient(bgColor) }}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Typography sx={{ pb: 0.3 }} fontFamily="Montserrat" variant='subtitle2' align='left'>{props.blueTeamAbbreviation} VS {props.redTeamAbbreviation}</Typography>
+      <Box sx={{ pb: 0.3, display: 'flex', flexDirection: 'row', columnGap: 0.5 }}>
+        <Typography sx={{ '&:hover': { color: theme.palette.hoverTeam.main, cursor: 'pointer' } }}
+          fontFamily="Montserrat"
+          variant='subtitle2'
+          align='left'
+          onClick={() => navigate(`${props.blueTeamAbbreviation}`)}>
+          {props.blueTeamAbbreviation}
+        </Typography>
+        <Typography fontFamily="Montserrat" variant='subtitle2' align='left'>VS</Typography>
+        <Typography sx={{ '&:hover': { color: theme.palette.hoverTeam.main, cursor: 'pointer' } }}
+          fontFamily="Montserrat"
+          variant='subtitle2'
+          align='left'
+          onClick={() => navigate(`${props.redTeamAbbreviation}`)}>
+          {props.redTeamAbbreviation}
+        </Typography>
       </Box>
       <Box sx={{ display: 'inline-flex', flexDirection: 'row', width: '100%', flexWrap: 'wrap', justifyContent: 'space-evenly', alignItems: 'center', columnGap: 0.8 }}>
         <Box sx={{ width: 90, flexWrap: 'wrap' }}>

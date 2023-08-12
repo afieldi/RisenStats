@@ -44,7 +44,7 @@ export function buildTextBasedLeaderboardRowPropsWithRedirect(identifier: string
   mainValueColorChooser: (value: number, theme: Theme) => string,
   onClick: () => void): LeaderboardRowProps {
 
-  const identifierTypography = <Typography sx={{ paddingLeft: 2, '&:hover': { color: '#f8c164', cursor: 'pointer' } }} fontWeight="bold" variant='body2' align='left' onClick={onClick}>{identifier}</Typography>;
+  const identifierTypography = <Typography sx={{ paddingLeft: 2, '&:hover': { color: theme.palette.hoverTeam.main, cursor: 'pointer' } }} fontWeight="bold" variant='body2' align='left' onClick={onClick}>{identifier}</Typography>;
   const gamesTypography= <Typography sx={{ minWidth: 80 }} variant='body2' align='center' color={theme.palette.info.main}>{games}</Typography>;
   const mainValueElement = <Typography sx={{ minWidth: 60, paddingRight: 1  }} fontWeight="bold" variant='body2' align='center' color={mainValueColorChooser(mainValue.value, theme)}>{mainValue.formatter(mainValue.value)}</Typography>;
   return {
