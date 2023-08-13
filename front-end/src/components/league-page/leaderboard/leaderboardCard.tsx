@@ -1,5 +1,5 @@
 import { SxProps, Theme,  useTheme } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box } from '@mui/material';
 import { getGradient } from '../general';
 import { darken } from '@mui/system/colorManipulator';
 import React from 'react';
@@ -11,20 +11,18 @@ interface LeaderboardCardProps {
     header: LeaderboardRowProps,
     title: React.ReactNode,
     sx?: SxProps<Theme> | undefined;
-    width: number,
-    height: number
 }
 
 export default function LeaderboardCard(props: LeaderboardCardProps) {
   const theme = useTheme() as Theme;
 
+  let sxFinal: SxProps<Theme> = { ...{
+    flexGrow: 1,
+    flexWrap: 'wrap',
+  }, ...props.sx };
+
   return (
-    <Box sx={{
-      minWidth: props.width,
-      minHeight: props.height,
-      flexGrow: 1,
-      flexWrap: 'wrap',
-    }}>
+    <Box sx={sxFinal}>
       <Box sx={{ p: 0.2, borderRadius: '4px 4px 0px 0px', background: getGradient(theme.palette.risenBoxBg.main)  }}>
         {props.title}
         <hr/>

@@ -1,9 +1,16 @@
 import express, { Router, Request } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
-import { GetGamesByDateRequest, GetGamesByDateResponse, GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
+import {
+  GetGamesByDateRequest,
+  GetGamesByDateResponse,
+  GetGamesRequest,
+  GetGamesResponse, GetRecentGamesBySeasonIdRequest,
+  GetRecentGamesBySeasonIdResponse
+} from '../../../Common/Interface/Internal/games';
 import { GetGamesBySeasonIdResponse } from '../../../Common/Interface/Internal/games';
 import logger from '../../logger';
 import {
+  GetDbGameModelBySeasonId,
   GetDbGamesByDate,
   GetDbGamesByPlayerPuuid,
   GetDbPlayerGamesByDate,
@@ -67,6 +74,23 @@ router.post('/by-seasonId/:seasonId', async(req: Request, res: TypedResponse<Get
   try {
     const games = await GetDbPlayerGamesBySeasonId(req.params.seasonId);
     logger.debug(`Got some games: ${games.length}`);
+    res.json({
+      games: games
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.post('/recent-league-games/by-seasonId/:seasonId', async(req: TypedRequest<GetRecentGamesBySeasonIdRequest>, res: TypedResponse<GetRecentGamesBySeasonIdResponse>) => {
+  logger.info(`Get games by seasonId ${req.params.seasonId}`);
+  try {
+    const {
+      amount
+    } = req.body;
+    const games = await GetDbGameModelBySeasonId(req.params.seasonId, amount);
+    logger.debug(`Got recent some games: ${games.length}`);
     res.json({
       games: games
     });

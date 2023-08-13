@@ -408,3 +408,29 @@ export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<Play
   }
   return await PlayerGameModel.find(filter);
 }
+
+export async function GetDbGameModelBySeasonId(seasonId: string, amount: number): Promise<GameModel[]> {
+  await ensureConnection();
+  const softCap = 10; // Have this softcap to prevent abuse
+  let filter: FindManyOptions<GameModel> = {};
+  if (seasonId === DEFAULT_RISEN_SEASON_ID) {
+    filter = {
+      where: {
+        seasonId: Not(IsNull())
+      }
+    };
+  } else if (seasonId === 'ALL') {
+    filter = {};
+  } else {
+    filter = { where: { seasonId: Number(seasonId) } };
+  }
+  filter.order = {
+    gameStart: 'DESC'
+  };
+
+  filter['relations'] = {
+    players: true
+  };
+  filter.take = Math.min(softCap, amount);
+  return await GameModel.find(filter);
+}

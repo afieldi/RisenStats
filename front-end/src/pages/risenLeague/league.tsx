@@ -9,15 +9,19 @@ import PlayerGameModel from '../../../../Common/models/playergame.model';
 import SeasonModel from '../../../../Common/models/season.model';
 import { getSeasonBySearchName } from '../../api/season';
 import { getLeagueTeamsBySeasonId } from '../../api/teams';
-import { getGamesBySeasonId } from '../../api/games';
+import { getRecentGamesBySeasonId, getPlayerGamesBySeasonId } from '../../api/games';
+import GameModel from '../../../../Common/models/game.model';
+
+const amountOfGamesToShow = 5;
 
 function LeaguePage() {
   let { leagueName } = useParams();
 
   const [loading, setLoading] = useState(true);
   const [season, setSeason] = useState<SeasonModel>();
-  const [teams, setTeams] = useState<TeamModel[]>([]);
-  const [leagueGames, setLeagueGames] = useState<PlayerGameModel[]>([]);
+  const [teams, setTeams] = useState<Map<number, TeamModel>>(new Map());
+  const [leaguePlayerGames, setLeaguePlayerGames] = useState<PlayerGameModel[]>([]);
+  const [recentLeagueMatches, setRecentLeagueMatches] = useState<GameModel[]>([]);
 
   const [loadingGames, setLoadingGames] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
@@ -41,15 +45,18 @@ function LeaguePage() {
   }
 
   async function loadLeagueGames(seasonId: number) {
-    if (leagueGames.length > 0 || loadingGames) {
+    if (leaguePlayerGames.length > 0 || loadingGames) {
       console.log('Not reloading league games.');
       return;
     }
 
     setLoadingGames(true);
     try {
-      let response = await getGamesBySeasonId(seasonId);
-      setLeagueGames(response.games);
+      let playerGameResponse = await getPlayerGamesBySeasonId(seasonId);
+      setLeaguePlayerGames(playerGameResponse.games);
+
+      let recentGamesResponse = await getRecentGamesBySeasonId(seasonId, amountOfGamesToShow);
+      setRecentLeagueMatches(recentGamesResponse.games);
     }
     catch (error) {
       console.error('An error occured trying to load the league games');
@@ -58,7 +65,7 @@ function LeaguePage() {
   }
 
   async function loadTeamsForLeague(seasonId: number) {
-    if (teams.length > 0 || loadingTeams) {
+    if (teams.size > 0 || loadingTeams) {
       console.log('Not reloading league teams.');
       return;
     }
@@ -68,7 +75,14 @@ function LeaguePage() {
     if (response.teams.length < 1) {
       throw Error('No teams found!');
     }
-    setTeams(response.teams);
+
+    let teamsMap: Map<number, TeamModel> = new Map();
+    for (let team of response.teams) {
+      teamsMap.set(team.teamId, team);
+    }
+
+    setTeams(teamsMap);
+
     setLoadingTeams(false);
   }
 
@@ -108,7 +122,10 @@ function LeaguePage() {
               </Box>
           }
           {
-            !hasErrorToDisplay() && !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel} teams={teams} games={leagueGames}></LeaguePageGeneralStats>
+            !hasErrorToDisplay() && !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel}
+              teams={teams}
+              recentGames={recentLeagueMatches}
+              playerGames={leaguePlayerGames}/>
           }
         </Box>
       </main>

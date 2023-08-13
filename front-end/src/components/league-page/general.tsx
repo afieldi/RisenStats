@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 import TeamModel from '../../../../Common/models/team.model';
@@ -12,34 +12,38 @@ import LeagueDragons from './league-dragons';
 import LeagueChampionWinrates from './league-champ-winrates';
 import TeamLeaderboards from './team-leaderboards';
 import SeasonModel from '../../../../Common/models/season.model';
+import GameModel from '../../../../Common/models/game.model';
+import RecentGames from './recent-games';
 
 const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
     season: SeasonModel;
-    games: PlayerGameModel[]
-    teams: TeamModel[]
+    playerGames: PlayerGameModel[]
+    recentGames: GameModel[]
+    teams: Map<number, TeamModel>
 }
 
 export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProps)
 {
 
-  const champsPlayed: Map<GameRoles, Map<number, number>> = buildChamps(props.games);
+  const champsPlayed: Map<GameRoles, Map<number, number>> = buildChamps(props.playerGames);
 
   return (
     <Box sx={{ pt: 1, display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-      <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-        <SideWinrateBox games={props.games}/>
-        <TeamListBox teams={props.teams}/>
+      <Box sx={{ maxWidth: 280, height: '100%', display: 'flex', flexDirection: 'column', rowGap: 2 }}>
+        <SideWinrateBox games={props.playerGames}/>
+        <TeamListBox teams={Array.from(props.teams.values())}/>
+        <RecentGames teams={props.teams} games={props.recentGames}/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-        <LeagueStats games={props.games} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
+        <LeagueStats games={props.playerGames} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}/>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-          <LeagueDragons games={props.games}/>
-          <LeagueChampionWinrates games={props.games}/>
+          <LeagueDragons games={props.playerGames}/>
+          <LeagueChampionWinrates games={props.playerGames}/>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-          <TeamLeaderboards games={props.games} teams={props.teams}></TeamLeaderboards>
+          <TeamLeaderboards games={props.playerGames} teams={props.teams}></TeamLeaderboards>
         </Box>
       </Box>
     </Box>

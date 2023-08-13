@@ -25,3 +25,11 @@ export interface GetGamesByDateResponse {
 export interface GetGamesBySeasonIdResponse {
   games: PlayerGameModel[]
 }
+
+export interface GetRecentGamesBySeasonIdRequest {
+  amount: number
+}
+
+export interface GetRecentGamesBySeasonIdResponse {
+  games: GameModel[]
+}

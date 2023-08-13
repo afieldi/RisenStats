@@ -1,5 +1,10 @@
 import { MakeBackendCall } from './_call';
-import { GetGamesBySeasonIdResponse, GetGamesByDateRequest, GetGamesByDateResponse } from '../../../Common/Interface/Internal/games';
+import {
+  GetGamesBySeasonIdResponse,
+  GetGamesByDateRequest,
+  GetGamesByDateResponse,
+  GetRecentGamesBySeasonIdResponse
+} from '../../../Common/Interface/Internal/games';
 import { DEFAULT_RISEN_SEASON_ID } from '../../../Common/constants';
 
 export async function GetGamesByUTCTime(startTime: number, endTime: number, seasonId?: string) {
@@ -16,6 +21,10 @@ export async function GetGamesByUTCTime(startTime: number, endTime: number, seas
   return await MakeBackendCall<GetGamesByDateRequest>('/api/games/by-date/', 'POST', params) as GetGamesByDateResponse;
 }
 
-export async function getGamesBySeasonId(seasonId: number) {
+export async function getPlayerGamesBySeasonId(seasonId: number) {
   return await MakeBackendCall(`/api/games/by-seasonId/${seasonId}`, 'POST', {}) as GetGamesBySeasonIdResponse;
+}
+
+export async function getRecentGamesBySeasonId(seasonId: number, amount: number) {
+  return await MakeBackendCall(`/api/games/recent-league-games/by-seasonId/${seasonId}`, 'POST', { amount: amount }) as GetRecentGamesBySeasonIdResponse;
 }

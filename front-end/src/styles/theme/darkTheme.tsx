@@ -12,6 +12,7 @@ declare module '@mui/material/styles'
     nth: PaletteOptions['primary'];
     tertiary: PaletteOptions['primary'];
     websiteBackground: PaletteOptions['primary'];
+    hoverTeam: PaletteOptions['primary'];
   }
 
   interface Palette {
@@ -24,6 +25,7 @@ declare module '@mui/material/styles'
     nth: Palette['primary'];
     tertiary: Palette['primary'];
     websiteBackground: Palette['primary'];
+    hoverTeam: Palette['primary'];
   }
 
   interface TypeBackground {
@@ -38,10 +40,12 @@ const darkTheme = createTheme({
       main: '#1e1e1e'
     },
     risenVictory: {
-      main: '#0e304d'
+      main: '#0e304d',
+      light: '#12578f'
     },
     risenDefeat: {
-      main: '#4b2222'
+      main: '#4b2222',
+      light: '#882a2a'
     },
     first: {
       main: '#FFA500',
@@ -72,6 +76,9 @@ const darkTheme = createTheme({
     websiteBackground: {
       main: '#161616',
       dark: '#000000'
+    },
+    hoverTeam: {
+      main: '#f8c164'
     }
   }
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Hidden, styled, useTheme, useMediaQuery } from '@mui/material';
-import GameSummaryList from './game-summary/game-summary-list';
+import PlayerBasedGameSummaryList from './game-summary/player-based-game-summary-list';
 import RankFlag from './general-components/rank-flag';
 import { PlayerDetailedGame } from '../../../../Common/Interface/Internal/player';
 import PlayerModel from '../../../../Common/models/player.model';
@@ -62,7 +62,7 @@ function PlayerPageGeneral({ games, loadGamesConfig, player, seasons, playerStat
             <RecentPlayers sx={{ width: '100%' }} recentGames={games} />
           </Hidden>
         </StyledFlexBox>
-        <GameSummaryList gameList={games} loadGamesConfig={loadGamesConfig} seasons={seasons} sx={{ minWidth: useMediaQuery(theme.breakpoints.up('sm')) ? '585px' : '371px' }}></GameSummaryList>
+        <PlayerBasedGameSummaryList gameList={games} loadGamesConfig={loadGamesConfig} seasons={seasons} sx={{ minWidth: useMediaQuery(theme.breakpoints.up('sm')) ? '585px' : '371px' }}></PlayerBasedGameSummaryList>
       </Box>
     </Box>
   );
