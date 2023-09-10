@@ -2,14 +2,7 @@ import { addPlayersToTeams, addTeamToDB, isValidRowData, RisenSheetParser, Risen
 
 export class PremadeParser implements RisenSheetParser {
   async buildTeamsForLeague(sheet: any[][], sheetName: string, seasonId: number) {
-    let risenSheetTeams: RisenTeam[] = [];
-
-    for (let [index, row] of sheet.entries()) {
-      if (index == 0 || !this.isValidRow(row)) {
-        continue; // Ignore headers and divs
-      }
-      risenSheetTeams.push(this.buildTeam(row));
-    }
+    let risenSheetTeams = this.getRisenSheetTeams(sheet);
 
     // Add team teams
     for (let risenSheetTeam of risenSheetTeams) {
@@ -20,6 +13,18 @@ export class PremadeParser implements RisenSheetParser {
     for (let risenSheetTeam of risenSheetTeams) {
       await addPlayersToTeams(seasonId, risenSheetTeam);
     }
+  }
+
+  public getRisenSheetTeams(sheet: any[][]): RisenTeam[] {
+    let risenSheetTeams: RisenTeam[] = [];
+
+    for (let [index, row] of sheet.entries()) {
+      if (index == 0 || !this.isValidRow(row)) {
+        continue; // Ignore headers and divs
+      }
+      risenSheetTeams.push(this.buildTeam(row));
+    }
+    return risenSheetTeams;
   }
 
   public buildTeam(row: any[]): RisenTeam {
