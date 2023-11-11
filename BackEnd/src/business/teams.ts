@@ -128,11 +128,18 @@ export async function addPlayersToTeams(seasonId: number, risenSheetTeam: RisenT
         teamSeasonId: seasonId,
         teamTeamId: team.teamId,
       });
+      rows.push(playerToAdd);
+    } else if(playerToAdd.teamTeamId !== team.teamId) {
+      // We need to remove and the add here because for some reason updating the row always try to insert a new row.
+      await playerToAdd.remove();
+      playerToAdd = PlayerTeamModel.create({
+        playerPuuid: puuid,
+        teamSeasonId: seasonId,
+        teamTeamId: team.teamId,
+      });
+      logger.info(`Player ${playerToAdd.playerPuuid} teamId updated, creating a new row`);
+      rows.push(playerToAdd);
     }
-
-    playerToAdd.teamSeasonId = seasonId;
-    playerToAdd.teamTeamId = team.teamId;
-    rows.push(playerToAdd);
   }
 
   await SaveObjects(rows, PlayerTeamModel);
