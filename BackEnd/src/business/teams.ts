@@ -8,7 +8,6 @@ import PlayerTeamModel from '../../../Common/models/playerteam.model';
 import { getDBPlayerTeamPlayer } from '../db/playerteam';
 import { GetDbActiveSeasonWithSheets } from '../db/season';
 import { GetGoogleSheet } from '../external-api/sheets';
-import { DivineParser } from './sheets/divineParser';
 import { DraftParser } from './sheets/draftParser';
 
 export type RisenTeam = {
@@ -34,7 +33,6 @@ export interface RisenSheetParser {
 
 const parsers: Map<string, RisenSheetParser> = new Map(Object.entries({
   'PREMADE' : new PremadeParser(),
-  'DIVINE': new DivineParser(),
   'DRAFT': new DraftParser()
 }));
 
