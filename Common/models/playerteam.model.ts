@@ -1,9 +1,10 @@
-import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn} from 'typeorm';
+import {BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn, Unique} from 'typeorm';
 import PlayerModel from './player.model';
 import SeasonModel from "./season.model";
 import TeamModel from "./team.model";
 
 @Entity({ name: "player_team_model" })
+@Unique(["teamSeasonId", "playerPuuid"])
 export default class PlayerTeamModel extends BaseEntity {
 
     @ManyToOne(() => PlayerModel)
