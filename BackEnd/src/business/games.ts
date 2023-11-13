@@ -25,25 +25,17 @@ async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   return gameData;
 }
 
-export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
-  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
-  if (existingObj) {
+export async function SaveDataByMatchIdAndUpdatePlayerStats(matchId: string): Promise<GameModel> {
+  let savedGameModel = await SaveDataByMatchId(matchId);
+  await updatePlayerStatsForGame(matchId);
+  return savedGameModel;
+}
 
-    // If its a game for a risen season then update the teams.
-    let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(existingObj.seasonId);
-    if (existingObj.seasonId && updatePlayerStats && !recentlyBuiltRisenTeams) {
-      await buildRisenTeams(existingObj.seasonId);
-    }
+export async function SaveDataByMatchId(matchId: string): Promise<GameModel> {
+  const existingMatch = await saveMatchForGameAlreadyInDb(matchId);
 
-    const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
-
-    if (playerGames.length !== 10) {
-      const foundPlayers = new Set<string>();
-      playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
-      await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
-    }
-
-    return existingObj;
+  if (existingMatch) {
+    return existingMatch;
   }
 
   const gameData = await GetGameDataByMatchId(matchId);
@@ -53,17 +45,12 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
     seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId;
   }
 
-  if (seasonId && updatePlayerStats && !await hasRecentlyBuiltRisenTeams(seasonId)) {
+  let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(seasonId);
+  if (seasonId && !recentlyBuiltRisenTeams) {
     await buildRisenTeams(seasonId);
   }
 
-  const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData, seasonId);
-
-  if (updatePlayerStats) {
-    await updatePlayerStatsForGame(matchId);
-  }
-
-  return savedGameModel;
+  return await SaveSingleMatchById(matchId, gameData, seasonId);
 }
 
 export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDto, seasonId: number): Promise<GameModel> {
@@ -205,9 +192,33 @@ export async function updatePlayerStatsForGame(matchId: string) {
   }
 }
 
+async function saveMatchForGameAlreadyInDb(matchId: string) {
+  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
+
+  if (!existingObj) {
+    return null;
+  }
+
+  // If its a game for a risen season then update the teams.
+  let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(existingObj.seasonId);
+  if (existingObj.seasonId && !recentlyBuiltRisenTeams) {
+    await buildRisenTeams(existingObj.seasonId);
+  }
+
+  const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+
+  if (playerGames.length !== 10) {
+    const foundPlayers = new Set<string>();
+    playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
+    await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
+  }
+
+  return existingObj;
+}
+
 export async function hasRecentlyBuiltRisenTeams(seasonId: number): Promise<boolean> {
   let season = await GetDbActiveSeasonWithSheets(seasonId);
-  if (!season) {
+  if (!season || !season.lastTimeRisenTeamsBuilt) {
     return false;
   }
 

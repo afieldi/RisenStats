@@ -17,7 +17,7 @@ import {
   GetDbPlayerGamesBySeasonId
 } from '../db/games';
 import { RiotMatchCallbackDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
-import { SaveDataByMatchId } from '../business/games';
+import { SaveDataByMatchId, SaveDataByMatchIdAndUpdatePlayerStats } from '../business/games';
 import { ToMatchId } from '../../../Common/utils';
 
 const router: Router = express.Router();
@@ -61,7 +61,7 @@ router.post('/by-date', async(req: TypedRequest<GetGamesByDateRequest>, res: Typ
 router.post('/callback', async(req: TypedRequest<RiotMatchCallbackDto>, res) => {
   logger.info(`Match callback for match ${req.body.gameId}`);
   try {
-    await SaveDataByMatchId(ToMatchId(req.body.gameId), true);
+    await SaveDataByMatchIdAndUpdatePlayerStats(ToMatchId(req.body.gameId));
     res.json('Success');
   } catch (error) {
     logger.error(error);
