@@ -30,4 +30,8 @@ export default class SeasonModel extends BaseEntity
 
   @Column('varchar', {nullable: true})
   googleSheetParserType: string;
+
+  @Column('timestamp', {nullable: true})
+  lastTimeRisenTeamsBuilt: Date
+
 }

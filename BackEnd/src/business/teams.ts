@@ -6,7 +6,7 @@ import logger from '../../logger';
 import { GetOrCreatePlayerOverviewByName } from './player';
 import PlayerTeamModel from '../../../Common/models/playerteam.model';
 import { getDBPlayerTeamPlayer } from '../db/playerteam';
-import { GetDbActiveSeasonWithSheets } from '../db/season';
+import { GetDbActiveSeasonWithSheets, SetDBLastTimeActiveSeasonRisenTeamWasBuilt } from '../db/season';
 import { GetGoogleSheet } from '../external-api/sheets';
 import { DraftParser } from './sheets/draftParser';
 
@@ -42,18 +42,17 @@ export async function GetTeamsBySeasonId(seasonId: number): Promise<TeamModel[]>
 
 export async function buildRisenTeams(seasonId: number) {
   let sheetName = 'Teams and Standings';
-  let seasonsWithSheets = await GetDbActiveSeasonWithSheets(seasonId);
-  for (let seasonsWithSheet of seasonsWithSheets) {
-    let sheet = await GetGoogleSheet(seasonsWithSheet.googleSheetId, sheetName);
-    let parser: RisenSheetParser = parsers.get(seasonsWithSheet.googleSheetParserType);
+  let seasonsWithSheet = await GetDbActiveSeasonWithSheets(seasonId);
+  let sheet = await GetGoogleSheet(seasonsWithSheet.googleSheetId, sheetName);
+  let parser: RisenSheetParser = parsers.get(seasonsWithSheet.googleSheetParserType);
 
-    if(!parser) {
-      logger.error(`Parser was not configured correctly for the ${seasonsWithSheet.searchname} season`);
-      continue;
-    }
-
-    await parser.buildTeamsForLeague(sheet, sheetName, seasonsWithSheet.id);
+  if(!parser) {
+    logger.error(`Parser was not configured correctly for the ${seasonsWithSheet.searchname} season`);
+    return;
   }
+
+  await parser.buildTeamsForLeague(sheet, sheetName, seasonsWithSheet.id);
+  await SetDBLastTimeActiveSeasonRisenTeamWasBuilt(new Date(), seasonsWithSheet);
 }
 
 export function isValidRowData(data: string): boolean {
@@ -142,6 +141,3 @@ export async function addPlayersToTeams(seasonId: number, risenSheetTeam: RisenT
 
   await SaveObjects(rows, PlayerTeamModel);
 }
-
-
-

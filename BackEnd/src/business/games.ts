@@ -15,6 +15,7 @@ import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { buildRisenTeams } from './teams';
+import { GetDbActiveSeasonWithSheets } from '../db/season';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -29,7 +30,8 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
   if (existingObj) {
 
     // If its a game for a risen season then update the teams.
-    if (existingObj.seasonId && updatePlayerStats) {
+    let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(existingObj.seasonId);
+    if (existingObj.seasonId && updatePlayerStats && !recentlyBuiltRisenTeams) {
       await buildRisenTeams(existingObj.seasonId);
     }
 
@@ -51,7 +53,7 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
     seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId;
   }
 
-  if (seasonId && updatePlayerStats) {
+  if (seasonId && updatePlayerStats && !await hasRecentlyBuiltRisenTeams(seasonId)) {
     await buildRisenTeams(seasonId);
   }
 
@@ -201,4 +203,19 @@ export async function updatePlayerStatsForGame(matchId: string) {
       await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, teamId);
     }
   }
+}
+
+export async function hasRecentlyBuiltRisenTeams(seasonId: number): Promise<boolean> {
+  let season = await GetDbActiveSeasonWithSheets(seasonId);
+  if (!season) {
+    return false;
+  }
+
+  let lastUpdateTime = await season.lastTimeRisenTeamsBuilt;
+  const timeDifference = Math.abs(new Date().getTime() - lastUpdateTime.getTime());
+
+  // 45 minutes is close to p90 of game times, should be enough to avoid some costly team rebuilds.
+  const fourtyMinutesInMilliseconds = 45 * 60 * 1000;
+
+  return timeDifference <= fourtyMinutesInMilliseconds;
 }
