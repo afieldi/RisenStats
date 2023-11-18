@@ -52,7 +52,13 @@ export async function GetDbActiveSeasonsWithSheets(): Promise<SeasonModel[]> {
   return await SeasonModel.find({ where: { active: true, googleSheetId: Not(IsNull()), googleSheetParserType: Not(IsNull()) } });
 }
 
-export async function GetDbActiveSeasonWithSheets(seasonId: number): Promise<SeasonModel[]> {
+export async function GetDbActiveSeasonWithSheets(seasonId: number): Promise<SeasonModel> {
   await ensureConnection();
-  return await SeasonModel.find({ where: { active: true, id: seasonId, googleSheetId: Not(IsNull()), googleSheetParserType: Not(IsNull()) } });
+  return await SeasonModel.findOne({ where: { active: true, id: seasonId, googleSheetId: Not(IsNull()), googleSheetParserType: Not(IsNull()) } });
+}
+
+export async function SetDBLastTimeActiveSeasonRisenTeamWasBuilt(time: Date, season: SeasonModel): Promise<SeasonModel> {
+  await ensureConnection();
+  season.lastTimeRisenTeamsBuilt = time;
+  return season.save();
 }

@@ -15,6 +15,7 @@ import PlayerGameModel from '../../../Common/models/playergame.model';
 import logger from '../../logger';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { buildRisenTeams } from './teams';
+import { GetDbActiveSeasonWithSheets } from '../db/season';
 
 async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -24,24 +25,17 @@ async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   return gameData;
 }
 
-export async function SaveDataByMatchId(matchId: string, updatePlayerStats: boolean = false): Promise<GameModel> {
-  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
-  if (existingObj) {
+export async function SaveDataByMatchIdAndUpdatePlayerStats(matchId: string): Promise<GameModel> {
+  let savedGameModel = await SaveDataByMatchId(matchId);
+  await updatePlayerStatsForGame(matchId);
+  return savedGameModel;
+}
 
-    // If its a game for a risen season then update the teams.
-    if (existingObj.seasonId && updatePlayerStats) {
-      await buildRisenTeams(existingObj.seasonId);
-    }
+export async function SaveDataByMatchId(matchId: string): Promise<GameModel> {
+  const existingMatch = await saveMatchForGameAlreadyInDb(matchId);
 
-    const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
-
-    if (playerGames.length !== 10) {
-      const foundPlayers = new Set<string>();
-      playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
-      await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
-    }
-
-    return existingObj;
+  if (existingMatch) {
+    return existingMatch;
   }
 
   const gameData = await GetGameDataByMatchId(matchId);
@@ -51,17 +45,12 @@ export async function SaveDataByMatchId(matchId: string, updatePlayerStats: bool
     seasonId = (await GetDbCode(gameData.info.tournamentCode))?.seasonId;
   }
 
-  if (seasonId && updatePlayerStats) {
+  let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(seasonId);
+  if (seasonId && !recentlyBuiltRisenTeams) {
     await buildRisenTeams(seasonId);
   }
 
-  const savedGameModel: GameModel = await SaveSingleMatchById(matchId, gameData, seasonId);
-
-  if (updatePlayerStats) {
-    await updatePlayerStatsForGame(matchId);
-  }
-
-  return savedGameModel;
+  return await SaveSingleMatchById(matchId, gameData, seasonId);
 }
 
 export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDto, seasonId: number): Promise<GameModel> {
@@ -201,4 +190,43 @@ export async function updatePlayerStatsForGame(matchId: string) {
       await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, teamId);
     }
   }
+}
+
+async function saveMatchForGameAlreadyInDb(matchId: string) {
+  const existingObj = await GetDbGameByGameId(ToGameId(matchId));
+
+  if (!existingObj) {
+    return null;
+  }
+
+  // If its a game for a risen season then update the teams.
+  let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(existingObj.seasonId);
+  if (existingObj.seasonId && !recentlyBuiltRisenTeams) {
+    await buildRisenTeams(existingObj.seasonId);
+  }
+
+  const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+
+  if (playerGames.length !== 10) {
+    const foundPlayers = new Set<string>();
+    playerGames.map(pg => foundPlayers.add(pg.playerPuuid));
+    await UpdatePlayersInSingleMatchById(existingObj, await GetGameDataByMatchId(matchId), foundPlayers);
+  }
+
+  return existingObj;
+}
+
+export async function hasRecentlyBuiltRisenTeams(seasonId: number): Promise<boolean> {
+  let season = await GetDbActiveSeasonWithSheets(seasonId);
+  if (!season || !season.lastTimeRisenTeamsBuilt) {
+    return false;
+  }
+
+  let lastUpdateTime = await season.lastTimeRisenTeamsBuilt;
+  const timeDifference = Math.abs(new Date().getTime() - lastUpdateTime.getTime());
+
+  // 45 minutes is close to p90 of game times, should be enough to avoid some costly team rebuilds.
+  const fourtyMinutesInMilliseconds = 45 * 60 * 1000;
+
+  return timeDifference <= fourtyMinutesInMilliseconds;
 }
