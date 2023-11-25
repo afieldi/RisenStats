@@ -21,6 +21,13 @@ describe('Get player account tests', () => {
       expect(err.status).toEqual(404);
     }
   }, 120000);
+});
+
+describe('Get Riot Summoner tests', () => {
+
+  const name = 'Vexrax';
+  const tagline = 'FAKER';
+  const puuid = 'EKgeQ6wm9orw_8MA2D5tOgtM9V1boDdDooilTKyW4PyvHHvfFg65-6iYCSkWCS1GQ6CtkjA2jUM3dw';
 
   test('Should return riot summoner', async() => {
     let riotSummonerDto = await GetRiotPlayerByGameNameAndTagline(name, tagline);
@@ -30,7 +37,10 @@ describe('Get player account tests', () => {
   }, 120000);
 
   test('Should return null', async() => {
-    let riotSummonerDto = await GetRiotPlayerByGameNameAndTagline(name, 'FAKE');
-    expect(riotSummonerDto).toBeNull();
+    try {
+      let riotSummonerDto = await GetRiotPlayerByGameNameAndTagline(name, 'FAKE');
+    } catch (err) {
+      expect(err.status).toEqual(404);
+    }
   }, 120000);
 });

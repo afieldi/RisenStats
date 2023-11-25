@@ -22,12 +22,8 @@ export async function GetRiotAccountByGameNameAndTagline(gameName: string, tagli
 }
 
 export async function GetRiotPlayerByGameNameAndTagline(gameName: string, tagline: string): Promise<RiotSummonerDto> {
-  try {
-    let riotAccount: RiotAccountDto = await GetRiotAccountByGameNameAndTagline(gameName, tagline);
-    return await GetRiotPlayerByPuuid(riotAccount.puuid);
-  } catch(err) {
-    return null;
-  }
+  let riotAccount: RiotAccountDto = await GetRiotAccountByGameNameAndTagline(gameName, tagline);
+  return await GetRiotPlayerByPuuid(riotAccount.puuid);
 }
 
 export async function GetRiotLeagueBySummonerId(summonerId: string, queueName: string = 'RANKED_SOLO_5x5'): Promise<RiotLeagueEntryDto> {
