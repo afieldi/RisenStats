@@ -43,7 +43,7 @@ async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise
 }
 
 function GetHost(endpoint: string): string {
-  if (endpoint.startsWith('/lol/tournament') || endpoint.startsWith('/lol/match/v5')) {
+  if (endpoint.startsWith('/lol/tournament') || endpoint.startsWith('/lol/match/v5') || endpoint.startsWith('/riot/account/v1')) {
     // americas.
     return process.env.RIOT_API_URL_1;
   }

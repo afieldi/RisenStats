@@ -451,6 +451,11 @@ export interface RiotMatchDto
   metadata: RiotMetadataDto;
   info: RiotInfoDto;
 }
+export interface RiotAccountDto {
+  puuid: string;
+  gameName: string;
+  tagLine: string;
+}
 
 export interface RiotSummonerDto
 {
