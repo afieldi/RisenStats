@@ -14,14 +14,14 @@ interface ChampionOverviewProps {
 export default function ChampionPickRate(props: ChampionOverviewProps) {
   const theme = useTheme() as Theme;
 
-  const [selectedGameRoles, setSelectedGameRoles] = useState<GameRoles>(GameRoles.SUPPORT);
+  const [selectedGameRoles, setSelectedGameRoles] = useState<GameRoles>(GameRoles.ALL);
 
   let champsPlayed = getChampsPlayed(props.champsPlayedByRole, selectedGameRoles);
   champsPlayed = new Map([...champsPlayed.entries()].sort((a, b) => b[1] - a[1]));
 
   return (
     <BaseRisenBox sx={{ background: getGradient(theme.palette.risenBoxBg.main), pt: 0 }} title={getTitleHeader(theme, champsPlayed.size, selectedGameRoles, setSelectedGameRoles)}>
-      <Box sx={{ display: 'flex', columnGap: 1, rowGap: 1, flexWrap: 'wrap' }}>
+      <Box sx={{ display: 'flex', columnGap: 1, rowGap: 1, flexWrap: 'wrap', maxHeight: '300px', overflowY: 'scroll' }}>
         { Array.from(champsPlayed.keys()).map((championId,  index) =>
           <ChampionSummaryBox key={index} championId={championId} games={champsPlayed.get(championId) as number}/>
         )}
@@ -35,7 +35,6 @@ function getTitleHeader(theme: Theme, unique: number, selectedGameRoles: GameRol
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
       <Typography sx={{ marginTop: 2 }} fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{`Champions Picked: ${unique}`}</Typography>
       <SmallRoleSelector
-        exclude={[GameRoles.ALL]}
         imageSize={30}
         sx={{ minWidth: '100px', pt: 1, pb: 0 }}
         initalValue={selectedGameRoles}

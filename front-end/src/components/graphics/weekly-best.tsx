@@ -154,50 +154,48 @@ const mapBestPlayersToChampBanner = (bestPlayers: BestPlayers, playerGames: { [k
   return {
     top: {
       stats: bestPlayers.top.item!,
-      championPortraitId: playerGames[bestPlayers.top.item?.playerPuuid!][0].championId
+      championPortraitId: (playerGames[bestPlayers.top.item?.playerPuuid!] ?? [])[0]?.championId
     },
     jungle: {
       stats: bestPlayers.jungle.item!,
-      championPortraitId: playerGames[bestPlayers.jungle.item?.playerPuuid!][0].championId
+      championPortraitId: (playerGames[bestPlayers.jungle.item?.playerPuuid!] ?? [])[0]?.championId
     },
     mid: {
       stats: bestPlayers.mid.item!,
-      championPortraitId: playerGames[bestPlayers.mid.item?.playerPuuid!][0].championId
+      championPortraitId: (playerGames[bestPlayers.mid.item?.playerPuuid!] ?? [])[0]?.championId
     },
     bot: {
       stats: bestPlayers.bot.item!,
-      championPortraitId: playerGames[bestPlayers.bot.item?.playerPuuid!][0].championId
+      championPortraitId: (playerGames[bestPlayers.bot.item?.playerPuuid!] ?? [])[0]?.championId
     },
     supp: {
       stats: bestPlayers.supp.item!,
-      championPortraitId: playerGames[bestPlayers.supp.item?.playerPuuid!][0].championId
+      championPortraitId: (playerGames[bestPlayers.supp.item?.playerPuuid!] ?? [])[0]?.championId
     },
   };
 };
 
 export default function WeeklyBest() {
-  const colors = [
-    '#663F46',
-    '#3C362A',
-    '#C9D6EA',
-    '#AA968A',
-    '#6E6A6F',
-  ];
-
-
   const backgroundShading = { background: 'linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.3) 10%, rgba(0,0,0,.3) 90%, rgba(0,0,0,0) 100%)', pt: 3, pb: 3, };
 
   const verticalBackground = { background: 'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.3) 10%, rgba(0,0,0,.3) 90%, rgba(0,0,0,0) 100%)' };
   const theme = useTheme() as Theme;
 
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-  const [gameData, setGameData] = useState<GameModel[]>([]);
-  const [playerGameData, setPlayerGameData] = useState<PlayerGameModel[]>([]);
   const [seasonId, setSeasonId] = useState<string>(DEFAULT_RISEN_SEASON_ID);
   const [seasons, setSeasons] = useState<SeasonModel[]>([]);
 
   const gameMap: { [gameId: string]: GameModel } = {};
   const playerGameMap: { [playerPuuid: string]: GameModel[] } = {};
+
+  const colors = [
+    '#ab4000',
+    theme.palette.secondary.main,
+    '#ab4000',
+    theme.palette.secondary.main,
+    '#ab4000',
+    theme.palette.secondary.main,
+  ];
 
   const seasonConfig = {
     seasonId,
@@ -217,15 +215,15 @@ export default function WeeklyBest() {
       return;
     }
     const { games, playerGames } = await GetGamesByUTCTime((new Date()).getTime() - MS_IN_A_WEEK, (new Date()).getTime(), seasonId);
-    const { playerStats } = await GetPlayerStatsByTimeAndSeason(Number(seasonId), (new Date()).getTime() - MS_IN_A_WEEK, (new Date()).getTime());
-    setGameData(games);
-    populateGameMap(games);
-    aggreatePlayerGames(playerGames);
-    setPlayerGameData(playerGames);
-    setMostStats(calculateMostStats(playerStats, defaultMostData) as MostData);
-    setBestPlayers(calculateMostStats(playerStats, defaultBestPlayers) as BestPlayers);
-    setBestGames(calculateMostStats(games, defaultBestGames) as BestGames);
-    setDataLoaded(true);
+    if (games.length > 0) {
+      const { playerStats } = await GetPlayerStatsByTimeAndSeason(Number(seasonId), (new Date()).getTime() - MS_IN_A_WEEK, (new Date()).getTime());
+      populateGameMap(games);
+      aggreatePlayerGames(playerGames);
+      setMostStats(calculateMostStats(playerStats, defaultMostData) as MostData);
+      setBestPlayers(calculateMostStats(playerStats, defaultBestPlayers) as BestPlayers);
+      setBestGames(calculateMostStats(games, defaultBestGames) as BestGames);
+      setDataLoaded(true);
+    }
   };
 
   const calculateMostStats = <T,>(statData: T[], defaultData: Record<string, MostDatum<T>>): Record<string, MostDatum<T>> => {
@@ -265,6 +263,7 @@ export default function WeeklyBest() {
   };
 
   useEffect(() => {
+    setDataLoaded(false);
     getData();
   }, [seasonId]);
 
@@ -393,16 +392,16 @@ export default function WeeklyBest() {
               <hr />
             </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly', rowGap: 2, pt: 4, pb: 2, mr: 7, ml: 7, color: 'white', transform: 'scale(1.1)' }}>
-              <BaseRisenBox title="Longest Game" subtitle={riotTimestampToGameTime(bestGames.longest.limit!)} sx={{ width: '350px', background: 'linear-gradient(0deg, rgba(24,38,143,1) 44%, rgba(30,30,30,1) 70%)' }}>
+              <BaseRisenBox title="Longest Game" subtitle={riotTimestampToGameTime(bestGames.longest.limit!)} titleColor='#7681d7' sx={{ width: '350px' }}>
                 <AllTeamInfo gameModel={bestGames.longest.item!} />
               </BaseRisenBox>
-              <BaseRisenBox title="Fastest Game" subtitle={riotTimestampToGameTime(bestGames.shortest.limit!)} sx={{ width: '350px', background: 'linear-gradient(0deg, rgba(147,145,4,1) 44%, rgba(30,30,30,1) 70%)' }}>
+              <BaseRisenBox title="Fastest Game" subtitle={riotTimestampToGameTime(bestGames.shortest.limit!)} titleColor='#cda443' sx={{ width: '350px' }}>
                 <AllTeamInfo gameModel={bestGames.shortest.item!} />
               </BaseRisenBox>
-              <BaseRisenBox title="Bloodfest" subtitle={`${bestGames.mostKills.limit} kills`} sx={{ width: '350px', background: 'linear-gradient(0deg, rgba(162,27,27,1) 44%, rgb(30 30 30) 70%)' }}>
+              <BaseRisenBox title="Bloodfest" subtitle={`${bestGames.mostKills.limit} kills`} titleColor='#d34d4d' sx={{ width: '350px' }}>
                 <AllTeamInfo gameModel={bestGames.mostKills.item!} />
               </BaseRisenBox>
-              <BaseRisenBox title="Herbivore" subtitle={`${bestGames.mostKills.limit} kills`} sx={{ width: '350px', background: 'linear-gradient(0deg, rgba(28,97,23,1) 44%, rgba(30,30,30,1) 70%)' }}>
+              <BaseRisenBox title="Herbivore" subtitle={`${bestGames.leastKills.limit} kills`} titleColor='#3a8d34' sx={{ width: '350px', fontSize: '16px' }}>
                 <AllTeamInfo gameModel={bestGames.leastKills.item!} />
               </BaseRisenBox>
             </Box>

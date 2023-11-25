@@ -5,7 +5,7 @@ export async function CreateRiotTournamentProvider(callbackUrl: string, region =
   if (callbackUrl.length < 3 || !region) {
     throw new InvalidRequestError('Requires callbackUrl and region');
   }
-  return await MakeTournamentRiotAPICall<number>('/lol/tournament/v4/providers', 'POST', {
+  return await MakeTournamentRiotAPICall<number>('/lol/tournament/v5/providers', 'POST', {
     region,
     url: callbackUrl
   });

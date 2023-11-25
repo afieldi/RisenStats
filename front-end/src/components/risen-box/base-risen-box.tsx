@@ -6,12 +6,14 @@ export interface Props {
   children?: React.ReactNode;
   sx?: SxProps<Theme> | undefined;
   title?: React.ReactNode | string;
+  titleColor?: string;
   subtitle?: React.ReactNode | string;
+  subtitleColor?: string;
   hideDivider?: boolean;
 }
 
 export default function BaseRisenBox(props: Props) {
-  const { children, sx, ...other } = props;
+  const { children, sx, titleColor, subtitleColor, ...other } = props;
   const theme = useTheme() as Theme;
 
   let sxFinal: SxProps<Theme> = { ...{
@@ -27,7 +29,7 @@ export default function BaseRisenBox(props: Props) {
     if (typeof props.title === 'string') {
       titleDisplay = (
         <Box>
-          <Typography fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={theme.palette.info.main}>{props.title.toUpperCase()}</Typography>
+          <Typography fontFamily="Montserrat" fontStyle="italic" variant='h5' align='left' color={titleColor ?? theme.palette.info.main}>{props.title.toUpperCase()}</Typography>
         </Box>
       );
     }
@@ -40,7 +42,7 @@ export default function BaseRisenBox(props: Props) {
     if (typeof props.subtitle === 'string') {
       subtitleDisplay = (
         <Box>
-          <Typography fontFamily="Montserrat" fontStyle="italic" variant='subtitle1' align='left' color={theme.palette.info.main}>{props.subtitle.toUpperCase()}</Typography>
+          <Typography fontFamily="Montserrat" fontStyle="italic" variant='subtitle1' align='left' color={subtitleColor ?? theme.palette.info.main}>{props.subtitle.toUpperCase()}</Typography>
         </Box>
       );
     }

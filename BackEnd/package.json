@@ -54,6 +54,7 @@
     "googleapis": "^122.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.7",
+    "node-html-parser": "^6.1.5",
     "pg": "^8.7.3",
     "tslog": "^3.3.3",
     "typeorm": "^0.3.6",

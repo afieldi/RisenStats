@@ -25,7 +25,7 @@ export async function updateStatsFor(playerGame: PlayerGameModel, fullgame: Game
 }
 
 export function AggregateGame(playerGame: PlayerGameModel, seasonId: number, teamId: number, champId: number, fullGame: GameModel, playerStatMap: Map<String, AggregatedPlayerStatModel>) {
-  let key = `${seasonId}_${teamId}_${champId}_${playerGame.lobbyPosition}`;
+  const key = `${seasonId}_${teamId}_${champId}_${playerGame.lobbyPosition}`;
   
   if (!playerStatMap.has(key)) {
     playerStatMap.set(key, CreateInitialPlayerStatModel(playerGame, seasonId, teamId));

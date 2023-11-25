@@ -40,6 +40,7 @@ export default function PlayerChampBanner(props: PlayerChampBanners) {
           <Typography align='right'>{roundTo(stats.damagePerMinute / stats.games, 0)} DPM</Typography>
           <Typography align='right'>{roundTo(stats.goldPerMinute / stats.games, 0)} GPM</Typography>
           <Typography align='right'>{roundTo(stats.visionScorePerMinute / stats.games, 1)} VSPM</Typography>
+          <Typography align='right'>{stats.games} games</Typography>
         </Box>
       </Box>
     );

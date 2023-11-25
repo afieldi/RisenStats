@@ -65,8 +65,8 @@ function ChampionSetup(championSetupProps: ChampionSetupProps) {
           width="25px"/>
       </Box>
     </Box>
-    <Box>
-      <Typography variant="body2" sx={{ fontSize: '12px', maxWidth: '115px', pt: 1, cursor: !!season ? 'pointer' : 'cursor' }} onClick={onClickSeasonName} align="center">
+    <Box className={season ? 'clickable' : ''} onClick={onClickSeasonName}>
+      <Typography variant="body2" sx={{ fontSize: '12px', maxWidth: '115px', pt: 1 }} align="center">
         {GameTypeToString(gameType, seasonId, seasons)}
       </Typography>
     </Box>
