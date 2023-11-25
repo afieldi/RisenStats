@@ -1,4 +1,9 @@
-import { GetRiotPlayerByName, GetRiotLeagueBySummonerId, GetRiotPlayerByPuuid } from '../external-api/player';
+import {
+  GetRiotPlayerByName,
+  GetRiotLeagueBySummonerId,
+  GetRiotPlayerByPuuid,
+  GetRiotPlayerByGameNameAndTagline
+} from '../external-api/player';
 import PlayerModel from '../../../Common/models/player.model';
 import { DocumentNotFound } from '../../../Common/errors';
 import { CreateDbPlayerWithRiotPlayer, GetDbPlayerByPuuid, GetPlayerDistinctSeasons, UpdateDbPlayer } from '../db/player';
@@ -27,6 +32,28 @@ export async function GetOrCreatePlayerOverviewByName(playerName: string): Promi
     if (error instanceof ApiError) {
       if (error.status === 404) {
         throw new DocumentNotFound(`Player with name ${playerName} not found`);
+      }
+    }
+    throw error;
+  }
+}
+
+export async function GetOrCreatePlayerOverviewByGameNameAndTagline(gameName: string, tagline: string): Promise<PlayerModel> {
+  try {
+    const riotPlayer = await GetRiotPlayerByGameNameAndTagline(gameName, tagline);
+    if (!riotPlayer) {
+      throw new DocumentNotFound(`Player with name ${gameName}#${tagline} not found`);
+    }
+    try {
+      return await GetDbPlayerByPuuid(riotPlayer.puuid);
+    } catch (error) {}
+
+    const riotLeague = await GetRiotLeagueBySummonerId(riotPlayer.id);
+    return await CreateDbPlayerWithRiotPlayer(riotPlayer, riotLeague);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      if (error.status === 404) {
+        throw new DocumentNotFound(`Player with name ${gameName}#${tagline} not found`);
       }
     }
     throw error;
