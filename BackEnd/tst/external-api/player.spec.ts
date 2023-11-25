@@ -18,7 +18,6 @@ describe('Get player account tests', () => {
     try {
       await GetRiotAccountByGameNameAndTagline(name, 'FAKE');
     } catch (err) {
-      console.log(err.toString());
       expect(err.status).toEqual(404);
     }
   }, 120000);
