@@ -3,33 +3,13 @@ import TeamModel from '../../../Common/models/team.model';
 import { PremadeParser } from './sheets/premadeParser';
 import { ensureConnection, SaveObjects } from '../db/dbConnect';
 import logger from '../../logger';
-import { GetOrCreatePlayerOverviewByName } from './player';
+import { GetOrCreatePlayerOverviewByGameNameAndTagline } from './player';
 import PlayerTeamModel from '../../../Common/models/playerteam.model';
 import { getDBPlayerTeamPlayer } from '../db/playerteam';
 import { GetDbActiveSeasonWithSheets, SetDBLastTimeActiveSeasonRisenTeamWasBuilt } from '../db/season';
 import { GetGoogleSheet } from '../external-api/sheets';
 import { DraftParser } from './sheets/draftParser';
-
-export type RisenTeam = {
-  teamName: string,
-  abrv: string,
-  win: string
-  loss: string
-  top: string
-  jungle: string,
-  mid: string,
-  adc: string,
-  support: string,
-  sub1?: string,
-  sub2?: string,
-  sub3?: string,
-  sub4?: string,
-  sub5?: string
-};
-
-export interface RisenSheetParser {
-  buildTeamsForLeague: (sheet: any[][], sheetName: string, seasonId: number) => Promise<void>;
-}
+import { RisenSheetParser, RisenTeam } from './sheets/sheets';
 
 const parsers: Map<string, RisenSheetParser> = new Map(Object.entries({
   'PREMADE' : new PremadeParser(),
@@ -51,12 +31,29 @@ export async function buildRisenTeams(seasonId: number) {
     return;
   }
 
-  await parser.buildTeamsForLeague(sheet, sheetName, seasonsWithSheet.id);
+  await this.buildTeamsForLeague(sheet, sheetName, seasonsWithSheet.id);
   await SetDBLastTimeActiveSeasonRisenTeamWasBuilt(new Date(), seasonsWithSheet);
 }
 
-export function isValidRowData(data: string): boolean {
-  return data && data.length > 1;
+async function buildTeamsForLeague(parser: RisenSheetParser, sheet: any[][], sheetName: string, seasonId: number) {
+  let risenSheetTeams: RisenTeam[] = [];
+
+  for (let [index, row] of sheet.entries()) {
+    if (index == 0 || !parser.isValidRow(row)) {
+      continue; // Ignore headers and divs
+    }
+    risenSheetTeams.push(parser.buildTeam(row));
+  }
+
+  // Add team teams
+  for (let risenSheetTeam of risenSheetTeams) {
+    await addTeamToDB(risenSheetTeam, seasonId);
+  }
+
+  // Add the players to their respective teams
+  for (let risenSheetTeam of risenSheetTeams) {
+    await addPlayersToTeams(seasonId, risenSheetTeam);
+  }
 }
 
 export async function addTeamToDB(risenSheetTeam: RisenTeam, seasonId: number) {
@@ -90,7 +87,7 @@ export async function addPlayersToTeams(seasonId: number, risenSheetTeam: RisenT
 
   let team = await GetDbTeamsByTeamName(risenSheetTeam.teamName, risenSheetTeam.abrv, seasonId);
 
-  let playersNames = [risenSheetTeam.top,
+  let playerIdentifiers = [risenSheetTeam.top,
     risenSheetTeam.jungle,
     risenSheetTeam.mid,
     risenSheetTeam.adc,
@@ -100,17 +97,18 @@ export async function addPlayersToTeams(seasonId: number, risenSheetTeam: RisenT
     risenSheetTeam.sub3,
     risenSheetTeam.sub4,
     risenSheetTeam.sub5]
-    .filter(name => '' !== name)
-    .filter(name => undefined !== name);
+    .filter(identifier => '' !== identifier.gameName)
+    .filter(identifier => '' !== identifier.tagline)
+    .filter(identifier => undefined !== identifier);
 
   let playerPuuids: string[] = [];
 
-  for (let player of playersNames) {
+  for (let playerIdentifier of playerIdentifiers) {
     try {
-      let playerModel = await GetOrCreatePlayerOverviewByName(player);
+      let playerModel = await GetOrCreatePlayerOverviewByGameNameAndTagline(playerIdentifier.gameName, playerIdentifier.tagline);
       playerPuuids.push(playerModel.puuid);
     } catch (e) {
-      logger.error(`Couldnt Find [${player}] skipping`);
+      logger.error(`Couldnt Find [${playerIdentifier}] skipping`);
     }
   }
 

@@ -1,7 +1,11 @@
-import { RisenSheetParser } from '../teams';
-
+import { RisenSheetParser, RisenTeam } from './sheets';
+// TODO when we have reqs for draft
 export class DraftParser implements RisenSheetParser {
-  async buildTeamsForLeague(sheet: any[][], sheetName: string, seasonId: number) {
-    // TODO when we get some consitency
+  public buildTeam(row: any[]): RisenTeam {
+    return null;
+  }
+
+  public isValidRow(data: string[]): boolean {
+    return false;
   }
 }
