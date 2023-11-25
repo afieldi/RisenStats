@@ -303,5 +303,5 @@ export function getSeasonWithLeaguePage(seasons: SeasonModel[], seasonId?: strin
   if(seasonId == null) {
     return null;
   }
-  return seasons.find(season => season.id.toString() === seasonId.toString() && season.active && season.googleSheetParserType !== null && season.googleSheetId !== null);
+  return seasons.find(season => season.id.toString() === seasonId.toString() && season.googleSheetParserType !== null && season.googleSheetId !== null);
 }

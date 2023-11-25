@@ -11,6 +11,7 @@ import { getSeasonBySearchName } from '../../api/season';
 import { getLeagueTeamsBySeasonId } from '../../api/teams';
 import { getRecentGamesBySeasonId, getPlayerGamesBySeasonId } from '../../api/games';
 import GameModel from '../../../../Common/models/game.model';
+import Loading from '../../components/loading/loading';
 
 const amountOfGamesToShow = 5;
 
@@ -120,6 +121,9 @@ function LeaguePage() {
               <Box sx={{ pt: 5, display: 'flex', justifyContent: 'space-evenly' }}>
                 <Typography fontFamily="Montserrat" variant='h4' align='left'>{errorMessage}</Typography>
               </Box>
+          }
+          {
+            isLoadingData() && <Loading />
           }
           {
             !hasErrorToDisplay() && !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel}

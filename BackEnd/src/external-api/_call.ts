@@ -66,3 +66,7 @@ export async function MakeRiotAPICall<T>(endpoint: string, method: string, body?
   const url = GetHost(endpoint) + endpoint;
   return await _MakeAPICall<T>(url, method, body);
 }
+
+export async function MakeGeneralAPICall<T>(url: string, method: string, body?: any): Promise<T> {
+  return _MakeAPICall(url, method, body);
+}

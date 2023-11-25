@@ -37,3 +37,14 @@
     transform: rotate(360deg);
   }
 }
+
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+::-webkit-scrollbar-thumb {
+  /* background-color: #53270d;
+  outline: 1px solid #53270d; */
+  background-color: #a3a3a3;
+  outline: 1px solid #a3a3a3;
+}
