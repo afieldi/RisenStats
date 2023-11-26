@@ -1,59 +1,57 @@
-import { addPlayersToTeams, addTeamToDB, isValidRowData, RisenSheetParser, RisenTeam } from '../teams';
+import log from '../../../logger';
+import { PlayerIdentifier, RisenSheetParser, RisenTeam } from './sheets';
 
 export class PremadeParser implements RisenSheetParser {
-  async buildTeamsForLeague(sheet: any[][], sheetName: string, seasonId: number) {
-    let risenSheetTeams = this.getRisenSheetTeams(sheet);
-
-    // Add team teams
-    for (let risenSheetTeam of risenSheetTeams) {
-      await addTeamToDB(risenSheetTeam, seasonId);
-    }
-
-    // Add the players to their respective teams
-    for (let risenSheetTeam of risenSheetTeams) {
-      await addPlayersToTeams(seasonId, risenSheetTeam);
-    }
-  }
-
-  public getRisenSheetTeams(sheet: any[][]): RisenTeam[] {
-    let risenSheetTeams: RisenTeam[] = [];
-
-    for (let [index, row] of sheet.entries()) {
-      if (index == 0 || !this.isValidRow(row)) {
-        continue; // Ignore headers and divs
-      }
-      risenSheetTeams.push(this.buildTeam(row));
-    }
-    return risenSheetTeams;
-  }
-
   public buildTeam(row: any[]): RisenTeam {
     return {
       teamName: row[0],
       abrv: row[1],
       win: row[2],
       loss: row[3],
-      top: row[5],
-      jungle: row[6],
-      mid: row[7],
-      adc: row[8],
-      support: row[9],
-      sub1: row[10] ?? undefined,
-      sub2: row[11] ?? undefined,
-      sub3: row[12] ?? undefined,
-      sub4: row[13] ?? undefined,
-      sub5: row[14] ?? undefined,
+      top: this.getPlayerIdentifierFromString(row[5]),
+      jungle: this.getPlayerIdentifierFromString(row[6]),
+      mid: this.getPlayerIdentifierFromString(row[7]),
+      adc: this.getPlayerIdentifierFromString(row[8]),
+      support: this.getPlayerIdentifierFromString(row[9]),
+      sub1: this.getPlayerIdentifierFromString(row[10]) ?? undefined,
+      sub2: this.getPlayerIdentifierFromString(row[11]) ?? undefined,
+      sub3: this.getPlayerIdentifierFromString(row[12]) ?? undefined,
+      sub4: this.getPlayerIdentifierFromString(row[13]) ?? undefined,
+      sub5: this.getPlayerIdentifierFromString(row[14])?? undefined,
     };
   }
 
-  isValidRow(data: string[]): boolean {
+  public isValidRow(data: string[]): boolean {
     // Check to make sure there's enough columns and make sure the name and abbr exist
-    return data.length > 5 && isValidRowData(data[0]) && isValidRowData(data[1]) && this.hasValidOPGG(data[15]);
+    return data.length > 5 && this.isValidRowData(data[0]) && this.isValidRowData(data[1]) && this.hasValidOPGG(data[15]);
+  }
+
+  isValidRowData(data: string): boolean {
+    return data && data.length > 1;
   }
 
   hasValidOPGG(url: string): boolean {
     const regex = /^http:\/\/na\.op\.gg\/multi/;
     return regex.test(url);
   }
+
+  getPlayerIdentifierFromString(inputString: string): PlayerIdentifier {
+    if (!inputString) {
+      return undefined;
+    }
+
+    let splitString = inputString.split('#');
+
+    if (splitString.length != 2) {
+      log.error(`Player name, ${inputString} was invalid!`);
+      return undefined;
+    }
+
+    return {
+      gameName: splitString[0],
+      tagline: splitString[1]
+    };
+  }
+
 }
 
