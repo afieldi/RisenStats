@@ -30,27 +30,31 @@ export default (props: RecentPlayerProps) => {
 
   const teammatesMap: { [key: string]: TeammateStat } = {};
 
+  const puuidToNameMap: { [key: string]: string } = {};
+
   for (const game of recentGames) {
     const teammates = game.playerGame.teamId === 100 ?
       game.game.playersSummary.redPlayers : game.game.playersSummary.bluePlayers;
     teammates.map(player => {
-      if (player.playerName == game.playerGame.player.name) {
+      const puuid = player.playerPuuid;
+      if (puuid == game.playerGame.player.puuid) {
         return;
       }
 
-      if (!(player.playerName in teammatesMap)) {
-        teammatesMap[player.playerName] = {
+      if (!(puuid in teammatesMap)) {
+        teammatesMap[puuid] = {
           games: 0,
           wins: 0,
         };
+        puuidToNameMap[puuid] = player.playerName;
       }
-      teammatesMap[player.playerName].games += 1;
-      teammatesMap[player.playerName].wins += ((game.game.winner ? 100 : 200) === game.playerGame.teamId) ? 1 : 0;
+      teammatesMap[puuid].games += 1;
+      teammatesMap[puuid].wins += ((game.game.winner ? 100 : 200) === game.playerGame.teamId) ? 1 : 0;
     });
   }
 
   const recentPlayerData: {[key in RecentPlayerTableHeaders]: string}[] = Object.entries(teammatesMap).map(([key, value], index) => ({
-    Player: key,
+    Player: puuidToNameMap[key],
     Games: value.games.toString(),
     'W - L': `${value.wins} - ${value.games - value.wins}`,
     'Win Rate': `${roundTo((value.wins / value.games) * 100, 0)}%`,
