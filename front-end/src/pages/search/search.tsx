@@ -8,7 +8,7 @@ export default function SearchPage() {
   const playerSearchFieldId = 'playerSearch';
 
   function searchName() {
-    const playerName = (document.getElementById(playerSearchFieldId) as HTMLInputElement).value;
+    const playerName = (document.getElementById(playerSearchFieldId) as HTMLInputElement).value.replaceAll('#', '-');
     navigate(`/player/${encodeURIComponent(playerName)}`);
   }
   return (

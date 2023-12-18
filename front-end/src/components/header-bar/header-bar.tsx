@@ -53,7 +53,7 @@ export default function HeaderBar({ open, setOpen }: Props) {
 
   function doSearch()
   {
-    const playerName = (document.getElementById(headerSearchId) as HTMLInputElement).value;
+    const playerName = (document.getElementById(headerSearchId) as HTMLInputElement).value.replaceAll('#', '-');
     navigate(`player/${encodeURIComponent(playerName)}`);
   }
 

@@ -29,9 +29,10 @@ router.post('/update/by-puuid/:playerPuuid', async(req: Request, res: TypedRespo
 });
 
 router.post('/summary/by-name/:playerName', async(req: Request, res: TypedResponse<PlayerOverviewResponse>) => {
-  logger.info(`Player summary by name ${req.params.playerName}`);
   try {
-    const playerData = await GetOrCreatePlayerOverviewByName(req.params.playerName);
+    const playerNameWithTag = req.params.playerName.replace('-', '#');
+    logger.info(`Player summary by name ${playerNameWithTag}`);
+    const playerData = await GetOrCreatePlayerOverviewByName(playerNameWithTag);
     res.json({
       overview: playerData
     });

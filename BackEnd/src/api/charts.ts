@@ -9,7 +9,7 @@ const router: Router = express.Router();
 router.post('/radar', async(req: TypedRequest<RadarChartsRequest>, res: Response) => {
   logger.info(`Call to radar for: ${req.body.playerNames}`);
   try {
-    res.send(await CreatePlayerRadarWithName('Earleking'));
+    res.send(await CreatePlayerRadarWithName('Earleking#NA1'));
   } catch (error) {
     logger.error(error);
   }

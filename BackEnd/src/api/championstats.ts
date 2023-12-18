@@ -1,6 +1,5 @@
 import express, { Response, Router } from 'express';
 import { TypedRequest } from '../../../Common/Interface/Internal/responseUtil';
-import { CreatePlayerRadarWithName } from '../business/charts';
 import logger from '../../logger';
 import { ChampionStatsSheetRequest } from '../../../Common/Interface/Internal/championstats';
 import { GetChampionStatsBySeason } from '../business/championstats';

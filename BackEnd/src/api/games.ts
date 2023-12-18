@@ -17,7 +17,7 @@ import {
   GetDbPlayerGamesBySeasonId
 } from '../db/games';
 import { RiotMatchCallbackDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
-import { SaveDataByMatchId, SaveDataByMatchIdAndUpdatePlayerStats } from '../business/games';
+import { SaveDataByMatchIdAndUpdatePlayerStats } from '../business/games';
 import { ToMatchId } from '../../../Common/utils';
 
 const router: Router = express.Router();

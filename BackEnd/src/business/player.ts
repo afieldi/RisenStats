@@ -1,5 +1,5 @@
 import {
-  GetRiotPlayerByName,
+  GetRiotAccountByPuuid,
   GetRiotLeagueBySummonerId,
   GetRiotPlayerByPuuid,
   GetRiotPlayerByGameNameAndTagline
@@ -18,7 +18,8 @@ import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 
 export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
   try {
-    const riotPlayer = await GetRiotPlayerByName(playerName);
+    const [name, tagline] = playerName.split('#'); 
+    const riotPlayer = await GetRiotPlayerByGameNameAndTagline(name, tagline ?? 'NA1');
     if (!riotPlayer) {
       throw new DocumentNotFound(`Player with name ${playerName} not found`);
     }
@@ -65,13 +66,6 @@ export async function GetPlayerOverviewByPuuid(playerPuuid: string): Promise<Pla
   return await GetDbPlayerByPuuid(playerPuuid);
 }
 
-export async function UpdateGamesByPlayerName(playerName: string): Promise<UpdatePlayerGamesResponse> {
-  const player = await GetOrCreatePlayerOverviewByName(playerName);
-  const updatedGames = await UpdateGamesByPlayerObject(player);
-  await UpdatePlayerByPlayerPuuid(player.puuid, updatedGames.updatedGames);
-  return updatedGames;
-}
-
 export async function UpdateGamesByPlayerPuuid(playerPuuid: string): Promise<UpdatePlayerGamesResponse> {
   const player = await GetPlayerOverviewByPuuid(playerPuuid);
   const updatedGames = await UpdateGamesByPlayerObject(player);
@@ -80,10 +74,16 @@ export async function UpdateGamesByPlayerPuuid(playerPuuid: string): Promise<Upd
 }
 
 async function UpdatePlayerByPlayerPuuid(playerPuuid: string, games: GameModel[]): Promise<PlayerModel> {
-  const riotPlayer = await GetRiotPlayerByPuuid(playerPuuid);
+  // We need both the player and the account. The Account contains the new name+tagline info, while the payer
+  // contains all the old data such as level, icon, etc
+  const [riotPlayer, riotAccount] = await Promise.all([
+    GetRiotPlayerByPuuid(playerPuuid),
+    GetRiotAccountByPuuid(playerPuuid),
+  ]);
   return await UpdateDbPlayer(
     playerPuuid,
     riotPlayer,
+    riotAccount,
     await GetRiotLeagueBySummonerId(riotPlayer.id),
     games
   );

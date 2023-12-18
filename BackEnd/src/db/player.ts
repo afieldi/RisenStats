@@ -1,5 +1,5 @@
 import { DocumentNotFound } from '../../../Common/errors';
-import { RiotLeagueEntryDto, RiotParticipantDto, RiotSummonerDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
+import { RiotAccountDto, RiotLeagueEntryDto, RiotParticipantDto, RiotSummonerDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import GameModel from '../../../Common/models/game.model';
 import PlayerModel from '../../../Common/models/player.model';
 import { GetAveragesFromObjects, GetCurrentEpcohMs, toSearchName } from '../../../Common/utils';
@@ -83,14 +83,15 @@ export async function CreateDbPlayersWithParticipantData(participants: RiotParti
   return playerObjs;
 }
 
-export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDto, soloQLeague: RiotLeagueEntryDto, games: GameModel[]): Promise<PlayerModel> {
+export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDto, account: RiotAccountDto, soloQLeague: RiotLeagueEntryDto, games: GameModel[]): Promise<PlayerModel> {
   await ensureConnection();
   const playerDto = await PlayerModel.findOne({ where: { puuid: playerPuuid } });
   if (!playerDto) {
     throw new DocumentNotFound('Player not found');
   }
   log.debug(`Updating player with riot player: \n ${JSON.stringify(player, null, 2)}`);
-  playerDto.name = player.name;
+  log.debug(`Updating player with riot account: \n ${JSON.stringify(account, null, 2)}`);
+  playerDto.name = `${account.gameName}#${account.tagLine}`;
   playerDto.profileIconId = player.profileIconId ? player.profileIconId : 0;
   playerDto.summonerLevel = player.summonerLevel ? player.summonerLevel : 0;
   playerDto.searchName = toSearchName(player.name);
