@@ -29,7 +29,8 @@ export default function PlayerPageHeader(playerOverviewProps: Props)
     }
   }
 
-  const [name, tag] = splitNameTagLine(playerOverviewProps.playerOverview?.overview?.name);
+  const name = playerOverviewProps.playerOverview?.overview?.name;
+  const tag = playerOverviewProps.playerOverview?.overview?.tag;
   const playerIcon = playerOverviewProps.playerOverview?.overview?.profileIconId ? playerOverviewProps.playerOverview?.overview?.profileIconId : 10;
   return (
     <Container sx={{ display: 'flex', alignItems: 'flex-start' }}>

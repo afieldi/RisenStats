@@ -15,10 +15,11 @@ import logger from '../../logger';
 import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from '../db/games';
 import { ApiError } from '../external-api/_call';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
+import { splitNameTagLine } from '../../../Common/utils';
 
 export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
   try {
-    const [name, tagline] = playerName.split('#'); 
+    const [name, tagline] = splitNameTagLine(playerName); 
     const riotPlayer = await GetRiotPlayerByGameNameAndTagline(name, tagline ?? 'NA1');
     if (!riotPlayer) {
       throw new DocumentNotFound(`Player with name ${playerName} not found`);

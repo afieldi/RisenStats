@@ -12,6 +12,9 @@ export default class PlayerModel extends BaseEntity
   @Column("varchar")
   name: string;
 
+  @Column('varchar', {nullable: true})
+  tag: string;
+
   @Column("int")
   summonerLevel: number;
 

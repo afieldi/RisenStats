@@ -8,6 +8,7 @@ import log from '../../logger';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import { In } from 'typeorm';
+import { GetRiotAccountByPuuid } from '../external-api/player';
 
 export async function GetDbPlayerByPuuid(playerPuuid: string): Promise<PlayerModel> {
   await ensureConnection();
@@ -29,13 +30,15 @@ export async function getDbPlayerByname(playerName: string): Promise<PlayerModel
 
 export async function CreateDbPlayerWithRiotPlayer(player: RiotSummonerDto, soloQLeague: RiotLeagueEntryDto): Promise<PlayerModel> {
   await ensureConnection();
+  const { gameName, tagLine } = await GetRiotAccountByPuuid(player.puuid);
   const playerDto = PlayerModel.create({
     puuid: player.puuid,
-    name: player.name,
+    name: gameName,
+    tag: tagLine,
     summonerId: player.id,
     profileIconId: player.profileIconId ? player.profileIconId : 0,
     summonerLevel: player.summonerLevel ? player.summonerLevel : 0,
-    searchName: toSearchName(player.name),
+    searchName: toSearchName(gameName, tagLine),
     league: soloQLeague?.tier ? soloQLeague.tier : 'UNRANKED',
     division: soloQLeague?.rank ? soloQLeague.rank : 'I',
     refreshedAt: GetCurrentEpcohMs(),
@@ -62,13 +65,15 @@ export async function CreateDbPlayersWithParticipantData(participants: RiotParti
   for (const participant of participants) {
     const currentPlayer = existingPlayersMap[participant.puuid];
 
+    const { gameName, tagLine } = await GetRiotAccountByPuuid(participant.puuid);
     playerObjs.push(PlayerModel.create({
       puuid: participant.puuid,
-      name: participant.summonerName,
+      name: gameName,
+      tag: tagLine,
       summonerId: participant.summonerId,
       profileIconId: participant.profileIcon ? participant.profileIcon : 0,
       summonerLevel: participant.summonerLevel ? participant.summonerLevel : 0,
-      searchName: toSearchName(participant.summonerName),
+      searchName: toSearchName(gameName, tagLine),
       league: currentPlayer?.league ?? 'UNRANKED',
       division: currentPlayer?.division ?? 'I',
       refreshedAt: currentPlayer?.refreshedAt ?? 0,
@@ -91,10 +96,12 @@ export async function UpdateDbPlayer(playerPuuid: string, player: RiotSummonerDt
   }
   log.debug(`Updating player with riot player: \n ${JSON.stringify(player, null, 2)}`);
   log.debug(`Updating player with riot account: \n ${JSON.stringify(account, null, 2)}`);
-  playerDto.name = `${account.gameName}#${account.tagLine}`;
+
+  playerDto.name = account.gameName;
+  playerDto.tag = account.tagLine;
   playerDto.profileIconId = player.profileIconId ? player.profileIconId : 0;
   playerDto.summonerLevel = player.summonerLevel ? player.summonerLevel : 0;
-  playerDto.searchName = toSearchName(player.name);
+  playerDto.searchName = toSearchName(account.gameName, account.tagLine);
   playerDto.league = soloQLeague?.tier ? soloQLeague.tier : 'UNRANKED';
   playerDto.division = soloQLeague?.rank ? soloQLeague.rank : 'I';
   playerDto.refreshedAt = GetCurrentEpcohMs();
