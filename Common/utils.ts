@@ -69,6 +69,13 @@ export function timeToTimeAgo(time: number): string {
 
 }
 
+export function splitNameTagLine(name?: string): string[] {
+  if (!name) {
+    return ['', ''];
+  }
+  return name.split('#');
+}
+
 export function toPerMinute(value: number, riotTimestamp: number, rounded: number = 2): number {
   let m = riotTimestampToMinutes(riotTimestamp);
   return roundTo(value / m, rounded);

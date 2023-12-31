@@ -1,10 +1,6 @@
 import { RiotAccountDto, RiotLeagueEntryDto, RiotSummonerDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import { MakeRiotAPICall } from './_call';
 
-export async function GetRiotPlayerByName(playerName: string): Promise<RiotSummonerDto> {
-  return await MakeRiotAPICall<RiotSummonerDto>(`/lol/summoner/v4/summoners/by-name/${encodeURIComponent(playerName)}`, 'GET');
-}
-
 export async function GetRiotLeaguesBySummonerId(summonerId: string): Promise<RiotLeagueEntryDto[]> {
   return await MakeRiotAPICall<RiotLeagueEntryDto[]>(`/lol/league/v4/entries/by-summoner/${encodeURIComponent(summonerId)}`, 'GET');
 }
@@ -19,6 +15,10 @@ export async function GetRiotPlayerBySummonerId(summonerId: string): Promise<Rio
 
 export async function GetRiotAccountByGameNameAndTagline(gameName: string, tagline: string): Promise<RiotAccountDto> {
   return await MakeRiotAPICall<RiotAccountDto>(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(gameName)}/${encodeURIComponent(tagline)}`, 'GET');
+}
+
+export async function GetRiotAccountByPuuid(puuid: string): Promise<RiotAccountDto> {
+  return await MakeRiotAPICall<RiotAccountDto>(`/riot/account/v1/accounts/by-puuid/${encodeURIComponent(puuid)}`, 'GET');
 }
 
 export async function GetRiotPlayerByGameNameAndTagline(gameName: string, tagline: string): Promise<RiotSummonerDto> {

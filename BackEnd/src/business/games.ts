@@ -218,7 +218,10 @@ async function saveMatchForGameAlreadyInDb(matchId: string) {
 
 export async function hasRecentlyBuiltRisenTeams(seasonId: number): Promise<boolean> {
   let season = await GetDbActiveSeasonWithSheets(seasonId);
-  if (!season || !season.lastTimeRisenTeamsBuilt) {
+  if (!season) {
+    return true;
+  }
+  else if (!season.lastTimeRisenTeamsBuilt) {
     return false;
   }
 

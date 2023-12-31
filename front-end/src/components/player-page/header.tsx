@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { PlayerOverviewResponse } from '../../../../Common/Interface/Internal/player';
 import { UpdatePlayer } from '../../api/player';
 import LoadingButton from '../loading-button/LoadingButton';
+import { splitNameTagLine } from '../../../../Common/utils';
 
 interface Props {
   playerOverview: PlayerOverviewResponse | undefined;
@@ -28,17 +29,22 @@ export default function PlayerPageHeader(playerOverviewProps: Props)
     }
   }
 
+  const name = playerOverviewProps.playerOverview?.overview?.name;
+  const tag = playerOverviewProps.playerOverview?.overview?.tag;
   const playerIcon = playerOverviewProps.playerOverview?.overview?.profileIconId ? playerOverviewProps.playerOverview?.overview?.profileIconId : 10;
   return (
     <Container sx={{ display: 'flex', alignItems: 'flex-start' }}>
       <Box sx={{ display: 'inline-flex', alignItems: 'flex-start' }}>
-        <img src={`https://ddragon.leagueoflegends.com/cdn/12.19.1/img/profileicon/${playerIcon}.png`} className="player-profile-picture"></img>
+        <img src={`https://ddragon.leagueoflegends.com/cdn/13.24.1/img/profileicon/${playerIcon}.png`} className="player-profile-picture"></img>
         <Box sx={{ flexGrow: 1, pl: 2, textAlign: 'left' }}>
           <Hidden mdUp>
-            <Typography variant="h5">{playerOverviewProps.playerOverview?.overview?.name}</Typography>
+            <Typography variant="h5">{name}</Typography><Typography variant="h6">#{tag}</Typography>
           </Hidden>
           <Hidden smDown>
-            <Typography fontFamily="Montserrat" variant="h3" className="text-overflow">{playerOverviewProps.playerOverview?.overview?.name}</Typography>
+            <div>
+              <Typography fontFamily="Montserrat" variant="h3" className="text-overflow inline-flex">{name}</Typography>
+              <Typography fontFamily="Montserrat" variant="h5" className="text-overflow inline-flex">#{tag}</Typography>
+            </div>
           </Hidden>
           {/* <br></br> */}
           <LoadingButton variant="outlined" color="primary" onClick={updateGames} loading={loading}>Update</LoadingButton>
