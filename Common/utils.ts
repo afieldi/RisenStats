@@ -5,10 +5,13 @@ import SeasonModel from "./models/season.model";
 import AggregatedPlayerStatModel from "./models/aggregatedplayerstat.model";
 import { GameRoles } from "./Interface/General/gameEnums";
 
-export function toSearchName(name: string): string
+export function toSearchName(name: string, tag?: string): string
 {
   name = name.toLowerCase();
   name = name.replace(new RegExp(" ", 'g'), "");
+  if (tag) {
+    name += '-' + tag;
+  }
   return name;
 }
 
@@ -73,7 +76,13 @@ export function splitNameTagLine(name?: string): string[] {
   if (!name) {
     return ['', ''];
   }
-  return name.split('#');
+  const [gameName, tag] = name.split('#');
+
+  // If there is no tag, also try splitting by -. We use both to split due to - working better in urls.
+  if (!tag) {
+    return name.split('-');
+  }
+  return [gameName, tag];
 }
 
 export function toPerMinute(value: number, riotTimestamp: number, rounded: number = 2): number {
