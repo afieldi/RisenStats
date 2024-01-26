@@ -17,12 +17,13 @@ export class PremadeParser implements RisenSheetParser {
       sub2: this.getPlayerIdentifierFromString(row[11]) ?? undefined,
       sub3: this.getPlayerIdentifierFromString(row[12]) ?? undefined,
       sub4: this.getPlayerIdentifierFromString(row[13]) ?? undefined,
-      sub5: this.getPlayerIdentifierFromString(row[14])?? undefined,
+      sub5: this.getPlayerIdentifierFromString(row[14]) ?? undefined,
     };
   }
 
   public isValidRow(data: string[]): boolean {
     // Check to make sure there's enough columns and make sure the name and abbr exist
+    // If a row has a opgg then we know its a team row and not a filler row.
     return data.length > 5 && this.isValidRowData(data[0]) && this.isValidRowData(data[1]) && this.hasValidOPGG(data[15]);
   }
 
@@ -40,6 +41,11 @@ export class PremadeParser implements RisenSheetParser {
       return undefined;
     }
 
+    if(!inputString.includes('#')) {
+      log.error(`Player name, ${inputString} was invalid!, no # to seperate!`);
+      return undefined;
+    }
+
     let splitString = inputString.split('#');
 
     if (splitString.length != 2) {
@@ -48,8 +54,8 @@ export class PremadeParser implements RisenSheetParser {
     }
 
     return {
-      gameName: splitString[0],
-      tagline: splitString[1]
+      gameName: splitString[0].trim(),
+      tagline: splitString[1].trim()
     };
   }
 
