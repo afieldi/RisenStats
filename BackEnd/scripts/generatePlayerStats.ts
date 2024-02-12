@@ -4,6 +4,8 @@ import { ensureConnection } from '../src/db/dbConnect';
 import PlayerGameModel from '../../Common/models/playergame.model';
 import { UpdateGamesByPlayerPuuid } from '../src/business/player';
 import { CreatePlayerStatsByPuuid } from '../src/business/playerstats';
+import PlayerTeamModel from '../../Common/models/playerteam.model';
+import { buildRisenTeams } from '../src/business/teams';
 
 // Use this function if you already have the games loaded. Should be much faster.
 async function generatePlayerStats(): Promise<any> {
@@ -29,14 +31,28 @@ async function generatePlayerStatsWithUpdate(): Promise<any> {
   console.log('starting');
   let playerRes = await PlayerGameModel.createQueryBuilder().select('"playerPuuid"').distinct(true).getRawMany();
   for (let item of playerRes) {
-    try {
-      const playerPuuid: string = item['playerPuuid'];
-      await UpdateGamesByPlayerPuuid(playerPuuid);
-      await CreatePlayerStatsByPuuid(playerPuuid);
-    } catch (error) {
-      console.log(error);
-    }
+    await buildStatsForPlayerWithGameFetch(item['playerPuuid']);
   }
 }
 
-generatePlayerStats();
+async function rebuildStatsForLeague(id: number) {
+  await ensureConnection();
+  console.log('starting');
+  buildRisenTeams(id);
+  let playerRes = await PlayerTeamModel.createQueryBuilder().where(`"teamSeasonId" = ${id}`).select('"playerPuuid"').distinct(true).getRawMany();
+  for (let item of playerRes) {
+    await buildStatsForPlayerWithGameFetch(item['playerPuuid']);
+  }
+  console.log(playerRes.length);
+}
+
+async function buildStatsForPlayerWithGameFetch(playerPuuid: string) {
+  try {
+    await UpdateGamesByPlayerPuuid(playerPuuid);
+    await CreatePlayerStatsByPuuid(playerPuuid);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+rebuildStatsForLeague(30);
