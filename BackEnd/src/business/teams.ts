@@ -30,12 +30,11 @@ export async function buildRisenTeams(seasonId: number) {
     logger.error(`Parser was not configured correctly for the ${seasonsWithSheet.searchname} season`);
     return;
   }
-
-  await this.buildTeamsForLeague(sheet, sheetName, seasonsWithSheet.id);
+  await buildTeamsForLeague(parser, sheet, seasonsWithSheet.id);
   await SetDBLastTimeActiveSeasonRisenTeamWasBuilt(new Date(), seasonsWithSheet);
 }
 
-async function buildTeamsForLeague(parser: RisenSheetParser, sheet: any[][], sheetName: string, seasonId: number) {
+async function buildTeamsForLeague(parser: RisenSheetParser, sheet: any[][], seasonId: number) {
   let risenSheetTeams: RisenTeam[] = [];
 
   for (let [index, row] of sheet.entries()) {
@@ -97,9 +96,9 @@ export async function addPlayersToTeams(seasonId: number, risenSheetTeam: RisenT
     risenSheetTeam.sub3,
     risenSheetTeam.sub4,
     risenSheetTeam.sub5]
+    .filter(identifier => undefined !== identifier)
     .filter(identifier => '' !== identifier.gameName)
-    .filter(identifier => '' !== identifier.tagline)
-    .filter(identifier => undefined !== identifier);
+    .filter(identifier => '' !== identifier.tagline);
 
   let playerPuuids: string[] = [];
 
