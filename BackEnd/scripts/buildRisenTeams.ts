@@ -5,9 +5,9 @@ import { buildRisenTeams } from '../src/business/teams';
 /*
     ?? - champions
     28 - Mythical
-    ?? - draft
-    ?? - dom
-    ?? - unstop
-    ?? - ramp
+    29 - draft
+    32 - dom
+    31 - unstop
+    30 - ramp
  */
-buildRisenTeams(28);
+buildRisenTeams(30);
