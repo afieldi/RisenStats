@@ -21,6 +21,7 @@ function MapStatsToLeaderboard(data: AggregatedPlayerStatModel[]): LeaderboardTy
   return data.map((stat, i) => ({
     rank: +i+1,
     playerName: stat.player.name,
+    playerTag: stat.player.tag,
     tier: OVERALL_GAME_RATING_OVERVIEW[stat.lobbyPosition as keyof typeof GameRoles].getStatNumber([stat]),
     wr: roundTo(StatGenerators.WR.getStatValue(stat)),
     role: GameRoles[stat.lobbyPosition as keyof typeof GameRoles],

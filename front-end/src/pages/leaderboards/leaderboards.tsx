@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Container, FormControlLabel, FormGroup, Grid, Hidden, Popper, Tooltip, Typography, useTheme } from '@mui/material';
+import { Button, Checkbox, Container, FormControlLabel, FormGroup, Hidden, Popper, Tooltip, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import FilterBar from '../../components/filters/filter-bar';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
@@ -33,8 +33,8 @@ export default function Leaderboards() {
   };
 
 
-  const goToPlayer = (playerName: string) => {
-    navigate(`/player/${toSearchName(playerName)}`);
+  const goToPlayer = (playerName: string, tag: string) => {
+    navigate(`/player/${toSearchName(playerName, tag)}`);
   };
 
   const headCells = getAllHeadCells(goToPlayer);

@@ -18,6 +18,7 @@ export interface LeaderboardType {
   role: GameRoles;
   tier: number;
   playerName: string;
+  playerTag: string;
   wr: number;
   kda: number;
   dpm: number;
