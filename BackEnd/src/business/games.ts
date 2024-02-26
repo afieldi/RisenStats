@@ -119,6 +119,7 @@ function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
       championId: participant.championId,
       team: participant.teamId,
       playerName: participant.summonerName,
+      tagline: participant.riotIdTagline,
       playerPuuid: participant.puuid,
       summoner1Id: participant.summoner1Id,
       summoner2Id: participant.summoner2Id,
