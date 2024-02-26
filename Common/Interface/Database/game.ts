@@ -5,6 +5,7 @@ export interface GameSummaryPlayers {
 
 export interface GameSummaryPlayer {
   playerName: string;
+  tagline: string;
   playerPuuid: string;
   championId: number;
   position: string;
