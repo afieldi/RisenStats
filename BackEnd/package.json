@@ -45,7 +45,6 @@
     "@types/node": "^20.2.5",
     "@types/uuid": "^8.3.4",
     "@types/yargs": "^17.0.11",
-    "chartjs-node-canvas": "^4.1.6",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "discord-oauth2": "^2.10.0",
