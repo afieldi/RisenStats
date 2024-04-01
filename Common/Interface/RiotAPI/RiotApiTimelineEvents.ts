@@ -29,7 +29,8 @@ export enum MonsterSubType {
 export enum MonsterType {
   BARON_NASHOR ="BARON_NASHOR",
   RIFTHERALD = "RIFTHERALD",
-  DRAGON = "DRAGON"
+  DRAGON = "DRAGON",
+  HORDE = "HORDE" // voidgrubs are named horde
 }
 
 export interface RiotTimelineEvent

@@ -74,6 +74,7 @@ function DefaultTimelineStats(): TimelineParticipantStats {
     elderDragonKills: 0,
     riftHeraldKills: 0,
     baronKills: 0,
+    voidgrubKills: 0,
   } as TimelineParticipantStats;
 }
 
@@ -175,6 +176,10 @@ function HandleEliteMosterKill(allParticipants: TimelineParticipantStats[], even
 
   if(event.monsterType == MonsterType.RIFTHERALD) {
     allParticipants[id].riftHeraldKills += 1;
+  }
+
+  if (event.monsterType == MonsterType.HORDE) {
+    allParticipants[id].voidgrubKills += 1;
   }
 }
 
