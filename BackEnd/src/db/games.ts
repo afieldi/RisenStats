@@ -144,6 +144,7 @@ export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj
     cloudDragonKills: timelineStats.cloudDragonKills,
     chemtechDragonKills: timelineStats.chemtechDragonKills,
     hextechDragonKills: timelineStats.hextechDragonKills,
+    voidgrubKills: timelineStats.voidgrubKills,
 
     items: [
       riotPlayer.item0,

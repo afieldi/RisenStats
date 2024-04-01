@@ -58,4 +58,5 @@ export interface TimelineParticipantStats
   elderDragonKills: number,
   baronKills: number,
   riftHeraldKills: number,
+  voidgrubKills: number
 }
