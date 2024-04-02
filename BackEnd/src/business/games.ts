@@ -25,7 +25,14 @@ async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   return gameData;
 }
 
-export async function SaveDataByMatchIdAndUpdatePlayerStats(matchId: string): Promise<GameModel> {
+export async function SaveDataByMatchIdForRiotCallback(matchId: string): Promise<GameModel> {
+  const existingMatch = await saveMatchForGameAlreadyInDb(matchId);
+  // We need this check because sometimes the callback function calls twice for the same match,
+  // in that case we dont want to aggregate the stats again.
+  if (existingMatch) {
+    return existingMatch;
+  }
+
   let savedGameModel = await SaveDataByMatchId(matchId);
   await updatePlayerStatsForGame(matchId);
   return savedGameModel;
