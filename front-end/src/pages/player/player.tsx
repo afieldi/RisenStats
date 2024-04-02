@@ -6,7 +6,11 @@ import { tabLabelProps, TabPanel } from '../../components/tab-panel/tab-panel';
 import PlayerPageGeneral from '../../components/player-page/general';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { GetDetailedPlayerGames, GetPlayerProfile, GetPlayerStats } from '../../api/player';
+import {
+  GetDetailedPlayerGames,
+  GetPlayerProfileByPlayerNameAndTagline,
+  GetPlayerStats
+} from '../../api/player';
 import { PlayerDetailedGame, PlayerOverviewResponse } from '../../../../Common/Interface/Internal/player';
 
 import '../../styles/player.css';
@@ -22,7 +26,7 @@ import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
 
 function PlayerPage()
 {
-  let { playerName } = useParams();
+  let { playerNameWithTagline } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -39,9 +43,9 @@ function PlayerPage()
   const [roleId, setRoleId] = useState<GameRoles>(GameRoles.ALL);
 
   async function loadPlayerProfile() {
-    if (playerName) {
+    if (playerNameWithTagline) {
       try {
-        const profile = await GetPlayerProfile(playerName);
+        const profile = await GetPlayerProfileByPlayerNameAndTagline(playerNameWithTagline);
         setPlayerProfile(profile);
         return profile;
       }

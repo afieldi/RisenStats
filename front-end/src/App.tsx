@@ -31,7 +31,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
-            <Route path="/player/:playerName" element={<Player />}></Route>
+            <Route path="/player/:playerNameWithTagline" element={<Player />}></Route>
             <Route path="/leagues/:leagueName" element={<LeaguePage />}></Route>
             <Route path="/leaderboard" element={<Leaderboards />}></Route>
             <Route path="/leagues/:leagueName/:teamName" element={<TeamPage />}></Route>

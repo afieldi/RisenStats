@@ -1,4 +1,4 @@
-import { CreateDbGame, CreateDbPlayerGameNoSave, GetDbGameByGameId, GetDbPlayerGamesByGameId } from '../db/games';
+import { CreateDbGame, CreateDbPlayerGameDatabaseObject, GetDbGameByGameId, GetDbPlayerGamesByGameId } from '../db/games';
 import { GameSummaryPlayer, GameSummaryPlayers, TeamSumStat, TeamSumStats } from '../../../Common/Interface/Database/game';
 import { RiotMatchDto, RiotParticipantDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import GameModel from '../../../Common/models/game.model';
@@ -78,7 +78,7 @@ export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDt
     const participant = gameData.info.participants[i];
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
     const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
+    objsToSave.push(CreateDbPlayerGameDatabaseObject(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
   return gameObj;
@@ -112,7 +112,7 @@ export async function UpdatePlayersInSingleMatchById(gameObj: GameModel, gameDat
     const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
 
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
+    objsToSave.push(CreateDbPlayerGameDatabaseObject(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
   return gameObj;

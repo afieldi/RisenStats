@@ -15,30 +15,6 @@ import logger from '../../logger';
 import { GetDbGamesByGameIds, GetDbPlayerGamesByPlayerPuuid } from '../db/games';
 import { ApiError } from '../external-api/_call';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
-import { splitNameTagLine } from '../../../Common/utils';
-
-export async function GetOrCreatePlayerOverviewByName(playerName: string): Promise<PlayerModel> {
-  try {
-    const [name, tagline] = splitNameTagLine(playerName); 
-    const riotPlayer = await GetRiotPlayerByGameNameAndTagline(name, tagline ?? 'NA1');
-    if (!riotPlayer) {
-      throw new DocumentNotFound(`Player with name ${playerName} not found`);
-    }
-    try {
-      return await GetDbPlayerByPuuid(riotPlayer.puuid);
-    } catch (error) {}
-
-    const riotLeague = await GetRiotLeagueBySummonerId(riotPlayer.id);
-    return await CreateDbPlayerWithRiotPlayer(riotPlayer, riotLeague);
-  } catch (error) {
-    if (error instanceof ApiError) {
-      if (error.status === 404) {
-        throw new DocumentNotFound(`Player with name ${playerName} not found`);
-      }
-    }
-    throw error;
-  }
-}
 
 export async function GetOrCreatePlayerOverviewByGameNameAndTagline(gameName: string, tagline: string): Promise<PlayerModel> {
   try {

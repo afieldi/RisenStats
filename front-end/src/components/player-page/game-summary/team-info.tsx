@@ -25,7 +25,6 @@ const flexDirectionByTeamColor: Record<TeamColor, string> = {
 };
 
 function TeamInfo(teamInfoProps: TeamInfoProps) {
-
   const alignment: 'left' | 'right' = alignmentByTeamColor[teamInfoProps.teamColor];
   const rowType = flexDirectionByTeamColor[teamInfoProps.teamColor];
   return <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', pr: .5 }}>
@@ -47,7 +46,7 @@ function TeamInfo(teamInfoProps: TeamInfoProps) {
                 width="15px"/>
             </Box>
             <Box sx={{ overflow: 'hidden' }}>
-              <Link to={`/player/${encodeURIComponent(player.playerName)}`}>
+              <Link to={`/player/${encodeURIComponent(player.playerName)}-${encodeURIComponent(player.tagline)}`}>
                 <Typography variant="body2" align={alignment} className="clickable-bg no-overflow player-names">
                   {player.playerName}
                 </Typography>
