@@ -12,7 +12,7 @@ describe('Saving Match Cases', () => {
   }, 120000);
 
   test('Should save an existing match correctly and update the stats', async() => {
-    let gamemodel = await games.SaveDataByMatchIdAndUpdatePlayerStats(existingMatchId);
+    let gamemodel = await games.SaveDataByMatchIdForRiotCallback(existingMatchId);
     expect(gamemodel).not.toBeNull();
     // TODO write some tests to validate that we're saving correctly.
   }, 120000);
