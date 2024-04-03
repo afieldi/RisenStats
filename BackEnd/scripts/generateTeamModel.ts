@@ -5,8 +5,8 @@ import { ensureConnection, SaveObjects } from '../src/db/dbConnect';
 import PlayerTeamModel from '../../Common/models/playerteam.model';
 import { parse } from 'csv-parse/sync';
 import * as fs from 'fs';
-import { GetOrCreatePlayerOverviewByName } from '../src/business/player';
-import { buildRisenTeams } from '../src/business/teams';
+import { GetOrCreatePlayerOverviewByGameNameAndTagline } from '../src/business/player';
+import { splitNameTagLine } from '../../Common/utils';
 
 const path = require('path');
 
@@ -61,15 +61,16 @@ async function buildTeam(seasonId: number, displayName: string, abbreviation: st
   await SaveObjects(rows, TeamModel);
 }
 
-async function buildPlayersInTeams(seasonId: number, teamId: number, playersNames: string[]) {
+async function buildPlayersInTeams(seasonId: number, teamId: number, nameWithTag: string[]) {
   await ensureConnection();
 
   let playerPuuids: string[] = [];
 
-  for (let player of playersNames) {
+  for (let player of nameWithTag) {
     console.log(`Trying to load player ${player}`);
     try {
-      let playerModel = await GetOrCreatePlayerOverviewByName(player);
+      let riotAccountName = splitNameTagLine(player);
+      let playerModel = await GetOrCreatePlayerOverviewByGameNameAndTagline(riotAccountName[0], riotAccountName[1]);
       playerPuuids.push(playerModel.puuid);
     } catch (e) {
       console.log(`Couldnt Find [${player}] skipping`);
@@ -111,8 +112,8 @@ async function addLeague(seasonId: number, sheet: string) {
   // Add the players
   for (let row of rows) {
     let team = await findTeam(row.teamName, row.abrv, seasonId);
-    let playerNames = [row.top, row.jungle, row.mid, row.adc, row.support, row.sub1, row.sub2, row.sub3, row.sub4, row.sub5].filter(name => '' !== name);
-    await buildPlayersInTeams(seasonId, team.teamId, playerNames);
+    let riotNames = [row.top, row.jungle, row.mid, row.adc, row.support, row.sub1, row.sub2, row.sub3, row.sub4, row.sub5].filter(name => '' !== name);
+    await buildPlayersInTeams(seasonId, team.teamId, riotNames);
   }
 
   console.log('Finished Adding Players');

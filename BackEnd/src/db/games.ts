@@ -19,16 +19,9 @@ const roleOrder = [
   GameRoles.SUPPORT
 ];
 
-export function CreateDbPlayerGameNoSave(riotPlayer: RiotParticipantDto, gameObj: GameModel,
+export function CreateDbPlayerGameDatabaseObject(riotPlayer: RiotParticipantDto, gameObj: GameModel,
   timelineStats: TimelineParticipantStats, teamStats: TeamSumStat, seasonId: number, lobbyOrder: number, teamId?: number): PlayerGameModel {
-
-  if (!riotPlayer.challenges) {
-    const d = new Date(0);
-    d.setUTCMilliseconds(gameObj.gameStart);
-    logger.warn(`Game ${gameObj.gameId} has no challenge stats. Probably too old. Game start: ${d.toUTCString()}`);
-  }
-
-
+  
   const shortPlayerData = {
     game: gameObj,
     timestamp: gameObj.gameStart,

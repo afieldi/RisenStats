@@ -1,4 +1,4 @@
-import { CreateDbGame, CreateDbPlayerGameNoSave, GetDbGameByGameId, GetDbPlayerGamesByGameId } from '../db/games';
+import { CreateDbGame, CreateDbPlayerGameDatabaseObject, GetDbGameByGameId, GetDbPlayerGamesByGameId } from '../db/games';
 import { GameSummaryPlayer, GameSummaryPlayers, TeamSumStat, TeamSumStats } from '../../../Common/Interface/Database/game';
 import { RiotMatchDto, RiotParticipantDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import GameModel from '../../../Common/models/game.model';
@@ -17,7 +17,7 @@ import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { buildRisenTeams } from './teams';
 import { GetDbActiveSeasonWithSheets } from '../db/season';
 
-async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
+export async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
   if (gameData.info.participants.length !== 10) {
     throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
@@ -78,7 +78,7 @@ export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDt
     const participant = gameData.info.participants[i];
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
     const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
+    objsToSave.push(CreateDbPlayerGameDatabaseObject(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
   return gameObj;
@@ -112,20 +112,20 @@ export async function UpdatePlayersInSingleMatchById(gameObj: GameModel, gameDat
     const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
 
     const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
-    objsToSave.push(CreateDbPlayerGameNoSave(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
+    objsToSave.push(CreateDbPlayerGameDatabaseObject(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
   return gameObj;
 }
 
-function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
+export function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
   const redPlayers: GameSummaryPlayer[] = [];
   const bluePlayers: GameSummaryPlayer[] = [];
   for (const participant of gameData.info.participants) {
     const player = {
       championId: participant.championId,
       team: participant.teamId,
-      playerName: participant.summonerName,
+      playerName: participant.riotIdGameName,
       tagline: participant.riotIdTagline,
       playerPuuid: participant.puuid,
       summoner1Id: participant.summoner1Id,
@@ -140,9 +140,9 @@ function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
       assists: participant.assists,
     } as GameSummaryPlayer;
     if (participant.teamId === 100) {
-      redPlayers.push(player);
-    } else {
       bluePlayers.push(player);
+    } else {
+      redPlayers.push(player);
     }
   }
   return {

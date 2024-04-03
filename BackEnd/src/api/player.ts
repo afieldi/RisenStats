@@ -1,7 +1,18 @@
 import express, { Request, Router } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
-import { PlayerGamesResponse, PlayerOverviewResponse, PlayerSeasonsResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
-import { GetOrCreatePlayerOverviewByName, GetPlayerDetailedGames, GetPlayerSeasons, UpdateGamesByPlayerPuuid } from '../business/player';
+import {
+  PlayerGamesResponse,
+  PlayerOverviewRequest,
+  PlayerOverviewResponse,
+  PlayerSeasonsResponse,
+  UpdatePlayerGamesResponse
+} from '../../../Common/Interface/Internal/player';
+import {
+  GetOrCreatePlayerOverviewByGameNameAndTagline,
+  GetPlayerDetailedGames,
+  GetPlayerSeasons,
+  UpdateGamesByPlayerPuuid
+} from '../business/player';
 import logger from '../../logger';
 import { DocumentNotFound } from '../../../Common/errors';
 import { NonNone } from '../../../Common/utils';
@@ -28,11 +39,12 @@ router.post('/update/by-puuid/:playerPuuid', async(req: Request, res: TypedRespo
   }
 });
 
-router.post('/summary/by-name/:playerName', async(req: Request, res: TypedResponse<PlayerOverviewResponse>) => {
+router.post('/summary/by-name-and-tagline', async(req: TypedRequest<PlayerOverviewRequest>, res: TypedResponse<PlayerOverviewResponse>) => {
   try {
-    const playerNameWithTag = req.params.playerName;
-    logger.info(`Player summary by name ${playerNameWithTag}`);
-    const playerData = await GetOrCreatePlayerOverviewByName(playerNameWithTag);
+    const name = req.body.name;
+    const tagline = req.body.tagline;
+    logger.info(`Player summary by name: ${name} tageline: ${tagline}`);
+    const playerData = await GetOrCreatePlayerOverviewByGameNameAndTagline(name, tagline);
     res.json({
       overview: playerData
     });

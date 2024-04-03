@@ -1,11 +1,27 @@
-import { PlayerGamesResponse, PlayerOverviewResponse, PlayerSeasonsResponse, UpdatePlayerGamesResponse } from '../../../Common/Interface/Internal/player';
+import {
+  PlayerGamesResponse,
+  PlayerOverviewRequest,
+  PlayerOverviewResponse,
+  PlayerSeasonsResponse,
+  UpdatePlayerGamesResponse
+} from '../../../Common/Interface/Internal/player';
 import { GetGamesRequest, GetGamesResponse } from '../../../Common/Interface/Internal/games';
 import { MakeBackendCall } from './_call';
 import { GetPlayerStatsByDateAndSeasonRequest, GetPlayerStatsByDateAndSeasonResponse, GetPlayerStatsRequest, GetPlayerStatsResponse } from '../../../Common/Interface/Internal/playerstats';
 import { DEFAULT_RISEN_SEASON_ID } from '../../../Common/constants';
+import { splitNameTagLine } from '../../../Common/utils';
 
-export async function GetPlayerProfile(playerName: string): Promise<PlayerOverviewResponse> {
-  return await MakeBackendCall(`/api/player/summary/by-name/${playerName}`, 'POST', {}) as PlayerOverviewResponse;
+export async function GetPlayerProfileByPlayerNameAndTagline(playerNameAndTagline: string) {
+  let nameAndTagline = splitNameTagLine(playerNameAndTagline);
+  return GetPlayerProfile(nameAndTagline[0], nameAndTagline[1]);
+}
+
+export async function GetPlayerProfile(name: string, tagline: string): Promise<PlayerOverviewResponse> {
+  const params: PlayerOverviewRequest = {
+    tagline,
+    name,
+  };
+  return await MakeBackendCall('/api/player/summary/by-name-and-tagline', 'POST', params) as PlayerOverviewResponse;
 }
 
 export async function GetPlayerGames(playerPuuid: string, seasonId: string): Promise<GetGamesResponse> {
