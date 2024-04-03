@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { GameSummaryPlayer } from '../../../../../Common/Interface/Database/game';
 import { Link } from 'react-router-dom';
+import { getEncodedNameWithTagline } from '../../../common/utils';
 
 export enum TeamColor {
     BLUE = 'blue',
@@ -46,7 +47,7 @@ function TeamInfo(teamInfoProps: TeamInfoProps) {
                 width="15px"/>
             </Box>
             <Box sx={{ overflow: 'hidden' }}>
-              <Link to={`/player/${encodeURIComponent(player.playerName)}-${encodeURIComponent(player.tagline)}`}>
+              <Link to={`/player/${getEncodedNameWithTagline(player.playerName, player.tagline)}`}>
                 <Typography variant="body2" align={alignment} className="clickable-bg no-overflow player-names">
                   {player.playerName}
                 </Typography>

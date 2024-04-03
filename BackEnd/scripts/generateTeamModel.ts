@@ -61,12 +61,12 @@ async function buildTeam(seasonId: number, displayName: string, abbreviation: st
   await SaveObjects(rows, TeamModel);
 }
 
-async function buildPlayersInTeams(seasonId: number, teamId: number, riotNames: string[]) {
+async function buildPlayersInTeams(seasonId: number, teamId: number, nameWithTag: string[]) {
   await ensureConnection();
 
   let playerPuuids: string[] = [];
 
-  for (let player of riotNames) {
+  for (let player of nameWithTag) {
     console.log(`Trying to load player ${player}`);
     try {
       let riotAccountName = splitNameTagLine(player);

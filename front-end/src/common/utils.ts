@@ -139,3 +139,7 @@ export function getTeamStats(gameModel: GameModel): RedAndBlueStats {
     },
   };
 }
+
+export function getEncodedNameWithTagline(name: string, tagline: string): string {
+  return `${encodeURIComponent(name)}-${encodeURIComponent(tagline)}`;
+}
