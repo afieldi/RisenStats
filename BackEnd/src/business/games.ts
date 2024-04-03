@@ -17,7 +17,7 @@ import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { buildRisenTeams } from './teams';
 import { GetDbActiveSeasonWithSheets } from '../db/season';
 
-async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
+export async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
   if (gameData.info.participants.length !== 10) {
     throw new Error(`Invalid number of participants: ${gameData.info.participants.length}`);
@@ -118,14 +118,14 @@ export async function UpdatePlayersInSingleMatchById(gameObj: GameModel, gameDat
   return gameObj;
 }
 
-function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
+export function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
   const redPlayers: GameSummaryPlayer[] = [];
   const bluePlayers: GameSummaryPlayer[] = [];
   for (const participant of gameData.info.participants) {
     const player = {
       championId: participant.championId,
       team: participant.teamId,
-      playerName: participant.summonerName,
+      playerName: participant.riotIdGameName,
       tagline: participant.riotIdTagline,
       playerPuuid: participant.puuid,
       summoner1Id: participant.summoner1Id,
@@ -140,9 +140,9 @@ function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers {
       assists: participant.assists,
     } as GameSummaryPlayer;
     if (participant.teamId === 100) {
-      redPlayers.push(player);
-    } else {
       bluePlayers.push(player);
+    } else {
+      redPlayers.push(player);
     }
   }
   return {
