@@ -61,8 +61,8 @@ function buildWinrate(games: PlayerGameModel[]) {
 
     // Only add the game if we found the winning game
     if (game.win) {
-      blueWin += game.teamId == 200 ? 1 : 0;
-      redWin += game.teamId == 100 ? 1 : 0;
+      blueWin += game.teamId == 100 ? 1 : 0;
+      redWin += game.teamId == 200 ? 1 : 0;
       gamesChecked.add(game.gameGameId);
     }
   }
