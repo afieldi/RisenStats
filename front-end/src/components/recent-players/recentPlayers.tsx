@@ -34,7 +34,7 @@ export default (props: RecentPlayerProps) => {
 
   for (const game of recentGames) {
     const teammates = game.playerGame.teamId === 100 ?
-      game.game.playersSummary.redPlayers : game.game.playersSummary.bluePlayers;
+      game.game.playersSummary.bluePlayers : game.game.playersSummary.redPlayers;
     teammates.map(player => {
       const puuid = player.playerPuuid;
       if (puuid == game.playerGame.player.puuid) {

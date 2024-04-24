@@ -8,17 +8,12 @@ interface AllTeamInfoProps {
   sx?: SxProps<Theme>
 }
 function AllTeamInfo(allTeamInfoProps: AllTeamInfoProps) {
-
-  // For some reason these are flipped so we do this remapping here.
-  const bluePlayer = allTeamInfoProps.gameModel.playersSummary.redPlayers;
-  const redPlayers = allTeamInfoProps.gameModel.playersSummary.bluePlayers;
-
   return (
     <Box sx={{ ...allTeamInfoProps.sx, display: 'flex', justifyContent: 'flex-end' }}>
-      <TeamInfo teamPlayers={bluePlayer}
+      <TeamInfo teamPlayers={allTeamInfoProps.gameModel.playersSummary.bluePlayers}
         gameId={allTeamInfoProps.gameModel.gameId}
         teamColor={TeamColor.BLUE} />
-      <TeamInfo teamPlayers={redPlayers}
+      <TeamInfo teamPlayers={allTeamInfoProps.gameModel.playersSummary.redPlayers}
         gameId={allTeamInfoProps.gameModel.gameId}
         teamColor={TeamColor.RED} />
     </Box>
