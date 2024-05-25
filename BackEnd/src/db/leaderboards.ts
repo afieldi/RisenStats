@@ -5,7 +5,6 @@ import { combine } from '../../../Common/utils';
 import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
 import logger from '../../logger';
 
-const minNumberOfGames = 4;
 
 // TODO for later:
 // Make a selector in the LB page for season/role
@@ -31,8 +30,7 @@ export async function GetDbLeaderboardsBySeasonIdAndRole(seasonId: number, roleI
   // If the role is ALL combine the data into one object and return it.
   let flattenedLeaderboard = flattenLeaderboard(leaderboard);
   logger.info(flattenedLeaderboard.length);
-  // Filter out players without the required amount of games
-  return flattenedLeaderboard.filter(playerStatModel => playerStatModel.games >= minNumberOfGames);
+  return flattenedLeaderboard;
 }
 
 function flattenLeaderboard(playerStatsModel: AggregatedPlayerStatModel[]) {

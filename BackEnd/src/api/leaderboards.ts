@@ -3,8 +3,8 @@ import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/
 import logger from '../../logger';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { GetLeaderboardRequest, GetLeaderboardResponse } from '../../../Common/Interface/Internal/leaderboard';
-import { GetDbLeaderboardsBySeasonIdAndRole } from '../db/leaderboards';
 import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
+import { GetLeaderboardsBySeasonIdAndRole } from '../business/leaderboards';
 
 const router: Router = express.Router();
 
@@ -18,7 +18,7 @@ router.post('/', async(req: TypedRequest<GetLeaderboardRequest>, res: TypedRespo
       res.status(403).send(`SeasonId or RoleId not provided! SeasonId: ${seasonId} ${roleId}`);
     }
 
-    const playerStats: AggregatedPlayerStatModel[] = await GetDbLeaderboardsBySeasonIdAndRole(seasonId, roleId);
+    const playerStats: AggregatedPlayerStatModel[] = await GetLeaderboardsBySeasonIdAndRole(seasonId, roleId);
     res.json({
       playerStats
     });
