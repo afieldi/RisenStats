@@ -30,8 +30,10 @@ interface LeaderboardStats {
   totalGameLength: number;
   totalGamesByTeam: number;
   totalDragonsByTeam: number;
-  baronKillsByTeam: number;
-  riftHeraldKillsByTeam: number;
+  totalBaronKillsByTeam: number;
+  totalRiftHeraldKillsByTeam: number;
+  totalVoidGrubsKillsByTeam: number;
+  totalTurretPlatesByTeam: number;
   goldDiff15ByTeam: number;
   csDiff15ByTeam: number;
 }
@@ -145,29 +147,56 @@ export function getLeaderboardCardProps(leaderboardStats: Map<number, Leaderboar
 
   // Average Rift
   const sortedEntriesRiftHerald = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].riftHeraldKillsByTeam/b[1].totalGamesByTeam) - (a[1].riftHeraldKillsByTeam/a[1].totalGamesByTeam)))
+    .sort((a, b) => ((b[1].totalRiftHeraldKillsByTeam/b[1].totalGamesByTeam) - (a[1].totalRiftHeraldKillsByTeam/a[1].totalGamesByTeam)))
     .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Rift Heralds', {
     titleOfCard: 'Average Rift Heralds',
     lbColumnTitle: 'Herald',
     orderedleaderboard: new Map(sortedEntriesRiftHerald),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.riftHeraldKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalRiftHeraldKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
     formatter: (v: number) => `${v}`
   });
 
   // Average Rift
   const sortedEntriesBarons = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].baronKillsByTeam/b[1].totalGamesByTeam) - (a[1].baronKillsByTeam/a[1].totalGamesByTeam)))
+    .sort((a, b) => ((b[1].totalBaronKillsByTeam/b[1].totalGamesByTeam) - (a[1].totalBaronKillsByTeam/a[1].totalGamesByTeam)))
     .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Barons', {
     titleOfCard: 'Average Barons',
     lbColumnTitle: 'Barons',
     orderedleaderboard: new Map(sortedEntriesBarons),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.baronKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalBaronKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
     formatter: (v: number) => `${v}`
   });
+
+  // Average Void Grubs
+  const sortedEntriesVoidGrubs = [...leaderboardStats.entries()]
+    .sort((a, b) => ((b[1].totalVoidGrubsKillsByTeam/b[1].totalGamesByTeam) - (a[1].totalVoidGrubsKillsByTeam/a[1].totalGamesByTeam)))
+    .slice(0, howManyToDisplay);
+
+  leaderboardCardProps.set('Void Grubs', {
+    titleOfCard: 'Average Void Grubs',
+    lbColumnTitle: 'Grubs',
+    orderedleaderboard: new Map(sortedEntriesVoidGrubs),
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalVoidGrubsKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    formatter: (v: number) => `${v}`
+  });
+
+  // Average Turret Plates
+  const sortedEntriesTurretPlates = [...leaderboardStats.entries()]
+    .sort((a, b) => ((b[1].totalTurretPlatesByTeam/b[1].totalGamesByTeam) - (a[1].totalTurretPlatesByTeam/a[1].totalGamesByTeam)))
+    .slice(0, howManyToDisplay);
+
+  leaderboardCardProps.set('Turret Plates', {
+    titleOfCard: 'Average Turret Plates',
+    lbColumnTitle: 'Plates',
+    orderedleaderboard: new Map(sortedEntriesTurretPlates),
+    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalTurretPlatesByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    formatter: (v: number) => `${v}`
+  });
+
 
   return leaderboardCardProps;
 }
@@ -182,10 +211,12 @@ function buildLeaderboardStats(games: PlayerGameModel[]): Map<number, Leaderboar
         totalGameLength: 0,
         totalGamesByTeam: 0,
         totalDragonsByTeam: 0,
-        baronKillsByTeam: 0,
-        riftHeraldKillsByTeam: 0,
+        totalBaronKillsByTeam: 0,
+        totalRiftHeraldKillsByTeam: 0,
         goldDiff15ByTeam: 0,
         csDiff15ByTeam: 0,
+        totalVoidGrubsKillsByTeam: 0,
+        totalTurretPlatesByTeam: 0,
       };
 
       const updatedStats: LeaderboardStats = {
@@ -200,10 +231,12 @@ function buildLeaderboardStats(games: PlayerGameModel[]): Map<number, Leaderboar
             game.hextechDragonKills +
             game.chemtechDragonKills +
             game.elderDragonKills,
-        baronKillsByTeam: existingStats.baronKillsByTeam + game.baronKills,
-        riftHeraldKillsByTeam: existingStats.riftHeraldKillsByTeam + game.riftHeraldKills,
+        totalBaronKillsByTeam: existingStats.totalBaronKillsByTeam + game.baronKills,
+        totalRiftHeraldKillsByTeam: existingStats.totalRiftHeraldKillsByTeam + game.riftHeraldKills,
         goldDiff15ByTeam: existingStats.goldDiff15ByTeam + game.goldDiff15,
         csDiff15ByTeam: existingStats.csDiff15ByTeam + game.csDiff15,
+        totalVoidGrubsKillsByTeam: existingStats.totalVoidGrubsKillsByTeam + game.voidgrubKills,
+        totalTurretPlatesByTeam: existingStats.totalTurretPlatesByTeam + game.turretPlatesTaken
       };
       leaderboardStatsMap.set(risenTeamTeamId, updatedStats);
     }
