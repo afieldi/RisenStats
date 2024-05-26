@@ -47,6 +47,8 @@ function MapStatsToLeaderboard(data: AggregatedPlayerStatModel[]): LeaderboardTy
   }));
 }
 
+const defaultSortedBy = 'tier';
+
 export default function PlayerTierTable(props: PlayerTierTableProps) {
   const {
     seasonId,
@@ -58,7 +60,7 @@ export default function PlayerTierTable(props: PlayerTierTableProps) {
 
   const [playersStats, setPlayersStats] = useState<LeaderboardType[]>([]);
   const [loadingStats, setLoadingStats] = useState<boolean>(false);
-  const [sortCol, setSortCol] = useState<keyof LeaderboardType>('playerName');
+  const [sortCol, setSortCol] = useState<keyof LeaderboardType>(defaultSortedBy);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
 
   useEffect(() => {
