@@ -1,8 +1,13 @@
 import express, { Router } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
 import logger from '../../logger';
-import { GetTeamsRequest, GetTeamsResponse } from '../../../Common/Interface/Internal/teams';
-import { GetTeamsBySeasonId } from '../business/teams';
+import {
+  GetTeamAbbreviationResponse,
+  GetTeamByAbbreviationRequest,
+  GetTeamsRequest,
+  GetTeamsResponse
+} from '../../../Common/Interface/Internal/teams';
+import { GetTeamsBySeasonId, GetTeamsByTeamAbbreviation } from '../business/teams';
 
 const router: Router = express.Router();
 
@@ -13,6 +18,21 @@ router.post('/by-seasonId/:seasonId', async(req: TypedRequest<GetTeamsRequest>, 
     const response = await GetTeamsBySeasonId(seasonId);
     res.json({
       teams: response
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.post('/by-abbr/:teamAbbr', async(req: TypedRequest<GetTeamByAbbreviationRequest>, res: TypedResponse<GetTeamAbbreviationResponse>) => {
+  try {
+    const teamAbbr = String(req.params.teamAbbr);
+    const seasonId = Number(req.body.seasonId);
+    logger.info(`Getting the team with abbr: ${teamAbbr} and seasonId ${seasonId}`);
+    const response = await GetTeamsByTeamAbbreviation(teamAbbr, seasonId);
+    res.json({
+      team: response
     });
   } catch (error) {
     logger.error(error);

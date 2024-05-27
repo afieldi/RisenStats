@@ -7,3 +7,11 @@ export interface GetTeamsRequest {
 export interface GetTeamsResponse {
     teams: TeamModel[]
 }
+
+export interface GetTeamByAbbreviationRequest {
+    seasonId: number
+}
+
+export interface GetTeamAbbreviationResponse {
+    team: TeamModel
+}
