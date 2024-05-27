@@ -29,7 +29,7 @@ function LeaguePage() {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function isLoadingData() {
-    return loadingTeams || loadingTeams || loading;
+    return loadingTeams || loadingGames || loading;
   }
 
   async function loadSeason(): Promise<SeasonModel> {
