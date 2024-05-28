@@ -7,10 +7,11 @@ import TeamPageGeneralStats from '../../components/team-page/general';
 import SeasonModel from '../../../../Common/models/season.model';
 import TeamModel from '../../../../Common/models/team.model';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
-import { getLeagueTeamByTeamAbbreviation, getLeagueTeamsBySeasonId } from '../../api/teams';
+import { getLeagueTeamByTeamAbbreviation, getLeagueTeamRosterByTeamId, getLeagueTeamsBySeasonId } from '../../api/teams';
 import { getPlayerGamesBySeasonId, getRecentGamesBySeasonId, getRecentGamesBySeasonIdAndTeamId } from '../../api/games';
 import { getSeasonBySearchName } from '../../api/season';
 import Loading from '../../components/loading/loading';
+import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 
 
 function TeamPage() {
@@ -21,12 +22,14 @@ function TeamPage() {
   const [season, setSeason] = useState<SeasonModel>();
   const [team, setTeam] = useState<TeamModel>();
   const [teamPlayerGames, setTeamPlayerGames] = useState<PlayerGameModel[]>([]);
+  const [teamRoster, setTeamRoster] = useState<PlayerTeamModel[]>([]);
 
+  const [loadingTeamRoster, setLoadingTeamRoster] = useState(false);
   const [loadingGames, setLoadingGames] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function isLoadingData() {
-    return loadingGames || loading;
+    return loadingGames || loadingTeamRoster || loading;
   }
 
   async function loadSeason(): Promise<SeasonModel> {
@@ -56,6 +59,21 @@ function TeamPage() {
     return response.team;
   }
 
+  async function loadTeamRoster(teamId: number, seasonId: number) {
+    if (teamRoster.length > 0 || loadingTeamRoster) {
+      console.log('Not reloading roster');
+      return;
+    }
+    setLoadingTeamRoster(true);
+    try {
+      let response = await getLeagueTeamRosterByTeamId(teamId, seasonId);
+      setTeamRoster(response.roster);
+    } catch (err) {
+      console.error('An error occured trying to load the team roster');
+    }
+    setLoadingTeamRoster(false);
+  }
+
   function errorOnLoad(err: Error) {
     setErrorMessage(err.message);
   }
@@ -68,6 +86,7 @@ function TeamPage() {
   function canDisplayStats(): boolean {
     return season !== undefined && team !== undefined;
   }
+
   async function loadTeamGames(teamId: number, seasonId: number) {
     if (teamPlayerGames.length > 0 || loadingGames) {
       console.log('Not reloading league games.');
@@ -90,6 +109,7 @@ function TeamPage() {
       .then(async seasonResponse => {
         const team = await loadTeam(seasonResponse.id);
         await loadTeamGames(team.teamId, seasonResponse.id);
+        await loadTeamRoster(team.teamId, seasonResponse.id);
         setLoading(false);
       })
       .catch(err => errorOnLoad(err));
@@ -116,7 +136,7 @@ function TeamPage() {
               season={season as SeasonModel}
               teamGames={teamPlayerGames}
               team={team as TeamModel}
-            />
+              teamRoster={teamRoster}/>
           }
         </Box>
       </main>

@@ -1,4 +1,9 @@
-import { GetDbteamsBySeasonId, GetDbTeamsByTeamAbbreviation, GetDbTeamsByTeamName } from '../db/teams';
+import {
+  GetDbTeamRosterByTeamId,
+  GetDbteamsBySeasonId,
+  GetDbTeamsByTeamAbbreviation,
+  GetDbTeamsByTeamName
+} from '../db/teams';
 import TeamModel from '../../../Common/models/team.model';
 import { PremadeParser } from './sheets/premadeParser';
 import { ensureConnection, SaveObjects } from '../db/dbConnect';
@@ -22,6 +27,10 @@ export async function GetTeamsBySeasonId(seasonId: number): Promise<TeamModel[]>
 
 export async function GetTeamsByTeamAbbreviation(teamAbbr: string, seasonId: number): Promise<TeamModel> {
   return await GetDbTeamsByTeamAbbreviation(teamAbbr, seasonId);
+}
+
+export async function GetTeamRosterByTeamIdAndSeason(teamId: number, seasonId: number): Promise<PlayerTeamModel[]> {
+  return await GetDbTeamRosterByTeamId(teamId, seasonId);
 }
 
 export async function buildRisenTeams(seasonId: number) {

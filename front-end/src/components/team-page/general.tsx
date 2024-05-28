@@ -11,10 +11,12 @@ import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import LeagueDragons from '../league-page/league-dragons';
 import LeagueChampionWinrates from '../league-page/league-champ-winrates';
+import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 
 interface TeamPageGeneralStatsProps {
     season: SeasonModel
     team: TeamModel;
+    teamRoster: PlayerTeamModel[],
     teamGames: PlayerGameModel[]
 }
 
@@ -29,7 +31,7 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
       <Box sx={{ maxWidth: 280, height: '100%', display: 'flex', flexDirection: 'column', rowGap: 2 }}>
         <WinRateBox wins={winrate.wins} losses={winrate.losses} hasData={true}/>
         <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1 }} title="Side Win Rate">TODO</BaseRisenBox>
-        <RosterBox player={[]}/>
+        <RosterBox roster={props.teamRoster} teamGames={props.teamGames}/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2, width: '100%' }}>
         <LeagueStats games={props.teamGames} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
