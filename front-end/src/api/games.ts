@@ -3,7 +3,7 @@ import {
   GetGamesBySeasonIdResponse,
   GetGamesByDateRequest,
   GetGamesByDateResponse,
-  GetRecentGamesBySeasonIdResponse
+  GetRecentGamesBySeasonIdResponse, GetGamesByTeamIdResponse
 } from '../../../Common/Interface/Internal/games';
 import { DEFAULT_RISEN_SEASON_ID } from '../../../Common/constants';
 
@@ -27,4 +27,8 @@ export async function getPlayerGamesBySeasonId(seasonId: number) {
 
 export async function getRecentGamesBySeasonId(seasonId: number, amount: number) {
   return await MakeBackendCall(`/api/games/recent-league-games/by-seasonId/${seasonId}`, 'POST', { amount: amount }) as GetRecentGamesBySeasonIdResponse;
+}
+
+export async function getRecentGamesBySeasonIdAndTeamId(seasonId: number, teamId: number) {
+  return await MakeBackendCall(`/api/games/recent-league-games/by-teamId/${teamId}`, 'POST', { seasonId: seasonId }) as GetGamesByTeamIdResponse;
 }
