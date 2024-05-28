@@ -9,15 +9,17 @@ import TeamModel from '../../../../Common/models/team.model';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import LeagueDragons from '../league-page/league-dragons';
 import LeagueChampionWinrates from '../league-page/league-champ-winrates';
 import PlayerTeamModel from '../../../../Common/models/playerteam.model';
+import StatsVsRestOfLeague from './stats-vs-rest-of-league';
 
 interface TeamPageGeneralStatsProps {
     season: SeasonModel
     team: TeamModel;
     teamRoster: PlayerTeamModel[],
     teamGames: PlayerGameModel[]
+    leagueTeams: Map<number, TeamModel>;
+    leagueGames: PlayerGameModel[]
 }
 
 export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
@@ -37,9 +39,9 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
         <LeagueStats games={props.teamGames} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-          <BaseRisenBox>
-            Stat VS rest of league
-          </BaseRisenBox>
+          <StatsVsRestOfLeague leagueGames={props.leagueGames}
+            leagueTeams={props.leagueTeams}
+            primaryTeam={props.team}></StatsVsRestOfLeague>
           <LeagueChampionWinrates games={props.teamGames}/>
         </Box>
       </Box>

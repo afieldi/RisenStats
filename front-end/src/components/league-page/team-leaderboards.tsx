@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   getDisplayValueForTeamLeaderboardForAverage,
   getRisenTeamGameCountForLeague,
-  getRisenTeamStatForLeague, sortRisenTeamStatEntriesAscending, sortRisenTeamStatEntriesDescending
+  getRisenTeamTotalStatForLeague, sortRisenTeamStatEntriesAscending, sortRisenTeamStatEntriesDescending
 } from '../../common/stats-generators/team/RisenTeamStatGenerator';
 
 export interface TeamLeaderboardProps {
@@ -87,7 +87,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   const leaderboardCardProps: Map<string, TeamLeaderboardCardProps> = new Map();
 
   // CSD15
-  const sortedEntriesCSD15 = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['csDiff15']), howManyToDisplay, gameCountMap);
+  const sortedEntriesCSD15 = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['csDiff15']), gameCountMap)
+    .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('CSD15', {
     titleOfCard: 'CSD @15',
@@ -98,7 +99,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // Average GameTime
-  const sortedEntriesAvgGameTime =  sortRisenTeamStatEntriesAscending(getRisenTeamStatForLeague(games, ['gameLength']), howManyToDisplay, gameCountMap);
+  const sortedEntriesAvgGameTime =  sortRisenTeamStatEntriesAscending(getRisenTeamTotalStatForLeague(games, ['gameLength']), gameCountMap)
+    .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Game Time', {
     titleOfCard: 'Average Game Time',
@@ -109,7 +111,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // GoldDiff15
-  const sortedEntriesGD15 = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['goldDiff15']), howManyToDisplay, gameCountMap);
+  const sortedEntriesGD15 = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['goldDiff15']), gameCountMap)
+    .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('GD15', {
     titleOfCard: 'Gold Diff @15',
@@ -120,8 +123,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // Average Dragons
-  const sortedEntriesDragons = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['oceanDragonKills', 'mountainDragonKills', 'chemtechDragonKills', 'elderDragonKills', 'infernalDragonKills', 'hextechDragonKills', 'cloudDragonKills']), howManyToDisplay, gameCountMap);
-
+  const sortedEntriesDragons = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['oceanDragonKills', 'mountainDragonKills', 'chemtechDragonKills', 'elderDragonKills', 'infernalDragonKills', 'hextechDragonKills', 'cloudDragonKills']), gameCountMap)
+    .slice(0, howManyToDisplay);
   leaderboardCardProps.set('Dragons', {
     titleOfCard: 'Average Dragons',
     lbColumnTitle: 'Drags',
@@ -131,7 +134,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // Average Rift
-  const sortedEntriesRiftHerald = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['riftHeraldKills']), howManyToDisplay, gameCountMap);
+  const sortedEntriesRiftHerald = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['riftHeraldKills']), gameCountMap)
+    .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Rift Heralds', {
     titleOfCard: 'Average Rift Heralds',
@@ -142,7 +146,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // Average Rift
-  const sortedEntriesBarons = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['baronKills']), howManyToDisplay, gameCountMap);
+  const sortedEntriesBarons = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['baronKills']), gameCountMap)
+    .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Barons', {
     titleOfCard: 'Average Barons',
@@ -153,7 +158,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // Average Void Grubs
-  const sortedEntriesVoidGrubs = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['voidgrubKills']), howManyToDisplay, gameCountMap);
+  const sortedEntriesVoidGrubs = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['voidgrubKills']), gameCountMap)
+    .slice(0, howManyToDisplay);
   leaderboardCardProps.set('Void Grubs', {
     titleOfCard: 'Average Void Grubs',
     lbColumnTitle: 'Grubs',
@@ -163,7 +169,8 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
   });
 
   // Average Turret Plates
-  const sortedEntriesTurretPlates = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['turretPlatesTaken']), howManyToDisplay, gameCountMap);
+  const sortedEntriesTurretPlates = sortRisenTeamStatEntriesDescending(getRisenTeamTotalStatForLeague(games, ['turretPlatesTaken']), gameCountMap)
+    .slice(0, howManyToDisplay);
 
   leaderboardCardProps.set('Turret Plates', {
     titleOfCard: 'Average Turret Plates',

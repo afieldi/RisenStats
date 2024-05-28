@@ -22,14 +22,17 @@ function TeamPage() {
   const [season, setSeason] = useState<SeasonModel>();
   const [team, setTeam] = useState<TeamModel>();
   const [teamPlayerGames, setTeamPlayerGames] = useState<PlayerGameModel[]>([]);
+  const [teams, setTeams] = useState<Map<number, TeamModel>>(new Map());
+  const [leaguePlayerGames, setLeaguePlayerGames] = useState<PlayerGameModel[]>([]);
   const [teamRoster, setTeamRoster] = useState<PlayerTeamModel[]>([]);
 
   const [loadingTeamRoster, setLoadingTeamRoster] = useState(false);
   const [loadingGames, setLoadingGames] = useState(false);
+  const [loadingTeams, setLoadingTeams] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function isLoadingData() {
-    return loadingGames || loadingTeamRoster || loading;
+    return loadingGames || loadingTeamRoster || loading || loadingTeams;
   }
 
   async function loadSeason(): Promise<SeasonModel> {
@@ -104,12 +107,54 @@ function TeamPage() {
     setLoadingGames(false);
   }
 
+
+  async function loadLeagueGames(seasonId: number) {
+    if (leaguePlayerGames.length > 0 || loadingGames) {
+      console.log('Not reloading league games.');
+      return;
+    }
+
+    setLoadingGames(true);
+    try {
+      let playerGameResponse = await getPlayerGamesBySeasonId(seasonId);
+      setLeaguePlayerGames(playerGameResponse.games);
+    }
+    catch (error) {
+      console.error('An error occured trying to load the league games');
+    }
+    setLoadingGames(false);
+  }
+
+  async function loadTeamsForLeague(seasonId: number) {
+    if (teams.size > 0 || loadingTeams) {
+      console.log('Not reloading league teams.');
+      return;
+    }
+
+    setLoadingTeams(true);
+    let response = await getLeagueTeamsBySeasonId(seasonId);
+    if (response.teams.length < 1) {
+      throw Error('No teams found!');
+    }
+
+    let teamsMap: Map<number, TeamModel> = new Map();
+    for (let team of response.teams) {
+      teamsMap.set(team.teamId, team);
+    }
+
+    setTeams(teamsMap);
+
+    setLoadingTeams(false);
+  }
+
   useEffect(() => {
     loadSeason()
       .then(async seasonResponse => {
         const team = await loadTeam(seasonResponse.id);
         await loadTeamGames(team.teamId, seasonResponse.id);
         await loadTeamRoster(team.teamId, seasonResponse.id);
+        await loadLeagueGames(seasonResponse.id);
+        await loadTeamsForLeague(seasonResponse.id);
         setLoading(false);
       })
       .catch(err => errorOnLoad(err));
@@ -136,7 +181,9 @@ function TeamPage() {
               season={season as SeasonModel}
               teamGames={teamPlayerGames}
               team={team as TeamModel}
-              teamRoster={teamRoster}/>
+              teamRoster={teamRoster}
+              leagueGames={leaguePlayerGames}
+              leagueTeams={teams}/>
           }
         </Box>
       </main>
