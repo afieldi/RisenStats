@@ -12,6 +12,11 @@ import { riotTimestampToGameTime, roundTo } from '../../../../Common/utils';
 import LeaderboardCard from './leaderboard/leaderboardCard';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import {
+  getDisplayValueForTeamLeaderboardForAverage,
+  getRisenTeamGameCountForLeague,
+  getRisenTeamStatForLeague, sortRisenTeamStatEntriesAscending, sortRisenTeamStatEntriesDescending
+} from '../../common/stats-generators/team/RisenTeamStatGenerator';
 
 export interface TeamLeaderboardProps {
     games: PlayerGameModel[]
@@ -21,21 +26,9 @@ export interface TeamLeaderboardProps {
 export interface TeamLeaderboardCardProps {
   titleOfCard: string,
   lbColumnTitle: string,
-  orderedleaderboard: Map<number, LeaderboardStats>,
-  mainValueCalculator: (value: LeaderboardStats) => number,
+  orderedleaderboard: Map<number, number>,
+  mainValueCalculator: (value: number, teamId: number) => number,
   formatter: (value: number) => string
-}
-
-interface LeaderboardStats {
-  totalGameLength: number;
-  totalGamesByTeam: number;
-  totalDragonsByTeam: number;
-  totalBaronKillsByTeam: number;
-  totalRiftHeraldKillsByTeam: number;
-  totalVoidGrubsKillsByTeam: number;
-  totalTurretPlatesByTeam: number;
-  goldDiff15ByTeam: number;
-  csDiff15ByTeam: number;
 }
 
 const colorChoser = (v: number, theme: Theme) => '';
@@ -43,9 +36,9 @@ const howManyRowsToDisplay = 6;
 export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const theme = useTheme() as Theme;
 
-  const leaderboardStats = buildLeaderboardStats(props.games);
 
-  const leaderboardCardProps = getLeaderboardCardProps(leaderboardStats, howManyRowsToDisplay);
+  const gameCounts = getRisenTeamGameCountForLeague(props.games);
+  const leaderboardCardProps = getLeaderboardCardProps(props.games, gameCounts, howManyRowsToDisplay);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column',  flexWrap: 'wrap', rowGap: 0.5, maxWidth: '100%' }}>
@@ -56,7 +49,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
         {
           [...leaderboardCardProps.keys()].map(key => {
-            return TeamLeaderboardCard(leaderboardCardProps.get(key) as TeamLeaderboardCardProps, props.teams);
+            return TeamLeaderboardCard(leaderboardCardProps.get(key) as TeamLeaderboardCardProps, props.teams, gameCounts);
           })
         }
       </Box>
@@ -64,7 +57,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   );
 }
 
-export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map<number, TeamModel>) {
+export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map<number, TeamModel>, gameCounts: Map<number, number>) {
   const theme = useTheme() as Theme;
   const navigate = useNavigate();
 
@@ -74,12 +67,12 @@ export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map
 
   props.orderedleaderboard.forEach((value, key) => {
     let team = teamMap.get(key) as TeamModel;
-
+    let games = gameCounts.get(key) as number;
     let mainValue: RowMainValue = {
-      value: props.mainValueCalculator(value),
+      value: props.mainValueCalculator(value, team.teamId),
       formatter: props.formatter
     };
-    leaderboardRows.push(buildTextBasedLeaderboardRowPropsWithRedirect(team.abbreviation, `${roundTo(value.totalGamesByTeam/5, 0)}`, mainValue, theme, colorChoser, () => navigate(`${team.abbreviation}`)));
+    leaderboardRows.push(buildTextBasedLeaderboardRowPropsWithRedirect(team.abbreviation, `${roundTo(games/5, 0)}`, mainValue, theme, colorChoser, () => navigate(`${team.abbreviation}`)));
   });
 
   let title = <Typography sx={{ pl: 1 }} fontFamily="Montserrat" variant='h6' align='left' color={theme.palette.info.main}>{props.titleOfCard}</Typography>;
@@ -89,157 +82,96 @@ export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map
   );
 }
 
-export function getLeaderboardCardProps(leaderboardStats: Map<number, LeaderboardStats>, howManyToDisplay: number): Map<String, TeamLeaderboardCardProps> {
+export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: Map<number, number>, howManyToDisplay: number): Map<String, TeamLeaderboardCardProps> {
 
   const leaderboardCardProps: Map<string, TeamLeaderboardCardProps> = new Map();
 
   // CSD15
-  const sortedEntriesCSD15 = [...leaderboardStats.entries()]
-    .sort((a, b) => (b[1].csDiff15ByTeam / b[1].totalGamesByTeam) - (a[1].csDiff15ByTeam / a[1].totalGamesByTeam))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesCSD15 = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['csDiff15']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('CSD15', {
     titleOfCard: 'CSD @15',
     lbColumnTitle: 'CSD15',
     orderedleaderboard: new Map(sortedEntriesCSD15),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.csDiff15ByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap), // Multiply to 5 to account for 5 players
     formatter: (v: number) => `${v}`
   });
 
   // Average GameTime
-  const sortedEntriesAvgGameTime = [...leaderboardStats.entries()]
-    .sort((a, b) => (a[1].totalGameLength/a[1].totalGamesByTeam) - (b[1].totalGameLength/b[1].totalGamesByTeam))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesAvgGameTime =  sortRisenTeamStatEntriesAscending(getRisenTeamStatForLeague(games, ['gameLength']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('Game Time', {
     titleOfCard: 'Average Game Time',
     lbColumnTitle: 'Time',
     orderedleaderboard: new Map(sortedEntriesAvgGameTime),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => leaderboardStat.totalGameLength / leaderboardStat.totalGamesByTeam,
+    mainValueCalculator: (value: number, teamId: number) => value / (gameCountMap.get(teamId) as number),
     formatter: (gameTime: number) => `${riotTimestampToGameTime(gameTime)}`
   });
 
   // GoldDiff15
-  const sortedEntriesGD15 = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].goldDiff15ByTeam/b[1].totalGamesByTeam) - (a[1].goldDiff15ByTeam/a[1].totalGamesByTeam)))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesGD15 = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['goldDiff15']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('GD15', {
     titleOfCard: 'Gold Diff @15',
     lbColumnTitle: 'GD15',
     orderedleaderboard: new Map(sortedEntriesGD15),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.goldDiff15ByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap),
     formatter: (v: number) => `${v}`
   });
 
   // Average Dragons
-  const sortedEntriesDragons = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].totalDragonsByTeam/b[1].totalGamesByTeam) - (a[1].totalDragonsByTeam/a[1].totalGamesByTeam)))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesDragons = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['oceanDragonKills', 'mountainDragonKills', 'chemtechDragonKills', 'elderDragonKills', 'infernalDragonKills', 'hextechDragonKills', 'cloudDragonKills']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('Dragons', {
     titleOfCard: 'Average Dragons',
     lbColumnTitle: 'Drags',
     orderedleaderboard: new Map(sortedEntriesDragons),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalDragonsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap),
     formatter: (v: number) => `${v}`
   });
 
   // Average Rift
-  const sortedEntriesRiftHerald = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].totalRiftHeraldKillsByTeam/b[1].totalGamesByTeam) - (a[1].totalRiftHeraldKillsByTeam/a[1].totalGamesByTeam)))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesRiftHerald = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['riftHeraldKills']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('Rift Heralds', {
     titleOfCard: 'Average Rift Heralds',
     lbColumnTitle: 'Herald',
     orderedleaderboard: new Map(sortedEntriesRiftHerald),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalRiftHeraldKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap),
     formatter: (v: number) => `${v}`
   });
 
   // Average Rift
-  const sortedEntriesBarons = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].totalBaronKillsByTeam/b[1].totalGamesByTeam) - (a[1].totalBaronKillsByTeam/a[1].totalGamesByTeam)))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesBarons = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['baronKills']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('Barons', {
     titleOfCard: 'Average Barons',
     lbColumnTitle: 'Barons',
     orderedleaderboard: new Map(sortedEntriesBarons),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalBaronKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap),
     formatter: (v: number) => `${v}`
   });
 
   // Average Void Grubs
-  const sortedEntriesVoidGrubs = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].totalVoidGrubsKillsByTeam/b[1].totalGamesByTeam) - (a[1].totalVoidGrubsKillsByTeam/a[1].totalGamesByTeam)))
-    .slice(0, howManyToDisplay);
-
+  const sortedEntriesVoidGrubs = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['voidgrubKills']), howManyToDisplay, gameCountMap);
   leaderboardCardProps.set('Void Grubs', {
     titleOfCard: 'Average Void Grubs',
     lbColumnTitle: 'Grubs',
     orderedleaderboard: new Map(sortedEntriesVoidGrubs),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalVoidGrubsKillsByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap),
     formatter: (v: number) => `${v}`
   });
 
   // Average Turret Plates
-  const sortedEntriesTurretPlates = [...leaderboardStats.entries()]
-    .sort((a, b) => ((b[1].totalTurretPlatesByTeam/b[1].totalGamesByTeam) - (a[1].totalTurretPlatesByTeam/a[1].totalGamesByTeam)))
-    .slice(0, howManyToDisplay);
+  const sortedEntriesTurretPlates = sortRisenTeamStatEntriesDescending(getRisenTeamStatForLeague(games, ['turretPlatesTaken']), howManyToDisplay, gameCountMap);
 
   leaderboardCardProps.set('Turret Plates', {
     titleOfCard: 'Average Turret Plates',
     lbColumnTitle: 'Plates',
     orderedleaderboard: new Map(sortedEntriesTurretPlates),
-    mainValueCalculator: (leaderboardStat: LeaderboardStats) => roundTo((leaderboardStat.totalTurretPlatesByTeam / leaderboardStat.totalGamesByTeam) * 5), // Multiply to 5 to account for 5 players
+    mainValueCalculator: (value: number, teamId: number) => getDisplayValueForTeamLeaderboardForAverage(value, teamId, gameCountMap),
     formatter: (v: number) => `${v}`
   });
 
-
   return leaderboardCardProps;
-}
-
-function buildLeaderboardStats(games: PlayerGameModel[]): Map<number, LeaderboardStats> {
-  const leaderboardStatsMap = new Map<number, LeaderboardStats>();
-
-  for (const game of games) {
-    const { risenTeamTeamId } = game;
-    if (risenTeamTeamId) {
-      const existingStats = leaderboardStatsMap.get(risenTeamTeamId) || {
-        totalGameLength: 0,
-        totalGamesByTeam: 0,
-        totalDragonsByTeam: 0,
-        totalBaronKillsByTeam: 0,
-        totalRiftHeraldKillsByTeam: 0,
-        goldDiff15ByTeam: 0,
-        csDiff15ByTeam: 0,
-        totalVoidGrubsKillsByTeam: 0,
-        totalTurretPlatesByTeam: 0,
-      };
-
-      const updatedStats: LeaderboardStats = {
-        totalGameLength: existingStats.totalGameLength + game.gameLength,
-        totalGamesByTeam: existingStats.totalGamesByTeam + 1,
-        totalDragonsByTeam:
-            existingStats.totalDragonsByTeam +
-            game.oceanDragonKills +
-            game.cloudDragonKills +
-            game.mountainDragonKills +
-            game.infernalDragonKills +
-            game.hextechDragonKills +
-            game.chemtechDragonKills +
-            game.elderDragonKills,
-        totalBaronKillsByTeam: existingStats.totalBaronKillsByTeam + game.baronKills,
-        totalRiftHeraldKillsByTeam: existingStats.totalRiftHeraldKillsByTeam + game.riftHeraldKills,
-        goldDiff15ByTeam: existingStats.goldDiff15ByTeam + game.goldDiff15,
-        csDiff15ByTeam: existingStats.csDiff15ByTeam + game.csDiff15,
-        totalVoidGrubsKillsByTeam: existingStats.totalVoidGrubsKillsByTeam + game.voidgrubKills,
-        totalTurretPlatesByTeam: existingStats.totalTurretPlatesByTeam + game.turretPlatesTaken
-      };
-      leaderboardStatsMap.set(risenTeamTeamId, updatedStats);
-    }
-  }
-  return leaderboardStatsMap;
 }
