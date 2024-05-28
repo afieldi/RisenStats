@@ -65,8 +65,6 @@ function buildGameCounts(games: PlayerGameModel[]): Map<string, number> {
 }
 
 function getGameColorByCount(count: number, theme: Theme) {
-  if(count > 0) {
-    return theme.palette.first.main;
-  }
+  // TODO fix?
   return theme.palette.info.dark;
 }

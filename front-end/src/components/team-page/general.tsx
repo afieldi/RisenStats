@@ -37,6 +37,9 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
         <LeagueStats games={props.teamGames} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+          <BaseRisenBox>
+            Stat VS rest of league
+          </BaseRisenBox>
           <LeagueChampionWinrates games={props.teamGames}/>
         </Box>
       </Box>
