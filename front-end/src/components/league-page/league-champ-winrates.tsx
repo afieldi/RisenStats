@@ -12,6 +12,7 @@ import LeaderboardCard from './leaderboard/leaderboardCard';
 
 interface LeagueChampionWinrates {
     games: PlayerGameModel[]
+    minGames: number
 }
 
 const amountOfChampsToShow = 6;
@@ -26,7 +27,7 @@ export default function LeagueChampionWinrates(props: LeagueChampionWinrates) {
     return { championId, wins, games, winrate };
   })
     .sort((a, b) => b.winrate - a.winrate)
-    .filter(champ => champ.games >= 4);
+    .filter(champ => champ.games >= props.minGames);
 
   return (
     <Box sx={{ minWidth: 560, minHeight: 280, display: 'flex', columnGap: 2, rowGap: 1, flexWrap: 'wrap' }}>

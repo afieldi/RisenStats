@@ -12,6 +12,8 @@ import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import LeagueChampionWinrates from '../league-page/league-champ-winrates';
 import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 import StatsVsRestOfLeague from './stats-vs-rest-of-league';
+import SideWinRateBox from '../charts/side-win-rate-box';
+import { BLUE_TEAM_ID, RED_TEAM_ID } from '../../common/constants';
 
 interface TeamPageGeneralStatsProps {
     season: SeasonModel
@@ -31,8 +33,8 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
   return (
     <Box sx={{ pt: 1, display: 'flex', flexDirection: 'row', columnGap: 3 }}>
       <Box sx={{ maxWidth: 280, height: '100%', display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-        <WinRateBox wins={winrate.wins} losses={winrate.losses} hasData={true}/>
-        <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1 }} title="Side Win Rate">TODO</BaseRisenBox>
+        <WinRateBox wins={winrate.blueWins + winrate.redWins} losses={winrate.blueLosses + winrate.redLosses} hasData={true}/>
+        <SideWinRateBox blueWins={winrate.blueWins} blueLosses={winrate.blueLosses} redWins={winrate.redLosses} redLosses={winrate.redLosses} hasData={true}/>
         <RosterBox roster={props.teamRoster} teamGames={props.teamGames}/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2, width: '100%' }}>
@@ -42,7 +44,7 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
           <StatsVsRestOfLeague leagueGames={props.leagueGames}
             leagueTeams={props.leagueTeams}
             primaryTeam={props.team}></StatsVsRestOfLeague>
-          <LeagueChampionWinrates games={props.teamGames}/>
+          <LeagueChampionWinrates games={props.teamGames} minGames={Math.min(calcMinChampsForWinrateLeaderboard(champsPlayed), 4)}/>
         </Box>
       </Box>
     </Box>
@@ -74,18 +76,39 @@ function buildUniqueChamps(champsPlayed: Map<GameRoles, Map<number, number>>) {
   }
   return mergedMap.size;
 }
-function calculateWinrateFromTeamGames(games: PlayerGameModel[]): { wins: number, losses: number } {
+function calculateWinrateFromTeamGames(games: PlayerGameModel[]): { redWins: number, redLosses: number, blueWins: number, blueLosses: number } {
   const gamesChecked = new Set<number>();
-  let wins = 0;
-  let losses = 0;
+  let blueWins = 0;
+  let blueLosses = 0;
+
+  let redWins = 0;
+  let redLosses = 0;
+
 
   for (const game of games) {
     if (gamesChecked.has(game.gameGameId)) {
       continue;
     }
     gamesChecked.add(game.gameGameId);
-    game.win ? wins++ : losses++;
+
+    if (game.teamId === BLUE_TEAM_ID) {
+      game.win ? blueWins++ : blueLosses++;
+    }
+
+    if (game.teamId === RED_TEAM_ID) {
+      game.win ? redWins++ : redLosses++;
+    }
   }
 
-  return { wins, losses };
+  return { redWins, redLosses, blueWins, blueLosses };
+}
+
+function calcMinChampsForWinrateLeaderboard(champsPlayed: Map<GameRoles, Map<number, number>>) {
+  let allRoles = champsPlayed.get(GameRoles.ALL) as Map<number, number>;
+  let sum = 0;
+  for (const value of allRoles.values()) {
+    sum += value;
+  }
+
+  return  allRoles.size > 0 ? sum / allRoles.size : 0;
 }

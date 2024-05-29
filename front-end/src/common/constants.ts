@@ -154,3 +154,6 @@ export const PING_SRC = {
   COMMAND: '/images/game/pings/command.png',
   DANGER: '/images/game/pings/danger.png',
 };
+
+export const BLUE_TEAM_ID = 100;
+export const RED_TEAM_ID = 200;
