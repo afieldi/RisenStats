@@ -433,6 +433,6 @@ export async function GetDbGameModelBySeasonId(seasonId: string, amount: number)
 export async function GetDbGameModelByTeamIdAndSeasonId(teamId: number, seasonId: number): Promise<PlayerGameModel[]> {
   await ensureConnection();
   let filter: FindManyOptions<PlayerGameModel> = {};
-  filter = { where: { seasonId: seasonId, risenTeamTeamId: teamId } };
+  filter = { where: { seasonId: seasonId, risenTeamTeamId: teamId }, relations: ['game'] };
   return await PlayerGameModel.find(filter);
 }
