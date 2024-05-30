@@ -14,6 +14,13 @@ import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 import StatsVsRestOfLeague from './stats-vs-rest-of-league';
 import SideWinRateBox from '../charts/side-win-rate-box';
 import { BLUE_TEAM_ID, RED_TEAM_ID } from '../../common/constants';
+import { getGradient } from '../league-page/general';
+import { Row } from '../league-page/leaderboard/row';
+import { darken } from '@mui/system/colorManipulator';
+import WardingHabits from './warding-habits';
+import LeagueDragons from '../league-page/league-dragons';
+import RecentGames from '../league-page/recent-games';
+import GameModel from '../../../../Common/models/game.model';
 
 interface TeamPageGeneralStatsProps {
     season: SeasonModel
@@ -26,7 +33,6 @@ interface TeamPageGeneralStatsProps {
 
 export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
 {
-
   const champsPlayed: Map<GameRoles, Map<number, number>> = buildChamps(props.teamGames);
   const winrate = calculateWinrateFromTeamGames(props.teamGames);
 
@@ -41,10 +47,13 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
         <LeagueStats games={props.teamGames} uniqueChampions={buildUniqueChamps(champsPlayed)}/>
         <ChampionPickRate champsPlayedByRole={champsPlayed}></ChampionPickRate>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+          <LeagueChampionWinrates games={props.teamGames} minGames={Math.min(calcMinChampsForWinrateLeaderboard(champsPlayed), 4)}/>
+          <LeagueDragons games={props.teamGames}/>
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2, width: '100%' }}>
           <StatsVsRestOfLeague leagueGames={props.leagueGames}
             leagueTeams={props.leagueTeams}
             primaryTeam={props.team}></StatsVsRestOfLeague>
-          <LeagueChampionWinrates games={props.teamGames} minGames={Math.min(calcMinChampsForWinrateLeaderboard(champsPlayed), 4)}/>
         </Box>
       </Box>
     </Box>

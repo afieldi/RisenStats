@@ -1,6 +1,6 @@
 import {
-  Box,
-  FormControl,
+  Box, Checkbox,
+  FormControl, FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
@@ -21,6 +21,7 @@ import {
 import BaseRisenBox from '../risen-box/base-risen-box';
 import { getGradient } from '../league-page/general';
 import Loading from '../loading/loading';
+import Team from '../../pages/risenTeam/team';
 
 interface StatsVsRestOfLeagueProps {
   primaryTeam: TeamModel,
@@ -40,8 +41,8 @@ interface StatSelectorProps {
 }
 
 interface TeamSelectorProps {
-  current: TeamModel
-  teams: TeamModel[]
+  allTeams: TeamModel[]
+  currentlySelectedTeams: TeamModel[]
   callback: (event: SelectChangeEvent) => any
 }
 
@@ -54,23 +55,22 @@ export default function StatsVsRestOfLeague(props: StatsVsRestOfLeagueProps) {
     );
   }
 
-  let first = props.leagueTeams.values().next().value;
-
   const gameCounts = getRisenTeamGameCountForLeague(props.leagueGames);
   const [allStats, setAllStats] = useState<Map<string, Map<number, number>>>(buildStatsToCompare(props.leagueGames, gameCounts));
-  const [currentTeamToCompareTo, setCurrentTeamToCompareTo] = useState<TeamModel>(first);
+  const [currentTeamsToCompareTo, setCurrentTeamsToCompareTo] = useState<TeamModel[]>(Array.from(props.leagueTeams.values()).filter(team => team.teamId !== props.primaryTeam.teamId));
   const [currentStat , setCurrentStat] = useState<string>('GD15');
 
-  let compare = (allStats.get(currentStat) as Map<number, number>).get(currentTeamToCompareTo.teamId) as number;
   let main = (allStats.get(currentStat)as Map<number, number>).get(props.primaryTeam.teamId) as number;
 
-  const data = [
-    {
-      name: currentTeamToCompareTo.abbreviation,
-      [currentTeamToCompareTo.abbreviation]: getDisplayValueForTeamLeaderboardForAverage(compare, currentTeamToCompareTo.teamId, gameCounts),
-      [props.primaryTeam.abbreviation]: getDisplayValueForTeamLeaderboardForAverage(main, props.primaryTeam.teamId, gameCounts)
-    }
-  ];
+  const data = {
+    name: props.primaryTeam.abbreviation,
+    [props.primaryTeam.abbreviation]: getDisplayValueForTeamLeaderboardForAverage(main, props.primaryTeam.teamId, gameCounts)
+  };
+
+  currentTeamsToCompareTo.forEach(team => {
+    let compare = (allStats.get(currentStat) as Map<number, number>).get(team.teamId) as number;
+    data[team.abbreviation] = getDisplayValueForTeamLeaderboardForAverage(compare, team.teamId, gameCounts);
+  });
 
   function onSelectChange(event: SelectChangeEvent) {
     setCurrentStat(event.target.value);
@@ -78,7 +78,12 @@ export default function StatsVsRestOfLeague(props: StatsVsRestOfLeagueProps) {
 
   function onTeamSelectChange(event: SelectChangeEvent) {
     let teamId = Number(event.target.value);
-    setCurrentTeamToCompareTo(props.leagueTeams.get(teamId) as TeamModel);
+    let teamModel = props.leagueTeams.get(teamId) as TeamModel;
+    if(currentTeamsToCompareTo.includes(teamModel)) {
+      setCurrentTeamsToCompareTo(prevteams => prevteams.filter(team => team.teamId !== teamId));
+    } else {
+      setCurrentTeamsToCompareTo(prevTeams => [...prevTeams, teamModel]);
+    }
   }
 
   let title = (
@@ -86,29 +91,31 @@ export default function StatsVsRestOfLeague(props: StatsVsRestOfLeagueProps) {
       <Typography sx={{ pt: 1 }} fontFamily="Montserrat" variant='h5' align='left' color={theme.palette.info.main}>COMPARE STATS</Typography>
       <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 1 }}>
         <StatSelector current={currentStat} callback={onSelectChange} ids={Array.from(allStats.keys())}></StatSelector>
-        <TeamSelector current={currentTeamToCompareTo} teams={Array.from(props.leagueTeams.values())} callback={onTeamSelectChange}/>
+        <TeamSelector currentlySelectedTeams={currentTeamsToCompareTo} allTeams={Array.from(props.leagueTeams.values()).filter(team => team.teamId !== props.primaryTeam.teamId)} callback={onTeamSelectChange}/>
       </Box>
     </Box>
   );
 
   return (
-    <BaseRisenBox sx={{ minWidth: 280, minHeight: 280, flexGrow: 1,  background: getGradient(theme.palette.risenBoxBg.main) }} title={title} hideDivider={true}>
+    <BaseRisenBox sx={{ maxWidth: 430, minHeight: 280, flexGrow: 1,  background: getGradient(theme.palette.risenBoxBg.main) }} title={title} hideDivider={true}>
       <BarChart
-        width={500}
-        height={300}
-        data={data}
+        width={400}
+        height={190}
+        data={[data]}
         margin={{
           top: 10,
           right: 0,
           left: -15,
-          bottom: 5,
+          bottom: 10,
         }}
       >
         <YAxis />
-        <Legend />
-        <Tooltip></Tooltip>
-        <Bar barSize={200} dataKey={props.primaryTeam.abbreviation} fill={theme.palette.primary.main}/>
-        <Bar barSize={200} dataKey={currentTeamToCompareTo.abbreviation} fill={theme.palette.secondary.light}/>
+        <Bar barSize={100} dataKey={props.primaryTeam.abbreviation} fill={theme.palette.primary.main}/>
+        {
+          currentTeamsToCompareTo.map((team) => {
+            return <Bar barSize={100} dataKey={team.abbreviation} fill={theme.palette.secondary.light}></Bar>;
+          })
+        }
       </BarChart>
     </BaseRisenBox>
   );
@@ -151,22 +158,28 @@ function StatSelector(props: StatSelectorProps) {
 }
 
 function TeamSelector(props: TeamSelectorProps) {
+  const theme = useTheme() as Theme;
+
   return (
-    <FormControl >
-      <InputLabel id="season-filter-select-label">Team</InputLabel>
+    <FormControl sx={{ width: '60px' }}>
+      <InputLabel id="team-filter-select-label">Team</InputLabel>
       <Select
         labelId="team-filter-select-label"
         id="team-simple-select"
-        value={props.current.teamId.toString()}
+        value={props.allTeams[0].teamId.toString()}
         label="Team"
-        onChange={props.callback}
-        sx={{ overflow: 'hidden', width: '100%' }}
+        sx={{ overflow: 'hidden', width: '90%' }}
       >
-        {
-          props.teams.map((team, index) => (
-            <MenuItem key={index} value={team.teamId} hidden={false}>{team.abbreviation}</MenuItem>
-          ))
-        }
+        <Box sx={{ display: 'flex', columnGap: 1, rowGap: 2, flexWrap: 'wrap', maxWidth: '350px', padding: '5px', background: getGradient(theme.palette.risenBoxBg.main) }}>
+          {
+            props.allTeams.map((team, index) => {
+              return (
+                <FormControlLabel value={props.allTeams[0].abbreviation} sx={{ width: '100px' }} control={<Checkbox value={team.teamId} checked={props.currentlySelectedTeams.some(selectedTeam => selectedTeam.teamId == team.teamId)} onChange={props.callback}/>} label={team.abbreviation} />
+              );
+            }
+            )
+          }
+        </Box>
       </Select>
     </FormControl>
   );
