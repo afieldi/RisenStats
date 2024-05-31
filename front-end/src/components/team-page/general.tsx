@@ -13,7 +13,6 @@ import LeagueChampionWinrates from '../league-page/league-champ-winrates';
 import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 import StatsVsRestOfLeague from './stats-vs-rest-of-league';
 import SideWinRateBox from '../charts/side-win-rate-box';
-import { BLUE_TEAM_ID, RED_TEAM_ID } from '../../common/constants';
 import { getGradient } from '../league-page/general';
 import { Row } from '../league-page/leaderboard/row';
 import { darken } from '@mui/system/colorManipulator';
@@ -21,6 +20,7 @@ import WardingHabits from './warding-habits';
 import LeagueDragons from '../league-page/league-dragons';
 import RecentGames from '../league-page/recent-games';
 import GameModel from '../../../../Common/models/game.model';
+import { BLUE_TEAM_ID, RED_TEAM_ID } from '../../../../Common/constants';
 
 interface TeamPageGeneralStatsProps {
     season: SeasonModel
@@ -40,7 +40,7 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
     <Box sx={{ pt: 1, display: 'flex', flexDirection: 'row', columnGap: 3 }}>
       <Box sx={{ maxWidth: 280, height: '100%', display: 'flex', flexDirection: 'column', rowGap: 2 }}>
         <WinRateBox wins={winrate.blueWins + winrate.redWins} losses={winrate.blueLosses + winrate.redLosses} hasData={true}/>
-        <SideWinRateBox blueWins={winrate.blueWins} blueLosses={winrate.blueLosses} redWins={winrate.redLosses} redLosses={winrate.redLosses} hasData={true}/>
+        <SideWinRateBox blueWins={winrate.blueWins} blueLosses={winrate.blueLosses} redWins={winrate.redWins} redLosses={winrate.redLosses} hasData={true}/>
         <RosterBox roster={props.teamRoster} teamGames={props.teamGames}/>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2, width: '100%' }}>
