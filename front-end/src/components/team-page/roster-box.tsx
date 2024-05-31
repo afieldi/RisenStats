@@ -39,7 +39,7 @@ export default function RosterBox(props: RosterProps) {
       value: (gameCounts.has(player.playerPuuid) ? gameCounts.get(player.playerPuuid) : 0) as number,
       formatter: (value: number) => `${value}`
     };
-    leaderboardRows.push(buildTextBasedLeaderboardRowPropsWithRedirect(`${player.player.name}#${player.player.tag}`,
+    leaderboardRows.push(buildTextBasedLeaderboardRowPropsWithRedirect(displayName(player.player.name, player.player.tag),
       `${player.player.league} ${player.player.division}`,
       mainValue, 
       theme,
@@ -52,6 +52,16 @@ export default function RosterBox(props: RosterProps) {
   return (
     <LeaderboardCard sx={{ minWidth: 280, maxWidth: 280, minHeight: 280 }} sortedRowProps={leaderboardRows} header={leaderboardHeaders} title={title}/>
   );
+}
+
+
+function displayName(playerName: string, playerTag: string): string {
+  let displayName: string = `${playerName}#${playerTag}`;
+  // Need to do this for stuff to fit nicely
+  if (displayName.length > 10) {
+    return displayName.slice(0, 11) + '...';
+  }
+  return displayName;
 }
 
 function buildGameCounts(games: PlayerGameModel[]): Map<string, number> {

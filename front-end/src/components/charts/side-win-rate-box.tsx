@@ -50,8 +50,8 @@ export default function SideWinRateBox(winRateProps: SideWinRateBoxProps) {
         <Tooltip/>
         <XAxis type="number" hide={true}/>
         <YAxis dataKey="name" type="category" scale="band"/>
-        <Bar dataKey="red" barSize={50} unit={'%'} fill="#640713" />
-        <Bar dataKey="blue" barSize={50} unit={'%'} fill="#010144" />
+        <Bar dataKey="red" barSize={50} unit={`% (${winRateProps.redWins + winRateProps.redLosses})`} fill="#640713" />
+        <Bar dataKey="blue" barSize={50} unit={`% (${winRateProps.blueWins + winRateProps.blueLosses})`} fill="#010144" />
       </ComposedChart>
     </BaseRisenBox>
   );
