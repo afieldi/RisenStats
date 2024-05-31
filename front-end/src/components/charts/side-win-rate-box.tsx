@@ -10,6 +10,7 @@ import {
   YAxis
 } from 'recharts';
 import React from 'react';
+import { getGradient } from '../league-page/general';
 
 interface SideWinRateBoxProps {
     blueWins: number;
@@ -33,7 +34,7 @@ export default function SideWinRateBox(winRateProps: SideWinRateBoxProps) {
   ];
 
   return (
-    <BaseRisenBox sx={{ minWidth: 280, minHeight: 100, flexGrow: 1 }} title="Side Win Rate">
+    <BaseRisenBox sx={{ minWidth: 280, minHeight: 100, flexGrow: 1,background: getGradient(theme.palette.risenBoxBg.main) }} title="Side Win Rate">
       {!winRateProps.hasData && <Typography color={theme.palette.info.light} variant="h3">No Data</Typography>}
       <ComposedChart
         layout="vertical"
