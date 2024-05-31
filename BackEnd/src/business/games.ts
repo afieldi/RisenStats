@@ -16,6 +16,7 @@ import logger from '../../logger';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { buildRisenTeams } from './teams';
 import { GetDbActiveSeasonWithSheets } from '../db/season';
+import { BLUE_TEAM_ID } from '../../../Common/constants';
 
 export async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -76,7 +77,7 @@ export async function SaveSingleMatchById(matchId: string, gameData: RiotMatchDt
 
   for (let i = 0; i < gameData.info.participants.length; i++) {
     const participant = gameData.info.participants[i];
-    const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
+    const teamStats = participant.teamId === BLUE_TEAM_ID ? teamSumStats.blueStats : teamSumStats.redStats;
     const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
     objsToSave.push(CreateDbPlayerGameDatabaseObject(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
@@ -111,7 +112,7 @@ export async function UpdatePlayersInSingleMatchById(gameObj: GameModel, gameDat
 
     const risenTeamId  = await getDbPlayerTeamPlayerPuuid(participant.puuid, seasonId);
 
-    const teamStats = participant.teamId === 100 ? teamSumStats.blueStats : teamSumStats.redStats;
+    const teamStats = participant.teamId === BLUE_TEAM_ID ? teamSumStats.blueStats : teamSumStats.redStats;
     objsToSave.push(CreateDbPlayerGameDatabaseObject(participant, gameObj, timelineStats[i], teamStats, seasonId, i, risenTeamId));
   }
   await SaveObjects(objsToSave);
@@ -139,7 +140,7 @@ export function CreatePlayerSummary(gameData: RiotMatchDto): GameSummaryPlayers 
       deaths: participant.deaths,
       assists: participant.assists,
     } as GameSummaryPlayer;
-    if (participant.teamId === 100) {
+    if (participant.teamId === BLUE_TEAM_ID) {
       bluePlayers.push(player);
     } else {
       redPlayers.push(player);
