@@ -33,3 +33,10 @@ export interface GetRecentGamesBySeasonIdRequest {
 export interface GetRecentGamesBySeasonIdResponse {
   games: GameModel[]
 }
+
+export interface GetGamesByTeamIdRequest {
+  seasonId: number
+}
+export interface GetGamesByTeamIdResponse {
+  games: PlayerGameModel[]
+}

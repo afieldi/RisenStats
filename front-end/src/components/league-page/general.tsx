@@ -40,7 +40,7 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
         <ChampionPickRate champsPlayedByRole={champsPlayed}/>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
           <LeagueDragons games={props.playerGames}/>
-          <LeagueChampionWinrates games={props.playerGames}/>
+          <LeagueChampionWinrates games={props.playerGames} minGames={4}/>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
           <TeamLeaderboards games={props.playerGames} teams={props.teams}></TeamLeaderboards>

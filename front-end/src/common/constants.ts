@@ -154,3 +154,4 @@ export const PING_SRC = {
   COMMAND: '/images/game/pings/command.png',
   DANGER: '/images/game/pings/danger.png',
 };
+

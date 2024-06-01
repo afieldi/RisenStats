@@ -2,7 +2,7 @@ import express, { Router, Request } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
 import {
   GetGamesByDateRequest,
-  GetGamesByDateResponse,
+  GetGamesByDateResponse, GetGamesByTeamIdRequest, GetGamesByTeamIdResponse,
   GetGamesRequest,
   GetGamesResponse, GetRecentGamesBySeasonIdRequest,
   GetRecentGamesBySeasonIdResponse
@@ -10,7 +10,7 @@ import {
 import { GetGamesBySeasonIdResponse } from '../../../Common/Interface/Internal/games';
 import logger from '../../logger';
 import {
-  GetDbGameModelBySeasonId,
+  GetDbGameModelBySeasonId, GetDbGameModelByTeamIdAndSeasonId,
   GetDbGamesByDate,
   GetDbGamesByPlayerPuuid,
   GetDbPlayerGamesByDate,
@@ -19,6 +19,7 @@ import {
 import { RiotMatchCallbackDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import { SaveDataByMatchIdForRiotCallback } from '../business/games';
 import { ToMatchId } from '../../../Common/utils';
+import teams from './teams';
 
 const router: Router = express.Router();
 
@@ -90,6 +91,23 @@ router.post('/recent-league-games/by-seasonId/:seasonId', async(req: TypedReques
       amount
     } = req.body;
     const games = await GetDbGameModelBySeasonId(req.params.seasonId, amount);
+    logger.debug(`Got recent some games: ${games.length}`);
+    res.json({
+      games: games
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.post('/recent-league-games/by-teamId/:teamId', async(req: TypedRequest<GetGamesByTeamIdRequest>, res: TypedResponse<GetGamesByTeamIdResponse>) => {
+  try {
+    const seasonId = req.body.seasonId;
+    const teamId = Number(req.params.teamId);
+    logger.info(`Get games by teamId ${teamId}, seasonId: ${seasonId}`);
+
+    const games = await GetDbGameModelByTeamIdAndSeasonId(teamId, seasonId);
     logger.debug(`Got recent some games: ${games.length}`);
     res.json({
       games: games

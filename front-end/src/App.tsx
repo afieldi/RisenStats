@@ -34,7 +34,7 @@ function App() {
             <Route path="/player/:playerNameWithTagline" element={<Player />}></Route>
             <Route path="/leagues/:leagueName" element={<LeaguePage />}></Route>
             <Route path="/leaderboard" element={<Leaderboards />}></Route>
-            <Route path="/leagues/:leagueName/:teamName" element={<TeamPage />}></Route>
+            <Route path="/leagues/:leagueName/:teamAbbr" element={<TeamPage />}></Route>
             <Route path="*" element={<Error404 />}></Route>
             <Route path="/statexport" element={<StatExport />}></Route>
             <Route path="/statgraphic" element={<StatGraphic />}></Route>
