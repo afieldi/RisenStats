@@ -26,15 +26,15 @@ export function getAllHeadCells(goToPlayer: Function): TableColumn<LeaderboardTy
       ),
     },
     {
-      id: 'playerName',
+      id: 'playerIdentifier',
       align: 'left',
       disablePadding: false,
       label: 'Name',
       active: true,
       display: (item: LeaderboardType, theme: Theme) => (
         <Typography>
-          <div className="clickable" onClick={() => {goToPlayer(item.playerName);}}>
-            {item.playerName}
+          <div className="clickable" onClick={() => {goToPlayer(item.playerIdentifier.playerName, item.playerIdentifier.playerTag);}}>
+            {item.playerIdentifier.playerName}
           </div>
         </Typography>
       ),

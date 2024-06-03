@@ -12,6 +12,7 @@ import { toSearchName } from '../../../../Common/utils';
 import BaseRisenBox from '../../components/risen-box/base-risen-box';
 import { getAllHeadCells } from './leaderboardDef';
 import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
+import player from '../player/player';
 
 
 export default function Leaderboards() {
@@ -33,8 +34,9 @@ export default function Leaderboards() {
   };
 
 
-  const goToPlayer = (playerName: string) => {
-    navigate(`/player/${toSearchName(playerName)}`);
+  const goToPlayer = (playerName: string, playerTag: string) => {
+    console.log(playerName, playerTag);
+    navigate(`/player/${encodeURIComponent(`${playerName}-${playerTag}`)}`);
   };
 
   const headCells = getAllHeadCells(goToPlayer);
