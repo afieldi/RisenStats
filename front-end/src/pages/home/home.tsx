@@ -39,7 +39,7 @@ const MobileBox = styled(Button)`
 const directory = {
   'leaderboard': '/leaderboard',
   'search': '/search',
-  'discord': 'https://discord.com/invite/BwnnBsV',
+  'leagues': '/leagues',
 };
 
 export default function Home() {
@@ -66,8 +66,8 @@ export default function Home() {
           <AngleBox light={theme.palette.secondary.main} dark={theme.palette.secondary.dark} theme={{ dark: theme.palette.primary.main, light: theme.palette.info.light }} sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.info.light }} onClick={() => goTo('search')}>
             <Typography fontFamily="Montserrat" variant="h3">PLAYER STATS</Typography>
           </AngleBox>
-          <AngleBox light={theme.palette.websiteBackground.main} dark={theme.palette.websiteBackground.dark} theme={theme.palette.primary.main} sx={{ backgroundColor: 'black', color: theme.palette.info.light }} onClick={() => goTo('discord')}>
-            <Typography fontFamily="Montserrat" variant="h3">DISCORD</Typography>
+          <AngleBox light={theme.palette.websiteBackground.main} dark={theme.palette.websiteBackground.dark} theme={theme.palette.primary.main} sx={{ backgroundColor: 'black', color: theme.palette.info.light }} onClick={() => goTo('leagues')}>
+            <Typography fontFamily="Montserrat" variant="h3">LEAGUE STATS</Typography>
           </AngleBox>
         </Box>
       </Hidden>
@@ -83,7 +83,7 @@ export default function Home() {
             <MobileBox variant='outlined' onClick={() => goTo('search')}>
               <Typography fontFamily="Montserrat" variant="h5">PLAYER STATS</Typography>
             </MobileBox>
-            <MobileBox variant='outlined' onClick={() => goTo('discord')}>
+            <MobileBox variant='outlined' onClick={() => goTo('leagues')}>
               <Typography fontFamily="Montserrat" variant="h5">DISCORD</Typography>
             </MobileBox>
           </Box>
