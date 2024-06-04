@@ -16,6 +16,7 @@ import SearchPage from './pages/search/search';
 import LeaguePage from './pages/risenLeague/league';
 import TeamPage from './pages/risenTeam/team';
 import StatGraphic from './pages/stat-graphic/stat-graphic';
+import FindLeague from './pages/risenLeague/findLeague';
 
 function App() {
   const [open, setOpen] = React.useState(false);
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
             <Route path="/player/:playerNameWithTagline" element={<Player />}></Route>
+            <Route path="/leagues" element={<FindLeague />}></Route>
             <Route path="/leagues/:leagueName" element={<LeaguePage />}></Route>
             <Route path="/leaderboard" element={<Leaderboards />}></Route>
             <Route path="/leagues/:leagueName/:teamAbbr" element={<TeamPage />}></Route>

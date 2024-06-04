@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import BaseRisenBox from '../risen-box/base-risen-box';
 import WinRateBox from '../charts/win-rate-box';
 import RosterBox from './roster-box';
 import ChampionPickRate from '../league-page/champion-pick-rate';
@@ -13,13 +12,7 @@ import LeagueChampionWinrates from '../league-page/league-champ-winrates';
 import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 import StatsVsRestOfLeague from './stats-vs-rest-of-league';
 import SideWinRateBox from '../charts/side-win-rate-box';
-import { getGradient } from '../league-page/general';
-import { Row } from '../league-page/leaderboard/row';
-import { darken } from '@mui/system/colorManipulator';
-import WardingHabits from './warding-habits';
 import LeagueDragons from '../league-page/league-dragons';
-import RecentGames from '../league-page/recent-games';
-import GameModel from '../../../../Common/models/game.model';
 import { BLUE_TEAM_ID, RED_TEAM_ID } from '../../../../Common/constants';
 
 interface TeamPageGeneralStatsProps {

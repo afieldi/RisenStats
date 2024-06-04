@@ -13,11 +13,16 @@ export interface TableColumn<T> {
   description?: string;
 }
 
+export interface PlayerIdentifier {
+  playerName: string,
+  playerTag: string,
+}
+
 export interface LeaderboardType {
   rank: number;
   role: GameRoles;
   tier: number;
-  playerName: string;
+  playerIdentifier: PlayerIdentifier;
   wr: number;
   kda: number;
   dpm: number;

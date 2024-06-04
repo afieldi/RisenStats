@@ -10,7 +10,7 @@ export async function GetLeaderboardsBySeasonIdAndRole(seasonId: number, roleId:
   let minGames = BASE_MIN_NUMBER_OF_GAMES;
 
   // Early in the season there will always be not enough games to satisfy the min count, so in this case we use the average so the early weeks have leaderboards.
-  let averageGames = Math.round(flattenedLeaderboard.reduce((sum, player) => sum + player.games, 0) / flattenedLeaderboard.length);
+  let averageGames = Math.floor(flattenedLeaderboard.reduce((sum, player) => sum + player.games, 0) / flattenedLeaderboard.length);
   if (averageGames < BASE_MIN_NUMBER_OF_GAMES) {
     minGames = averageGames;
   }

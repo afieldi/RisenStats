@@ -72,6 +72,7 @@ function TeamPage() {
       let response = await getLeagueTeamRosterByTeamId(teamId, seasonId);
       setTeamRoster(response.roster);
     } catch (err) {
+      setErrorMessage('Couldnt Load Team Roster!');
       console.error('An error occured trying to load the team roster');
     }
     setLoadingTeamRoster(false);
@@ -84,7 +85,6 @@ function TeamPage() {
   function hasErrorToDisplay(): boolean {
     return errorMessage != null && errorMessage.length > 0;
   }
-
 
   function canDisplayStats(): boolean {
     return season !== undefined && team !== undefined;
@@ -120,7 +120,7 @@ function TeamPage() {
       setLeaguePlayerGames(playerGameResponse.games);
     }
     catch (error) {
-      console.error('An error occured trying to load the league games');
+      console.error('An error occurred trying to load the league games');
     }
     setLoadingGames(false);
   }
@@ -134,6 +134,7 @@ function TeamPage() {
     setLoadingTeams(true);
     let response = await getLeagueTeamsBySeasonId(seasonId);
     if (response.teams.length < 1) {
+      setErrorMessage('No Teams Found!');
       throw Error('No teams found!');
     }
 
