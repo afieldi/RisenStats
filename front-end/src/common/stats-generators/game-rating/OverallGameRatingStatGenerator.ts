@@ -7,12 +7,12 @@ import AggregatedPlayerStatModel from '../../../../../Common/models/aggregatedpl
 
 export class OverallGameRatingStatGenerator extends GameRatingStatGenerator {
 
-  private midGame: GameRatingStatGenerator;
+  private earlyGame: GameRatingStatGenerator;
   private lateGame: GameRatingStatGenerator;
 
   constructor(midGame: RoleRatingStatGenerator, lateGame: RoleRatingStatGenerator) {
     super();
-    this.midGame = midGame;
+    this.earlyGame = midGame;
     this.lateGame = lateGame;
   }
 
@@ -25,10 +25,12 @@ export class OverallGameRatingStatGenerator extends GameRatingStatGenerator {
   }
 
   getRawStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
-    const wins = 3 * playerStatsModel.win;
-    const loss = 3 * (playerStatsModel.games - playerStatsModel.win);
-    return  ((this.midGame.getRawStatValue(playerStatsModel) * 0.4) + (this.lateGame.getRawStatValue(playerStatsModel) * 0.6))
-                + ((wins - loss) / playerStatsModel.games);
+    const wins = playerStatsModel.win;
+    const earlyGameValue = this.earlyGame.getRawStatValue(playerStatsModel) * 0.4;
+    const lateGameValue = this.lateGame.getRawStatValue(playerStatsModel) * 0.6;
+    const winrate = (wins / playerStatsModel.games);
+    const scoreMultiplier = 0.9 + (winrate * 0.1); // multiply their score based on their winrate, this number can be between 0.9 and 1
+    return  (earlyGameValue + lateGameValue) * scoreMultiplier;
   }
 
 }
