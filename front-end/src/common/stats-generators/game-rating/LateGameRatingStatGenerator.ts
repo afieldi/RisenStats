@@ -43,9 +43,8 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     const controlWards = 0.5 * (playerStatsModel.controlWardsPlaced / playerStatsModel.games);
     const killParticipation = 20 * (playerStatsModel.killParticipation / playerStatsModel.games);
     const vspm = 25 * ((playerStatsModel.visionScorePerMinute / playerStatsModel.games) - 1);
-    const quickSupportQuest = 4 * (playerStatsModel.completeSupportQuestInTime / playerStatsModel.games);
 
-    return kills + assists + deaths + xpDiff + wardsPlaced + wardsKilled + controlWards + killParticipation + vspm + quickSupportQuest;
+    return kills + assists + deaths + xpDiff + wardsPlaced + wardsKilled + controlWards + killParticipation + vspm;
   }
 
   getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
