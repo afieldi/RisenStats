@@ -10,9 +10,9 @@ export class OverallGameRatingStatGenerator extends GameRatingStatGenerator {
   private earlyGame: GameRatingStatGenerator;
   private lateGame: GameRatingStatGenerator;
 
-  constructor(midGame: RoleRatingStatGenerator, lateGame: RoleRatingStatGenerator) {
+  constructor(earlyGame: RoleRatingStatGenerator, lateGame: RoleRatingStatGenerator) {
     super();
-    this.earlyGame = midGame;
+    this.earlyGame = earlyGame;
     this.lateGame = lateGame;
   }
 
