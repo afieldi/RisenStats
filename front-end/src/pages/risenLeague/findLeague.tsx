@@ -27,7 +27,8 @@ export default function FindLeague() {
   }, []);
 
   const seasonsWithLeaguePage = seasons.filter(season => season.active)
-    .filter(season => season.googleSheetId != null);
+    .filter(season => season.googleSheetId != null)
+    .sort((a,b) => a.id > b.id ? 1 : -1); // Always display in the same order no matter how it returned from the DB
 
   return (
     <Container className="full-height full-width" sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
