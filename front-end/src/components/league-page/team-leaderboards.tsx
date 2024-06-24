@@ -180,5 +180,42 @@ export function getLeaderboardCardProps(games:PlayerGameModel[], gameCountMap: M
     formatter: (v: number) => `${v}`
   });
 
+
+  // Unique Champions
+  const sortedUniqueChamps = Array.from(getSortedUniqueChampions(games).entries()).sort((a, b) => b[1] - a[1])
+    .slice(0, howManyToDisplay);
+
+  leaderboardCardProps.set('Unique Champions', {
+    titleOfCard: 'Unique Champions',
+    lbColumnTitle: 'Unique',
+    orderedleaderboard: new Map(sortedUniqueChamps),
+    mainValueCalculator: (value: number, teamId: number) => value,
+    formatter: (v: number) => `${v}`
+  });
+
   return leaderboardCardProps;
+}
+
+function getSortedUniqueChampions(games: PlayerGameModel[]): Map<number, number> {
+  const allChampsPerTeam = new Map<number, Set<number>>();
+
+  for (let game of games) {
+    let risenTeamId = game.risenTeamTeamId;
+    if (risenTeamId == null) {
+      continue;
+    }
+    let current = allChampsPerTeam.get(risenTeamId);
+    if (!current) {
+      current = new Set<number>();
+    }
+    current.add(game.championId);
+    allChampsPerTeam.set(risenTeamId, current);
+  }
+
+  const uniqueChampCountPerTeam = new Map<number, number>;
+  for (let statMapElement of allChampsPerTeam) {
+    uniqueChampCountPerTeam.set(statMapElement[0], statMapElement[1].size);
+  }
+
+  return uniqueChampCountPerTeam;
 }

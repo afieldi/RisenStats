@@ -38,8 +38,10 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     const xpDiff = 0.11 * playerStatsModel.xpDiff15;
     const wardsPlaced = 3 * playerStatsModel.wardsPlaced15;
     const wardsKilled = 8 * playerStatsModel.wardsKilled15;
+    const quickSupportQuest = 4 * playerStatsModel.completeSupportQuestInTime;
 
-    return  (kills + assists + deaths + turretPlats + fb + goldDiff + xpDiff + wardsPlaced + wardsKilled) / playerStatsModel.games;
+
+    return  (kills + assists + deaths + turretPlats + fb + goldDiff + xpDiff + wardsPlaced + wardsKilled + quickSupportQuest) / playerStatsModel.games;
   }
 
   getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
