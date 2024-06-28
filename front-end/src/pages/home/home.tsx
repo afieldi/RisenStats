@@ -84,7 +84,7 @@ export default function Home() {
               <Typography fontFamily="Montserrat" variant="h5">PLAYER STATS</Typography>
             </MobileBox>
             <MobileBox variant='outlined' onClick={() => goTo('leagues')}>
-              <Typography fontFamily="Montserrat" variant="h5">DISCORD</Typography>
+              <Typography fontFamily="Montserrat" variant="h5">LEAGUE STATS</Typography>
             </MobileBox>
           </Box>
         </Container>

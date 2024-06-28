@@ -399,7 +399,11 @@ export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<Play
   } else if (seasonId === 'ALL') {
     filter = {};
   } else {
-    filter = { where: { seasonId: Number(seasonId) } };
+    /**
+     * we need to filter for gamelength because riot make a change where remade matches show up in the match history if everyone leaves.
+     * Using 180s since it seems to count from when the pause happened.
+     **/
+    filter = { where: { seasonId: Number(seasonId), gameLength: MoreThanOrEqual(180) } };
   }
   return await PlayerGameModel.find(filter);
 }
