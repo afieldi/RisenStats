@@ -16,10 +16,14 @@ export async function updateStatsFor(playerGame: PlayerGameModel, fullgame: Game
     return;
   }
 
-  let currentDbPlayerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid, teamId, playerGame.championId, seasonId, roleId);
+  // If the season is a real risen season (AKA not an aggregate season) then use the passed in teamId. If its an aggregate season
+  // then use null because a player can have multiple teams over multiple seasons so dont set it for the aggregate season
+  let teamIdToUseInRow = IsRealSeasonId(seasonId) ? teamId : null;
+
+  let currentDbPlayerStats: AggregatedPlayerStatModel[]  = await GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid, teamIdToUseInRow, playerGame.championId, seasonId, roleId);
   let updatedDbPlayerStats: AggregatedPlayerStatModel[] = [];
   if (currentDbPlayerStats.length === 0) {
-    currentDbPlayerStats.push(CreateInitialPlayerStatModel(playerGame, seasonId, IsRealSeasonId(seasonId) ? teamId : null));
+    currentDbPlayerStats.push(CreateInitialPlayerStatModel(playerGame, seasonId, teamIdToUseInRow));
   }
 
   for (let currentDbPlayerStat of currentDbPlayerStats) {
