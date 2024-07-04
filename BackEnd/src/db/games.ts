@@ -311,8 +311,10 @@ export async function GetDbPlayerGamesByPlayerPuuid(playerPuuid: string, risenOn
   return await PlayerGameModel.find(searchFilter);
 }
 
+// TODO this should return PlayerGameModel and not PlayerGameModel[] since gameId is 1:1 to game
 export async function GetDbPlayerGamesByGameId(gameId: number): Promise<PlayerGameModel[]> {
   await ensureConnection();
+  // TODO use findOne here
   return await PlayerGameModel.find({ where: { gameGameId: gameId } });
 }
 

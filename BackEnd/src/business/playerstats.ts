@@ -11,6 +11,11 @@ import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { GetDbAggregatedPlayerStatsByPlayerPuuid } from '../db/playerstats';
 
 export async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, playerPuuid: string, seasonId: number, roleId: GameRoles, teamId: number) {
+  if (shouldAggregateStatsForGame(playerGame)) {
+    console.log(`Skipping aggregating stats for gameId ${playerGame.gameGameId}`);
+    return;
+  }
+
   let currentDbPlayerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid, teamId, playerGame.championId, seasonId, roleId);
   let updatedDbPlayerStats: AggregatedPlayerStatModel[] = [];
   if (currentDbPlayerStats.length === 0) {
@@ -43,6 +48,11 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
   let playerStatMap: Map<String, AggregatedPlayerStatModel> = new Map<String, AggregatedPlayerStatModel>();
 
   for (const playerGame of playerGames) {
+    if (shouldAggregateStatsForGame(playerGame)) {
+      console.log(`Skipping aggregating stats for gameId ${playerGame.gameGameId}`);
+      continue;
+    }
+
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
     const champId = playerGame.championId;
     for (let seasonId of getSeasonsToUpdate(playerGame)) {
@@ -56,6 +66,12 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
 
   await SaveObjects(objsToSave, AggregatedPlayerStatModel);
   return objsToSave;
+}
+
+// TODO add other conditions where we shouldnt aggregate stats
+function shouldAggregateStatsForGame(playerGame: PlayerGameModel): boolean {
+  let isRemake = playerGame.gameLength < 180;
+  return !!isRemake;
 }
 
 /**
@@ -75,7 +91,7 @@ export function getSeasonsToUpdate(playerGame: PlayerGameModel) : number[] {
 }
 
 export async function GetPlayerStatsByTimeAndSeason(seasonId: number, timeStart: number, timeEnd: number): Promise<AggregatedPlayerStatModel[]> {
-  const playerGames = await GetDbPlayerGames({ seasonId, timeEnd, timeStart});
+  const playerGames = await GetDbPlayerGames({ seasonId, timeEnd, timeStart });
 
   const playerMap: { [key: string]: AggregatedPlayerStatModel } = {};
 
