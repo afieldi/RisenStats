@@ -39,8 +39,13 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
     roleConfig,
     playerStats,
     playerPuuid,
-    leaderboardData,
   } = props;
+
+  const leaderboardData = props.leaderboardData == undefined ? [] : props.leaderboardData;
+  // Leaderboard Data has information for all players, filter it to just the player we are interested in
+  const gameRatingStats = leaderboardData.filter(statsModel => {
+    return statsModel.playerPuuid == playerPuuid;
+  });
 
   // This page does not care about a per champion breakdown right now, so merge the data so its by role.
   // This page also doesnt care about a per team breakdown right now, so merge the team data away
@@ -74,7 +79,7 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
             leaderboardStats={leaderboardData ?? []}
           />
           <Box sx={{ minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2 }}>
-            <GameRatingOverview playerStats={playerStatsByRole}
+            <GameRatingOverview playerStats={gameRatingStats as AggregatedPlayerStatModel[]}
               roleId={!!roleConfig?.roleId ? roleConfig.roleId : GameRoles.ALL}/>
             <PingOverview playerStats={playerStatsByRole}/>
             <BaseRisenBox hideDivider>
