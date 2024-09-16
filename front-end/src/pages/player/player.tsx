@@ -212,7 +212,7 @@ function PlayerPage()
               roleConfig={loadGamesConfig.roleConfig}/>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <PlayerPageStats playerStats={playerStats}
+            <PlayerPageStats playerStatsByChampionAndRole={playerStats}
               playerPuuid={playerProfile?.overview.puuid}
               leaderboardData={fullLeaderboard.get(seasonId)?.get(roleId)}
               seasonConfig={{ ...loadGamesConfig.seasonConfig, seasons: seasons.filter(season => season.active) }}
