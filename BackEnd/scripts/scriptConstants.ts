@@ -1,7 +1,7 @@
 // Used for per-season scripts, needs to be updated every season
-export const RAMPAGE: number = 39;
-export const UNSTOPPABLE: number = 38;
-export const DOMINATE: number = 37;
-export const DRAFT: number = 36;
-export const MYTHICAL: number = 35;
-export const CHAMPIONS: number = 34;
+export const RAMPAGE: number = 46;
+export const UNSTOPPABLE: number = 45;
+export const DOMINATE: number = 44;
+export const DRAFT: number = 42;
+export const MYTHICAL: number = 43;
+export const CHAMPIONS: number = -1;

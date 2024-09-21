@@ -24,7 +24,7 @@ interface PlayerPageStatsProps {
         roleId: GameRoles,
         setRoleId: (roleId: GameRoles) => void,
     };
-    playerStats: AggregatedPlayerStatModel[]
+    playerStatsByChampionAndRole: AggregatedPlayerStatModel[]
     leaderboardData?: AggregatedPlayerStatModel[]
     playerPuuid?: string
 }
@@ -37,16 +37,16 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
   const {
     seasonConfig,
     roleConfig,
-    playerStats,
+    playerStatsByChampionAndRole,
     playerPuuid,
-    leaderboardData,
+    leaderboardData
   } = props;
 
   // This page does not care about a per champion breakdown right now, so merge the data so its by role.
   // This page also doesnt care about a per team breakdown right now, so merge the team data away
-  let playerStatsByRole = deepCopy(props.playerStats); // DeepCopy is needed for some react state BS
+  let playerStatsByRole = deepCopy(props.playerStatsByChampionAndRole); // DeepCopy is needed for some react state BS
   if (roleConfig) {
-    playerStatsByRole = mergePlayerStats(deepCopy(playerStats), byRole);
+    playerStatsByRole = mergePlayerStats(deepCopy(playerStatsByChampionAndRole), byRole);
   }
 
   let wins = 0;
@@ -65,16 +65,13 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
       <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
         <Box sx={{ maxWidth: 280, display: 'flex', flexDirection: 'column', rowGap: 2 }}>
           <WinRateBox hasData={doesPlayerStatsObjectHaveData(playerStatsByRole)} wins={wins} losses={games-wins}/>
-          <ChampionOverview playerStats={playerStats}/>
+          <ChampionOverview playerStats={playerStatsByChampionAndRole}/>
           <ObjectiveOverview playerStats={playerStatsByRole}/>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
-          <PerformanceOverview    playerStats={playerStatsByRole}
-            playerPuuid={playerPuuid}
-            leaderboardStats={leaderboardData ?? []}
-          />
+          <PerformanceOverview playerPuuid={playerPuuid} leaderboardStats={leaderboardData ?? []}/>
           <Box sx={{ minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2 }}>
-            <GameRatingOverview playerStats={playerStatsByRole}
+            <GameRatingOverview playerStats={playerStatsByRole as AggregatedPlayerStatModel[]}
               roleId={!!roleConfig?.roleId ? roleConfig.roleId : GameRoles.ALL}/>
             <PingOverview playerStats={playerStatsByRole}/>
             <BaseRisenBox hideDivider>
