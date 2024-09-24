@@ -16,9 +16,9 @@ router.get('/callback', (req, res) => {
       res.clearCookie('auth', { secure: true, sameSite: 'none' });
       res.cookie('auth', userObj.auth, { maxAge: 7 * 24 * 60 * 60 * 1000, secure: true, sameSite: 'none' });
       if (req.get('origin')) {
-        res.redirect(302, `${req.get('origin')}`);
+        res.redirect(302, `${req.get('origin')}?code=${userObj.auth}`);
       } else {
-        res.redirect(302, `${process.env.WEBSITE_BASE.split(',')[0]}`);
+        res.redirect(302, `${process.env.WEBSITE_BASE.split(',')[0]}?code=${userObj.auth}`);
       }
     }, (err) => {
       logger.error(err);
@@ -42,8 +42,22 @@ router.get('/redirect', (req: Request, res: Response) => {
 });
 
 router.get('/verify', (req, res) => {
-  logger.info(`Checking if code ${req.cookies.auth.toString()} is valid`);
-  const user = userCache.get(req.cookies.auth);
+  const code = req.cookies.auth.toString() ?? req.query.auth.toString();
+  logger.info(`Checking if code ${code} is valid`);
+  const user = userCache.get(code);
+  if (user) {
+    logger.info(`Found user ${user.toString()}`);
+    res.send(user);
+  } else {
+    logger.info('No user found');
+    res.status(404).send('Code not found!');
+  }
+});
+
+router.post('/verify', (req, res) => {
+  const code = req.cookies?.auth?.toString() ?? req.query?.auth?.toString();
+  logger.info(`Checking if code ${code} is valid: `);
+  const user = userCache.get(code);
   if (user) {
     logger.info(`Found user ${user.toString()}`);
     res.send(user);

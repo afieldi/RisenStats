@@ -1,5 +1,6 @@
+import LoginIcon from '@mui/icons-material/Login';
 import { styled } from '@mui/material/styles';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import MuiDrawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -10,11 +11,13 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import PhoneIcon from '@mui/icons-material/Phone';
 import PersonIcon from '@mui/icons-material/Person';
 import { List } from '@mui/material';
+import Cookies from 'universal-cookie';
 
-import { DRAWER_WIDTH } from '../../common/constants';
+import { AUTH_COOKIE_KEY, DRAWER_WIDTH, OAUTH_URL } from '../../common/constants';
 
 import theme from '../../styles/theme/darkTheme';
-import { Leaderboard } from '@mui/icons-material';
+import { Leaderboard, Logout } from '@mui/icons-material';
+import { AuthenticationContext, isAdmin, isLoggedIn } from '../authentication/authentication';
 import SideBarLinkItem from './side-bar-link-item';
 
 interface Props {
@@ -54,7 +57,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export function SideBar({ open, onClose }: Props) {
-
+  const user = useContext(AuthenticationContext);
   const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     // @ts-ignore
     ({ open }) => ({
@@ -119,11 +122,28 @@ export function SideBar({ open, onClose }: Props) {
           primaryText={'Contact Us'}>
           <PhoneIcon/>
         </SideBarLinkItem>
+
+        {isLoggedIn(user) ? <SideBarLinkItem
+          isInternalLink={false}
+          url={'#'}
+          onClick={() => {(new Cookies()).remove(AUTH_COOKIE_KEY); window.location.reload();}}
+          key={'nav-logout'}
+          primaryText={'Log Out'}
+        >
+          <Logout/>
+        </SideBarLinkItem> : <SideBarLinkItem
+          isInternalLink={false}
+          url={OAUTH_URL}
+          key={'nav-login'}
+          primaryText={'Log In'}
+        >
+          <LoginIcon/>
+        </SideBarLinkItem>}
       </List>
 
       {/* Admin manage */}
       {
-        false ? (
+        isAdmin(user) ? (
           <SideBarLinkItem  isInternalLink={true}
             url={'/admin/codes'}
             key={'nav-admin'}
