@@ -155,3 +155,5 @@ export const PING_SRC = {
   DANGER: '/images/game/pings/danger.png',
 };
 
+export const OAUTH_URL = `https://discord.com/api/oauth2/authorize?response_type=code&client_id=737851599778742405&scope=identify&redirect_uri=${encodeURIComponent(process.env.REACT_APP_BACKEND_URL as string)}/api/auth/callback&prompt=identify%20guilds%20guilds.members.read`;
+export const AUTH_COOKIE_KEY = 'auth_cookie';

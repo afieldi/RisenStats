@@ -9,11 +9,12 @@ interface Props {
     url: string,
     key: string,
     primaryText: string;
+    onClick?: () => void;
     children: React.ReactNode; // should always be a svg icon
 }
 
 export default function SideBarLinkItem(props: Props) {
-  if (props.isInternalLink) {
+  if (props.isInternalLink && !props.onClick) {
     return (
       <Link to={props.url}>
         {getListItem(props.key, props.primaryText, props.children)}
@@ -21,7 +22,7 @@ export default function SideBarLinkItem(props: Props) {
     );
   } else {
     return (
-      <a href={props.url}>
+      <a href={props.url} onClick={props.onClick}>
         {getListItem(props.key, props.primaryText, props.children)}
       </a>
     );
