@@ -1,8 +1,10 @@
 import DiscordOauth2 from 'discord-oauth2';
+import NodeCache from 'node-cache';
 import logger from '../../logger';
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
+export const userCache = new NodeCache();
 const oauth = new DiscordOauth2();
 
 interface AuthUser {
@@ -21,8 +23,16 @@ async function getGuildUser(userId: string): Promise<any> {
   }).then(async data => await data.json());
 }
 
+export function getAuthUser(auth: string): AuthUser | undefined {
+  const user = userCache.get(auth);
+  if (user) {
+    return user as AuthUser;
+  }
+  return undefined;
+}
+
 export async function DoAuth(code: string, host: string): Promise<AuthUser> {
-  const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'http://localhost:4000') + '/api/auth/callback';
+  const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'https://3ac5-64-46-29-171.ngrok-free.app') + '/api/auth/callback';
   logger.info(`Redirect URI: ${redirectUri}`);
   return await oauth.tokenRequest({
     clientId: '737851599778742405',
