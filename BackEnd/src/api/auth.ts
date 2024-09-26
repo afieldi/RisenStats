@@ -1,10 +1,8 @@
 import express, { Request, Response, Router } from 'express';
-import { DoAuth } from '../business/auth';
+import { DoAuth, userCache } from '../business/auth';
 import logger from '../../logger';
-import NodeCache from 'node-cache';
 
 const router: Router = express.Router();
-const userCache = new NodeCache();
 
 router.get('/callback', (req, res) => {
   logger.info(`Login called with code: ${req.query.code}`);
