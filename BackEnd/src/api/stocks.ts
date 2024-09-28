@@ -6,12 +6,19 @@ import {
   GetPortfolioRequest, GetPortfolioResponse, GetStockTimelineResponse,
   SellStockRequest, SellStockResponse
 } from '../../../Common/Interface/Internal/stocks';
+import { getAuthUser } from '../business/auth';
 
 
 const router: Router = express.Router();
 
 router.post('/buy', async(req: TypedRequest<BuyStockRequest>, res: TypedResponse<BuyStockResponse>) => {
+  if(!req.body.auth) {
+    res.status(403).send('Missing Auth');
+  }
 
+
+  let authUser = getAuthUser(req.body.auth);
+  console.log(authUser);
 });
 
 router.post('/sell', async(req: TypedRequest<SellStockRequest>, res: TypedResponse<SellStockResponse>) => {
