@@ -72,7 +72,11 @@ function RoutedApp() {
             <Route path="*" element={<Error404/>}></Route>
             <Route path="/statexport" element={<StatExport/>}></Route>
             <Route path="/statgraphic" element={<StatGraphic/>}></Route>
-            <Route path='/admin/codes' element={<AdminCodes/>} />
+            {
+              isAdmin(user) && (
+                <Route path='/admin/codes' element={<AdminCodes/>} />
+              )
+            }
           </Routes>
         </div>
       </AuthenticationContext.Provider>
