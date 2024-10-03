@@ -1,9 +1,9 @@
 import { useTheme } from '@emotion/react';
 import { Theme } from '@mui/material';
+import { getGradient } from '../../common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
 import { Cell, Label, Pie, PieChart, Tooltip } from 'recharts';
 import React from 'react';
-import { getGradient } from './general';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 
 export interface SideWinRateBoxProps {

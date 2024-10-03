@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/system';
-import { getGradient } from '../general';
+import { getGradient } from '../../../common/utils';
 import { Theme, Typography } from '@mui/material';
 import ImgBox from '../../risen-box/img-box';
 

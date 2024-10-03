@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useSearchParams } from 'react-router-dom';
+import { Routes, Route, useSearchParams } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import './App.css';
 import './styles/globals.css';
@@ -10,6 +10,7 @@ import {
   AuthenticationInterface,
   DEFAULT_USER
 } from './components/authentication/authentication';
+import AdminCodes from './pages/admin/codes';
 import darkTheme from './styles/theme/darkTheme';
 
 import Player from './pages/player/player';
@@ -71,6 +72,7 @@ function RoutedApp() {
             <Route path="*" element={<Error404/>}></Route>
             <Route path="/statexport" element={<StatExport/>}></Route>
             <Route path="/statgraphic" element={<StatGraphic/>}></Route>
+            <Route path='/admin/codes' element={<AdminCodes/>} />
           </Routes>
         </div>
       </AuthenticationContext.Provider>

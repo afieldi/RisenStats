@@ -10,7 +10,7 @@ import {
   useTheme
 } from '@mui/material';
 import React, { useState } from 'react';
-import { BarChart, Bar, Rectangle, XAxis, YAxis, Legend, ResponsiveContainer, Tooltip } from 'recharts';
+import { BarChart, Bar, YAxis } from 'recharts';
 import TeamModel from '../../../../Common/models/team.model';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 import {
@@ -18,10 +18,9 @@ import {
   getRisenTeamGameCountForLeague,
   getRisenTeamTotalStatForLeague,
 } from '../../common/stats-generators/team/RisenTeamStatGenerator';
+import { getGradient } from '../../common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
-import { getGradient } from '../league-page/general';
 import Loading from '../loading/loading';
-import Team from '../../pages/risenTeam/team';
 
 interface StatsVsRestOfLeagueProps {
   primaryTeam: TeamModel,

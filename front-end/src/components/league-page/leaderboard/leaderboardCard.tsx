@@ -1,6 +1,6 @@
 import { SxProps, Theme,  useTheme } from '@mui/material';
 import { Box } from '@mui/material';
-import { getGradient } from '../general';
+import { getGradient } from '../../../common/utils';
 import { darken } from '@mui/system/colorManipulator';
 import React from 'react';
 import { LeaderboardRowProps, Row } from './row';

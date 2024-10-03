@@ -1,9 +1,8 @@
 import { Box, Theme, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import BaseRisenBox from '../risen-box/base-risen-box';
-import { getGradient } from './general';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
-import { abbreviateNumber } from '../../common/utils';
+import { abbreviateNumber, getGradient } from '../../common/utils';
 import { PING_SRC } from '../../common/constants';
 
 

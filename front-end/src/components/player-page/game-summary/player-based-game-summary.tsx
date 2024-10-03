@@ -53,7 +53,7 @@ function PlayerBasedGameSummary({ gameData, seasons }: Props)
   timestamp.setUTCMilliseconds(+gameData.game.gameStart + (+gameData.game.gameDuration * 1000));
 
   return (
-    <BaseRisenBox sx={{ bgcolor: bgColor, mb: 1 }} hideDivider>
+    <BaseRisenBox sx={{ background: bgColor, mb: 1 }} hideDivider>
       <Box sx={{ display: 'inline-flex', width: '100%', flexWrap: 'wrap', justifyContent: 'space-evenly', alignItems: 'center' }}>
         <Box sx={{ display: 'inline-flex', justifyContent: 'space-evenly', flexGrow: 1, flexWrap: 'wrap', }}>
           <GameTimeInformation playerWin={playerWin} gameDuration={gameData.game.gameDuration} gameStart={gameData.game.gameStart} />
