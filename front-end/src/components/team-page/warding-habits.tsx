@@ -1,6 +1,6 @@
 import { Box, Theme, Typography, useTheme } from '@mui/material';
 import React from 'react';
-import { getGradient } from '../league-page/general';
+import { getGradient } from '../../common/utils';
 
 interface WardingHabitsProps {
 

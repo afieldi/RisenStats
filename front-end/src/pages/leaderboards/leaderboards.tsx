@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Container, FormControlLabel, FormGroup, Grid, Hidden, Popper, Tooltip, Typography, useTheme } from '@mui/material';
+import { Button, Checkbox, Container, FormControlLabel, FormGroup, Hidden, Popper, Tooltip, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import FilterBar from '../../components/filters/filter-bar';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
@@ -8,11 +8,9 @@ import { GetActiveSeasons } from '../../api/season';
 import SeasonModel from '../../../../Common/models/season.model';
 import { TableColumn, LeaderboardType } from '../../common/types';
 import { useNavigate } from 'react-router-dom';
-import { toSearchName } from '../../../../Common/utils';
 import BaseRisenBox from '../../components/risen-box/base-risen-box';
 import { getAllHeadCells } from './leaderboardDef';
 import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
-import player from '../player/player';
 
 
 export default function Leaderboards() {

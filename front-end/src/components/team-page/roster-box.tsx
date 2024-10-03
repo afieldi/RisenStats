@@ -1,19 +1,13 @@
 import { useTheme } from '@emotion/react';
 import { Theme, Typography } from '@mui/material';
 import React from 'react';
-import { Box } from '@mui/system';
-import PlayerModel from '../../../../Common/models/player.model';
-import BaseRisenBox from '../risen-box/base-risen-box';
-import { getGradient } from '../league-page/general';
 import PlayerTeamModel from '../../../../Common/models/playerteam.model';
 import {
-  buildTextBasedLeaderboardHeader, buildTextBasedLeaderboardRowProps,
+  buildTextBasedLeaderboardHeader,
   buildTextBasedLeaderboardRowPropsWithRedirect,
   LeaderboardRowProps,
   RowMainValue
 } from '../league-page/leaderboard/row';
-import { calculateWR } from '../../../../Common/utils';
-import { getRankColorByPercent } from '../../common/utils';
 import LeaderboardCard from '../league-page/leaderboard/leaderboardCard';
 import { useNavigate } from 'react-router-dom';
 import PlayerGameModel from '../../../../Common/models/playergame.model';

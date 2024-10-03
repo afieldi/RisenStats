@@ -1,8 +1,9 @@
-import championsMap from '../data/champions_map.json';
 import { Theme } from '@mui/material';
-import { Rank, RedAndBlueStats, TotalTeamStats } from './types';
+import { darken } from '@mui/system/colorManipulator';
 import { GameRoles, GameSide } from '../../../Common/Interface/General/gameEnums';
 import GameModel from '../../../Common/models/game.model';
+import championsMap from '../data/champions_map.json';
+import { Rank, RedAndBlueStats, TotalTeamStats } from './types';
 
 
 export function ChampionIdToName(championId: number): string {
@@ -142,4 +143,12 @@ export function getTeamStats(gameModel: GameModel): RedAndBlueStats {
 
 export function getEncodedNameWithTagline(name: string, tagline: string): string {
   return `${encodeURIComponent(name)}-${encodeURIComponent(tagline)}`;
+}
+
+// The gradient function used for boxes on this page
+export function getGradient(background: string, gradientsEnabled=true) {
+  if (gradientsEnabled) {
+    return `linear-gradient(to right, ${background} 0%, ${darken(background, 0.4)} 100%)`;
+  }
+  return `linear-gradient(to right, ${background} 100%, ${background} 100%)`;
 }

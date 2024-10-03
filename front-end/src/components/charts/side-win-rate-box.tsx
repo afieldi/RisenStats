@@ -1,6 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { Theme, Typography } from '@mui/material';
 import { calculateWR } from '../../../../Common/utils';
+import { getGradient } from '../../common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
 import {
   Bar,
@@ -10,7 +11,6 @@ import {
   YAxis
 } from 'recharts';
 import React from 'react';
-import { getGradient } from '../league-page/general';
 
 interface SideWinRateBoxProps {
     blueWins: number;

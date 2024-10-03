@@ -1,10 +1,10 @@
 import { Box, SelectChangeEvent, Theme, Typography } from '@mui/material';
 import { useTheme } from '@emotion/react';
+import { getGradient } from '../../common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
 import ChampionSummaryBox from '../champion-overview/champion-summary-box';
 import React, { useState } from 'react';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import { getGradient } from './general';
 import SmallRoleSelector from '../selectors/small-role-selector';
 
 interface ChampionOverviewProps {

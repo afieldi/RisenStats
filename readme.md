@@ -11,7 +11,7 @@ If new things happen(such as a new champion being released), run `npm run update
 Front end uses Material-UI: https://mui.com/material-ui/react-text-field/
 Charts are made with Recharts: https://recharts.org/en-US/
 
-### QA
+# QA
 ## Why is naming for frontend `front-end` but CamelCase for everything else
 Because react forced that and I was already using camel case for the other packages.
 

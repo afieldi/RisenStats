@@ -144,7 +144,7 @@ export function SideBar({ open, onClose }: Props) {
       {/* Admin manage */}
       {
         isAdmin(user) ? (
-          <SideBarLinkItem  isInternalLink={true}
+          <SideBarLinkItem isInternalLink={true}
             url={'/admin/codes'}
             key={'nav-admin'}
             primaryText={'Manage Codes'}>

@@ -1,6 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { Box, Typography, Theme, SxProps } from '@mui/material';
 import React from 'react';
+import { getGradient } from '../../common/utils';
 
 export interface Props {
   children?: React.ReactNode;
@@ -18,8 +19,10 @@ export default function BaseRisenBox(props: Props) {
 
   let sxFinal: SxProps<Theme> = { ...{
     p: 2,
-    bgcolor: theme.palette.risenBoxBg.main,
+    // bgcolor: 'transparent', // theme.palette.risenBoxBg.main,
+    background: getGradient(theme.palette.risenBoxBg.main),
     borderRadius: 1,
+    border: `1px solid ${theme.palette.risenBoxBg.main}`,
     flexWrap: 'wrap'
   }, ...sx };
 
