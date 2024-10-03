@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { Box, Theme, Typography } from '@mui/material';
 import React from 'react';
-import { getGradient } from './general';
+import { getGradient } from '../../common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
 import { riotTimestampToGameTime,  roundTo } from '../../../../Common/utils';
 import PlayerGameModel from '../../../../Common/models/playergame.model';

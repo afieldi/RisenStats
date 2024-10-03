@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
-import { Theme, Typography } from '@mui/material';
+import { Theme } from '@mui/material';
+import { getGradient } from '../../common/utils';
 import BaseRisenBox from '../risen-box/base-risen-box';
-import { getGradient } from './general';
 import { Cell, Label, Pie, PieChart, Tooltip } from 'recharts';
 import React from 'react';
 import PlayerGameModel from '../../../../Common/models/playergame.model';

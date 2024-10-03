@@ -3,8 +3,8 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 interface Props {
-  items: Number[]
-  nCol?: Number
+  items: number[]
+  nCol?: number
 }
 
 export default function ItemBox({ items, nCol }: Props) {

@@ -1,21 +1,19 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
-import PlayerGameModel from '../../../../Common/models/playergame.model';
-import TeamModel from '../../../../Common/models/team.model';
-import SideWinrateBox from './side-winrate-box';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import ChampionPickRate from './champion-pick-rate';
-import TeamListBox from './teams-list';
-import { darken } from '@mui/system/colorManipulator';
-import LeagueStats from './league-stats';
-import LeagueDragons from './league-dragons';
-import LeagueChampionWinrates from './league-champ-winrates';
-import TeamLeaderboards from './team-leaderboards';
-import SeasonModel from '../../../../Common/models/season.model';
 import GameModel from '../../../../Common/models/game.model';
+import PlayerGameModel from '../../../../Common/models/playergame.model';
+import SeasonModel from '../../../../Common/models/season.model';
+import TeamModel from '../../../../Common/models/team.model';
+import ChampionPickRate from './champion-pick-rate';
+import LeagueChampionWinrates from './league-champ-winrates';
+import LeagueDragons from './league-dragons';
+import LeagueStats from './league-stats';
 import RecentGames from './recent-games';
+import SideWinrateBox from './side-winrate-box';
+import TeamLeaderboards from './team-leaderboards';
+import TeamListBox from './teams-list';
 
-const gradientsEnabled = true;
 export interface LeaguePageGeneralStatsProps {
     season: SeasonModel;
     playerGames: PlayerGameModel[]
@@ -71,12 +69,4 @@ function buildUniqueChamps(champsPlayed: Map<GameRoles, Map<number, number>>) {
     mergedMap = new Map([...Array.from(mergedMap.entries()), ...Array.from((champsPlayed.get(key) as Map<number, number>).entries())]);
   }
   return mergedMap.size;
-}
-
-// The gradient function used for boxes on this page
-export function getGradient(background: string) {
-  if (gradientsEnabled) {
-    return `linear-gradient(to right, ${background} 0%, ${darken(background, 0.4)} 100%)`;
-  }
-  return `linear-gradient(to right, ${background} 100%, ${background} 100%)`;
 }

@@ -2,9 +2,9 @@ import GameModel from '../../../../../Common/models/game.model';
 import { riotTimestampToGameTime, timeToTimeAgo } from '../../../../../Common/utils';
 import { useTheme } from '@emotion/react';
 import { Box, Theme, Typography } from '@mui/material';
+import { getGradient } from '../../../common/utils';
 import AllTeamInfo from './all-team-info';
 import React from 'react';
-import { getGradient } from '../../league-page/general';
 import { useNavigate } from 'react-router-dom';
 
 interface SeasonBasedGameSummaryProps {

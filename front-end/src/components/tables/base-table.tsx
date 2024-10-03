@@ -15,7 +15,7 @@ export default function BaseTable<T extends string>(props: TableProps<T>) {
 
   const rowSxNonNull = rowSx || {} as {[key in T]: SxProps<Theme>};
   return (
-    <Paper>
+    <Paper sx={{ bgcolor: 'transparent', backgroundImage: 'none' }}>
       <TableContainer>
         <Table>
           <TableHead>
@@ -28,7 +28,7 @@ export default function BaseTable<T extends string>(props: TableProps<T>) {
                 ))
               }
             </TableRow>
-          </TableHead>
+          </TableHead>g
           <TableBody>
             {
               data.map((rowData) => (
