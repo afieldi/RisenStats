@@ -8,7 +8,7 @@ import { AUTH_COOKIE_KEY } from './common/constants';
 import {
   AuthenticationContext,
   AuthenticationInterface,
-  DEFAULT_USER
+  DEFAULT_USER, isAdmin
 } from './components/authentication/authentication';
 import AdminCodes from './pages/admin/codes';
 import darkTheme from './styles/theme/darkTheme';
@@ -72,7 +72,11 @@ function RoutedApp() {
             <Route path="*" element={<Error404/>}></Route>
             <Route path="/statexport" element={<StatExport/>}></Route>
             <Route path="/statgraphic" element={<StatGraphic/>}></Route>
-            <Route path='/admin/codes' element={<AdminCodes/>} />
+            {
+              isAdmin(user) && (
+                <Route path='/admin/codes' element={<AdminCodes/>} />
+              )
+            }
           </Routes>
         </div>
       </AuthenticationContext.Provider>
