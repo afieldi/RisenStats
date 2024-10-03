@@ -99,7 +99,7 @@ export default function AdminCodes() {
                       <TableRow>
                         {
                           [...Array(bestOf)].map((_, colIndex) => (
-                            <TableCell>{generatedCodes[(numberOfMatches * rowIndex) + colIndex]?.code}</TableCell>
+                            <TableCell>{generatedCodes[(bestOf * rowIndex) + colIndex]?.code}</TableCell>
                           ))
                         }
                       </TableRow>
