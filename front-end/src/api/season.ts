@@ -16,3 +16,7 @@ export async function getSeasonBySearchName(searchName: string) {
 
   return await MakeBackendCall('/api/season/get', 'POST', params) as GetSeasonResponse;
 }
+
+export async function getSeasonsForPlayer(playerPuuid: string):  Promise<GetSeasonsResponse> {
+  return await MakeBackendCall(`/api/season/get/by-puuid/${playerPuuid}`, 'POST', {}) as GetSeasonsResponse;
+}

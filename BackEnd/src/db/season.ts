@@ -4,7 +4,7 @@ import { ensureConnection } from './dbConnect';
 import { toSearchName } from '../../../Common/utils';
 import { GetDbTournamentProvider } from './provider';
 import ProviderModel from '../../../Common/models/provider.model';
-import { IsNull, Not } from 'typeorm';
+import { In, IsNull, Not } from 'typeorm';
 
 export async function GetDbSeasons(active: boolean): Promise<SeasonModel[]> {
   await ensureConnection();
@@ -61,4 +61,9 @@ export async function SetDBLastTimeActiveSeasonRisenTeamWasBuilt(time: Date, sea
   await ensureConnection();
   season.lastTimeRisenTeamsBuilt = time;
   return season.save();
+}
+
+export async function GetDbActiveSeasonsBySeasonIds(seasonIds: number[]): Promise<SeasonModel[]> {
+  await ensureConnection();
+  return await SeasonModel.find({ where: { active: true, id: In(seasonIds) } });
 }

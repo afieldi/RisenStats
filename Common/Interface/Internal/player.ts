@@ -25,5 +25,5 @@ export interface UpdatePlayerGamesResponse {
 }
 
 export interface PlayerSeasonsResponse {
-  seasons: string[];
+  seasons: number[];
 }
