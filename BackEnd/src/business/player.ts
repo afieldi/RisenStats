@@ -98,6 +98,6 @@ export async function GetPlayerDetailedGames(playerPuuid: string, pageSize = 0, 
   }));
 }
 
-export async function GetPlayerSeasons(playerPuuid: string): Promise<string[]> {
+export async function GetPlayerSeasons(playerPuuid: string): Promise<number[]> {
   return (await GetPlayerDistinctSeasons(playerPuuid)).map(season => season.seasonId).filter(seasonId => !!seasonId);
 }

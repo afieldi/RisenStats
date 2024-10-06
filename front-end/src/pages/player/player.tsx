@@ -20,7 +20,7 @@ import { ApiError } from '../../api/_call';
 import PlayerPageChampions from '../../components/player-page/champions';
 import SeasonModel from '../../../../Common/models/season.model';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
-import { GetAllSeasons } from '../../api/season';
+import { getSeasonsForPlayer } from '../../api/season';
 import PlayerPageStats from '../../components/player-page/stats';
 import { getFlattenedLeaderboard } from '../../api/leaderboards';
 import { DEFAULT_RISEN_SEASON_ID } from '../../../../Common/constants';
@@ -120,9 +120,9 @@ function PlayerPage() {
     }
   }
 
-  async function loadSeasons() {
+  async function loadSeasons(playerPuuid: string) {
     try {
-      setSeasons((await GetAllSeasons()).seasons);
+      setSeasons((await getSeasonsForPlayer(playerPuuid)).seasons);
     } catch (error) {
       console.log(error);
     }
@@ -139,6 +139,8 @@ function PlayerPage() {
       setPlayerProfile(profile);
       loadMoreGames(true, profile);
       loadPlayerStats(profile);
+      loadSeasons(profile.overview.puuid);
+      setSeasonId(DEFAULT_RISEN_SEASON_ID);
       loadLeaderboards();
     }, (err: any) => {
       console.log(err);
@@ -150,10 +152,6 @@ function PlayerPage() {
     loadPlayerStats(playerProfile);
     loadLeaderboards();
   }, [seasonId, roleId]);
-
-  useEffect(() => {
-    loadSeasons();
-  }, []);
 
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
