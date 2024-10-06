@@ -135,7 +135,7 @@ export async function GetPlayerPuuidsInSeason(seasonId: number, roleId: GameRole
 }
 
 interface SeasonData {
-  seasonId: string;
+  seasonId: number;
 }
 
 export async function GetPlayerDistinctSeasons(playerPuuid: string): Promise<SeasonData[]> {

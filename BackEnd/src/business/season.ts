@@ -1,7 +1,12 @@
-import { CreateDbSeasonWithProviderId, GetDbSeasonByName, GetDbSeasons } from '../db/season';
+import {
+  CreateDbSeasonWithProviderId,
+  GetDbActiveSeasonsBySeasonIds,
+  GetDbSeasonByName,
+  GetDbSeasons
+} from '../db/season';
 import SeasonModel from '../../../Common/models/season.model';
 import { CreateRiotTournament } from '../external-api/tournament';
-import { DocumentNotFound } from '../../../Common/errors';
+import { GetPlayerSeasons } from './player';
 
 export async function CreateSeason(seasonName: string, providerId: number): Promise<SeasonModel> {
   const tournamentId = await CreateRiotTournament(seasonName, providerId);
@@ -17,5 +22,13 @@ export async function GetSeasonBySearchName(searchName: string): Promise<SeasonM
     return await GetDbSeasonByName(searchName);
   } catch (err) {
     return null;
+  }
+}
+export async function GetActiveSeasonThatPlayerHasParticiaptedInByPuuid(playerPuuid: string): Promise<SeasonModel[]> {
+  try {
+    let seasonIds = await GetPlayerSeasons(playerPuuid);
+    return await GetDbActiveSeasonsBySeasonIds(seasonIds);
+  } catch (err) {
+    return [];
   }
 }

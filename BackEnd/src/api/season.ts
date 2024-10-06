@@ -6,7 +6,12 @@ import {
   GetSeasonResponse,
   GetSeasonsResponse
 } from '../../../Common/Interface/Internal/season';
-import { CreateSeason, GetSeasonBySearchName, GetSeasons } from '../business/season';
+import {
+  CreateSeason,
+  GetSeasonBySearchName,
+  GetSeasons,
+  GetActiveSeasonThatPlayerHasParticiaptedInByPuuid
+} from '../business/season';
 import logger from '../../logger';
 import { number } from 'yargs';
 import { GetPlayerStatsRequest } from '../../../Common/Interface/Internal/playerstats';
@@ -32,6 +37,20 @@ router.post('/get/active', async(req: Request, res: TypedResponse<GetSeasonsResp
 
   try {
     const seasons = await GetSeasons(true);
+    res.json({
+      seasons
+    });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.post('/get/by-puuid/:playerPuuid', async(req: Request, res: TypedResponse<GetSeasonsResponse>) => {
+  logger.debug('Season get active');
+
+  try {
+    const seasons = await GetActiveSeasonThatPlayerHasParticiaptedInByPuuid(req.params.playerPuuid);
     res.json({
       seasons
     });
