@@ -54,13 +54,18 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     const wardsPlaced = 1.5 * (playerStatsModel.wardsPlaced / playerStatsModel.games);
     const wardsKilled = 3 * (playerStatsModel.wardsKilled / playerStatsModel.games);
     const visionScorePerMinute = 10 * ((playerStatsModel.visionScorePerMinute / playerStatsModel.games) - 0.5);
-    const perfectSoul = 30 * (playerStatsModel.perfectDragonSoulsTaken / playerStatsModel.games);
-    const regularDragons = 7 * (playerStatsModel.dragonTakedowns / playerStatsModel.games);
-    const heraldTakedowns = 5 *  (playerStatsModel.riftHeraldTakedowns / playerStatsModel.games);
-    const barons = 10 * (playerStatsModel.baronTakedowns / playerStatsModel.games);
-    const steals = 20 * (playerStatsModel.epicMonsterSteals / playerStatsModel.games);
+    const perfectSoul = 15 * (playerStatsModel.perfectDragonSoulsTaken / playerStatsModel.games);
+    const regularDragons = 3.5 * (playerStatsModel.dragonTakedowns / playerStatsModel.games);
+    const heraldTakedowns = 2.5 *  (playerStatsModel.riftHeraldTakedowns / playerStatsModel.games);
+    const barons = 5 * (playerStatsModel.baronTakedowns / playerStatsModel.games);
+    const steals = 10 * (playerStatsModel.epicMonsterSteals / playerStatsModel.games);
+    const dpg = 20 * ((playerStatsModel.totalDamageDealtToChampions / playerStatsModel.goldEarned) / playerStatsModel.games);
 
-    return  kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals;
+    const dpm = 0.025 *  (playerStatsModel.totalDamageDealtToChampions / riotTimestampToMinutes(playerStatsModel.gameLength));
+    const dmgTankedPM = 0.03 * (playerStatsModel.totalDamageTaken / riotTimestampToMinutes(playerStatsModel.gameLength));
+    const carryStat = this.calculateCarryStat(dpm, dmgTankedPM);
+
+    return  kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals + carryStat + dpg;
   }
 
   private calculateCarryStat(dpm: number, dmgTankedPM: number) {
