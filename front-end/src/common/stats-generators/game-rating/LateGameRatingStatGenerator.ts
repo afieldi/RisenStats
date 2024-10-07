@@ -59,12 +59,13 @@ export class LateGameRatingStatGenerator extends RoleRatingStatGenerator {
     const heraldTakedowns = 5 *  (playerStatsModel.riftHeraldTakedowns / playerStatsModel.games);
     const barons = 10 * (playerStatsModel.baronTakedowns / playerStatsModel.games);
     const steals = 20 * (playerStatsModel.epicMonsterSteals / playerStatsModel.games);
+    const dpg = 20 * ((playerStatsModel.totalDamageDealtToChampions / playerStatsModel.goldEarned) / playerStatsModel.games);
 
     const dpm = 0.025 *  (playerStatsModel.totalDamageDealtToChampions / riotTimestampToMinutes(playerStatsModel.gameLength));
     const dmgTankedPM = 0.03 * (playerStatsModel.totalDamageTaken / riotTimestampToMinutes(playerStatsModel.gameLength));
     const carryStat = this.calculateCarryStat(dpm, dmgTankedPM);
 
-    return  kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals + carryStat;
+    return  kda + csDiff + xpDiff  + wardsPlaced + wardsKilled + visionScorePerMinute + perfectSoul + regularDragons + heraldTakedowns + barons + steals + carryStat + dpg;
   }
 
   private calculateCarryStat(dpm: number, dmgTankedPM: number) {
