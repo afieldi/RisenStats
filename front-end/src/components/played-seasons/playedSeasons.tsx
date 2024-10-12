@@ -19,7 +19,7 @@ export default (props: PlayedSeasonsProps) => {
     allSeasons,
   } = props;
 
-  const [seasons, setSeasons] = useState<LoadingData<string[]>>({ loading: true });
+  const [seasons, setSeasons] = useState<LoadingData<number[]>>({ loading: true });
 
   const seasonMap = useMemo(() => {
     const data: {[key: string]: string} = {};

@@ -18,6 +18,7 @@ interface ImgBoxProps {
   border?: string;
   location?: ImagePositions; // defaults to bottom right
   sx?: SxProps<Theme> | undefined;
+  onClick?: (event:  React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 export default function ImgBox(props: ImgBoxProps) {
@@ -30,6 +31,7 @@ export default function ImgBox(props: ImgBoxProps) {
     text,
     location,
     sx,
+    onClick,
   } = props;
 
   const theme = useTheme() as Theme;
@@ -53,7 +55,7 @@ export default function ImgBox(props: ImgBoxProps) {
   };
 
   return (
-    <Box sx={combinedSx} >
+    <Box sx={combinedSx} onClick={onClick} >
       <img alt={alt}
         src={src}
         height={height}
