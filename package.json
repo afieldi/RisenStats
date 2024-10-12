@@ -1,0 +1,9 @@
+{
+  "name": "risen-stats",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "cd BackEnd && npm start",
+    "build": "cd Common && npm install && cd ../BackEnd && npm install"
+  }
+}
