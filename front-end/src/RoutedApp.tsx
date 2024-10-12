@@ -80,7 +80,7 @@ function RoutedApp() {
             <Route path="/statexport" element={<StatExport/>}></Route>
             <Route path="/statgraphic" element={<StatGraphic/>}></Route>
             <Route path="/drafting" element={<CreateDraft/>}></Route>
-            <Route path="/drafting/:room/:auth?" element={<Draft/>} />
+            <Route path="/drafting/:room/:auth" element={<Draft/>} />
             <Route path="/drafting/links/:room/:blueAuth/:redAuth" element={<DraftLinks />} />
             {
               isAdmin(user) && (
