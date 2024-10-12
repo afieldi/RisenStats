@@ -110,3 +110,4 @@ server.listen(port, () => {
   logger.debug(`Example app listening on port ${port}`);
 });
 
+module.exports = server;

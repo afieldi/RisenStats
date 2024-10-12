@@ -36,7 +36,7 @@ export interface DraftingSocketServerToClient {
 
 export interface DraftingSocketClientToServer {
   register: (room: string) => void;
-  pick: (room: string, auth: string, stage: number) => void;
+  pick: (room: string, auth: string) => void;
   hover: (room: string, auth: string, pick: string, stage: number) => void;
   ready: (room: string, auth: string) => void;
   unready: (room: string, auth: string) => void;
