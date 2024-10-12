@@ -1,10 +1,12 @@
-import {BaseEntity, Column, Entity, ManyToOne, Unique} from "typeorm";
+import {BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
 import SeasonModel from "./season.model";
 import TeamModel from "./team.model";
 
 @Entity({ name: "stock_timeline" })
-@Unique(["teamSeasonId"])
 export default class StockTimelineModel extends BaseEntity {
+
+    @PrimaryGeneratedColumn()
+    transactionId: number;
 
     @ManyToOne(() => SeasonModel)
     teamSeason: SeasonModel;
@@ -17,8 +19,8 @@ export default class StockTimelineModel extends BaseEntity {
     teamTeamId: number;
 
     @Column("integer")
-    dollar_value: number;
+    dollarValue: number;
 
-    @Column("integer")
-    timestamp: number;
+    @Column("timestamptz")
+    timestamp: Date;
 }

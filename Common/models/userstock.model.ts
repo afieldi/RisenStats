@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, ManyToOne} from "typeorm";
+import {BaseEntity, Column, Entity, ManyToOne, PrimaryColumn} from "typeorm";
 import SeasonModel from "./season.model";
 import TeamModel from "./team.model";
 import Usermodel from "./user.model";
@@ -8,7 +8,7 @@ export default class UserStockModel extends BaseEntity {
 
     @ManyToOne(() => Usermodel)
     user: Usermodel;
-    @Column("varchar")
+    @PrimaryColumn("varchar")
     userId: number;
 
     @ManyToOne(() => SeasonModel)

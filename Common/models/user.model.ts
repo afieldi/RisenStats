@@ -3,7 +3,7 @@ import {BaseEntity, Column, Entity, PrimaryColumn, Unique} from "typeorm";
 @Unique(["id"])
 export default class UserModel extends BaseEntity {
 
-    @Column("varchar")
+    @PrimaryColumn("varchar")
     id: number;
 
     @Column("varchar")
