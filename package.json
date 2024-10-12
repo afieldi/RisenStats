@@ -4,6 +4,6 @@
   "private": true,
   "scripts": {
     "start": "cd BackEnd && npm start",
-    "build": "cd Common && npm install && cd ../BackEnd && npm install"
+    "build": "cd Common && npm install && cd ../BackEnd && npm install && npm run build"
   }
 }
