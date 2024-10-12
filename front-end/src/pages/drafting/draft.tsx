@@ -1,23 +1,13 @@
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
-import { DRAFT_SOCKET_PATH } from '../../../../Common/constants';
-import {
-  DraftingSocketClientToServer,
-  DraftingSocketServerToClient, DraftState
-} from '../../../../Common/Interface/Internal/drafting';
+import { DraftState } from '../../../../Common/Interface/Internal/drafting';
 import ChampionPicker from '../../components/drafting/champion-picker';
 import DraftSubmitButton from '../../components/drafting/draft-submit-button';
 import TeamChampionBans from '../../components/drafting/team-champion-bans';
 import TeamChampionPicks from '../../components/drafting/team-champion-picks';
+import socket from '../../draftSocket';
 
-const socket: Socket<
-  DraftingSocketServerToClient,
-  DraftingSocketClientToServer
-> = io(process.env.REACT_APP_BACKEND_URL, {
-  path: DRAFT_SOCKET_PATH,
-});
 
 export default function() {
   const theme = useTheme();
@@ -25,6 +15,7 @@ export default function() {
   const [draftState, setDraftState] = useState<DraftState>();
 
   useEffect(() => {
+    console.log('effect', socket.connected);
     if (socket.connected) {
       socket.emit('register', room as string);
     }
@@ -53,18 +44,15 @@ export default function() {
 
   const onPickSubmit = () => {
     console.log('Pick Submitted', draftState);
-    socket.emit('pick', room as string, auth as string, draftState?.stage ?? 0);
+    socket.emit('pick', room as string, auth as string);
   };
 
   console.log('draftState', draftState);
   return (
     <Box sx={{ minHeight: '100vh', maxWidth: '95%', margin: 'auto', color: theme.palette.text.primary, pt: 10 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Typography>{draftState?.timerRemaining}</Typography>
-      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', }}>
         <TeamChampionPicks champions={draftState?.blueTeam.picks ?? []} />
-        <ChampionPicker onClick={onChampClick} />
+        <ChampionPicker onClick={onChampClick} draftState={draftState} />
         <TeamChampionPicks champions={draftState?.redTeam.picks ?? []} reverse />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', }}>

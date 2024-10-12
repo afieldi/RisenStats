@@ -1,12 +1,12 @@
-import { Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import NodeCache from 'node-cache';
 import { draftStepConfig } from '../../../Common/constants';
-import { DraftState, TeamDraftState } from '../../../Common/Interface/Internal/drafting';
+import { DraftState } from '../../../Common/Interface/Internal/drafting';
 import { MakeId } from '../../../Common/utils';
 import logger from '../../logger';
 
 const gameCache = new NodeCache();
-const gameTimers: Record<string, NodeJS.Timer> = {};
+const gameTimers: Record<string, number[]> = {};
 
 const DEFAULT_DRAFT_TIME = 30;
 
@@ -19,6 +19,12 @@ function getTeam(game: DraftState, auth: string): 'blueTeam' | 'redTeam' {
     return 'redTeam';
   }
   return null;
+}
+
+function clearTimersForRoom(room: string) {
+  while(gameTimers[room].length) {
+    clearInterval(gameTimers[room].pop());
+  }
 }
 
 export function createDraft(blueName: string, redName: string): DraftState {
@@ -96,7 +102,7 @@ export function handleReady(room: string, auth: string) {
 
   if (game.redTeam.ready && game.blueTeam.ready) {
     game.roomActive = true;
-    gameTimers[room] = setInterval(handleTimerUpdate.bind({ server: this.server }, room, auth, 0), 1000);
+    gameTimers[room] = [setInterval(handleTimerUpdate.bind({ server: this.server }, room, auth, this.server), 1000)[Symbol.toPrimitive]()];
   }
   gameCache.set(room, game);
   this.server.to(room).emit('draftUpdate', game);
@@ -113,16 +119,19 @@ export function handleUnready(room: string, auth: string) {
   this.server.to(room).emit('draftUpdate', game);
 }
 
-export function handleDraftPick(room: string, auth: string, stage: number, timeEnd = false) {
+export function handleDraftPick(room: string, auth: string, server: Server) {
   const game: DraftState = gameCache.get(room);
-  logger.info('Got draftPick', room, auth, stage);
+  logger.info('Got draftPick', room, auth);
+  const resolvedServer: Server = server ?? this.server;
   if (!game) {
     logger.error(`Timer update for non-existent room(${room})`);
-    this.socket.disconnect();
+    // this.socket.disconnect();
     return;
   }
-  const pickConfig = draftStepConfig[Number(stage)];
-  if ((game[pickConfig[0]])[pickConfig[1]][pickConfig[2]] === '0' && !timeEnd) {
+  const pickConfig = draftStepConfig[game.stage];
+
+  // Server is only passed by handleTimerUpdate, meaning that it will only occur when we run out of time
+  if ((game[pickConfig[0]])[pickConfig[1]][pickConfig[2]] === '0' && !server) {
     return;
   }
 
@@ -130,43 +139,46 @@ export function handleDraftPick(room: string, auth: string, stage: number, timeE
   game.timerRemaining = game.timerMax;
   game.stage += 1;
 
-  if (gameTimers[room]) {
-    logger.info('Clearing room timers:', gameTimers[room]);
-    clearInterval(gameTimers[room]);
-  }
+  logger.info('Clearing room timers:', gameTimers[room]);
+  clearTimersForRoom(room);
+
   gameCache.set(room, game);
-  gameTimers[room] = setInterval(() => {
-    handleTimerUpdate.bind(this)(room, auth, stage);
-  }, 1000);
+  gameTimers[room].push(setInterval(handleTimerUpdate, 1000, room, auth, resolvedServer)[Symbol.toPrimitive]());
 
-  this.server.to(room).emit('draftUpdate', game);
+  resolvedServer.to(room).emit('draftUpdate', game);
 
-  if (Number(stage) === draftStepConfig.length) {
-    finishGame(this.server);
+  if (game.stage === draftStepConfig.length) {
+    finishGame(room, resolvedServer);
   }
 }
 
-function handleTimerUpdate(room: string, auth: string, stage: number) {
+function handleTimerUpdate(room: string, auth: string, server: Server) {
   const game: DraftState = gameCache.get(room);
+
+  console.log('countdown', server);
+
   if (!game) {
     logger.error(`Timer update for non-existent room(${room})`);
     return;
   }
+  if (game.timerRemaining < -3) {
+    return;
+  }
+
   game.timerRemaining -= 1;
+  gameCache.set(room, game);
 
   // give 3 seconds of leeway
-  if (game.timerRemaining <= -3) {
-    clearInterval(gameTimers[room]);
-    handleDraftPick.bind(this)(room, auth, stage, true);
+  if (game.timerRemaining === -3) {
+    console.log('time is up');
+    handleDraftPick(room, auth, server);
   }
-  gameCache.set(room, game);
-  this.server.to(room).emit('draftUpdate', game);
+  server.to(room).emit('draftUpdate', game);
 }
 
-function finishGame(socket: Socket) {
+function finishGame(room: string, socket: Server) {
   // basically just take the game out of memory and put it into the DB
-  const room = socket.data.room as string;
-  clearInterval(gameTimers[room]);
+  clearTimersForRoom(room);
   socket.to(room).disconnectSockets();
   console.log('Finishing game: ' + room);
 }
