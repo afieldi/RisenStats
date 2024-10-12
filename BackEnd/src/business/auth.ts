@@ -32,7 +32,7 @@ export function getAuthUser(auth: string): AuthUser | undefined {
 }
 
 export async function DoAuth(code: string, host: string): Promise<AuthUser> {
-  const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'https://3ac5-64-46-29-171.ngrok-free.app') + '/api/auth/callback';
+  const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'https://2117-64-46-29-171.ngrok-free.app') + '/api/auth/callback';
   logger.info(`Redirect URI: ${redirectUri}`);
   return await oauth.tokenRequest({
     clientId: '737851599778742405',
@@ -42,7 +42,7 @@ export async function DoAuth(code: string, host: string): Promise<AuthUser> {
     scope: 'identify guilds',
     redirectUri
   }).then(async userAuth => {
-    logger.info(`Recieved userAuth from discord ${JSON.stringify(userAuth)}`);
+    logger.info(`Received userAuth from discord ${JSON.stringify(userAuth)}`);
     const roleMap: { [key: string]: number } = {
       '293099704785305600': 1, // Sr, Admin
       '980589721904361592': 1, // Admin
@@ -71,5 +71,8 @@ export async function DoAuth(code: string, host: string): Promise<AuthUser> {
         name: user.username
       } as AuthUser;
     }, (err) => { throw new Error(err); });
+  }, (err) => {
+    console.log('err');
+    throw new Error(err);
   });
 }

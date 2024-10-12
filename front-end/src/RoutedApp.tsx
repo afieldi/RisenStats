@@ -11,6 +11,9 @@ import {
   DEFAULT_USER, isAdmin
 } from './components/authentication/authentication';
 import AdminCodes from './pages/admin/codes';
+import CreateDraft from './pages/drafting/createDraft';
+import Draft from './pages/drafting/draft';
+import DraftLinks from './pages/drafting/draftLinks';
 import darkTheme from './styles/theme/darkTheme';
 
 import Player from './pages/player/player';
@@ -46,12 +49,16 @@ function RoutedApp() {
       code = cookies.get(AUTH_COOKIE_KEY);
     }
     if (code) {
-      // verify user
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/verify?auth=${code}`, { method: 'POST' }).then(response => {
-        if (response.ok) {
-          response.json().then(data => setUser(data));
-        }
-      });
+      try {
+        // verify user
+        // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/verify?auth=${code}`, { method: 'POST' }).then(response => {
+        //   if (response.ok) {
+        //     response.json().then(data => setUser(data));
+        //   }
+        // });
+      } catch (e) {
+        // failed to verify, no worries
+      }
     }
   }, []);
 
@@ -72,6 +79,9 @@ function RoutedApp() {
             <Route path="*" element={<Error404/>}></Route>
             <Route path="/statexport" element={<StatExport/>}></Route>
             <Route path="/statgraphic" element={<StatGraphic/>}></Route>
+            <Route path="/drafting" element={<CreateDraft/>}></Route>
+            <Route path="/drafting/:room/:auth?" element={<Draft/>} />
+            <Route path="/drafting/links/:room/:blueAuth/:redAuth" element={<DraftLinks />} />
             {
               isAdmin(user) && (
                 <Route path='/admin/codes' element={<AdminCodes/>} />

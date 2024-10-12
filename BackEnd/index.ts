@@ -1,9 +1,20 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { DRAFT_SOCKET_PATH } from '../Common/constants';
+import { DraftingSocketClientToServer, DraftingSocketServerToClient } from '../Common/Interface/Internal/drafting';
 import logger from './logger';
 import cookieParser from 'cookie-parser';
 import yargs from 'yargs/yargs';
+import io from 'socket.io';
+import { createServer } from 'node:http';
+import {
+  handleDraftHover,
+  handleDraftPick,
+  handleReady,
+  handleSocketConnection,
+  handleUnready
+} from './src/business/drafting';
 
 interface Argv {
   prod?: boolean;
@@ -58,6 +69,7 @@ import LeaderboardsRouter from './src/api/leaderboards';
 import TeamsRouter from './src/api/teams';
 import Stocks from './src/api/stocks';
 
+import DraftingRouter from './src/api/drafting';
 
 app.use('/api/codes', CodesRouter);
 app.use('/api/provider', ProviderRouter);
@@ -71,10 +83,32 @@ app.use('/api/stats/player', PlayerStatsRouter);
 app.use('/api/stats/champions', ChampionStatsRouter);
 app.use('/api/stats/leaderboards', LeaderboardsRouter);
 app.use('/api/teams', TeamsRouter);
+app.use('/api/drafting', DraftingRouter);
 app.use('/api/stocks', Stocks);
 
+const server = createServer(app);
 
-app.listen(port, () => {
+const draftServer = new io.Server<
+  DraftingSocketClientToServer,
+  DraftingSocketServerToClient,
+  {},
+  {}
+>(server, {
+  path: DRAFT_SOCKET_PATH,
+  cors: {
+    origin: '*', // TODO only allow FE to connect
+  },
+});
+draftServer.on('connection', (socket: io.Socket) => {
+  console.log('got new connection ');
+  socket.on('register', handleSocketConnection.bind({ socket, server: draftServer }));
+  socket.on('pick', handleDraftPick.bind({ socket, server: draftServer }));
+  socket.on('hover', handleDraftHover.bind({ socket, server: draftServer }));
+  socket.on('ready', handleReady.bind({ socket, server: draftServer }));
+  socket.on('unready', handleUnready.bind({ socket, server: draftServer }));
+});
+
+server.listen(port, () => {
   // console.log(`Example app listening on port ${port}`)
   logger.debug(`Example app listening on port ${port}`);
 });
