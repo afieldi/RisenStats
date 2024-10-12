@@ -51,11 +51,11 @@ function RoutedApp() {
     if (code) {
       try {
         // verify user
-        // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/verify?auth=${code}`, { method: 'POST' }).then(response => {
-        //   if (response.ok) {
-        //     response.json().then(data => setUser(data));
-        //   }
-        // });
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/verify?auth=${code}`, { method: 'POST' }).then(response => {
+          if (response.ok) {
+            response.json().then(data => setUser(data));
+          }
+        });
       } catch (e) {
         // failed to verify, no worries
       }
@@ -80,6 +80,7 @@ function RoutedApp() {
             <Route path="/statexport" element={<StatExport/>}></Route>
             <Route path="/statgraphic" element={<StatGraphic/>}></Route>
             <Route path="/drafting" element={<CreateDraft/>}></Route>
+            <Route path="/drafting/:room" element={<Draft/>} />
             <Route path="/drafting/:room/:auth" element={<Draft/>} />
             <Route path="/drafting/links/:room/:blueAuth/:redAuth" element={<DraftLinks />} />
             {
