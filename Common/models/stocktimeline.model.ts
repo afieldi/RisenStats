@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
+import {BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, Unique} from "typeorm";
 import SeasonModel from "./season.model";
 import TeamModel from "./team.model";
 
@@ -22,5 +22,6 @@ export default class StockTimelineModel extends BaseEntity {
     dollarValue: number;
 
     @Column("timestamptz")
+    @Index()
     timestamp: Date;
 }
