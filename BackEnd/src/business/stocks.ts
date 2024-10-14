@@ -1,16 +1,59 @@
 import TeamModel from '../../../Common/models/team.model';
-import { GetDbTeamsByTeamId } from '../db/teams';
+import { GetDbTeamRosterByTeamId, GetDbTeamsByTeamId } from '../db/teams';
 import { InvalidRequestError } from '../../../Common/errors';
 import { AuthUser } from './auth';
 import { buyDbStockForUser, createDBNewStockValue, getDbLatestStockValue, withdrawDbFunds } from '../db/stocks';
+import { GetRiotLeagueBySummonerId, GetRiotPlayerByPuuid } from '../external-api/player';
+import { RiotLeagueEntryDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
+import PlayerGameModel from '../../../Common/models/playergame.model';
+import { GetDbPlayerGamesByGameId } from '../db/games';
+import { ToGameId } from '../../../Common/utils';
+import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
+import logger from '../../logger';
+
+export async function updateTeamStocksForGame(matchId: string): Promise<void> {
+  logger.info(`Updating Stock Values For Match: ${matchId}`);
+  const allPlayersGames: PlayerGameModel[] = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+
+  // We need to do this because sometimes players arent registered to a team. (Eg, ESUBs)
+  let loserTeamIds: Map<number, number> = new Map<number, number>();
+  let winningTeamIds: Map<number, number> = new Map<number, number>();
+  let seasonIds: Map<number, number> = new Map<number, number>();
+
+  for (let playerGame of allPlayersGames) {
+    const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
+    seasonIds.set(playerGame.seasonId, (seasonIds.get(playerGame.seasonId) || 0) + 1);
+
+    if(teamId == null) {
+      continue;
+    }
+
+    if(playerGame.win) {
+      winningTeamIds.set(teamId, (winningTeamIds.get(teamId) || 0) + 1);
+    } else {
+      loserTeamIds.set(teamId, (loserTeamIds.get(teamId) || 0) + 1);
+    }
+  }
+
+  if(winningTeamIds.size == 0 || loserTeamIds.size == 0 || seasonIds.size == 0) {
+    logger.info(`There was a missing winningIds or missing losingIds for match ${matchId}`);
+    return;
+  }
+
+  let winningTeamId = [...winningTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
+  let losingTeamId = [...loserTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
+  let seasonId = [...seasonIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
+  logger.info(`Updating Stocks For Winner: ${winningTeamId} Loser: ${losingTeamId} Season: ${seasonId}`);
+  await updateStocksValueAfterMatch(seasonId, winningTeamId, losingTeamId);
+}
 
 export async function updateStocksValueAfterMatch(seasonId: number, winningTeamId: number, losingTeamId: number ) {
   // Get the value of both teams, this is their ELO
   let latestTimelineForWinner = await getDbLatestStockValue(seasonId, winningTeamId);
   let latestTimelineForLoser = await getDbLatestStockValue(seasonId, losingTeamId);
 
-  let winnerStockValue = latestTimelineForWinner == null ? createBaselineForTeam(winningTeamId) : latestTimelineForWinner.dollarValue;
-  let loserStockValue = latestTimelineForLoser == null ? createBaselineForTeam(losingTeamId) : latestTimelineForLoser.dollarValue;
+  let winnerStockValue = latestTimelineForWinner == null ? await createBaselineForTeam(seasonId, winningTeamId) : latestTimelineForWinner.dollarValue;
+  let loserStockValue = latestTimelineForLoser == null ? await createBaselineForTeam(seasonId, losingTeamId) : latestTimelineForLoser.dollarValue;
 
   // Calculate new value of teams
   let updatedStockValues = calculateNewDollarValue(winnerStockValue, loserStockValue);
@@ -46,8 +89,7 @@ async function getUserWallet(user: AuthUser): Promise<number> {
   return 0; // TODO
 }
 
-// TODO decouple from the model?
-function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 32) {
+function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 250) {
 
   // Extract current ratings from the team objects
   const ratingWinner = winnerDollarValue;
@@ -67,7 +109,48 @@ function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: nu
   };
 }
 
-function createBaselineForTeam(teamId: number): number {
-  // TODO fetch the ranks of the players and then make a baseline
-  return 1000;
+async function createBaselineForTeam(seasonId: number, teamId: number): Promise<number> {
+  let team = await GetDbTeamRosterByTeamId(teamId, seasonId);
+  let total_elo = 0;
+
+  for (let player of team) {
+    let riotPlayer = await GetRiotPlayerByPuuid(player.playerPuuid);
+    let rank = await  GetRiotLeagueBySummonerId(riotPlayer.id);
+    let elo = mapLeagueRankToElo(rank);
+    total_elo += elo;
+  }
+
+  return total_elo / team.length;
 }
+
+
+function mapLeagueRankToElo(rankInformation: RiotLeagueEntryDto): number {
+  let rankMap: Record<string, number> =  {
+    'I': 375,
+    'II': 250,
+    'III': 125,
+    'IV': 0,
+  };
+
+  let tierMap: Record<string, number> = {
+    'IRON': 0,
+    'BRONZE': 500,
+    'SILVER': 1000,
+    'GOLD': 1500,
+    'PLATINUM': 2000,
+    'EMERALD': 2500,
+    'DIAMOND': 3000,
+    'MASTER': 3500,
+    'GRANDMASTER': 4000,
+    'CHALLENGER': 4500
+  };
+
+  // Default to PLATINUM elo if the player has not played rank yet
+  const tierElo = rankInformation?.tier ? tierMap[rankInformation.tier] ?? tierMap['PLATINUM'] : tierMap['PLATINUM'];
+  const rankElo = rankInformation?.rank ? rankMap[rankInformation.rank] ?? 0 : 0;
+  return tierElo + rankElo;
+}
+
+
+
+
