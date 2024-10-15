@@ -56,6 +56,7 @@ import PlayerStatsRouter from './src/api/playerstats';
 import ChampionStatsRouter from './src/api/championstats';
 import LeaderboardsRouter from './src/api/leaderboards';
 import TeamsRouter from './src/api/teams';
+import Stocks from './src/api/stocks';
 
 
 app.use('/api/codes', CodesRouter);
@@ -70,6 +71,7 @@ app.use('/api/stats/player', PlayerStatsRouter);
 app.use('/api/stats/champions', ChampionStatsRouter);
 app.use('/api/stats/leaderboards', LeaderboardsRouter);
 app.use('/api/teams', TeamsRouter);
+app.use('/api/stocks', Stocks);
 
 
 app.listen(port, () => {

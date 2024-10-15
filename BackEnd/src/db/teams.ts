@@ -21,6 +21,11 @@ export async function GetDbTeamsByTeamAbbreviation(abbr: string, seasonId: numbe
   return await TeamModel.findOne({ where: { abbreviation: abbr, seasonId: seasonId  } });
 }
 
+export async function GetDbTeamsByTeamId(teamId: number, seasonId: number): Promise<TeamModel> {
+  await ensureConnection();
+  return await TeamModel.findOne({ where: { teamId: teamId, seasonId: seasonId  } });
+}
+
 export async function GetDbTeamRosterByTeamId(teamId: number, seasonId: number): Promise<PlayerTeamModel[]> {
   await ensureConnection();
   return await PlayerTeamModel.find({ where: { teamTeamId: teamId,  teamSeasonId: seasonId } , relations: ['player'] });

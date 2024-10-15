@@ -6,6 +6,7 @@ import { UpdateGamesByPlayerPuuid } from '../src/business/player';
 import { CreatePlayerStatsByPuuid } from '../src/business/playerstats';
 import PlayerTeamModel from '../../Common/models/playerteam.model';
 import { buildRisenTeams } from '../src/business/teams';
+import { RAMPAGE, UNSTOPPABLE } from './scriptConstants';
 
 // Use this function if you already have the games loaded. Should be much faster.
 async function generatePlayerStats(): Promise<any> {
@@ -38,7 +39,7 @@ async function generatePlayerStatsWithUpdate(): Promise<any> {
 async function rebuildStatsForLeague(id: number) {
   await ensureConnection();
   console.log('starting');
-  buildRisenTeams(id);
+  await buildRisenTeams(id);
   let playerRes = await PlayerTeamModel.createQueryBuilder().where(`"teamSeasonId" = ${id}`).select('"playerPuuid"').distinct(true).getRawMany();
   for (let item of playerRes) {
     await buildStatsForPlayerWithGameFetch(item['playerPuuid']);
@@ -55,4 +56,4 @@ async function buildStatsForPlayerWithGameFetch(playerPuuid: string) {
   }
 }
 
-rebuildStatsForLeague(30);
+rebuildStatsForLeague(RAMPAGE);

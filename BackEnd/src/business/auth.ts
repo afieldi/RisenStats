@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const userCache = new NodeCache();
 const oauth = new DiscordOauth2();
 
-interface AuthUser {
+export interface AuthUser {
   user: string
   auth: string
   level: number

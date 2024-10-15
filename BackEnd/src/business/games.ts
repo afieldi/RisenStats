@@ -17,6 +17,7 @@ import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { buildRisenTeams } from './teams';
 import { GetDbActiveSeasonWithSheets } from '../db/season';
 import { BLUE_TEAM_ID } from '../../../Common/constants';
+import { updateTeamStocksForGame } from './stocks';
 
 export async function GetGameDataByMatchId(matchId: string): Promise<RiotMatchDto> {
   const gameData = await GetRiotGameByMatchId(matchId);
@@ -36,6 +37,7 @@ export async function SaveDataByMatchIdForRiotCallback(matchId: string): Promise
 
   let savedGameModel = await SaveDataByMatchId(matchId);
   await updatePlayerStatsForGame(matchId);
+  await updateTeamStocksForGame(matchId);
   return savedGameModel;
 }
 

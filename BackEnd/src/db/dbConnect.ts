@@ -15,6 +15,9 @@ import DenylistModel from '../../../Common/models/denylist.model';
 import PlayerTeamModel from '../../../Common/models/playerteam.model';
 import TeamModel from '../../../Common/models/team.model';
 import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
+import StockTimelineModel from '../../../Common/models/stocktimeline.model';
+import UserStockModel from '../../../Common/models/userstock.model';
+import UserModel from '../../../Common/models/user.model';
 
 const POSTGRES_URI = process.env.POSTGRES_URI;
 export const ALL_TOURNAMENT_GAMES_NAME = 'ALL TOURNAMENT GAMES'; // DO NOT TOUCH
@@ -52,6 +55,9 @@ const options = {
       PlayerTeamModel,
       TeamModel,
       AggregatedPlayerStatModel,
+      StockTimelineModel,
+      UserStockModel,
+      UserModel
     ]
   }
 };
