@@ -13,12 +13,15 @@ import RecentGames from './recent-games';
 import SideWinrateBox from './side-winrate-box';
 import TeamLeaderboards from './team-leaderboards';
 import TeamListBox from './teams-list';
+import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
+import StockTimeline from './stock-timeline';
 
 export interface LeaguePageGeneralStatsProps {
     season: SeasonModel;
     playerGames: PlayerGameModel[]
     recentGames: GameModel[]
     teams: Map<number, TeamModel>
+    stockTimeline: Map<number, StockTimelineEntry[]>
 }
 
 export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProps)
@@ -42,6 +45,9 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
           <TeamLeaderboards games={props.playerGames} teams={props.teams}></TeamLeaderboards>
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
+          <StockTimeline stockTimeline={props.stockTimeline} teams={props.teams}></StockTimeline>
         </Box>
       </Box>
     </Box>
