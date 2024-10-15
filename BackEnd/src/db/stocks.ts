@@ -33,6 +33,16 @@ export async function createDBNewStockValue(teamId: number, seasonId: number, st
   }).save();
 }
 
+export async function getDbStockTimeLineForSeason(seasonId: number): Promise<StockTimelineModel[]> {
+  await ensureConnection();
+
+  const searchFilter: FindManyOptions<StockTimelineModel> =  {
+    where: { teamSeasonId: seasonId },
+    order: { timestamp: 'ASC' }, // Order so the array is in cronoloigcal order
+  };
+  return await StockTimelineModel.find(searchFilter);
+}
+
 export async function buyDbStockForUser(user: AuthUser, seasonId: number, teamId: number, amountToBuy: number): Promise<boolean> {
   // TODO
   return false;

@@ -2,7 +2,13 @@ import TeamModel from '../../../Common/models/team.model';
 import { GetDbTeamRosterByTeamId, GetDbTeamsByTeamId } from '../db/teams';
 import { InvalidRequestError } from '../../../Common/errors';
 import { AuthUser } from './auth';
-import { buyDbStockForUser, createDBNewStockValue, getDbLatestStockValue, withdrawDbFunds } from '../db/stocks';
+import {
+  buyDbStockForUser,
+  createDBNewStockValue,
+  getDbLatestStockValue,
+  getDbStockTimeLineForSeason,
+  withdrawDbFunds
+} from '../db/stocks';
 import { GetRiotLeagueBySummonerId, GetRiotPlayerByPuuid } from '../external-api/player';
 import { RiotLeagueEntryDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import PlayerGameModel from '../../../Common/models/playergame.model';
@@ -10,6 +16,7 @@ import { GetDbPlayerGamesByGameId } from '../db/games';
 import { ToGameId } from '../../../Common/utils';
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import logger from '../../logger';
+import { StockTimelineEntry } from '../../../Common/Interface/Internal/stocks';
 
 export async function updateTeamStocksForGame(matchId: string): Promise<void> {
   logger.info(`Updating Stock Values For Match: ${matchId}`);
@@ -47,7 +54,7 @@ export async function updateTeamStocksForGame(matchId: string): Promise<void> {
   await updateStocksValueAfterMatch(seasonId, winningTeamId, losingTeamId);
 }
 
-export async function updateStocksValueAfterMatch(seasonId: number, winningTeamId: number, losingTeamId: number ) {
+export async function updateStocksValueAfterMatch(seasonId: number, winningTeamId: number, losingTeamId: number) {
   // Get the value of both teams, this is their ELO
   let latestTimelineForWinner = await getDbLatestStockValue(seasonId, winningTeamId);
   let latestTimelineForLoser = await getDbLatestStockValue(seasonId, losingTeamId);
@@ -87,6 +94,26 @@ export async function buyStock(user: AuthUser, seasonId: number, teamId: number,
 
 async function getUserWallet(user: AuthUser): Promise<number> {
   return 0; // TODO
+}
+
+export async function getStockTimelinesForSeason(seasonId: number): Promise<Map<number, StockTimelineEntry[]>> {
+  const stockEntries = await getDbStockTimeLineForSeason(seasonId);
+  const timelines = new Map<number, StockTimelineEntry[]>();
+
+  for (const stockEntry of stockEntries) {
+    const teamId = stockEntry.teamTeamId;
+
+    if (!timelines.has(teamId)) {
+      timelines.set(teamId, []);
+    }
+
+    timelines.get(teamId)!.push({
+      value: stockEntry.dollarValue,
+      timestamp: stockEntry.timestamp,
+    });
+  }
+
+  return timelines;
 }
 
 function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 250) {
