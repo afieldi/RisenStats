@@ -12,6 +12,8 @@ import { getLeagueTeamsBySeasonId } from '../../api/teams';
 import { getRecentGamesBySeasonId, getPlayerGamesBySeasonId } from '../../api/games';
 import GameModel from '../../../../Common/models/game.model';
 import Loading from '../../components/loading/loading';
+import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
+import { getStockTimelineForSeason } from '../../api/stocks';
 
 const amountOfGamesToShow = 5;
 
@@ -23,13 +25,14 @@ function LeaguePage() {
   const [teams, setTeams] = useState<Map<number, TeamModel>>(new Map());
   const [leaguePlayerGames, setLeaguePlayerGames] = useState<PlayerGameModel[]>([]);
   const [recentLeagueMatches, setRecentLeagueMatches] = useState<GameModel[]>([]);
-
+  const [stockTimeline, setStockTimeline] = useState<Map<number, StockTimelineEntry[]>>(new Map());
+  const [loadingStocktimeline, setLoadingStockTimeline] = useState(false);
   const [loadingGames, setLoadingGames] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function isLoadingData() {
-    return loadingTeams || loadingGames || loading;
+    return loadingTeams || loadingGames || loading || loadingStocktimeline;
   }
 
   async function loadSeason(): Promise<SeasonModel> {
@@ -63,6 +66,25 @@ function LeaguePage() {
       console.error('An error occured trying to load the league games');
     }
     setLoadingGames(false);
+  }
+
+  async function loadStockTimelineForLeague(seasonId: number) {
+    if (stockTimeline.size > 0 || loadingGames) {
+      console.log('Not reloading league games.');
+      return;
+    }
+
+    setLoadingStockTimeline(true);
+    try {
+      let stockTimelineResponse = await getStockTimelineForSeason(seasonId);
+      setStockTimeline(new Map<number, StockTimelineEntry[]>(
+        Array.from(new Map(Object.entries(stockTimelineResponse.timeline)).entries()).map(([key, value]) => [Number(key), value])
+      ));
+    }
+    catch (error) {
+      console.error('An error occurred trying to load the stocktimeline');
+    }
+    setLoadingStockTimeline(false);
   }
 
   async function loadTeamsForLeague(seasonId: number) {
@@ -104,6 +126,7 @@ function LeaguePage() {
       .then(async seasonResponse => {
         await loadLeagueGames(seasonResponse.id);
         await loadTeamsForLeague(seasonResponse.id);
+        await loadStockTimelineForLeague(seasonResponse.id);
         setLoading(false);
       })
       .catch(err => errorOnLoad(err));
@@ -129,6 +152,7 @@ function LeaguePage() {
             !hasErrorToDisplay() && !isLoadingData() && canDisplayStats() && <LeaguePageGeneralStats season={season as SeasonModel}
               teams={teams}
               recentGames={recentLeagueMatches}
+              stockTimeline={stockTimeline}
               playerGames={leaguePlayerGames}/>
           }
         </Box>
