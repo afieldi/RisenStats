@@ -7,6 +7,8 @@ import {
   SellStockRequest, SellStockResponse
 } from '../../../Common/Interface/Internal/stocks';
 import { getAuthUser } from '../business/auth';
+import logger from '../../logger';
+import { getStockTimelinesForSeason } from '../business/stocks';
 
 
 const router: Router = express.Router();
@@ -30,7 +32,17 @@ router.post('/get-portfolio', async(req: TypedRequest<GetPortfolioRequest>, res:
 });
 
 
-router.post('/get-timeline/:season-id', async(req: Request, res: TypedResponse<GetStockTimelineResponse>) => {
+router.post('/get-timeline/:seasonId', async(req: Request, res: TypedResponse<GetStockTimelineResponse>) => {
+  logger.info(`Get stocktimeline by seasonId ${req.params.seasonId}`);
+  try {
+    const timeline = await getStockTimelinesForSeason(Number(req.params.seasonId));
+    res.json({
+      timeline: Object.fromEntries(timeline)
+    });
 
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
 });
 export default router;
