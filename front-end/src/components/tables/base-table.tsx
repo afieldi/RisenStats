@@ -28,7 +28,7 @@ export default function BaseTable<T extends string>(props: TableProps<T>) {
                 ))
               }
             </TableRow>
-          </TableHead>g
+          </TableHead>
           <TableBody>
             {
               data.map((rowData) => (
