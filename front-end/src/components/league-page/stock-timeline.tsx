@@ -13,25 +13,49 @@ interface StockTimeLineProps {
 
 export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   const stockTimeline = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
+  console.log(stockTimeline);
 
+
+  // Find the minimum and maximum timestamps from the dataset to set the X-axis domain
+  const timestamps = Array.from(stockTimeline.values()).flat().map(entry => entry.timestamp);
+  const minTimestamp = Math.min(...timestamps);
+  const maxTimestamp = Math.max(...timestamps);
+
+  // Date formatter for tooltip and axis
   const dateFormatter = (dateTime: any) => {
-    return new Date(dateTime).toISOString();
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
   };
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-        <XAxis type={'number'} dataKey={'timestamp'} domain={['auto', 'auto']} tickFormatter={dateFormatter}/>
-        <YAxis dataKey={'value'} domain={['auto', 'auto']}/>
+      <LineChart
+        margin={{ top: 5, right: 30, left: 20, bottom: 80 }} // Increased bottom margin
+      >
+        {/* Use number type and manually set domain for even distribution */}
+        <XAxis
+          type="number"
+          dataKey="timestamp"
+          domain={[minTimestamp, maxTimestamp]}
+          tickFormatter={dateFormatter}
+          scale="time" // Optional: ensures it uses time-based scaling
+          tick={{ angle: -45, textAnchor: 'end' }} // Rotates the labels by 45 degrees
+          height={60} // Adjust height to avoid cutting off labels
+        />
+        <YAxis dataKey="value" domain={['auto', 'auto']} />
         <Tooltip />
-        <Legend />
+        <Legend verticalAlign="top" height={36} /> {/* Move legend to the top */}
         {Array.from(stockTimeline.keys()).map((key) => (
           <Line
             key={key}
             type="monotone"
             data={groupDataByHour(stockTimeline.get(key) as StockTimelineEntry[])}
-            dataKey={'value'}
-            stroke={`#${Math.floor(Math.random() * stringToNumber(key)).toString(16)}`}
+            dataKey="value"
+            stroke={stringToNumber(key)}
             connectNulls={false}
             isAnimationActive={true}
             dot={false}
@@ -43,10 +67,21 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   );
 }
 
-function stringToNumber(input: string): number {
+function stringToNumber(input: string): string {
   // Convert each character to its ASCII code and combine them into a number
-  const charCodes = input.split('').map(char => char.charCodeAt(0));
-  return  charCodes[0] * 26 * 26 + charCodes[1] * 26 + charCodes[2] * 6000;
+  let hash = 0;
+  for (let i = 0; i < input.length; i++) {
+    hash = input.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  // Convert the hash to a 6-digit hexadecimal color code
+  let color = '#';
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xFF;
+    color += ('00' + value.toString(16)).slice(-2);
+  }
+
+  return color;
 }
 
 function mapTeamIdToAbbreviation(teamMap: Map<number, TeamModel>, timeline: Map<number, StockTimelineEntry[]>): Map<string, StockTimelineEntry[]> {
