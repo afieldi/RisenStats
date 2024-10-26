@@ -13,6 +13,7 @@ interface StockTimeLineProps {
 
 export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   const stockTimelineAbbrevated = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
+
   const stockTimeline = bridgeData(stockTimelineAbbrevated);
 
   console.log(stockTimeline);
@@ -53,10 +54,10 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
           <Line
             key={key}
             type="monotone"
-            data={groupDataByHour(stockTimeline.get(key) as StockTimelineEntry[])}
+            data={stockTimeline.get(key)}
             dataKey="value"
             name={key}
-            stroke={stringToNumber(key)}
+            stroke={mapStringToColorCode(key)}
             connectNulls={false}
             isAnimationActive={true}
             dot={false}
@@ -67,7 +68,7 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   );
 }
 
-function stringToNumber(input: string): string {
+function mapStringToColorCode(input: string): string {
   // Convert each character to its ASCII code and combine them into a number
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
@@ -96,21 +97,6 @@ function mapTeamIdToAbbreviation(teamMap: Map<number, TeamModel>, timeline: Map<
   return timeLineWithTeamAbbr;
 }
 
-function groupDataByHour(stockTimeline: StockTimelineEntry[]) {
-  const roundToHour = (date: Date): Date => {
-    const newDate = new Date(date);
-    // newDate.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to 0
-    // newDate.setMinutes(0,0,0);
-    // newDate.setHours(0,0,0);
-    return newDate;
-  };
-
-  return stockTimeline.map(entry => ({
-    ...entry,
-    timestamp: roundToHour(entry.timestamp).getTime()
-  }));
-}
-
 function roundToHour(date: Date): Date {
   const newDate = new Date(date);
   newDate.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to 0
@@ -129,7 +115,7 @@ function bridgeData(stockTimeline: Map<string, StockTimelineEntry[]>): Map<strin
   const orderedUniqueTimestamps = getOrderedUniqueTimestamps(groupedStockTimeline);
 
   groupedStockTimeline.forEach((entries, symbol) => {
-    const bridgedEntries = fillMissingTimestamps(entries, orderedUniqueTimestamps);
+    const bridgedEntries = fillMissingTimestampsOptimized(entries, orderedUniqueTimestamps);
     bridgedTimelineMap.set(symbol, bridgedEntries);
   });
 
@@ -176,27 +162,52 @@ function fillMissingTimestamps(stockTimelineForTickerEntries: StockTimelineEntry
         return;
       }
 
-      const date = new Date(timestamp);
+      const orderedDate = new Date(timestamp);
+
+      // TODO handle the case where all the values in orderedUniqueTimestamps are before all the values in stockTimelineForTickerEntries
 
       // If we're at the end, fill with the last known value
       if (index + 1 >= stockTimelineForTickerEntries.length) {
-        usedTimestamps.add(date.getTime());
-        filledEntries.push({ timestamp: date, value: lastValue });
+        usedTimestamps.add(orderedDate.getTime());
+        filledEntries.push({ timestamp: orderedDate, value: lastValue });
         return;
       }
 
       // If the time is after the current date the we dont want to add it cause there might be a better value to use
-      if (date.getTime() >= entry.timestamp.getTime()) {
+      if (orderedDate.getTime() >= entry.timestamp.getTime()) {
         lastValue = entry.value;
       }
 
       // if the time is before the current date then its between two points so we fill the data
-      else if (date.getTime() < entry.timestamp.getTime()) {
-        usedTimestamps.add(date.getTime());
-        filledEntries.push({ timestamp: date, value: lastValue });
+      else if (orderedDate.getTime() < entry.timestamp.getTime()) {
+        usedTimestamps.add(orderedDate.getTime());
+        filledEntries.push({ timestamp: orderedDate, value: lastValue });
       }
     });
   });
+
+  return filledEntries;
+}
+
+function fillMissingTimestampsOptimized(stockTimelineForTickerEntries: StockTimelineEntry[], orderedUniqueTimestamps: number[]): StockTimelineEntry[] {
+  const filledEntries: StockTimelineEntry[] = [];
+  let stockValues = new Map<number, number>();
+  let current: number = stockTimelineForTickerEntries[0]?.value || 0;
+
+  for (let stockTimelineForTickerEntry of stockTimelineForTickerEntries) {
+    stockValues.set(new Date(stockTimelineForTickerEntry.timestamp).getTime(), stockTimelineForTickerEntry.value);
+  }
+
+  for (let orderedUniqueTimestamp of orderedUniqueTimestamps) {
+    if(stockValues.has(orderedUniqueTimestamp)) {
+      current = stockValues.get(orderedUniqueTimestamp) as number;
+    }
+
+    filledEntries.push({
+      timestamp: new Date(orderedUniqueTimestamp),
+      value: current,
+    });
+  }
 
   return filledEntries;
 }
