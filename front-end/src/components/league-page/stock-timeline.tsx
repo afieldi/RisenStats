@@ -12,12 +12,12 @@ interface StockTimeLineProps {
 }
 
 export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
-  const stockTimeline = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
+  const stockTimelineAbbrevated = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
+  const stockTimeline = bridgeData(stockTimelineAbbrevated);
+
   console.log(stockTimeline);
-
-
   // Find the minimum and maximum timestamps from the dataset to set the X-axis domain
-  const timestamps = Array.from(stockTimeline.values()).flat().map(entry => entry.timestamp);
+  const timestamps = Array.from(stockTimeline.values()).flat().map(entry => entry.timestamp.getTime());
   const minTimestamp = Math.min(...timestamps);
   const maxTimestamp = Math.max(...timestamps);
 
@@ -34,7 +34,7 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   return (
     <ResponsiveContainer width="100%" height={400}>
       <LineChart
-        margin={{ top: 5, right: 30, left: 20, bottom: 80 }} // Increased bottom margin
+        margin={{ top: 5, right: 30, left: 20, bottom: 80 }}
       >
         {/* Use number type and manually set domain for even distribution */}
         <XAxis
@@ -42,24 +42,24 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
           dataKey="timestamp"
           domain={[minTimestamp, maxTimestamp]}
           tickFormatter={dateFormatter}
-          scale="time" // Optional: ensures it uses time-based scaling
-          tick={{ angle: -45, textAnchor: 'end' }} // Rotates the labels by 45 degrees
-          height={60} // Adjust height to avoid cutting off labels
+          scale="time"
+          tick={{ angle: -45, textAnchor: 'end' }}
+          height={60}
         />
         <YAxis dataKey="value" domain={['auto', 'auto']} />
         <Tooltip />
-        <Legend verticalAlign="top" height={36} /> {/* Move legend to the top */}
+        <Legend verticalAlign="top" height={36} />
         {Array.from(stockTimeline.keys()).map((key) => (
           <Line
             key={key}
             type="monotone"
             data={groupDataByHour(stockTimeline.get(key) as StockTimelineEntry[])}
             dataKey="value"
+            name={key}
             stroke={stringToNumber(key)}
             connectNulls={false}
             isAnimationActive={true}
             dot={false}
-            name={key}
           />
         ))}
       </LineChart>
@@ -109,5 +109,94 @@ function groupDataByHour(stockTimeline: StockTimelineEntry[]) {
     ...entry,
     timestamp: roundToHour(entry.timestamp).getTime()
   }));
+}
 
+function roundToHour(date: Date): Date {
+  const newDate = new Date(date);
+  newDate.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to 0
+  newDate.setMinutes(0,0,0);
+  // newDate.setHours(0,0,0);
+  return newDate;
+}
+
+function bridgeData(stockTimeline: Map<string, StockTimelineEntry[]>): Map<string, StockTimelineEntry[]> {
+
+  const bridgedTimelineMap = new Map<string, StockTimelineEntry[]>();
+
+  // group the stocks by hour so that we dont have random extra ticks
+  const groupedStockTimeline = groupStocksByHour(stockTimeline);
+
+  const orderedUniqueTimestamps = getOrderedUniqueTimestamps(groupedStockTimeline);
+
+  groupedStockTimeline.forEach((entries, symbol) => {
+    const bridgedEntries = fillMissingTimestamps(entries, orderedUniqueTimestamps);
+    bridgedTimelineMap.set(symbol, bridgedEntries);
+  });
+
+  return bridgedTimelineMap;
+}
+
+function groupStocksByHour(stockTimeline: Map<string, StockTimelineEntry[]>): Map<string, StockTimelineEntry[]> {
+  const groupedTimeline = new Map<string, StockTimelineEntry[]>();
+
+  stockTimeline.forEach((entries, symbol) => {
+    const groupedEntries = entries.map(entry => ({
+      ...entry,
+      timestamp: roundToHour(entry.timestamp)
+    }));
+    groupedTimeline.set(symbol, groupedEntries);
+  });
+
+  return groupedTimeline;
+}
+
+function getOrderedUniqueTimestamps(groupedStockTimeline: Map<string, StockTimelineEntry[]>): number[] {
+  const uniqueTimestamps = new Set<number>();
+
+  groupedStockTimeline.forEach((entries) => {
+    entries.forEach((entry) => {
+      uniqueTimestamps.add(entry.timestamp.getTime());
+    });
+  });
+
+  return Array.from(uniqueTimestamps).sort((a, b) => a - b);
+}
+
+function fillMissingTimestamps(stockTimelineForTickerEntries: StockTimelineEntry[], orderedUniqueTimestamps: number[]): StockTimelineEntry[] {
+  const filledEntries: StockTimelineEntry[] = [];
+  const usedTimestamps = new Set<number>();
+  let lastValue = stockTimelineForTickerEntries[0]?.value || 0;
+
+  stockTimelineForTickerEntries.forEach((entry, index) => {
+    usedTimestamps.add(entry.timestamp.getTime());
+    filledEntries.push(entry);
+
+    orderedUniqueTimestamps.forEach((timestamp) => {
+      if (usedTimestamps.has(timestamp)) {
+        return;
+      }
+
+      const date = new Date(timestamp);
+
+      // If we're at the end, fill with the last known value
+      if (index + 1 >= stockTimelineForTickerEntries.length) {
+        usedTimestamps.add(date.getTime());
+        filledEntries.push({ timestamp: date, value: lastValue });
+        return;
+      }
+
+      // If the time is after the current date the we dont want to add it cause there might be a better value to use
+      if (date.getTime() >= entry.timestamp.getTime()) {
+        lastValue = entry.value;
+      }
+
+      // if the time is before the current date then its between two points so we fill the data
+      else if (date.getTime() < entry.timestamp.getTime()) {
+        usedTimestamps.add(date.getTime());
+        filledEntries.push({ timestamp: date, value: lastValue });
+      }
+    });
+  });
+
+  return filledEntries;
 }
