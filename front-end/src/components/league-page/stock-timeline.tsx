@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import TeamModel from '../../../../Common/models/team.model';
-import ChartTooltip from '../charts/chart-tooltip';
+import StockTimelineChartTooltip from '../charts/stock-timeline-chart-tooltip';
+import { StockTimelineLegend } from '../charts/stock-timeline-legend';
 
 
 interface StockTimeLineProps {
@@ -33,8 +34,8 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
+    <ResponsiveContainer width="100%" height={460}>
+      <LineChart margin={{ top: 5, right: 30, bottom: 80 }}>
         <XAxis
           type="number"
           dataKey="timestamp"
@@ -44,8 +45,9 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
           height={60}
         />
         <YAxis dataKey="value" domain={['auto', 'auto']} />
-        <Tooltip content={<ChartTooltip active={true} payload={[]} label={''} />} />
-        <Legend verticalAlign="top" onClick={onClickLegend(setShownLines)} height={36} />
+        <Tooltip content={<StockTimelineChartTooltip active={true} payload={[]} label={''} />} />
+        {/*<Legend verticalAlign="top" height={90} content={<StockTimelineLegend onClick={onClickLegend(setShownLines)} />} />*/}
+        <Legend verticalAlign="top" height={50} onClick={onClickLegend(setShownLines)} />
 
         {Array.from(stockTimeline.keys()).map((key) => (
           <Line
@@ -86,22 +88,63 @@ function onClickLegend(setShownLines: React.Dispatch<React.SetStateAction<Set<st
 
 
 function mapStringToColorCode(input: string): string {
-  // Convert each character to its ASCII code and combine them into a number
+  // Convert the input string to a hash
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     hash = input.charCodeAt(i) + ((hash << 5) - hash);
   }
 
-  // Convert the hash to a 6-digit hexadecimal color code
-  let color = '#';
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xFF;
-    color += ('00' + value.toString(16)).slice(-2);
-  }
+  // Use the hash to generate a hue value (0-360) in the HSL color space
+  const hue = Math.abs(hash % 12) * 30;
+  // Set saturation to 70% and lightness to 50% for good contrast with white text
+  const saturation = 70;
+  const lightness = 50;
 
-  return color;
+  // Convert HSL to RGB and then to hexadecimal color code
+  return hslToHex(hue, saturation, lightness);
 }
 
+// Helper function to convert HSL to Hex
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100;
+  l /= 100;
+
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+
+  let r = 0, g = 0, b = 0;
+
+  if (0 <= h && h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (60 <= h && h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (120 <= h && h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (180 <= h && h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (240 <= h && h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else if (300 <= h && h < 360) {
+    r = c;
+    g = 0;
+    b = x;
+  }
+
+  // Convert RGB to hexadecimal format
+  const toHex = (n: number) => Math.round((n + m) * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
 function mapTeamIdToAbbreviation(teamMap: Map<number, TeamModel>, timeline: Map<number, StockTimelineEntry[]>): Map<string, StockTimelineEntry[]> {
   let timeLineWithTeamAbbr: Map<string, StockTimelineEntry[]> = new Map();
 
