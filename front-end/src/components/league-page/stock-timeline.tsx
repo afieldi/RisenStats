@@ -1,6 +1,6 @@
 import { Theme, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import TeamModel from '../../../../Common/models/team.model';
@@ -12,47 +12,44 @@ interface StockTimeLineProps {
 }
 
 export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
-  const stockTimelineAbbrevated = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
+  const stockTimelineAbbreviated = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
+  const stockTimeline = bridgeData(stockTimelineAbbreviated);
 
-  const stockTimeline = bridgeData(stockTimelineAbbrevated);
+  const [shownLines, setShownLines] = useState<Set<string>>(new Set(stockTimeline.keys()));
 
-  console.log(stockTimeline);
-  // Find the minimum and maximum timestamps from the dataset to set the X-axis domain
   const timestamps = Array.from(stockTimeline.values()).flat().map(entry => entry.timestamp.getTime());
   const minTimestamp = Math.min(...timestamps);
   const maxTimestamp = Math.max(...timestamps);
 
-  // Date formatter for tooltip and axis
+  // Date formatter for tooltip and axis, including hours
   const dateFormatter = (dateTime: any) => {
     const date = new Date(dateTime);
     return date.toLocaleDateString('en-GB', {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit',
+      day: '2-digit'
     });
   };
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart
-        margin={{ top: 5, right: 30, left: 20, bottom: 80 }}
-      >
-        {/* Use number type and manually set domain for even distribution */}
+      <LineChart margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
         <XAxis
           type="number"
           dataKey="timestamp"
           domain={[minTimestamp, maxTimestamp]}
           tickFormatter={dateFormatter}
-          scale="time"
           tick={{ angle: -45, textAnchor: 'end' }}
           height={60}
         />
         <YAxis dataKey="value" domain={['auto', 'auto']} />
         <Tooltip />
-        <Legend verticalAlign="top" height={36} />
+        <Legend verticalAlign="top" onClick={onClickLegend(setShownLines)} height={36} />
+
         {Array.from(stockTimeline.keys()).map((key) => (
           <Line
             key={key}
+            hide={!shownLines.has(key)}
             type="monotone"
             data={stockTimeline.get(key)}
             dataKey="value"
@@ -67,6 +64,24 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
     </ResponsiveContainer>
   );
 }
+
+function onClickLegend(setShownLines: React.Dispatch<React.SetStateAction<Set<string>>>) {
+  return function onClickLegend(...args: any[]): void {
+    if (args[0].type !== 'line' || !args[0].value) return;
+
+    const lineKey = args[0].value;
+    setShownLines((prevShownLines) => {
+      const updatedShownLines = new Set(prevShownLines);
+      if (updatedShownLines.has(lineKey)) {
+        updatedShownLines.delete(lineKey);
+      } else {
+        updatedShownLines.add(lineKey);
+      }
+      return updatedShownLines;
+    });
+  };
+}
+
 
 function mapStringToColorCode(input: string): string {
   // Convert each character to its ASCII code and combine them into a number
