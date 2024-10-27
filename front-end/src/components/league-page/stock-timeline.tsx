@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import TeamModel from '../../../../Common/models/team.model';
+import ChartTooltip from '../charts/chart-tooltip';
 
 
 interface StockTimeLineProps {
@@ -43,7 +44,7 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
           height={60}
         />
         <YAxis dataKey="value" domain={['auto', 'auto']} />
-        <Tooltip />
+        <Tooltip content={<ChartTooltip active={true} payload={[]} label={''} />} />
         <Legend verticalAlign="top" onClick={onClickLegend(setShownLines)} height={36} />
 
         {Array.from(stockTimeline.keys()).map((key) => (
@@ -64,6 +65,7 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
     </ResponsiveContainer>
   );
 }
+
 
 function onClickLegend(setShownLines: React.Dispatch<React.SetStateAction<Set<string>>>) {
   return function onClickLegend(...args: any[]): void {
