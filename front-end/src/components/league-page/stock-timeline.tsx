@@ -130,7 +130,7 @@ function bridgeData(stockTimeline: Map<string, StockTimelineEntry[]>): Map<strin
   const orderedUniqueTimestamps = getOrderedUniqueTimestamps(groupedStockTimeline);
 
   groupedStockTimeline.forEach((entries, symbol) => {
-    const bridgedEntries = fillMissingTimestampsOptimized(entries, orderedUniqueTimestamps);
+    const bridgedEntries = fillMissingTimestamps(entries, orderedUniqueTimestamps);
     bridgedTimelineMap.set(symbol, bridgedEntries);
   });
 
@@ -164,47 +164,6 @@ function getOrderedUniqueTimestamps(groupedStockTimeline: Map<string, StockTimel
 }
 
 function fillMissingTimestamps(stockTimelineForTickerEntries: StockTimelineEntry[], orderedUniqueTimestamps: number[]): StockTimelineEntry[] {
-  const filledEntries: StockTimelineEntry[] = [];
-  const usedTimestamps = new Set<number>();
-  let lastValue = stockTimelineForTickerEntries[0]?.value || 0;
-
-  stockTimelineForTickerEntries.forEach((entry, index) => {
-    usedTimestamps.add(entry.timestamp.getTime());
-    filledEntries.push(entry);
-
-    orderedUniqueTimestamps.forEach((timestamp) => {
-      if (usedTimestamps.has(timestamp)) {
-        return;
-      }
-
-      const orderedDate = new Date(timestamp);
-
-      // TODO handle the case where all the values in orderedUniqueTimestamps are before all the values in stockTimelineForTickerEntries
-
-      // If we're at the end, fill with the last known value
-      if (index + 1 >= stockTimelineForTickerEntries.length) {
-        usedTimestamps.add(orderedDate.getTime());
-        filledEntries.push({ timestamp: orderedDate, value: lastValue });
-        return;
-      }
-
-      // If the time is after the current date the we dont want to add it cause there might be a better value to use
-      if (orderedDate.getTime() >= entry.timestamp.getTime()) {
-        lastValue = entry.value;
-      }
-
-      // if the time is before the current date then its between two points so we fill the data
-      else if (orderedDate.getTime() < entry.timestamp.getTime()) {
-        usedTimestamps.add(orderedDate.getTime());
-        filledEntries.push({ timestamp: orderedDate, value: lastValue });
-      }
-    });
-  });
-
-  return filledEntries;
-}
-
-function fillMissingTimestampsOptimized(stockTimelineForTickerEntries: StockTimelineEntry[], orderedUniqueTimestamps: number[]): StockTimelineEntry[] {
   const filledEntries: StockTimelineEntry[] = [];
   let stockValues = new Map<number, number>();
   let current: number = stockTimelineForTickerEntries[0]?.value || 0;
