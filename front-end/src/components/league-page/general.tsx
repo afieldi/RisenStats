@@ -12,6 +12,9 @@ import LeagueStats from './league-stats';
 import RecentGames from './recent-games';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import StockTimeline from './stock-timeline';
+import SideWinrateBox from './side-winrate-box';
+import TeamListBox from './teams-list';
+import TeamLeaderboards from './team-leaderboards';
 
 export interface LeaguePageGeneralStatsProps {
     season: SeasonModel;
