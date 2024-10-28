@@ -10,12 +10,6 @@ import LeagueChampionWinrates from './league-champ-winrates';
 import LeagueDragons from './league-dragons';
 import LeagueStats from './league-stats';
 import RecentGames from './recent-games';
-import SideWinrateBox from './side-winrate-box';
-import TeamLeaderboards from './team-leaderboards';
-import TeamListBox from './teams-list';
-import SideWinrateBox from './side-winrate-box';
-import TeamLeaderboards from './team-leaderboards';
-import TeamListBox from './teams-list';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import StockTimeline from './stock-timeline';
 
