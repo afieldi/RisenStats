@@ -421,7 +421,7 @@ export default class PlayerGameModel extends BaseEntity
   @Column("smallint")
   blastConeOppositeOpponentCount: number;
 
-  @Column("smallint")
+  @Column("real", {nullable: true})
   bountyGold: number;
 
   @Column("smallint")
