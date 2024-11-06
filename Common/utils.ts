@@ -1,3 +1,4 @@
+import { DraftState } from './Interface/Internal/drafting';
 import PlayerGameModel from "./models/playergame.model";
 import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
@@ -332,4 +333,14 @@ export function MakeId(length: number) {
     counter += 1;
   }
   return result;
+}
+
+export function getTeamFromDraftState(game: DraftState, auth: string): 'blueTeam' | 'redTeam' {
+  if (game.blueTeam.auth === auth) {
+    return 'blueTeam';
+  }
+  else if (game.redTeam.auth === auth) {
+    return 'redTeam';
+  }
+  return null;
 }

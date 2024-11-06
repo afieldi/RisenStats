@@ -71,7 +71,7 @@ export function handleSocketConnection(room: string) {
 export function handleDraftHover(room: string, auth: string, pick: string, stage: number) {
   const game: DraftState = gameCache.get(room);
   logger.info(`Got hover for champion: ${pick}`, stage, game.stage);
-  if (!game) {
+  if (!game || !game.roomActive) {
     logger.error(`Pick made(${pick}) with a room(${room}) not existing`);
     return;
   }
@@ -123,7 +123,7 @@ export function handleDraftPick(room: string, auth: string, server: Server) {
   const game: DraftState = gameCache.get(room);
   logger.info('Got draftPick', room, auth);
   const resolvedServer: Server = server ?? this.server;
-  if (!game) {
+  if (!game || !game.roomActive) {
     logger.error(`Timer update for non-existent room(${room})`);
     // this.socket.disconnect();
     return;
@@ -177,6 +177,10 @@ function handleTimerUpdate(room: string, auth: string, server: Server) {
 }
 
 function finishGame(room: string, socket: Server) {
+  const game: DraftState = gameCache.get(room);
+  game.roomActive = false;
+  socket.to(room).emit('draftUpdate', game);
+
   // basically just take the game out of memory and put it into the DB
   clearTimersForRoom(room);
   socket.to(room).disconnectSockets();
