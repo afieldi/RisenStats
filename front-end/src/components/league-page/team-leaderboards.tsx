@@ -39,14 +39,10 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const theme = useTheme() as Theme;
   const navigate = useNavigate();
 
-  const [expanded, setExpanded] = useState(false); // To toggle Collapse
+  const [expanded, setExpanded] = useState(false);
 
   const gameCounts = getRisenTeamGameCountForLeague(props.games);
   const leaderboardCardProps = getLeaderboardCardProps(props.games, gameCounts, howManyRowsToDisplay);
-
-  const handleShowMore = () => {
-    setExpanded(!expanded);
-  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', rowGap: 0.5, maxWidth: '100%' }}>
@@ -85,7 +81,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
       </Box>
 
       <Typography
-        onClick={handleShowMore}
+        onClick={() => {setExpanded(!expanded);}}
         sx={{
           cursor: 'pointer',
           color: theme.palette.primary.main,
