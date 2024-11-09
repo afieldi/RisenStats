@@ -34,19 +34,18 @@ export interface TeamLeaderboardCardProps {
 
 const colorChoser = (v: number, theme: Theme) => '';
 const howManyRowsToDisplay = 6;
+const defaultAmountOfCardsToShow = 3; // Make sure this is a multiple of 3 for UI purposes
 export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const theme = useTheme() as Theme;
   const navigate = useNavigate();
 
-  const [visibleCount, setVisibleCount] = useState(3); // Initialize to show only the first 3 items
   const [expanded, setExpanded] = useState(false); // To toggle Collapse
 
   const gameCounts = getRisenTeamGameCountForLeague(props.games);
   const leaderboardCardProps = getLeaderboardCardProps(props.games, gameCounts, howManyRowsToDisplay);
 
   const handleShowMore = () => {
-    setExpanded(true);
-    setVisibleCount(leaderboardCardProps.size);
+    setExpanded(!expanded);
   };
 
   return (
@@ -60,7 +59,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
         {
-          [...leaderboardCardProps.keys()].slice(0, 3).map(key => {
+          [...leaderboardCardProps.keys()].slice(0, defaultAmountOfCardsToShow).map(key => {
             return TeamLeaderboardCard(
                   leaderboardCardProps.get(key) as TeamLeaderboardCardProps,
                   props.teams,
@@ -72,7 +71,7 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
         }
         <Collapse in={expanded} timeout="auto" unmountOnExit >
           <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
-            {[...leaderboardCardProps.keys()].slice(3, visibleCount).map(key => {
+            {[...leaderboardCardProps.keys()].slice(defaultAmountOfCardsToShow, leaderboardCardProps.size).map(key => {
               return TeamLeaderboardCard(
                   leaderboardCardProps.get(key) as TeamLeaderboardCardProps,
                   props.teams,
@@ -85,18 +84,14 @@ export default function TeamLeaderboards(props: TeamLeaderboardProps) {
         </Collapse>
       </Box>
 
-      {/*TODO show less as well*/}
-      {visibleCount < leaderboardCardProps.size && (
-        <Typography
-          onClick={handleShowMore}
-          sx={{
-            cursor: 'pointer',
-            color: theme.palette.primary.main,
-            textAlign: 'center',
-            mt: 2,
-            fontWeight: 'bold',
-          }}>Show More</Typography>
-      )}
+      <Typography
+        onClick={handleShowMore}
+        sx={{
+          cursor: 'pointer',
+          color: theme.palette.primary.main,
+          textAlign: 'right',
+          fontWeight: 'bold',
+        }}>{expanded ? 'Show Less' : 'Show More'}</Typography>
     </Box>
   );
 }
