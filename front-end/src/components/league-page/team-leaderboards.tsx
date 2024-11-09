@@ -1,6 +1,6 @@
 import { useTheme } from '@emotion/react';
-import { Theme, Typography } from '@mui/material';
-import React from 'react';
+import { Collapse, Theme, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import PlayerGameModel from '../../../../Common/models/playergame.model';
 import TeamModel from '../../../../Common/models/team.model';
 import {
@@ -17,6 +17,7 @@ import {
   getRisenTeamGameCountForLeague,
   getRisenTeamTotalStatForLeague, sortRisenTeamStatEntriesAscending, sortRisenTeamStatEntriesDescending
 } from '../../common/stats-generators/team/RisenTeamStatGenerator';
+import { NavigateFunction } from 'react-router/lib/hooks';
 
 export interface TeamLeaderboardProps {
     games: PlayerGameModel[]
@@ -35,32 +36,72 @@ const colorChoser = (v: number, theme: Theme) => '';
 const howManyRowsToDisplay = 6;
 export default function TeamLeaderboards(props: TeamLeaderboardProps) {
   const theme = useTheme() as Theme;
+  const navigate = useNavigate();
 
+  const [visibleCount, setVisibleCount] = useState(3); // Initialize to show only the first 3 items
+  const [expanded, setExpanded] = useState(false); // To toggle Collapse
 
   const gameCounts = getRisenTeamGameCountForLeague(props.games);
   const leaderboardCardProps = getLeaderboardCardProps(props.games, gameCounts, howManyRowsToDisplay);
 
+  const handleShowMore = () => {
+    setExpanded(true);
+    setVisibleCount(leaderboardCardProps.size);
+  };
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column',  flexWrap: 'wrap', rowGap: 0.5, maxWidth: '100%' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', rowGap: 0.5, maxWidth: '100%' }}>
       <Box sx={{ p: 0.2, display: 'flex', flexDirection: 'column', minWidth: 880 }}>
-        <Typography fontFamily="Montserrat" variant='h4' align='left'>Team Leaderboards</Typography>
-        <hr style={{ width: '100%' }}></hr>
+        <Typography fontFamily="Montserrat" variant="h4" align="left">
+            Team Leaderboards
+        </Typography>
+        <hr style={{ width: '100%' }} />
       </Box>
+
       <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
         {
-          [...leaderboardCardProps.keys()].map(key => {
-            return TeamLeaderboardCard(leaderboardCardProps.get(key) as TeamLeaderboardCardProps, props.teams, gameCounts);
+          [...leaderboardCardProps.keys()].slice(0, 3).map(key => {
+            return TeamLeaderboardCard(
+                  leaderboardCardProps.get(key) as TeamLeaderboardCardProps,
+                  props.teams,
+                  gameCounts,
+                  theme,
+                  navigate
+            );
           })
         }
+        <Collapse in={expanded} timeout="auto" unmountOnExit >
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', columnGap: 3 }}>
+            {[...leaderboardCardProps.keys()].slice(3, visibleCount).map(key => {
+              return TeamLeaderboardCard(
+                  leaderboardCardProps.get(key) as TeamLeaderboardCardProps,
+                  props.teams,
+                  gameCounts,
+                  theme,
+                  navigate
+              );
+            })}
+          </Box>
+        </Collapse>
       </Box>
+
+      {/*TODO show less as well*/}
+      {visibleCount < leaderboardCardProps.size && (
+        <Typography
+          onClick={handleShowMore}
+          sx={{
+            cursor: 'pointer',
+            color: theme.palette.primary.main,
+            textAlign: 'center',
+            mt: 2,
+            fontWeight: 'bold',
+          }}>Show More</Typography>
+      )}
     </Box>
   );
 }
 
-export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map<number, TeamModel>, gameCounts: Map<number, number>) {
-  const theme = useTheme() as Theme;
-  const navigate = useNavigate();
-
+export function TeamLeaderboardCard(props: TeamLeaderboardCardProps, teamMap:Map<number, TeamModel>, gameCounts: Map<number, number>, theme: Theme, navigate: NavigateFunction) {
   const leaderboardHeaders = buildTextBasedLeaderboardHeader('Name', 'Games', props.lbColumnTitle, theme);
 
   let leaderboardRows: LeaderboardRowProps[] = [];
