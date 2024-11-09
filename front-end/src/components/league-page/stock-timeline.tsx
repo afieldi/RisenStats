@@ -17,36 +17,27 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
   const stockTimelineAbbreviated = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
   const stockTimeline = bridgeData(stockTimelineAbbreviated);
 
+  stockTimeline.forEach((entries, symbol) => {
+    const updatedEntries = entries.map((entry, index) => ({
+      ...entry,
+      index: index // Replace timestamp with index for even spacing
+    }));
+    stockTimeline.set(symbol, updatedEntries);
+  });
+
+
   const [shownLines, setShownLines] = useState<Set<string>>(new Set(stockTimeline.keys()));
-
-  const timestamps = Array.from(stockTimeline.values()).flat().map(entry => entry.timestamp.getTime());
-  const minTimestamp = Math.min(...timestamps);
-  const maxTimestamp = Math.max(...timestamps);
-
-  // Date formatter for tooltip and axis, including hours
-  const dateFormatter = (dateTime: any) => {
-    const date = new Date(dateTime);
-    return date.toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-  };
 
   return (
     <ResponsiveContainer width="100%" height={460}>
       <LineChart margin={{ top: 5, right: 30, bottom: 80 }}>
         <XAxis
           type="number"
-          dataKey="timestamp"
-          domain={[minTimestamp, maxTimestamp]}
-          tickFormatter={dateFormatter}
-          tick={{ angle: -45, textAnchor: 'end' }}
-          height={60}
+          dataKey="index"
+          hide={true}
         />
         <YAxis dataKey="value" domain={['auto', 'auto']} />
         <Tooltip content={<StockTimelineChartTooltip active={true} payload={[]} label={''} />} />
-        {/*<Legend verticalAlign="top" height={90} content={<StockTimelineLegend onClick={onClickLegend(setShownLines)} />} />*/}
         <Legend verticalAlign="top" height={50} onClick={onClickLegend(setShownLines)} />
 
         {Array.from(stockTimeline.keys()).map((key) => (
@@ -60,7 +51,7 @@ export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
             stroke={mapStringToColorCode(key)}
             connectNulls={false}
             isAnimationActive={true}
-            dot={false}
+            dot={true}
           />
         ))}
       </LineChart>
