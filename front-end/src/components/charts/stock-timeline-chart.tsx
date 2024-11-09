@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import TeamModel from '../../../../Common/models/team.model';
-import StockTimelineChartTooltip from '../charts/stock-timeline-chart-tooltip';
-import { StockTimelineLegend } from '../charts/stock-timeline-legend';
+import StockTimelineChartTooltip from './stock-timeline-chart-tooltip';
+import { StockTimelineLegend } from './stock-timeline-legend';
 
 
 interface StockTimeLineProps {
@@ -13,7 +13,7 @@ interface StockTimeLineProps {
   teams: Map<number, TeamModel>
 }
 
-export default function StockTimeline(props: StockTimeLineProps): JSX.Element {
+export default function StockTimelineChart(props: StockTimeLineProps): JSX.Element {
   const stockTimelineAbbreviated = mapTeamIdToAbbreviation(props.teams, props.stockTimeline);
   const stockTimeline = bridgeData(stockTimelineAbbreviated);
 

@@ -11,10 +11,11 @@ import LeagueDragons from './league-dragons';
 import LeagueStats from './league-stats';
 import RecentGames from './recent-games';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
-import StockTimeline from './stock-timeline';
+import StockTimelineChart from '../charts/stock-timeline-chart';
 import SideWinrateBox from './side-winrate-box';
 import TeamListBox from './teams-list';
 import TeamLeaderboards from './team-leaderboards';
+import RisenStocks from './risen-stocks';
 
 export interface LeaguePageGeneralStatsProps {
     season: SeasonModel;
@@ -47,7 +48,7 @@ export default function LeaguePageGeneralStats(props: LeaguePageGeneralStatsProp
           <TeamLeaderboards games={props.playerGames} teams={props.teams}></TeamLeaderboards>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 3 }}>
-          <StockTimeline stockTimeline={props.stockTimeline} teams={props.teams}></StockTimeline>
+          <RisenStocks stockTimeline={props.stockTimeline} teams={props.teams}/>
         </Box>
       </Box>
     </Box>
