@@ -1,11 +1,8 @@
-import { Theme, Typography, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
-import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import React, {  useState } from 'react';
+import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import TeamModel from '../../../../Common/models/team.model';
 import StockTimelineChartTooltip from './stock-timeline-chart-tooltip';
-import { StockTimelineLegend } from './stock-timeline-legend';
 
 
 interface StockTimeLineProps {
