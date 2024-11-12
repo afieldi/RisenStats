@@ -53,14 +53,25 @@ export default function() {
   const onNewDraftClick = () => {
     navigate('/drafting');
   };
+
+  const blueLink = `${prePath}/drafting/${room}/${blueAuth}`;
+  const redLink = `${prePath}/drafting/${room}/${redAuth}`;
+  const specLink = `${prePath}/drafting/${room}`;
+  const onCopy = () => {
+    navigator.clipboard.writeText(`Blue Draft: ${blueLink}\nRed Draft: ${redLink}\nSpectator: ${specLink}`);
+  };
+
   return (
     <Container maxWidth="md" sx={{ minHeight: '100vh', pt: 10, color: theme.palette.text.primary }}>
-      <Button onClick={onNewDraftClick} variant='outlined'>
+      <Button onClick={onNewDraftClick} sx={{ mb: 5 }} variant='outlined'>
         New Draft
       </Button>
-      <DisplayRow side='Blue' link={`${prePath}/drafting/${room}/${blueAuth}`} />
-      <DisplayRow side='Red' link={`${prePath}/drafting/${room}/${redAuth}`} />
-      <DisplayRow side='Spectator' link={`${prePath}/drafting/${room}`} />
+      <DisplayRow side='Blue' link={blueLink} />
+      <DisplayRow side='Red' link={redLink} />
+      <DisplayRow side='Spectator' link={specLink} />
+      <Button onClick={onCopy} variant='outlined' sx={{ mt: 5 }}>
+        Copy all
+      </Button>
     </Container>
   );
 }
