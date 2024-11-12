@@ -35,8 +35,13 @@ export default function(props: Props) {
   }
 
   let text = 'Spectating';
+
+  if (!draftState?.roomActive && side && (draftState?.stage ?? 0) > 0) {
+    text = 'Finished';
+    buttonDisabled = true;
+  }
   // We are at the start and at least one team is not ready
-  if (!draftState?.roomActive && side && draftState?.[side].ready) {
+  else if (!draftState?.roomActive && side && draftState?.[side].ready) {
     text = 'Waiting';
     buttonHandler = onUnready;
   }

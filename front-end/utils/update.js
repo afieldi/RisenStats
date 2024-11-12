@@ -43,6 +43,7 @@ fetch("https://lol-web-api.op.gg/api/v1.0/internal/bypass/champions/na/ranked")
   roleData.forEach(champData => {
     roles[champData.id] = champData.positions.map(position => OPGG_ROLE_TO_GAMEROLE(position.name));
   });
+  console.log('Writing champion position data...')
   fs.writeFileSync(`${dataPath}/role_map.json`, JSON.stringify(roles, undefined, 2));
 });
 
@@ -53,7 +54,7 @@ fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => 
     console.log("Version: " + version);
     fetch(champ_url).then(response2 => {
       response2.json().then(async champData => {
-        console.log("Saving champion data");
+        console.log("Saving champion data...");
         fs.writeFileSync(`${dataPath}/champions.json`, JSON.stringify(champData, undefined, 2));
         let newData = {};
         for (let key in champData["data"]) {
@@ -83,6 +84,7 @@ fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => 
     const item_url = `http://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/item.json`;
     fetch(item_url).then(response3 => {
       response3.json().then(async itemData => {
+        console.log('Saving item images...');
         fs.writeFileSync(`${dataPath}/items.json`, JSON.stringify(itemData, undefined, 2));
 
         for (let key in itemData["data"]) {
@@ -98,6 +100,7 @@ fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => 
     const summoner_url = `http://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/summoner.json`;
     fetch(summoner_url).then(response4 => {
       response4.json().then(async summonerData => {
+        console.log('Saving summoner images...');
         fs.writeFileSync(`${dataPath}/summoner.json`, JSON.stringify(summonerData, undefined, 2));
 
         for (let key in summonerData["data"]) {
@@ -113,6 +116,7 @@ fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => 
     const runes_url = `http://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/runesReforged.json`;
     fetch(runes_url).then(response5 => {
       response5.json().then(async runeData => {
+        console.log('Saving rune images...');
         fs.writeFileSync(`${dataPath}/runes.json`, JSON.stringify(runeData, undefined, 2));
 
         for (let style of runeData) {

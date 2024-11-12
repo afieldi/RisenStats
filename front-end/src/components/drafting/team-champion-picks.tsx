@@ -6,14 +6,15 @@ import { getChampionNameFromId } from '../../common/utils';
 interface Props {
   champions: string[];
   stage: number;
+  active: boolean;
   reverse?: boolean;
 }
 
-export default function({ champions, reverse, stage }: Props) {
+export default function({ active, champions, reverse, stage }: Props) {
   const [team, step, index] = draftStepConfig[stage] ?? ['blueTeam', -1, -1];
   let addBorder = false;
   if ((team === 'blueTeam' && !reverse) || (team === 'redTeam' && reverse)) {
-    addBorder = true;
+    addBorder = active && true;
   }
   return (
     <Box sx={{
@@ -49,9 +50,10 @@ export default function({ champions, reverse, stage }: Props) {
                 display: 'flex',
                 flexDirection: reverse ? 'row-reverse' : 'row',
                 marginTop: 'auto',
-                width: '100%'
+                width: '100%',
+                zIndex: 1,
               }}>
-                <Typography>{getChampionNameFromId(champion)}</Typography>
+                <Typography fontFamily='Montserrat'>{getChampionNameFromId(champion)}</Typography>
               </Box>
             </Box>
           );

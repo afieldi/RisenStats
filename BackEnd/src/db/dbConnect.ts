@@ -1,4 +1,5 @@
 import { BaseEntity, Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions, Repository } from 'typeorm';
+import DraftsModel from '../../../Common/models/drafts.model';
 import PlayerModel from '../../../Common/models/player.model';
 import CodeModel from '../../../Common/models/code.model';
 import GameModel from '../../../Common/models/game.model';
@@ -52,6 +53,7 @@ const options = {
       PlayerChampionStatsModel,
       PlayerStatModel,
       DenylistModel,
+      DraftsModel,
       PlayerTeamModel,
       TeamModel,
       AggregatedPlayerStatModel,

@@ -58,9 +58,18 @@ export default function() {
   return (
     <Box sx={{ minHeight: '100vh', maxWidth: '95%', margin: 'auto', color: theme.palette.text.primary, pt: 10 }}>
       <Box sx={{ display: 'flex', flexDirection: 'row', pb: 3 }}>
-        <TeamChampionPicks champions={draftState?.blueTeam.picks ?? []} stage={draftState?.stage ?? 0} />
+        <TeamChampionPicks
+          champions={draftState?.blueTeam.picks ?? []}
+          stage={draftState?.stage ?? 0}
+          active={!!draftState?.roomActive}
+        />
         <ChampionPicker onClick={onChampClick} draftState={draftState} auth={auth} />
-        <TeamChampionPicks champions={draftState?.redTeam.picks ?? []} stage={draftState?.stage ?? 0} reverse />
+        <TeamChampionPicks
+          champions={draftState?.redTeam.picks ?? []}
+          stage={draftState?.stage ?? 0}
+          active={!!draftState?.roomActive}
+          reverse
+        />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'row', }}>
         <TeamChampionBans

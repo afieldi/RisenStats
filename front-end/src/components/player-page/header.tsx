@@ -35,7 +35,7 @@ export default function PlayerPageHeader(playerOverviewProps: Props)
   return (
     <Container sx={{ display: 'flex', alignItems: 'flex-start' }}>
       <Box sx={{ display: 'inline-flex', alignItems: 'flex-start' }}>
-        <img src={`https://ddragon.leagueoflegends.com/cdn/13.24.1/img/profileicon/${playerIcon}.png`} className="player-profile-picture"></img>
+        <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${playerIcon}.png`} className="player-profile-picture"></img>
         <Box sx={{ flexGrow: 1, pl: 2, textAlign: 'left' }}>
           <Hidden mdUp>
             <Typography variant="h5">{name}</Typography><Typography variant="h6">#{tag}</Typography>

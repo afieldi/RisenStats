@@ -6,15 +6,6 @@ import { DraftingSocketClientToServer, DraftingSocketServerToClient } from '../C
 import logger from './logger';
 import cookieParser from 'cookie-parser';
 import yargs from 'yargs/yargs';
-import io from 'socket.io';
-import { createServer } from 'node:http';
-import {
-  handleDraftHover,
-  handleDraftPick,
-  handleReady,
-  handleSocketConnection,
-  handleUnready
-} from './src/business/drafting';
 
 interface Argv {
   prod?: boolean;
@@ -35,6 +26,7 @@ else if (argv.stg) {
 else {
   process.env.NODE_ENV = 'development';
 }
+console.log('loading, ', envFile);
 dotenv.config({ path: envFile });
 
 const app = express();
@@ -85,6 +77,16 @@ app.use('/api/stats/leaderboards', LeaderboardsRouter);
 app.use('/api/teams', TeamsRouter);
 app.use('/api/drafting', DraftingRouter);
 app.use('/api/stocks', Stocks);
+
+import io from 'socket.io';
+import { createServer } from 'node:http';
+import {
+  handleDraftHover,
+  handleDraftPick,
+  handleReady,
+  handleSocketConnection,
+  handleUnready
+} from './src/business/drafting';
 
 const server = createServer(app);
 

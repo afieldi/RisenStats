@@ -1,5 +1,6 @@
 import { Box, Button, Collapse, SelectChangeEvent, TextField, Theme, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
+import { draftStepConfig } from '../../../../Common/constants';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import { DraftState } from '../../../../Common/Interface/Internal/drafting';
 import { getTeamFromDraftState } from '../../../../Common/utils';
@@ -88,8 +89,9 @@ export default function({ onClick, draftState, auth }: Props) {
       }
     }
     else {
-      setBlueReady(getTeamFromDraftState(draftState, auth ?? '') === 'blueTeam');
-      setRedReady(getTeamFromDraftState(draftState, auth ?? '') === 'redTeam');
+      const [team,,] = draftStepConfig[draftState.stage];
+      setBlueReady(team === 'blueTeam');
+      setRedReady(team === 'redTeam');
     }
   }, [draftState]);
 
@@ -149,14 +151,14 @@ export default function({ onClick, draftState, auth }: Props) {
           filteredChamps.map(champion => (
             <ImgBox
               sx={{
-                height:80,
-                width: 80,
+                height:120,
+                width: 120,
                 filter: unavailableChamps.has(champion.key) ? 'grayscale(1)' : '',
               }}
               alt={`${champion.id}`}
               src={`/images/champions/icons/${champion.key}_0.png`}
-              height="75px"
-              width="75px"
+              height="115px"
+              width="115px"
               onClick={() => {
                 if (!unavailableChamps.has(champion.key)) {
                   onClick(champion.key);

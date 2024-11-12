@@ -4,6 +4,7 @@ import { draftStepConfig } from '../../../Common/constants';
 import { DraftState } from '../../../Common/Interface/Internal/drafting';
 import { MakeId } from '../../../Common/utils';
 import logger from '../../logger';
+import { createDbDraft, getDbDraft } from '../db/drafting';
 
 const gameCache = new NodeCache();
 const gameTimers: Record<string, number[]> = {};
@@ -55,11 +56,23 @@ export function createDraft(blueName: string, redName: string): DraftState {
   return draftState;
 }
 
-export function handleSocketConnection(room: string) {
+export async function handleSocketConnection(room: string) {
 
   if (!gameCache.has(room as string)) {
-    logger.error('Tried to join a room that does not exist: ' + room);
-    logger.info('Current rooms: ', gameCache.keys());
+    const dbDraft = await getDbDraft(room);
+    if (dbDraft) {
+      this.socket.emit('draftUpdate', {
+        ...dbDraft,
+        stage: 19,
+        roomActive: false,
+        timerMax: 0,
+        timerRemaining: 0,
+      } as DraftState);
+    }
+    else {
+      logger.error('Tried to join a room that does not exist: ' + room);
+      logger.info('Current rooms: ', gameCache.keys());
+    }
     this.socket.disconnect();
     return;
   }
@@ -180,6 +193,9 @@ function finishGame(room: string, socket: Server) {
   const game: DraftState = gameCache.get(room);
   game.roomActive = false;
   socket.to(room).emit('draftUpdate', game);
+
+  createDbDraft(game);
+  gameCache.del(room);
 
   // basically just take the game out of memory and put it into the DB
   clearTimersForRoom(room);
