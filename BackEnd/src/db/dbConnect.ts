@@ -1,4 +1,4 @@
-import { BaseEntity, Connection, createConnection, getConnection, getConnectionManager, getConnectionOptions, Repository } from 'typeorm';
+import { BaseEntity, Connection, getConnection, getConnectionManager } from 'typeorm';
 import DraftsModel from '../../../Common/models/drafts.model';
 import PlayerModel from '../../../Common/models/player.model';
 import CodeModel from '../../../Common/models/code.model';
