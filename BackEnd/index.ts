@@ -26,7 +26,6 @@ else if (argv.stg) {
 else {
   process.env.NODE_ENV = 'development';
 }
-console.log('loading, ', envFile);
 dotenv.config({ path: envFile });
 
 const app = express();
@@ -102,7 +101,6 @@ const draftServer = new io.Server<
   },
 });
 draftServer.on('connection', (socket: io.Socket) => {
-  console.log('got new connection ');
   socket.on('register', handleSocketConnection.bind({ socket, server: draftServer }));
   socket.on('pick', handleDraftPick.bind({ socket, server: draftServer }));
   socket.on('hover', handleDraftHover.bind({ socket, server: draftServer }));
@@ -111,7 +109,6 @@ draftServer.on('connection', (socket: io.Socket) => {
 });
 
 server.listen(port, () => {
-  // console.log(`Example app listening on port ${port}`)
   logger.debug(`Example app listening on port ${port}`);
 });
 

@@ -37,7 +37,6 @@ export default function AdminCodes() {
       setError(false);
       GenerateCodes(numberOfMatches * bestOf, risenSeason).then(response => {
         setGeneratedCodes(response.codes);
-        console.log(generatedCodes);
       });
     }
     else {

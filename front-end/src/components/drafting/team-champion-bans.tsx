@@ -17,7 +17,6 @@ export default function({ champions, stage, reverse, ready }: Props) {
   if (ready && ((team === 'blueTeam' && !reverse) || (team === 'redTeam' && reverse))) {
     addBorder = true;
   }
-  console.log({ champions });
   return (
     <Box sx={{
       display: 'flex',

@@ -37,7 +37,6 @@ export default function() {
     }
 
     socket.on('draftUpdate', (data) => {
-      console.log('gotDraftUpdate');
       setDraftState(data);
     });
     return () => {

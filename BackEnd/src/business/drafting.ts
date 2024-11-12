@@ -111,8 +111,6 @@ export function handleReady(room: string, auth: string) {
   const game: DraftState = gameCache.get(room);
   game[getTeam(game, auth)].ready = true;
 
-  console.log(`Blue: ${game.blueTeam.ready}, Red: ${game.redTeam.ready}`);
-
   if (game.redTeam.ready && game.blueTeam.ready) {
     game.roomActive = true;
     gameTimers[room] = [setInterval(handleTimerUpdate.bind({ server: this.server }, room, auth, this.server), 1000)[Symbol.toPrimitive]()];
@@ -168,8 +166,6 @@ export function handleDraftPick(room: string, auth: string, server: Server) {
 function handleTimerUpdate(room: string, auth: string, server: Server) {
   const game: DraftState = gameCache.get(room);
 
-  console.log('countdown', server);
-
   if (!game) {
     logger.error(`Timer update for non-existent room(${room})`);
     return;
@@ -183,7 +179,6 @@ function handleTimerUpdate(room: string, auth: string, server: Server) {
 
   // give 3 seconds of leeway
   if (game.timerRemaining === -3) {
-    console.log('time is up');
     handleDraftPick(room, auth, server);
   }
   server.to(room).emit('draftUpdate', game);
@@ -200,5 +195,4 @@ function finishGame(room: string, socket: Server) {
   // basically just take the game out of memory and put it into the DB
   clearTimersForRoom(room);
   socket.to(room).disconnectSockets();
-  console.log('Finishing game: ' + room);
 }
