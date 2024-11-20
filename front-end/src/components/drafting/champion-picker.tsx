@@ -1,6 +1,6 @@
 import { Box, Button, SelectChangeEvent, TextField, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import { draftStepConfig } from '../../../../Common/constants';
+import { DRAFT_TEAM, draftStepConfig } from '../../../../Common/constants';
 import { GameRoles } from '../../../../Common/Interface/General/gameEnums';
 import { DraftState } from '../../../../Common/Interface/Internal/drafting';
 import { getTeamFromDraftState } from '../../../../Common/utils';
@@ -66,10 +66,10 @@ export default function({ onClick, draftState, auth }: Props) {
       ...draftState.redTeam.picks,
       ...draftState.redTeam.bans,
     ];
-    if (team === 'redTeam') {
+    if (team === DRAFT_TEAM.redTeam) {
       champs.push(...draftState.redTeam.disabledPicks);
     }
-    else if (team === 'blueTeam') {
+    else if (team === DRAFT_TEAM.blueTeam) {
       champs.push(...draftState.blueTeam.disabledPicks);
     }
     return new Set(champs);
@@ -90,8 +90,8 @@ export default function({ onClick, draftState, auth }: Props) {
     }
     else {
       const [team,,] = draftStepConfig[draftState.stage];
-      setBlueReady(team === 'blueTeam');
-      setRedReady(team === 'redTeam');
+      setBlueReady(team === DRAFT_TEAM.blueTeam);
+      setRedReady(team === DRAFT_TEAM.redTeam);
     }
   }, [draftState]);
 

@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { draftStepConfig } from '../../../../Common/constants';
+import { DRAFT_STAGE, DRAFT_TEAM, draftStepConfig } from '../../../../Common/constants';
 import { getChampionNameFromId } from '../../common/utils';
 
 interface Props {
@@ -11,9 +11,9 @@ interface Props {
 }
 
 export default function({ active, champions, reverse, stage }: Props) {
-  const [team, step, index] = draftStepConfig[stage] ?? ['blueTeam', -1, -1];
+  const [team, step, index] = draftStepConfig[stage] ?? [DRAFT_TEAM.blueTeam, -1, -1];
   let addBorder = false;
-  if ((team === 'blueTeam' && !reverse) || (team === 'redTeam' && reverse)) {
+  if ((team === DRAFT_TEAM.blueTeam && !reverse) || (team === DRAFT_TEAM.redTeam && reverse)) {
     addBorder = active && true;
   }
   return (
@@ -28,7 +28,7 @@ export default function({ active, champions, reverse, stage }: Props) {
         champions.map((champion, champIndex) => {
           return (
             <Box
-              className={(addBorder && step === 'picks' && index === champIndex) ? 'outlined-box' : 'waiting-box'}
+              className={(addBorder && step === DRAFT_STAGE.picks && index === champIndex) ? 'outlined-box' : 'waiting-box'}
               sx={{
                 position: 'relative',
                 display: 'flex',

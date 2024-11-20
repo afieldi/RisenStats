@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import NodeCache from 'node-cache';
-import { draftStepConfig } from '../../../Common/constants';
+import { DRAFT_TEAM, draftStepConfig } from '../../../Common/constants';
 import { DraftState } from '../../../Common/Interface/Internal/drafting';
 import { MakeId } from '../../../Common/utils';
 import logger from '../../logger';
@@ -12,12 +12,12 @@ const gameTimers: Record<string, number[]> = {};
 const DEFAULT_DRAFT_TIME = 30;
 
 // 0 is spectator, 1 is blue, 2 is red
-function getTeam(game: DraftState, auth: string): 'blueTeam' | 'redTeam' {
+function getTeam(game: DraftState, auth: string): DRAFT_TEAM {
   if (game.blueTeam.auth === auth) {
-    return 'blueTeam';
+    return DRAFT_TEAM.blueTeam;
   }
   else if (game.redTeam.auth === auth) {
-    return 'redTeam';
+    return DRAFT_TEAM.redTeam;
   }
   return null;
 }

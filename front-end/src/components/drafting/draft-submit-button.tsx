@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React from 'react';
 import { Socket } from 'socket.io-client';
-import { draftStepConfig } from '../../../../Common/constants';
+import { DRAFT_TEAM, draftStepConfig } from '../../../../Common/constants';
 import { DraftState } from '../../../../Common/Interface/Internal/drafting';
 
 interface Props {
@@ -26,12 +26,12 @@ export default function(props: Props) {
     socket.emit('unready', room, auth);
   };
 
-  let side: 'blueTeam' | 'redTeam' | undefined;
+  let side: DRAFT_TEAM | undefined;
   if (draftState?.blueTeam.auth === auth) {
-    side = 'blueTeam';
+    side = DRAFT_TEAM.blueTeam;
   }
   else if (draftState?.redTeam.auth === auth) {
-    side = 'redTeam';
+    side = DRAFT_TEAM.redTeam;
   }
 
   let text = 'Spectating';
