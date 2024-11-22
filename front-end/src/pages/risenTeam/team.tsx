@@ -12,6 +12,8 @@ import { getPlayerGamesBySeasonId, getRecentGamesBySeasonId, getRecentGamesBySea
 import { getSeasonBySearchName } from '../../api/season';
 import Loading from '../../components/loading/loading';
 import PlayerTeamModel from '../../../../Common/models/playerteam.model';
+import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
+import { getStockTimelineForSeason } from '../../api/stocks';
 
 
 function TeamPage() {
@@ -25,14 +27,17 @@ function TeamPage() {
   const [teams, setTeams] = useState<Map<number, TeamModel>>(new Map());
   const [leaguePlayerGames, setLeaguePlayerGames] = useState<PlayerGameModel[]>([]);
   const [teamRoster, setTeamRoster] = useState<PlayerTeamModel[]>([]);
+  const [stockTimeline, setStockTimeline] = useState<StockTimelineEntry[]>([]);
 
   const [loadingTeamRoster, setLoadingTeamRoster] = useState(false);
   const [loadingGames, setLoadingGames] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loadingStocktimeline, setLoadingStockTimeline] = useState(false);
+
 
   function isLoadingData() {
-    return loadingGames || loadingTeamRoster || loading || loadingTeams;
+    return loadingGames || loadingTeamRoster || loading || loadingTeams || loadingStocktimeline;
   }
 
   async function loadSeason(): Promise<SeasonModel> {
@@ -76,6 +81,32 @@ function TeamPage() {
       console.error('An error occured trying to load the team roster');
     }
     setLoadingTeamRoster(false);
+  }
+
+  async function loadStockTimelineForTeam(seasonId: number, teamId: number) {
+    if (stockTimeline.length > 0 || loadingGames) {
+      console.log('Not reloading league games.');
+      return;
+    }
+
+    setLoadingStockTimeline(true);
+    try {
+      let stockTimelineResponse = await getStockTimelineForSeason(seasonId);
+      let fullSeasonStockTimeline = new Map<number, StockTimelineEntry[]>(
+        Array.from(new Map(Object.entries(stockTimelineResponse.timeline)).entries()).map(([key, value]) => [Number(key), value])
+      );
+
+      if(!fullSeasonStockTimeline.has(teamId)) {
+        console.error('teamid was not in the stocktimeline map');
+        setLoadingStockTimeline(false);
+        return;
+      }
+      setStockTimeline(fullSeasonStockTimeline.get(teamId) as StockTimelineEntry[]);
+    }
+    catch (error) {
+      console.error('An error occurred trying to load the stocktimeline');
+    }
+    setLoadingStockTimeline(false);
   }
 
   function errorOnLoad(err: Error) {
@@ -156,6 +187,7 @@ function TeamPage() {
         await loadTeamRoster(team.teamId, seasonResponse.id);
         await loadLeagueGames(seasonResponse.id);
         await loadTeamsForLeague(seasonResponse.id);
+        await loadStockTimelineForTeam(seasonResponse.id, team.teamId);
         setLoading(false);
       })
       .catch(err => errorOnLoad(err));
@@ -184,7 +216,8 @@ function TeamPage() {
               team={team as TeamModel}
               teamRoster={teamRoster}
               leagueGames={leaguePlayerGames}
-              leagueTeams={teams}/>
+              leagueTeams={teams}
+              stockTimeline={stockTimeline}/>
           }
         </Box>
       </main>
