@@ -3,6 +3,7 @@ import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } f
 import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
 import TeamModel from '../../../../Common/models/team.model';
 import StockTimelineChartTooltip from './stock-timeline-chart-tooltip';
+import { Typography } from '@mui/material';
 
 
 interface StockTimeLineProps {
@@ -24,6 +25,10 @@ export default function StockTimelineChart(props: StockTimeLineProps): JSX.Eleme
 
 
   const [shownLines, setShownLines] = useState<Set<string>>(new Set(stockTimeline.keys()));
+
+  if(!timelineHasData(props.stockTimeline)) {
+    return  <Typography fontFamily="Montserrat" variant="h5">NO DATA</Typography>;
+  }
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -56,7 +61,6 @@ export default function StockTimelineChart(props: StockTimeLineProps): JSX.Eleme
   );
 }
 
-
 function onClickLegend(setShownLines: React.Dispatch<React.SetStateAction<Set<string>>>) {
   return function onClickLegend(...args: any[]): void {
     if (args[0].type !== 'line' || !args[0].value) return;
@@ -74,6 +78,9 @@ function onClickLegend(setShownLines: React.Dispatch<React.SetStateAction<Set<st
   };
 }
 
+function timelineHasData(stockTimeline: Map<number, StockTimelineEntry[]>): boolean {
+  return stockTimeline.size >= 0 &&  Array.from(stockTimeline.values()).some(entries => entries.length > 0);
+}
 
 function mapStringToColorCode(input: string): string {
   // Convert the input string to a hash
