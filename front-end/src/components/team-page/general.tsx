@@ -14,6 +14,9 @@ import StatsVsRestOfLeague from './stats-vs-rest-of-league';
 import SideWinRateBox from '../charts/side-win-rate-box';
 import LeagueDragons from '../league-page/league-dragons';
 import { BLUE_TEAM_ID, RED_TEAM_ID } from '../../../../Common/constants';
+import { StockTimelineEntry } from '../../../../Common/Interface/Internal/stocks';
+import StockTimelineChart from '../charts/stock-timeline-chart';
+import BaseRisenBox from '../risen-box/base-risen-box';
 
 interface TeamPageGeneralStatsProps {
     season: SeasonModel
@@ -21,13 +24,17 @@ interface TeamPageGeneralStatsProps {
     teamRoster: PlayerTeamModel[],
     teamGames: PlayerGameModel[]
     leagueTeams: Map<number, TeamModel>;
-    leagueGames: PlayerGameModel[]
+    leagueGames: PlayerGameModel[],
+    stockTimeline: StockTimelineEntry[],
 }
 
 export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
 {
   const champsPlayed: Map<GameRoles, Map<number, number>> = buildChamps(props.teamGames);
   const winrate = calculateWinrateFromTeamGames(props.teamGames);
+
+  const stockMapForSingularTeam = new Map();
+  stockMapForSingularTeam.set(props.team.teamId, props.stockTimeline);
 
   return (
     <Box sx={{ pt: 1, display: 'flex', flexDirection: 'row', columnGap: 3 }}>
@@ -43,10 +50,14 @@ export default function TeamPageGeneralStats(props: TeamPageGeneralStatsProps)
           <LeagueChampionWinrates games={props.teamGames} minGames={Math.min(calcMinChampsForWinrateLeaderboard(champsPlayed), 4)}/>
           <LeagueDragons games={props.teamGames}/>
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2, width: '100%' }}>
+
+        <Box sx={{ display: 'flex', flexDirection: 'row', columnGap: 2, width: '100%' }}>
           <StatsVsRestOfLeague leagueGames={props.leagueGames}
             leagueTeams={props.leagueTeams}
             primaryTeam={props.team}></StatsVsRestOfLeague>
+          <BaseRisenBox hideDivider={true} title={'Stock Value'} sx={{ width: '50%', height: '90%' }}>
+            <StockTimelineChart stockTimeline={stockMapForSingularTeam} teams={props.leagueTeams}/>
+          </BaseRisenBox>
         </Box>
       </Box>
     </Box>

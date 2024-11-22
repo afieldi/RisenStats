@@ -18,7 +18,9 @@ export default function RisenStocks(props: RisenStocksProps) {
         <Typography fontFamily="Montserrat" variant='h4' align='left'>Risen Stocks</Typography>
         <hr style={{ width: '100%' }}></hr>
       </Box>
-      <StockTimelineChart stockTimeline={props.stockTimeline} teams={props.teams}/>
+      <Box sx={{ height: '460px' }}>
+        <StockTimelineChart  stockTimeline={props.stockTimeline} teams={props.teams}/>
+      </Box>
     </Box>
   );
 }

@@ -26,7 +26,7 @@ export default function StockTimelineChart(props: StockTimeLineProps): JSX.Eleme
   const [shownLines, setShownLines] = useState<Set<string>>(new Set(stockTimeline.keys()));
 
   return (
-    <ResponsiveContainer width="100%" height={460}>
+    <ResponsiveContainer width="100%" height="100%">
       <LineChart margin={{ top: 5, right: 30, bottom: 80 }}>
         <XAxis
           type="number"
