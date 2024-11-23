@@ -33,7 +33,7 @@ export interface GetPortfolioResponse {
 }
 
 export interface GetStockTimelineResponse {
-    timeline: { [k: number]: StockTimelineEntry[]; }
+    timeline: Record<number, StockTimelineEntry[]>
 }
 
 export interface StockTimelineEntry {
