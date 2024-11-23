@@ -116,7 +116,7 @@ export async function getStockTimelinesForSeason(seasonId: number): Promise<Map<
   return timelines;
 }
 
-function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 200) {
+function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 150) {
 
   // Extract current ratings from the team objects
   const ratingWinner = winnerDollarValue;
