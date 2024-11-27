@@ -1,3 +1,5 @@
+import { DRAFT_TEAM } from './constants';
+import { DraftState } from './Interface/Internal/drafting';
 import PlayerGameModel from "./models/playergame.model";
 import { RiotParticipantDto } from "./Interface/RiotAPI/RiotApiDto";
 import * as RiotEvents from './Interface/RiotAPI/RiotApiTimelineEvents';
@@ -320,4 +322,26 @@ export function getSeasonWithLeaguePage(seasons: SeasonModel[], seasonId?: strin
     return null;
   }
   return seasons.find(season => season.id.toString() === seasonId.toString() && season.googleSheetParserType !== null && season.googleSheetId !== null);
+}
+
+export function MakeId(length: number) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+}
+
+export function getTeamFromDraftState(game: DraftState, auth: string): DRAFT_TEAM {
+  if (game.blueTeam.auth === auth) {
+    return DRAFT_TEAM.blueTeam;
+  }
+  else if (game.redTeam.auth === auth) {
+    return DRAFT_TEAM.redTeam;
+  }
+  return null;
 }

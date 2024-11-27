@@ -2,6 +2,7 @@ import { Theme } from '@mui/material';
 import { darken } from '@mui/system/colorManipulator';
 import { GameRoles, GameSide } from '../../../Common/Interface/General/gameEnums';
 import GameModel from '../../../Common/models/game.model';
+import championData from '../data/champions.json';
 import championsMap from '../data/champions_map.json';
 import { Rank, RedAndBlueStats, TotalTeamStats } from './types';
 
@@ -151,4 +152,10 @@ export function getGradient(background: string, gradientsEnabled=true) {
     return `linear-gradient(to right, ${background} 0%, ${darken(background, 0.4)} 100%)`;
   }
   return `linear-gradient(to right, ${background} 100%, ${background} 100%)`;
+}
+
+// id is still a number, but just as a string
+export function getChampionNameFromId(id: string) {
+  const championKey = championsMap[id as keyof typeof championsMap] as keyof typeof championData.data;
+  return championData.data[championKey]?.name;
 }

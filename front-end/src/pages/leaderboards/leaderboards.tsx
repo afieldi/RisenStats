@@ -33,7 +33,6 @@ export default function Leaderboards() {
 
 
   const goToPlayer = (playerName: string, playerTag: string) => {
-    console.log(playerName, playerTag);
     navigate(`/player/${encodeURIComponent(`${playerName}-${playerTag}`)}`);
   };
 

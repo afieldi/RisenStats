@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 import './styles/globals.css';
+import './styles/draft.scss';
 import RoutedApp from './RoutedApp';
 
 function App() {

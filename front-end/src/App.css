@@ -48,3 +48,7 @@
   background-color: #a3a3a3;
   outline: 1px solid #a3a3a3;
 }
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}

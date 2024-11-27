@@ -9,6 +9,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import HomeIcon from '@mui/icons-material/Home';
 import GavelIcon from '@mui/icons-material/Gavel';
 import PhoneIcon from '@mui/icons-material/Phone';
+import DrawIcon from '@mui/icons-material/Draw';
 import PersonIcon from '@mui/icons-material/Person';
 import { List } from '@mui/material';
 import Cookies from 'universal-cookie';
@@ -114,6 +115,13 @@ export function SideBar({ open, onClose }: Props) {
           key={'nav-league'}
           primaryText={'League Info'}>
           <GavelIcon/>
+        </SideBarLinkItem>
+
+        <SideBarLinkItem isInternalLink={false}
+          url={'/drafting'}
+          key={'nav-draft'}
+          primaryText={'Draft Tool'}>
+          <DrawIcon/>
         </SideBarLinkItem>
 
         <SideBarLinkItem isInternalLink={false}
