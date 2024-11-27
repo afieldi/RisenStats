@@ -88,7 +88,7 @@ export default function AdminCodes() {
         <hr />
         <Box color={theme.palette.info.light}>
           <Typography fontFamily="Montserrat" variant="h3">
-            Codes
+            Create Codes
           </Typography>
           {
             generatedCodes.length > 0 && (

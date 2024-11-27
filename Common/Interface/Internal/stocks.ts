@@ -33,10 +33,10 @@ export interface GetPortfolioResponse {
 }
 
 export interface GetStockTimelineResponse {
-    timeline: Map<number, StockTimelineEntry[]>
+    timeline: Record<number, StockTimelineEntry[]>
 }
 
 export interface StockTimelineEntry {
     value: number,
-    timestamp: number,
+    timestamp: Date,
 }
