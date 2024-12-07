@@ -11,13 +11,14 @@ import {
 import { riotTimestampToGameTime, roundTo } from '../../../../Common/utils';
 import LeaderboardCard from './leaderboard/leaderboardCard';
 import { Box } from '@mui/system';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import {
   getDisplayValueForTeamLeaderboardForAverage,
   getRisenTeamGameCountForLeague,
-  getRisenTeamTotalStatForLeague, sortRisenTeamStatEntriesAscending, sortRisenTeamStatEntriesDescending
+  getRisenTeamTotalStatForLeague,
+  sortRisenTeamStatEntriesAscending,
+  sortRisenTeamStatEntriesDescending,
 } from '../../common/stats-generators/team/RisenTeamStatGenerator';
-import { NavigateFunction } from 'react-router/lib/hooks';
 
 export interface TeamLeaderboardProps {
     games: PlayerGameModel[]
