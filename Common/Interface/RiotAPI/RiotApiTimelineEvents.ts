@@ -30,7 +30,8 @@ export enum MonsterType {
   BARON_NASHOR ="BARON_NASHOR",
   RIFTHERALD = "RIFTHERALD",
   DRAGON = "DRAGON",
-  HORDE = "HORDE" // voidgrubs are named horde
+  HORDE = "HORDE", // voidgrubs are named horde
+  ATAKHAN = "ATAKHAN"
 }
 
 export interface RiotTimelineEvent
