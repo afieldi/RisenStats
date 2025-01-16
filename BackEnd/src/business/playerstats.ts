@@ -330,7 +330,7 @@ export function AggregateStatsForRow(currentRow: AggregatedPlayerStatModel, game
   currentRow.damageDealtToObjectives += NonNone(game.damageDealtToObjectives, 0);
   currentRow.dragonKills += NonNone(game.dragonKills, 0);
   currentRow.voidgrubKills += NonNone(game.voidgrubKills, 0);
-  currentRow.atakhanKills += NonNone(game.voidgrubKills, 0);
+  currentRow.atakhanKills += NonNone(game.atakhanKills, 0);
   currentRow.firstTowerTakedown += BoolToNumber(game.firstTowerTakedown);
   currentRow.firstBloodTakedown += BoolToNumber(game.firstBloodTakedown);
   currentRow.firstBloodKill += BoolToNumber(game.firstBloodKill);
