@@ -125,6 +125,7 @@ function buildStatsToCompare(games: PlayerGameModel[], gameCounts: Map<number, n
   statsToCompare.set('GD15',  getRisenTeamTotalStatForLeague(games, ['goldDiff15']));
   statsToCompare.set('CSD15',  getRisenTeamTotalStatForLeague(games, ['csDiff15']));
   statsToCompare.set('Barons',  getRisenTeamTotalStatForLeague(games, ['baronKills']));
+  statsToCompare.set('Atakhans',  getRisenTeamTotalStatForLeague(games, ['atakhanKills']));
   statsToCompare.set('Heralds',  getRisenTeamTotalStatForLeague(games, ['riftHeraldKills']));
   statsToCompare.set('Grubs',  getRisenTeamTotalStatForLeague(games, ['voidgrubKills']));
   statsToCompare.set('Crabs',  getRisenTeamTotalStatForLeague(games, ['scuttleCrabKills']));

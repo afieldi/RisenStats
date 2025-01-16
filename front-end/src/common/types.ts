@@ -58,7 +58,9 @@ export enum Objectives {
   HERALD = 'Herald',
   BARON = 'Baron',
   TOWER = 'Tower',
-  ELDER = 'Elder' // Technically elder is a dragon but we'll consider it a different objective
+  ELDER = 'Elder', // Technically elder is a dragon but we'll consider it a different objective
+  ATAKHAN = 'Atakhan',
+  VOID_GRUBS = 'Voidgrubs'
 }
 
 export enum Dragons {
