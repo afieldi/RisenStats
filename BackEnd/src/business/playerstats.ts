@@ -75,7 +75,7 @@ export function getSeasonsToUpdate(playerGame: PlayerGameModel) : number[] {
 }
 
 export async function GetPlayerStatsByTimeAndSeason(seasonId: number, timeStart: number, timeEnd: number): Promise<AggregatedPlayerStatModel[]> {
-  const playerGames = await GetDbPlayerGames({ seasonId, timeEnd, timeStart});
+  const playerGames = await GetDbPlayerGames({ seasonId, timeEnd, timeStart });
 
   const playerMap: { [key: string]: AggregatedPlayerStatModel } = {};
 
@@ -130,6 +130,8 @@ export function CreateInitialPlayerStatModel(game: PlayerGameModel, seasonId: nu
     visionWardsBoughtInGame: 0,
     damageDealtToObjectives: 0,
     dragonKills: 0,
+    voidgrubKills: 0,
+    atakhanKills: 0,
     firstTowerTakedown: 0,
     firstBloodTakedown: 0,
     firstBloodKill: 0,
@@ -327,6 +329,8 @@ export function AggregateStatsForRow(currentRow: AggregatedPlayerStatModel, game
   currentRow.visionWardsBoughtInGame += NonNone(game.visionWardsBoughtInGame, 0);
   currentRow.damageDealtToObjectives += NonNone(game.damageDealtToObjectives, 0);
   currentRow.dragonKills += NonNone(game.dragonKills, 0);
+  currentRow.voidgrubKills += NonNone(game.voidgrubKills, 0);
+  currentRow.atakhanKills += NonNone(game.voidgrubKills, 0);
   currentRow.firstTowerTakedown += BoolToNumber(game.firstTowerTakedown);
   currentRow.firstBloodTakedown += BoolToNumber(game.firstBloodTakedown);
   currentRow.firstBloodKill += BoolToNumber(game.firstBloodKill);
