@@ -19,13 +19,14 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     const assists = (4.5 * playerStatsModel.assists15) / playerStatsModel.games;
     const deaths = (-7.5 * playerStatsModel.deaths15) / playerStatsModel.games;
     const turretPlats = (4 * playerStatsModel.turretPlatesTaken) / playerStatsModel.games;
+    const turretFirstBlood = (20 * playerStatsModel.takedownOnFirstTurret) / playerStatsModel.games;
     const fb = (20 * playerStatsModel.firstBloodTakedown) / playerStatsModel.games;
     const csDiff = (1.1 * playerStatsModel.csDiff15) / playerStatsModel.games;
     const xpDiff = (0.03 * playerStatsModel.xpDiff15) / playerStatsModel.games;
     const quickTurret = (30 * playerStatsModel.quickFirstTurret) / playerStatsModel.games;
     const wardsPlaced = (2.5 * playerStatsModel.wardsPlaced15) / playerStatsModel.games;
     const wardsKilled = (6 * playerStatsModel.wardsKilled15) / playerStatsModel.games;
-    return cs + kills + assists + deaths + turretPlats + fb + csDiff + xpDiff + quickTurret + wardsPlaced + wardsKilled;
+    return cs + kills + assists + deaths + turretPlats + fb + csDiff + xpDiff + quickTurret + wardsPlaced + wardsKilled + turretFirstBlood;
   }
 
   getSupportStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
@@ -33,6 +34,7 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     const assists = 5.5 * playerStatsModel.assists15;
     const deaths = -4.5 * playerStatsModel.deaths15; // Dying on support is less valueable than dying on carry
     const turretPlats = 4 * playerStatsModel.turretPlatesTaken;
+    const turretFirstBlood = 30 * playerStatsModel.takedownOnFirstTurret;
     const fb = 20 * playerStatsModel.firstBloodTakedown;
     const goldDiff = 0.02 * playerStatsModel.goldDiff15;
     const xpDiff = 0.11 * playerStatsModel.xpDiff15;
@@ -40,8 +42,7 @@ export class EarlyGameRatingStatGenerator extends RoleRatingStatGenerator {
     const wardsKilled = 8 * playerStatsModel.wardsKilled15;
     const quickSupportQuest = 4 * playerStatsModel.completeSupportQuestInTime;
 
-
-    return  (kills + assists + deaths + turretPlats + fb + goldDiff + xpDiff + wardsPlaced + wardsKilled + quickSupportQuest) / playerStatsModel.games;
+    return  (kills + assists + deaths + turretPlats + fb + turretFirstBlood + goldDiff + xpDiff + wardsPlaced + wardsKilled + quickSupportQuest) / playerStatsModel.games;
   }
 
   getJunglerStatValue(playerStatsModel: AggregatedPlayerStatModel): number {
