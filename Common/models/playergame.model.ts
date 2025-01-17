@@ -241,6 +241,8 @@ export default class PlayerGameModel extends BaseEntity
   riftHeraldKills: number;
   @Column("smallint")
   voidgrubKills: number;
+  @Column("smallint")
+  atakhanKills: number;
 
   // Diff
   @Column("boolean")

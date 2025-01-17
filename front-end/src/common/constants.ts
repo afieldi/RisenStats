@@ -46,6 +46,10 @@ import { TotalVisionClearedPingStatGenerator } from './stats-generators/pings/To
 import { TotalCommandPingStatGenerator } from './stats-generators/pings/TotalCommandPingStatGenerator';
 import { TotalDangerPingStatGenerator } from './stats-generators/pings/TotalDangerPingStatGenerator';
 import { VisionScorePerMinuteStatGenerator } from './stats-generators/VisionScorePerMinuteStatGenerator';
+import { VoidgrubKillsStatGenerator } from './stats-generators/VoidgrubKillsStatGenerator';
+import { AtakhanKillsStatGenerator } from './stats-generators/AtakhanKillsStatGenerator';
+import { TotalVoidgrubKillsStatsGenerator } from './stats-generators/total/TotalVoidgrubKillsStatsGenerator';
+import { TotalAtakhanKillsStatsGenerator } from './stats-generators/total/TotalAtakhanKillsStatsGenerator';
 
 export const DRAWER_WIDTH = 230;
 
@@ -75,12 +79,16 @@ export const StatGenerators = {
   'BARON': new BaronKillsStatsGenerator(),
   'HERALD': new HeraldKillsStatsGenerator(),
   'DRAGON': new DragonKillsStatsGenerator(),
+  'VOID_GRUBS': new VoidgrubKillsStatGenerator(),
+  'ATAKHAN': new AtakhanKillsStatGenerator(),
   'TOWERS': new TowersTakenStatsGenerator(),
   'TOWER_PLATES': new TowerPlatesStatsGenerator(),
   'TOTAL_ELDER': new TotalElderDragonKillsStatGenerator(),
   'TOTAL_BARON': new TotalBaronKillsStatsGenerator(),
   'TOTAL_HERALD': new TotalHeraldKillsStatsGenerator(),
   'TOTAL_DRAGON': new TotalDragonKillsStatsGenerator(),
+  'TOTAL_VOIDGRUBS': new TotalVoidgrubKillsStatsGenerator(),
+  'TOTAL_ATAKHAN': new TotalAtakhanKillsStatsGenerator(),
   'TOTAL_TOWERS': new TotalTowersTakenStatsGenerator(),
   'TOTAL_TOWER_PLATES': new TotalTowerPlatesStatsGenerator(),
   'EARLY_GAME_RATING_SOLO_LANE': new EarlyGameRatingStatGenerator(GameRoles.ALL),

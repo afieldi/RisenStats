@@ -142,6 +142,12 @@ export default class AggregatedPlayerStatModel extends BaseEntity
     @Column("integer")
     dragonKills: number;
 
+    @Column("integer")
+    atakhanKills: number;
+
+    @Column("integer")
+    voidgrubKills: number;
+
     @Column("real")
     firstTowerTakedown: number;
 

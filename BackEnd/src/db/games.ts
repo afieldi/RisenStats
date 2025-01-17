@@ -138,6 +138,7 @@ export function CreateDbPlayerGameDatabaseObject(riotPlayer: RiotParticipantDto,
     chemtechDragonKills: timelineStats.chemtechDragonKills,
     hextechDragonKills: timelineStats.hextechDragonKills,
     voidgrubKills: timelineStats.voidgrubKills,
+    atakhanKills: timelineStats.atakhanKills,
 
     items: [
       riotPlayer.item0,

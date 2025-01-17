@@ -26,7 +26,9 @@ const ObjectiveToPath: Record<AllObjectives, string> = {
   Ocean: '/images/game/Ocean-dragon.svg',
   Plates: '/images/game/Plates.png',
   Tower: '/images/game/Tower.png',
-  Baron : '/images/game/Baron.svg'
+  Baron : '/images/game/Baron.svg',
+  Atakhan: '/images/game/Atakhan.png',
+  Voidgrubs: '/images/game/Voidgrubs.png'
 };
 
 const totalObjectives: Record<Objectives, BaseStatGenerator> = {
@@ -34,7 +36,9 @@ const totalObjectives: Record<Objectives, BaseStatGenerator> = {
   Herald : StatGenerators.TOTAL_HERALD,
   Baron : StatGenerators.TOTAL_BARON,
   Tower: StatGenerators.TOTAL_TOWERS,
-  Plates: StatGenerators.TOTAL_TOWER_PLATES
+  Plates: StatGenerators.TOTAL_TOWER_PLATES,
+  Atakhan: StatGenerators.TOTAL_ATAKHAN,
+  Voidgrubs: StatGenerators.TOTAL_VOIDGRUBS
 };
 
 const averageObjectives: Record<Objectives, BaseStatGenerator> = {
@@ -42,7 +46,9 @@ const averageObjectives: Record<Objectives, BaseStatGenerator> = {
   Herald : StatGenerators.HERALD,
   Baron : StatGenerators.BARON,
   Tower: StatGenerators.TOWERS,
-  Plates: StatGenerators.TOWER_PLATES
+  Plates: StatGenerators.TOWER_PLATES,
+  Atakhan: StatGenerators.ATAKHAN,
+  Voidgrubs: StatGenerators.VOID_GRUBS,
 };
 
 export default function ObjectiveOverview(props: ChampionOverviewProps) {
@@ -69,7 +75,7 @@ export default function ObjectiveOverview(props: ChampionOverviewProps) {
       { hasStats &&
                 <Box>
                   <Fade in={true} style={{ transitionDelay: '50ms' }}>
-                    <Box sx={{ display: 'flex', columnGap: 3, rowGap: 1 }}>
+                    <Box sx={{ display: 'flex', columnGap: 4, rowGap: 1, flexWrap: 'wrap', justifyContent: 'center' }}>
                       { Object.keys(statsGeneratorToUse).map((key) => ObjectiveStat(key as Objectives, statsGeneratorToUse[key as Objectives], props.playerStats, amountOfDecimals))}
                     </Box>
                   </Fade>
