@@ -247,7 +247,7 @@ export default class AggregatedPlayerStatModel extends BaseEntity
     @Column("integer")
     blastConeOppositeOpponentCount: number;
 
-    @Column("integer")
+    @Column("real")
     bountyGold: number;
 
     @Column("integer")
