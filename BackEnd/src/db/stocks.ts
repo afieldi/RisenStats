@@ -43,6 +43,12 @@ export async function getDbStockTimeLineForSeason(seasonId: number): Promise<Sto
   return await StockTimelineModel.find(searchFilter);
 }
 
+export async function deleteDbStockTimeLineForSeason(seasonId: number) {
+  await ensureConnection();
+
+  await StockTimelineModel.delete({ teamSeasonId: seasonId });
+}
+
 export async function buyDbStockForUser(user: AuthUser, seasonId: number, teamId: number, amountToBuy: number): Promise<boolean> {
   // TODO
   return false;

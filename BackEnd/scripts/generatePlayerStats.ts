@@ -6,7 +6,7 @@ import { UpdateGamesByPlayerPuuid } from '../src/business/player';
 import { CreatePlayerStatsByPuuid } from '../src/business/playerstats';
 import PlayerTeamModel from '../../Common/models/playerteam.model';
 import { buildRisenTeams } from '../src/business/teams';
-import { RAMPAGE, UNSTOPPABLE } from './scriptConstants';
+import { DRAFT, RAMPAGE, UNSTOPPABLE } from './scriptConstants';
 
 // Use this function if you already have the games loaded. Should be much faster.
 async function generatePlayerStats(): Promise<any> {
@@ -56,4 +56,4 @@ async function buildStatsForPlayerWithGameFetch(playerPuuid: string) {
   }
 }
 
-rebuildStatsForLeague(RAMPAGE);
+rebuildStatsForLeague(DRAFT);
