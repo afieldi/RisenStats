@@ -26,8 +26,9 @@ export async function updateTeamStocksForGame(matchId: string): Promise<void> {
   let loserTeamIds: Map<number, number> = new Map<number, number>();
   let winningTeamIds: Map<number, number> = new Map<number, number>();
   let seasonIds: Map<number, number> = new Map<number, number>();
-
+  let matchTimestamp = new Date(Date.now());
   for (let playerGame of allPlayersGames) {
+    matchTimestamp = new Date(Number(playerGame.timestamp));
     const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
     seasonIds.set(playerGame.seasonId, (seasonIds.get(playerGame.seasonId) || 0) + 1);
 
@@ -47,14 +48,15 @@ export async function updateTeamStocksForGame(matchId: string): Promise<void> {
     return;
   }
 
+  console.log(matchTimestamp);
   let winningTeamId = [...winningTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
   let losingTeamId = [...loserTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
   let seasonId = [...seasonIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
   logger.info(`Updating Stocks For Winner: ${winningTeamId} Loser: ${losingTeamId} Season: ${seasonId}`);
-  await updateStocksValueAfterMatch(seasonId, winningTeamId, losingTeamId);
+  await updateStocksValueAfterMatch(seasonId, winningTeamId, losingTeamId, matchTimestamp);
 }
 
-export async function updateStocksValueAfterMatch(seasonId: number, winningTeamId: number, losingTeamId: number) {
+export async function updateStocksValueAfterMatch(seasonId: number, winningTeamId: number, losingTeamId: number, matchTimestamp: Date) {
   // Get the value of both teams, this is their ELO
   let latestTimelineForWinner = await getDbLatestStockValue(seasonId, winningTeamId);
   let latestTimelineForLoser = await getDbLatestStockValue(seasonId, losingTeamId);
@@ -66,7 +68,7 @@ export async function updateStocksValueAfterMatch(seasonId: number, winningTeamI
   let updatedStockValues = calculateNewDollarValue(winnerStockValue, loserStockValue);
 
   //Sync the times
-  let currentTimeStamp = new Date(Date.now());
+  let currentTimeStamp = matchTimestamp;
 
   // insert new value in timeline for both teams
   await createDBNewStockValue(winningTeamId, seasonId, updatedStockValues.newWinnerDollarValue, currentTimeStamp);
