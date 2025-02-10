@@ -48,7 +48,6 @@ export async function updateTeamStocksForGame(matchId: string): Promise<void> {
     return;
   }
 
-  console.log(matchTimestamp);
   let winningTeamId = [...winningTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
   let losingTeamId = [...loserTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
   let seasonId = [...seasonIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
@@ -170,8 +169,8 @@ function mapLeagueRankToElo(rankInformation: RiotLeagueEntryDto): number {
     'EMERALD': 2500,
     'DIAMOND': 3000,
     'MASTER': 3500,
-    'GRANDMASTER': 4000,
-    'CHALLENGER': 4500
+    'GRANDMASTER': 3700,
+    'CHALLENGER': 4200
   };
 
   // Default to PLATINUM elo if the player has not played rank yet

@@ -306,7 +306,7 @@ export default class PlayerGameModel extends BaseEntity
   xpDiff25: number;
 
   // Items
-  @Column("smallint", { array: true })
+  @Column("integer", { array: true })
   items: number[];
 
   @Column("smallint")
