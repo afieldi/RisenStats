@@ -14,7 +14,7 @@ export async function getDbLatestStockValue(seasonId: number, teamId: number): P
 
   const searchFilter: FindOneOptions<StockTimelineModel> =  {
     where: { teamTeamId: teamId, teamSeasonId: seasonId },
-    order: { timestamp: 'DESC' }, // Order by timestamp in descending order
+    order: { timestamp: 'ASC' }, // Order by timestamp in descending order
   };
   return await StockTimelineModel.findOne(searchFilter);
 }
