@@ -18,41 +18,18 @@ import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import logger from '../../logger';
 import { StockTimelineEntry } from '../../../Common/Interface/Internal/stocks';
 
+export interface RisenMatchStockInfo {
+  winningTeamId: number;
+  losingTeamId: number;
+  risenSeasonid: number;
+  matchTimestamp: Date
+}
+
 export async function updateTeamStocksForGame(matchId: string): Promise<void> {
   logger.info(`Updating Stock Values For Match: ${matchId}`);
-  const allPlayersGames: PlayerGameModel[] = await GetDbPlayerGamesByGameId(ToGameId(matchId));
-
-  // We need to do this because sometimes players arent registered to a team. (Eg, ESUBs)
-  let loserTeamIds: Map<number, number> = new Map<number, number>();
-  let winningTeamIds: Map<number, number> = new Map<number, number>();
-  let seasonIds: Map<number, number> = new Map<number, number>();
-  let matchTimestamp = new Date(Date.now());
-  for (let playerGame of allPlayersGames) {
-    matchTimestamp = new Date(Number(playerGame.timestamp));
-    const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
-    seasonIds.set(playerGame.seasonId, (seasonIds.get(playerGame.seasonId) || 0) + 1);
-
-    if(teamId == null) {
-      continue;
-    }
-
-    if(playerGame.win) {
-      winningTeamIds.set(teamId, (winningTeamIds.get(teamId) || 0) + 1);
-    } else {
-      loserTeamIds.set(teamId, (loserTeamIds.get(teamId) || 0) + 1);
-    }
-  }
-
-  if(winningTeamIds.size == 0 || loserTeamIds.size == 0 || seasonIds.size == 0) {
-    logger.info(`There was a missing winningIds or missing losingIds for match ${matchId}`);
-    return;
-  }
-
-  let winningTeamId = [...winningTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
-  let losingTeamId = [...loserTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
-  let seasonId = [...seasonIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0];
-  logger.info(`Updating Stocks For Winner: ${winningTeamId} Loser: ${losingTeamId} Season: ${seasonId}`);
-  await updateStocksValueAfterMatch(seasonId, winningTeamId, losingTeamId, matchTimestamp);
+  let matchInfo = await getRisenTeamsFromMatch(matchId);
+  logger.info(`Updating Stocks For Winner: ${matchInfo.winningTeamId} Loser: ${matchInfo.losingTeamId} Season: ${matchInfo.risenSeasonid}`);
+  await updateStocksValueAfterMatch(matchInfo.risenSeasonid, matchInfo.winningTeamId, matchInfo.losingTeamId, matchInfo.matchTimestamp);
 }
 
 export async function updateStocksValueAfterMatch(seasonId: number, winningTeamId: number, losingTeamId: number, matchTimestamp: Date) {
@@ -117,7 +94,7 @@ export async function getStockTimelinesForSeason(seasonId: number): Promise<Map<
   return timelines;
 }
 
-function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 150) {
+export function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: number, kFactor: number = 150) {
 
   // Extract current ratings from the team objects
   const ratingWinner = winnerDollarValue;
@@ -137,48 +114,46 @@ function calculateNewDollarValue(winnerDollarValue: number, loserDollarValue: nu
   };
 }
 
-async function createBaselineForTeam(seasonId: number, teamId: number): Promise<number> {
-  let team = await GetDbTeamRosterByTeamId(teamId, seasonId);
-  let total_elo = 0;
+export async function createBaselineForTeam(seasonId: number, teamId: number): Promise<number> {
+  return 2000;
+}
 
-  for (let player of team) {
-    let riotPlayer = await GetRiotPlayerByPuuid(player.playerPuuid);
-    let rank = await  GetRiotLeagueBySummonerId(riotPlayer.id);
-    let elo = mapLeagueRankToElo(rank);
-    total_elo += elo;
+export async function getRisenTeamsFromMatch(matchId: string): Promise<RisenMatchStockInfo> {
+  const allPlayersGames: PlayerGameModel[] = await GetDbPlayerGamesByGameId(ToGameId(matchId));
+
+  // We need to do this because sometimes players arent registered to a team. (Eg, ESUBs)
+  let loserTeamIds: Map<number, number> = new Map<number, number>();
+  let winningTeamIds: Map<number, number> = new Map<number, number>();
+  let seasonIds: Map<number, number> = new Map<number, number>();
+  let matchTimestamp = new Date(Date.now());
+  for (let playerGame of allPlayersGames) {
+    matchTimestamp = new Date(Number(playerGame.timestamp));
+    const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
+    seasonIds.set(playerGame.seasonId, (seasonIds.get(playerGame.seasonId) || 0) + 1);
+
+    if(teamId == null) {
+      continue;
+    }
+
+    if(playerGame.win) {
+      winningTeamIds.set(teamId, (winningTeamIds.get(teamId) || 0) + 1);
+    } else {
+      loserTeamIds.set(teamId, (loserTeamIds.get(teamId) || 0) + 1);
+    }
   }
 
-  return total_elo / team.length;
-}
+  if(winningTeamIds.size == 0 || loserTeamIds.size == 0 || seasonIds.size == 0) {
+    logger.info(`There was a missing winningIds or missing losingIds for match ${matchId}`);
+    return;
+  }
 
-
-function mapLeagueRankToElo(rankInformation: RiotLeagueEntryDto): number {
-  let rankMap: Record<string, number> =  {
-    'I': 375,
-    'II': 250,
-    'III': 125,
-    'IV': 0,
+  return {
+    winningTeamId: [...winningTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0],
+    losingTeamId: [...loserTeamIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0],
+    risenSeasonid: [...seasonIds.entries()].reduce((a, e ) => e[1] > a[1] ? e : a)[0],
+    matchTimestamp: matchTimestamp
   };
-
-  let tierMap: Record<string, number> = {
-    'IRON': 0,
-    'BRONZE': 500,
-    'SILVER': 1000,
-    'GOLD': 1500,
-    'PLATINUM': 2000,
-    'EMERALD': 2500,
-    'DIAMOND': 3000,
-    'MASTER': 3500,
-    'GRANDMASTER': 3700,
-    'CHALLENGER': 4200
-  };
-
-  // Default to PLATINUM elo if the player has not played rank yet
-  const tierElo = rankInformation?.tier ? tierMap[rankInformation.tier] ?? tierMap['PLATINUM'] : tierMap['PLATINUM'];
-  const rankElo = rankInformation?.rank ? rankMap[rankInformation.rank] ?? 0 : 0;
-  return tierElo + rankElo;
 }
-
 
 
 
