@@ -6,7 +6,13 @@ import { UpdateGamesByPlayerPuuid } from '../src/business/player';
 import { CreatePlayerStatsByPuuid } from '../src/business/playerstats';
 import PlayerTeamModel from '../../Common/models/playerteam.model';
 import { buildRisenTeams } from '../src/business/teams';
-import { DRAFT, RAMPAGE, UNSTOPPABLE } from './scriptConstants';
+import { DOMINATE, DRAFT, RAMPAGE, UNSTOPPABLE } from './scriptConstants';
+import GameModel from '../../Common/models/game.model';
+import { GetDbGameByGameId } from '../src/db/games';
+import StockTimelineModel from '../../Common/models/stocktimeline.model';
+import PlayerStatModel from '../../Common/models/playerstat.model';
+import AggregatedPlayerStatModel from '../../Common/models/aggregatedplayerstat.model';
+import player from '../src/api/player';
 
 // Use this function if you already have the games loaded. Should be much faster.
 async function generatePlayerStats(): Promise<any> {
@@ -53,6 +59,18 @@ async function buildStatsForPlayerWithGameFetch(playerPuuid: string) {
     await CreatePlayerStatsByPuuid(playerPuuid);
   } catch (error) {
     console.log(error);
+  }
+}
+
+// useful for when theres a remake and u need to purge their playerstats stats for a game
+async function deletePlayerStatsForParticipantOfGame(gameId: number, seasonId: number) {
+  const fullGame: GameModel = await GetDbGameByGameId(gameId, true);
+  await ensureConnection();
+
+  for (let player of fullGame.players) {
+    console.log(player.playerPuuid);
+
+    await AggregatedPlayerStatModel.delete({ playerPuuid: player.playerPuuid, seasonId: seasonId });
   }
 }
 

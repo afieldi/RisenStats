@@ -196,6 +196,11 @@ export async function updatePlayerStatsForGame(matchId: string) {
 
   for (let playerGame of allPlayersGames) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
+
+    if(!isGameValidForStats(fullGame)) {
+      continue;
+    }
+
     const teamId: number = await getDbPlayerTeamPlayerPuuid(playerGame.playerPuuid, playerGame.seasonId);
     for (let number of getSeasonsToUpdate(playerGame)) {
       await updateStatsFor(playerGame, fullGame, playerGame.playerPuuid, number, playerGame.lobbyPosition as GameRoles, teamId);
@@ -243,4 +248,9 @@ export async function hasRecentlyBuiltRisenTeams(seasonId: number): Promise<bool
   const fourtyMinutesInMilliseconds = 45 * 60 * 1000;
 
   return timeDifference <= fourtyMinutesInMilliseconds;
+}
+
+export function isGameValidForStats(fullGame: GameModel): boolean {
+  // If the game is grater than 300s its PROBABLY real
+  return fullGame.gameDuration >= 300;
 }

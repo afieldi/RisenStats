@@ -9,6 +9,7 @@ import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerst
 import { getDbPlayerTeamPlayerPuuid } from '../db/playerteam';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
 import { GetDbAggregatedPlayerStatsByPlayerPuuid } from '../db/playerstats';
+import { isGameValidForStats } from './games';
 
 export async function updateStatsFor(playerGame: PlayerGameModel, fullgame: GameModel, playerPuuid: string, seasonId: number, roleId: GameRoles, teamId: number) {
   let currentDbPlayerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid, teamId, playerGame.championId, seasonId, roleId);
@@ -44,6 +45,12 @@ export async function CreatePlayerStatsByPuuid(playerPuuid: string) {
 
   for (const playerGame of playerGames) {
     const fullGame: GameModel = await GetDbGameByGameId(playerGame.gameGameId, true);
+
+    if(!isGameValidForStats(fullGame)) {
+      logger.info(`game ${fullGame.gameId} is invalid, skipping`);
+      continue;
+    }
+
     const champId = playerGame.championId;
     for (let seasonId of getSeasonsToUpdate(playerGame)) {
       const teamId = await getDbPlayerTeamPlayerPuuid(playerPuuid, seasonId);

@@ -11,7 +11,7 @@ import {
 } from '../src/business/stocks';
 import { CHAMPIONS, DOMINATE, DRAFT, MYTHICAL, RAMPAGE, UNSTOPPABLE } from './scriptConstants';
 import { deleteDbStockTimeLineForSeason, getDbLatestStockValue } from '../src/db/stocks';
-import { GetDbPlayerGames, GetDbPlayerGamesByGameId } from '../src/db/games';
+import { GetDbGameByGameId, GetDbPlayerGames, GetDbPlayerGamesByGameId } from '../src/db/games';
 import PlayerGameModel from '../../Common/models/playergame.model';
 import { ToGameId } from '../../Common/utils';
 import StockTimelineModel from '../../Common/models/stocktimeline.model';
@@ -19,6 +19,8 @@ import { GetDbActiveSeasonWithSheets } from '../src/db/season';
 import { GetDbTeamsByTeamId } from '../src/db/teams';
 import { SaveObjects } from '../src/db/dbConnect';
 import TeamModel from '../../Common/models/team.model';
+import GameModel from '../../Common/models/game.model';
+import { isGameValidForStats } from '../src/business/games';
 
 // In the case that callback doesnt work, rebuild the stocktimeline from scratch
 // Assumes all games are in the league
@@ -53,6 +55,12 @@ async function batchUpdateStocks(sortedGameIds: number[]) {
     let matchId =  `NA1_${gameId}`;
 
     console.log(matchId);
+
+    const fullGame: GameModel = await GetDbGameByGameId(gameId, true);
+
+    if(!isGameValidForStats(fullGame)) {
+      continue;
+    }
 
     let matchInfo  = await getRisenTeamsFromMatch(matchId);
     let seasonModel = await GetDbActiveSeasonWithSheets(matchInfo.risenSeasonid);
@@ -102,4 +110,4 @@ async function batchUpdateStocks(sortedGameIds: number[]) {
   await SaveObjects(rows, StockTimelineModel);
 }
 
-rebuildStocktimelineForLeague(DRAFT);
+rebuildStocktimelineForLeague(DOMINATE);
