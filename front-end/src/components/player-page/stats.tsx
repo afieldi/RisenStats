@@ -42,6 +42,10 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
     leaderboardData
   } = props;
 
+
+  // Find the player we care about in the leaderboard and use it for rating overview since we want to keep it in sync with the LB
+  const dataFromLeaderboardForPlayer = leaderboardData?.filter(stats => stats.playerPuuid === playerPuuid) ?? [];
+
   // This page does not care about a per champion breakdown right now, so merge the data so its by role.
   // This page also doesnt care about a per team breakdown right now, so merge the team data away
   let playerStatsByRole = deepCopy(props.playerStatsByChampionAndRole); // DeepCopy is needed for some react state BS
@@ -71,7 +75,7 @@ export default function PlayerPageStats(props: PlayerPageStatsProps) {
         <Box sx={{ display: 'flex', flexDirection: 'column', rowGap: 2 }}>
           <PerformanceOverview playerPuuid={playerPuuid} leaderboardStats={leaderboardData ?? []}/>
           <Box sx={{ minHeight: 350, display: 'flex', flexDirection: 'row', columnGap: 2 }}>
-            <GameRatingOverview playerStats={playerStatsByRole as AggregatedPlayerStatModel[]}
+            <GameRatingOverview playerStats={dataFromLeaderboardForPlayer as AggregatedPlayerStatModel[]}
               roleId={!!roleConfig?.roleId ? roleConfig.roleId : GameRoles.ALL}/>
             <PingOverview playerStats={playerStatsByRole}/>
             <BaseRisenBox hideDivider>
