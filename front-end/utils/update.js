@@ -36,16 +36,16 @@ const OPGG_ROLE_TO_GAMEROLE = (role) => {
   return role;
 }
 
-fetch("https://lol-web-api.op.gg/api/v1.0/internal/bypass/champions/na/ranked")
-  .then(response => response.json()).then(data => {
-  const roleData = data.data;
-  const roles = {};
-  roleData.forEach(champData => {
-    roles[champData.id] = champData.positions.map(position => OPGG_ROLE_TO_GAMEROLE(position.name));
-  });
-  console.log('Writing champion position data...')
-  fs.writeFileSync(`${dataPath}/role_map.json`, JSON.stringify(roles, undefined, 2));
-});
+// fetch("https://lol-web-api.op.gg/api/v1.0/internal/bypass/champions/na/ranked")
+//   .then(response => response.json()).then(data => {
+//   const roleData = data.data;
+//   const roles = {};
+//   roleData.forEach(champData => {
+//     roles[champData.id] = champData.positions.map(position => OPGG_ROLE_TO_GAMEROLE(position.name));
+//   });
+//   console.log('Writing champion position data...')
+//   fs.writeFileSync(`${dataPath}/role_map.json`, JSON.stringify(roles, undefined, 2));
+// });
 
 fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => {
   response.json().then(data => {
