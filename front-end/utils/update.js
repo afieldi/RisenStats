@@ -47,6 +47,10 @@ const OPGG_ROLE_TO_GAMEROLE = (role) => {
 //   fs.writeFileSync(`${dataPath}/role_map.json`, JSON.stringify(roles, undefined, 2));
 // });
 
+// Temp creating this file
+fs.writeFileSync(`${dataPath}/role_map.json`, '');
+
+
 fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(response => {
   response.json().then(data => {
     const version = data[0];
