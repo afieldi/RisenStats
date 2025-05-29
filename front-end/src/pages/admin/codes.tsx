@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import CodeModel from '../../../../Common/models/code.model';
 import SeasonModel from '../../../../Common/models/season.model';
 import { GenerateCodes } from '../../api/codes';
-import { GetActiveSeasons } from '../../api/season';
+import { createSeason, GetActiveSeasons } from '../../api/season';
 import RisenSeasonSelector from '../../components/selectors/risen-season-selector';
 
 export default function AdminCodes() {
@@ -25,6 +25,8 @@ export default function AdminCodes() {
   const [risenSeasons, setRisenSeasons] = useState<SeasonModel[]>([]);
   const [error, setError] = useState(false);
   const [generatedCodes, setGeneratedCodes] = useState<CodeModel[]>([]);
+  const [newRisenSeasonName, setNewRisenSeasonName] = useState<string>('');
+  const [newRisenSeasonCreationMessage, setNewRisenSeasonCreationMessage] = useState<string>('');
 
   useEffect(() => {
     GetActiveSeasons().then(seasons => {
@@ -43,9 +45,31 @@ export default function AdminCodes() {
       setError(true);
     }
   };
+
+  const onGenerateSeason = () => {
+    setNewRisenSeasonCreationMessage('');
+    if(!(/^[a-zA-Z0-9 ]+$/.test(newRisenSeasonName))) {
+      setNewRisenSeasonCreationMessage('Season must be alpha Numeric');
+      return;
+    }
+
+    if(newRisenSeasonName.length < 5) {
+      setNewRisenSeasonCreationMessage('Season name must be longer than 5 characters');
+      return;
+    }
+
+    createSeason(newRisenSeasonName).then(response => {
+      if(response == null || response.season == null) {
+        setNewRisenSeasonCreationMessage('Season response was null or season was null');
+      } else {
+        setNewRisenSeasonCreationMessage(`Created season with name ${response.season.seasonName} and Id ${response.season.id}`);
+      }
+    });
+  };
+
   return (
     <Container maxWidth='lg'>
-      <Box sx={{ pt: 15, pb: 6, minHeight: '100vh' }}>
+      <Box sx={{ pt: 15, pb: 6, minHeight: '50vh' }}>
         <Typography fontFamily="Montserrat" variant="h1" color={theme.palette.info.light}>
           Create Codes
         </Typography>
@@ -109,6 +133,30 @@ export default function AdminCodes() {
             )
           }
         </Box>
+      </Box>
+      <Box sx={{ pt: 15, pb: 6, minHeight: '50vh' }}>
+        <Typography fontFamily="Montserrat" variant="h1" color={theme.palette.info.light}>
+          Create Season
+        </Typography>
+        <hr />
+        <TextField
+          label="New Season Name"
+          placeholder="Enter new season name"
+          value={newRisenSeasonName}
+          onChange={(event) => setNewRisenSeasonName(event.target.value)}
+          sx={{ mt: 2, mb: 2 }}
+          fullWidth
+        />
+
+        <Button variant={'contained'} onClick={onGenerateSeason}>
+          Generate Season
+        </Button>
+
+        {newRisenSeasonCreationMessage && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {newRisenSeasonCreationMessage}
+          </Typography>
+        )}
       </Box>
     </Container>
   );
