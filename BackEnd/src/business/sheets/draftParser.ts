@@ -5,13 +5,13 @@ export class DraftParser implements RisenSheetParser {
     return {
       teamName: row[1], // n-1
       abrv: row[2],
-      win: row[5],
-      loss: row[6],
-      top: getPlayerIdentifierFromString(row[11]),
-      jungle: getPlayerIdentifierFromString(row[13]),
-      mid: getPlayerIdentifierFromString(row[15]),
-      adc: getPlayerIdentifierFromString(row[17]),
-      support: getPlayerIdentifierFromString(row[19]),
+      win: row[4],
+      loss: row[5],
+      top: getPlayerIdentifierFromString(row[10]),
+      jungle: getPlayerIdentifierFromString(row[12]),
+      mid: getPlayerIdentifierFromString(row[14]),
+      adc: getPlayerIdentifierFromString(row[16]),
+      support: getPlayerIdentifierFromString(row[18]),
       sub1: undefined, // No defined subs in draft league
       sub2: undefined,
       sub3: undefined,

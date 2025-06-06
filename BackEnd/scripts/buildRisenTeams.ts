@@ -5,8 +5,8 @@ import { CHAMPIONS, DOMINATE, DRAFT, MYTHICAL, RAMPAGE, UNSTOPPABLE } from './sc
 
 /*
     ?? - champions
-    28 - Mythical
-    29 - draft
+    61 - Mythical
+    62 - draft
     32 - dom
     31 - unstop
     30 - ramp
