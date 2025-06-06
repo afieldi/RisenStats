@@ -21,7 +21,7 @@ export class DraftParser implements RisenSheetParser {
   }
 
   public isValidRow(data: string[]): boolean {
-    return data.length > 5 && this.isValidRowData(data[1]) && this.isValidRowData(data[2]) && hasValidOPGG(data[21]);
+    return data.length > 5 && this.isValidRowData(data[1]) && this.isValidRowData(data[2]) && hasValidOPGG(data[20]);
   }
 
   isValidRowData(data: string): boolean {
