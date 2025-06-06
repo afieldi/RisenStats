@@ -3,7 +3,8 @@ import log from '../../../logger';
 
 export function hasValidOPGG(url: string): boolean {
   const regex = /^http:\/\/na\.op\.gg\/multi/;
-  return regex.test(url);
+  const newOPGGRegex = /^http:\/\/na\.op\.gg\/multisearch/;
+  return regex.test(url) || newOPGGRegex.test(url);
 }
 
 export function getPlayerIdentifierFromString(inputString: string): PlayerIdentifier {
