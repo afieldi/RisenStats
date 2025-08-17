@@ -18,3 +18,4 @@ export const AuthenticationContext = React.createContext<AuthenticationInterface
 
 export const isLoggedIn = (user: AuthenticationInterface) => user.level > 0;
 export const isAdmin = (user: AuthenticationInterface) => isLoggedIn(user) && user.level < 2;
+export const canManageCodes = (user: AuthenticationInterface) => user.level < 5;

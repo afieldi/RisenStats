@@ -47,6 +47,7 @@ export async function DoAuth(code: string, host: string): Promise<AuthUser> {
       '293099704785305600': 1, // Sr, Admin
       '980589721904361592': 1, // Admin
       '778687457083260928': 1, // Developer
+      '385541928143421444': 3, // Staff
       '401841718569205771': 5, // Casters
       '616647423485542428': 10 // Verified
     };
