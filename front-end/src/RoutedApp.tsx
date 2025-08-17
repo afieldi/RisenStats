@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 import { AUTH_COOKIE_KEY } from './common/constants';
 import {
   AuthenticationContext,
-  AuthenticationInterface,
+  AuthenticationInterface, canManageCodes,
   DEFAULT_USER, isAdmin
 } from './components/authentication/authentication';
 import AdminCodes from './pages/admin/codes';
@@ -84,7 +84,7 @@ function RoutedApp() {
             <Route path="/drafting/:room/:auth" element={<Draft/>} />
             <Route path="/drafting/links/:room/:blueAuth/:redAuth" element={<DraftLinks />} />
             {
-              isAdmin(user) && (
+              canManageCodes(user) && (
                 <Route path='/admin/codes' element={<AdminCodes/>} />
               )
             }
