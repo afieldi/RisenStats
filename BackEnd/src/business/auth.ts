@@ -32,7 +32,7 @@ export function getAuthUser(auth: string): AuthUser | undefined {
 }
 
 export async function DoAuth(code: string, host: string): Promise<AuthUser> {
-  const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'https://2117-64-46-29-171.ngrok-free.app') + '/api/auth/callback';
+  const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'http://localhost:4000') + '/api/auth/callback';
   logger.info(`Redirect URI: ${redirectUri}`);
   return await oauth.tokenRequest({
     clientId: '737851599778742405',
