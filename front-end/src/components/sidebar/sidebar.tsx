@@ -18,7 +18,7 @@ import { AUTH_COOKIE_KEY, DRAWER_WIDTH, OAUTH_URL } from '../../common/constants
 
 import theme from '../../styles/theme/darkTheme';
 import { Leaderboard, Logout } from '@mui/icons-material';
-import { AuthenticationContext, isAdmin, isLoggedIn } from '../authentication/authentication';
+import { AuthenticationContext, canManageCodes, isLoggedIn } from '../authentication/authentication';
 import SideBarLinkItem from './side-bar-link-item';
 
 interface Props {
@@ -149,9 +149,8 @@ export function SideBar({ open, onClose }: Props) {
         </SideBarLinkItem>}
       </List>
 
-      {/* Admin manage */}
       {
-        isAdmin(user) ? (
+        canManageCodes(user) ? (
           <SideBarLinkItem isInternalLink={true}
             url={'/admin/codes'}
             key={'nav-admin'}
