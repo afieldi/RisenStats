@@ -2,6 +2,7 @@ import { Box, Button, Container, Grid, Hidden, InputBase, Typography, useTheme }
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import React, { KeyboardEvent } from 'react';
+import DiscordAnnouncements from '../../components/discord-announcements/discord-announcements';
 
 interface AngleBoxProps {
   dark: String,
@@ -89,6 +90,9 @@ export default function Home() {
           </Box>
         </Container>
       </Hidden>
+      <Container>
+        <DiscordAnnouncements />
+      </Container>
     </Box>
   );
 }

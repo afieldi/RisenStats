@@ -59,6 +59,7 @@ import ChampionStatsRouter from './src/api/championstats';
 import LeaderboardsRouter from './src/api/leaderboards';
 import TeamsRouter from './src/api/teams';
 import Stocks from './src/api/stocks';
+import DiscordRouter from './src/api/discord';
 
 import DraftingRouter from './src/api/drafting';
 
@@ -76,6 +77,7 @@ app.use('/api/stats/leaderboards', LeaderboardsRouter);
 app.use('/api/teams', TeamsRouter);
 app.use('/api/drafting', DraftingRouter);
 app.use('/api/stocks', Stocks);
+app.use('/api/discord', DiscordRouter);
 
 import io from 'socket.io';
 import { createServer } from 'node:http';
