@@ -7,11 +7,11 @@ export class DraftParser implements RisenSheetParser {
       abrv: row[2],
       win: row[4],
       loss: row[5],
-      top: getPlayerIdentifierFromString(row[10]),
-      jungle: getPlayerIdentifierFromString(row[12]),
-      mid: getPlayerIdentifierFromString(row[14]),
-      adc: getPlayerIdentifierFromString(row[16]),
-      support: getPlayerIdentifierFromString(row[18]),
+      top: getPlayerIdentifierFromString(row[11]),
+      jungle: getPlayerIdentifierFromString(row[13]),
+      mid: getPlayerIdentifierFromString(row[15]),
+      adc: getPlayerIdentifierFromString(row[17]),
+      support: getPlayerIdentifierFromString(row[19]),
       sub1: undefined, // No defined subs in draft league
       sub2: undefined,
       sub3: undefined,
@@ -21,10 +21,12 @@ export class DraftParser implements RisenSheetParser {
   }
 
   public isValidRow(data: string[]): boolean {
-    return data.length > 5 && this.isValidRowData(data[1]) && this.isValidRowData(data[2]) && hasValidOPGG(data[20]);
+    return data.length > 5 && this.isValidRowData(data[1]) && this.isValidRowData(data[2]);
   }
 
   isValidRowData(data: string): boolean {
     return data && data.length > 1;
   }
+
+
 }
