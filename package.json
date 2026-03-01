@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "concurrently \"npm run dev --prefix BackEnd\" \"npm start --prefix front-end\"",
     "start": "cd BackEnd && npm start",
     "build": "cd Common && npm install && cd ../BackEnd && npm install && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
   }
 }

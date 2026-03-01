@@ -138,6 +138,17 @@ interface SeasonData {
   seasonId: number;
 }
 
+export async function SearchPlayersByName(query: string, limit: number = 8): Promise<{ name: string; tag: string }[]> {
+  await ensureConnection();
+  const normalizedQuery = query.toLowerCase().replace(/\s+/g, '').replace('#', '-');
+  const results = await PlayerModel.createQueryBuilder('player')
+    .select(['player.name', 'player.tag'])
+    .where('player.searchName LIKE :query', { query: `${normalizedQuery}%` })
+    .limit(limit)
+    .getMany();
+  return results.map(p => ({ name: p.name, tag: p.tag }));
+}
+
 export async function GetPlayerDistinctSeasons(playerPuuid: string): Promise<SeasonData[]> {
   await ensureConnection();
   return (await PlayerGameModel.createQueryBuilder().select('"seasonId"').where('"playerPuuid" = :puuid', { puuid: playerPuuid }).distinct(true).getRawMany()) as SeasonData[];
