@@ -27,3 +27,12 @@ export interface UpdatePlayerGamesResponse {
 export interface PlayerSeasonsResponse {
   seasons: number[];
 }
+
+export interface PlayerSearchResult {
+  name: string;
+  tag: string;
+}
+
+export interface PlayerSearchResponse {
+  players: PlayerSearchResult[];
+}
