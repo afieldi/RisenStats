@@ -2,6 +2,7 @@ import {
   PlayerGamesResponse,
   PlayerOverviewRequest,
   PlayerOverviewResponse,
+  PlayerSearchResponse,
   PlayerSeasonsResponse,
   UpdatePlayerGamesResponse
 } from '../../../Common/Interface/Internal/player';
@@ -78,4 +79,15 @@ export async function GetPlayerSeasons(playerPuuid: string): Promise<PlayerSeaso
 
 export async function GetPlayerStatsByTimeAndSeason(seasonId: number, timeStart: number, timeEnd: number): Promise<GetPlayerStatsByDateAndSeasonResponse> {
   return await MakeBackendCall<GetPlayerStatsByDateAndSeasonRequest>('/api/stats/player/by-date', 'POST', { seasonId, timeEnd, timeStart }) as GetPlayerStatsByDateAndSeasonResponse;
+}
+
+export async function SearchPlayers(query: string): Promise<PlayerSearchResponse> {
+  try {
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/player/search?q=${encodeURIComponent(query)}`;
+    const res = await fetch(url);
+    if (!res.ok) return { players: [] };
+    return await res.json() as PlayerSearchResponse;
+  } catch {
+    return { players: [] };
+  }
 }
