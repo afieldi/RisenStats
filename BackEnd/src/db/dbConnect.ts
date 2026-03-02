@@ -34,11 +34,9 @@ if (!POSTGRES_URI) {
 const options = {
   default: {
     type: 'postgres',
-    host: POSTGRES_URI,
-    username: process.env.POSTGRES_UN,
-    password: process.env.POSTGRES_PW,
-    database: process.env.POSTGRES_DB,
+    url: POSTGRES_URI,
     bigNumberStrings: false,
+    ssl: { rejectUnauthorized: false },
     synchronize: process.env.NODE_ENV !== 'production',
     entities: [
       BanModel,
