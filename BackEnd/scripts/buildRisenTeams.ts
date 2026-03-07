@@ -11,4 +11,4 @@ import { CHAMPIONS, DOMINATE, DRAFT, MYTHICAL, RAMPAGE, UNSTOPPABLE } from './sc
     31 - unstop
     30 - ramp
  */
-buildRisenTeams(DRAFT);
+buildRisenTeams(RAMPAGE);

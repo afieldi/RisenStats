@@ -1,6 +1,6 @@
 import {
   GetRiotAccountByPuuid,
-  GetRiotLeagueBySummonerId,
+  GetRiotLeagueByPuuid,
   GetRiotPlayerByPuuid,
   GetRiotPlayerByGameNameAndTagline
 } from '../external-api/player';
@@ -26,7 +26,7 @@ export async function GetOrCreatePlayerOverviewByGameNameAndTagline(gameName: st
       return await GetDbPlayerByPuuid(riotPlayer.puuid);
     } catch (error) {}
 
-    const riotLeague = await GetRiotLeagueBySummonerId(riotPlayer.id);
+    const riotLeague = await GetRiotLeagueByPuuid(riotPlayer.puuid);
     return await CreateDbPlayerWithRiotPlayer(riotPlayer, riotLeague);
   } catch (error) {
     if (error instanceof ApiError) {
@@ -61,7 +61,7 @@ async function UpdatePlayerByPlayerPuuid(playerPuuid: string, games: GameModel[]
     playerPuuid,
     riotPlayer,
     riotAccount,
-    await GetRiotLeagueBySummonerId(riotPlayer.id),
+    await GetRiotLeagueByPuuid(riotPlayer.puuid),
     games
   );
 }
