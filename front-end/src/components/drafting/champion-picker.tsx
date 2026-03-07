@@ -45,7 +45,7 @@ export default function({ onClick, draftState, auth }: Props) {
   const theme = useTheme();
 
   const filteredChamps = useMemo(() => {
-    const filtered = sortedChamps.filter(champ => champ.name.includes(champSearch));
+    const filtered = sortedChamps.filter(champ => champ.name.toLowerCase().includes(champSearch.toLowerCase()));
     if (roleId !== GameRoles.ALL) {
       return filtered.filter(champ => RoleMap[champ.key as keyof typeof RoleMap].includes(roleId));
     }

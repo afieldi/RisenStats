@@ -4,6 +4,7 @@ import {
   PlayerGamesResponse,
   PlayerOverviewRequest,
   PlayerOverviewResponse,
+  PlayerSearchResponse,
   PlayerSeasonsResponse,
   UpdatePlayerGamesResponse
 } from '../../../Common/Interface/Internal/player';
@@ -13,6 +14,7 @@ import {
   GetPlayerSeasons,
   UpdateGamesByPlayerPuuid
 } from '../business/player';
+import { SearchPlayersByName } from '../db/player';
 import logger from '../../logger';
 import { DocumentNotFound } from '../../../Common/errors';
 import { NonNone } from '../../../Common/utils';
@@ -78,6 +80,21 @@ router.post('/seasons/by-puuid/:playerPuuid', async(req: Request, res: TypedResp
     res.json({
       seasons: await GetPlayerSeasons(req.params.playerPuuid)
     });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).send('Something went wrong');
+  }
+});
+
+router.get('/search', async(req: Request, res: TypedResponse<PlayerSearchResponse>) => {
+  const query = (req.query.q as string) ?? '';
+  if (query.length < 2) {
+    res.json({ players: [] });
+    return;
+  }
+  try {
+    const players = await SearchPlayersByName(query);
+    res.json({ players });
   } catch (error) {
     logger.error(error);
     res.status(500).send('Something went wrong');

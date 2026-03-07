@@ -22,7 +22,6 @@
         "object-curly-spacing": ["error", "always"],
         "quotes": ["error", "single"],
         "@typescript-eslint/semi": ["error", "always"],
-        "space-before-function-paren": ["error", "never"],
         "indent": ["error", 2]
     }
 }
