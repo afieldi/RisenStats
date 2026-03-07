@@ -1,8 +1,8 @@
 import { RiotAccountDto, RiotLeagueEntryDto, RiotSummonerDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import { MakeRiotAPICall } from './_call';
 
-export async function GetRiotLeaguesBySummonerId(summonerId: string): Promise<RiotLeagueEntryDto[]> {
-  return await MakeRiotAPICall<RiotLeagueEntryDto[]>(`/lol/league/v4/entries/by-summoner/${encodeURIComponent(summonerId)}`, 'GET');
+export async function GetRiotLeaguesByPuuid(puuid: string): Promise<RiotLeagueEntryDto[]> {
+  return await MakeRiotAPICall<RiotLeagueEntryDto[]>(`/lol/league/v4/entries/by-puuid/${encodeURIComponent(puuid)}`, 'GET');
 }
 
 export async function GetRiotPlayerByPuuid(puuid: string): Promise<RiotSummonerDto> {
@@ -26,8 +26,8 @@ export async function GetRiotPlayerByGameNameAndTagline(gameName: string, taglin
   return await GetRiotPlayerByPuuid(riotAccount.puuid);
 }
 
-export async function GetRiotLeagueBySummonerId(summonerId: string, queueName: string = 'RANKED_SOLO_5x5'): Promise<RiotLeagueEntryDto> {
-  const leagues = await GetRiotLeaguesBySummonerId(summonerId);
+export async function GetRiotLeagueByPuuid(puuid: string, queueName: string = 'RANKED_SOLO_5x5'): Promise<RiotLeagueEntryDto> {
+  const leagues = await GetRiotLeaguesByPuuid(puuid);
   for (const league of leagues) {
     if (league.queueType === queueName) {
       return league;

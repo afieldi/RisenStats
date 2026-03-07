@@ -9,8 +9,6 @@ import {
   getDbStockTimeLineForSeason,
   withdrawDbFunds
 } from '../db/stocks';
-import { GetRiotLeagueBySummonerId, GetRiotPlayerByPuuid } from '../external-api/player';
-import { RiotLeagueEntryDto } from '../../../Common/Interface/RiotAPI/RiotApiDto';
 import PlayerGameModel from '../../../Common/models/playergame.model';
 import { GetDbPlayerGamesByGameId } from '../db/games';
 import { ToGameId } from '../../../Common/utils';
