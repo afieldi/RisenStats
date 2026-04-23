@@ -10,7 +10,10 @@ LOCAL_ENV_FILE="$BACKEND_DIR/.env.local"
 
 # Default local DB settings
 DEFAULT_LOCAL_DB="risen_stats_dev"
+DEFAULT_LOCAL_USER="postgres"
+
 LOCAL_DB_NAME=${1:-$DEFAULT_LOCAL_DB}
+LOCAL_DB_USER=${2:-$DEFAULT_LOCAL_USER}
 
 # Load production environment variables
 if [ -f "$ENV_FILE" ]; then
@@ -28,7 +31,7 @@ fi
 
 echo "--- Database Sync ---"
 echo "Source (Prod): $PROD_URI"
-echo "Target (Dev):  $LOCAL_DB_NAME"
+echo "Target (Dev):  $LOCAL_DB_NAME (User: $LOCAL_DB_USER)"
 echo "---------------------"
 
 # Check if psql and pg_dump are available
@@ -39,9 +42,9 @@ fi
 
 # Create local DB if it doesn't exist
 echo "Checking if local database '$LOCAL_DB_NAME' exists..."
-if ! psql -lqt | cut -d \| -f 1 | grep -qw "$LOCAL_DB_NAME"; then
-    echo "Creating database '$LOCAL_DB_NAME'..."
-    createdb "$LOCAL_DB_NAME" || { echo "Failed to create database. Make sure Postgres is running locally."; exit 1; }
+if ! psql -U "$LOCAL_DB_USER" -lqt | cut -d \| -f 1 | grep -qw "$LOCAL_DB_NAME"; then
+    echo "Creating database '$LOCAL_DB_NAME' with user '$LOCAL_DB_USER'..."
+    createdb -U "$LOCAL_DB_USER" "$LOCAL_DB_NAME" || { echo "Failed to create database. Make sure Postgres is running and you have the correct permissions."; exit 1; }
 fi
 
 # Confirm with user
@@ -55,13 +58,13 @@ fi
 # Perform sync
 echo "Syncing data (this may take a moment)..."
 
-# Set SSL mode to no-verify for RDS if needed, but pg_dump usually respects the URI params
+# Set SSL mode to no-verify for RDS if needed
 export PGSSLMODE=no-verify
 
 # Sync command: dump from prod, restore to local
 # --clean drops existing objects, --if-exists avoids errors on first run
-# --no-owner and --no-privileges avoid permission issues
-pg_dump --no-owner --no-privileges --clean --if-exists --dbname="$PROD_URI" | psql --dbname="$LOCAL_DB_NAME"
+# --no-owner and --no-privileges avoid permission issues with different users
+pg_dump --no-owner --no-privileges --clean --if-exists --dbname="$PROD_URI" | psql -U "$LOCAL_DB_USER" --dbname="$LOCAL_DB_NAME"
 
 if [ $? -eq 0 ]; then
     echo "Success: Sync completed successfully!"
@@ -70,8 +73,10 @@ if [ $? -eq 0 ]; then
     if [ -f "$LOCAL_ENV_FILE" ]; then
         echo "Updating $LOCAL_ENV_FILE with local DB details..."
         # Update POSTGRES_URI and POSTGRES_DB
-        sed -i '' "s|^POSTGRES_URI=.*|POSTGRES_URI=postgresql://postgres@localhost:5432/$LOCAL_DB_NAME|" "$LOCAL_ENV_FILE"
+        # Using a safe delimiter | because URIs contain /
+        sed -i '' "s|^POSTGRES_URI=.*|POSTGRES_URI=postgresql://$LOCAL_DB_USER@localhost:5432/$LOCAL_DB_NAME|" "$LOCAL_ENV_FILE"
         sed -i '' "s|^POSTGRES_DB=.*|POSTGRES_DB=$LOCAL_DB_NAME|" "$LOCAL_ENV_FILE"
+        sed -i '' "s|^POSTGRES_UN=.*|POSTGRES_UN=$LOCAL_DB_USER|" "$LOCAL_ENV_FILE"
     fi
     
     echo "To run the app against the local DB, use: npm run dev:local"
