@@ -6,11 +6,12 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon --exec npx ts-node index.ts",
+    "sync-db": "bash ./scripts/sync-db.sh",
     "deploy": "npm run build && gcloud app deploy",
     "start": "node ./dist/BackEnd/index.js --prod",
     "build": "tsc -p .",
-    "lint": "npx eslint src\\**\\*.ts",
-    "lint:fix": "npx eslint src\\**\\*.ts --fix",
+    "lint": "npx eslint src/**/*.ts",
+    "lint:fix": "npx eslint src/**/*.ts --fix",
     "gcp-build": ""
   },
   "author": "",
