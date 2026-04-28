@@ -60,7 +60,7 @@ router.post('/by-puuid/:playerPuuid', async(req: TypedRequest<GetPlayerStatsRequ
       risenOnly,
     } = req.body;
 
-    const playerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(req.params.playerPuuid, teamId, championId, seasonId, roleId);
+    const playerStats: AggregatedPlayerStatModel[] = await GetDbAggregatedPlayerStatsByPlayerPuuid(req.params.playerPuuid, teamId, championId, seasonId, roleId, risenOnly);
 
     res.json({
       playerStats

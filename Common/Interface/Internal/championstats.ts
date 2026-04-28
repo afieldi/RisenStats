@@ -1,3 +1,4 @@
 export interface ChampionStatsSheetRequest {
-  seasonId: string;
+  seasonId?: string;
+  risenOnly?: boolean;
 }
