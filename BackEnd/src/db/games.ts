@@ -388,10 +388,10 @@ export async function GetDbGamesByGameIds(gameIds: number[]): Promise<GameModel[
   return await GameModel.find(searchFilter);
 }
 
-export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<PlayerGameModel[]> {
+export async function GetDbPlayerGamesBySeasonId(seasonId: string | undefined, risenOnly?: boolean): Promise<PlayerGameModel[]> {
   await ensureConnection();
   let filter: FindManyOptions<PlayerGameModel> = {};
-  if (seasonId === DEFAULT_RISEN_SEASON_ID) {
+  if (seasonId === DEFAULT_RISEN_SEASON_ID || risenOnly) {
     filter = {
       where: {
         seasonId: Not(IsNull())
@@ -399,12 +399,20 @@ export async function GetDbPlayerGamesBySeasonId(seasonId: string): Promise<Play
     };
   } else if (seasonId === 'ALL') {
     filter = {};
-  } else {
-    /**
-     * we need to filter for gamelength because riot make a change where remade matches show up in the match history if everyone leaves.
-     * Using 180s since it seems to count from when the pause happened.
-     **/
-    filter = { where: { seasonId: Number(seasonId), gameLength: MoreThanOrEqual(180) } };
+  } else if (seasonId) {
+    filter = { where: { seasonId: Number(seasonId) } };
+  }
+
+  /**
+   * we need to filter for gamelength because riot make a change where remade matches show up in the match history if everyone leaves.
+   * Using 180s since it seems to count from when the pause happened.
+   ***/
+  filter = {
+    ...filter, 
+    where: {
+      ...filter.where, 
+      gameLength: MoreThanOrEqual(180) 
+    } 
   }
   return await PlayerGameModel.find(filter);
 }

@@ -13,8 +13,8 @@ const averageHeaders = [
   'pentaKills', 'damagePerGold', 'soloKills', 'win'
 ];
 
-export async function GetChampionStatsBySeason(seasonId: string): Promise<string> {
-  const seasonGames = await GetDbPlayerGamesBySeasonId(seasonId);
+export async function GetChampionStatsBySeason(seasonId: string | undefined, risenOnly?: boolean): Promise<string> {
+  const seasonGames = await GetDbPlayerGamesBySeasonId(seasonId, risenOnly);
   log.debug(`Found ${seasonGames.length} games`);
   const games: { [key: number]: PlayerGameModel[] } = {};
   for (const game of seasonGames) {
@@ -32,6 +32,5 @@ export async function GetChampionStatsBySeason(seasonId: string): Promise<string
     averages.push(tmp);
   }
 
-  // const averages = GetAveragesFromObjects(seasonGames, averageHeaders);
   return ObjectArrayToCsv(Object.values(averages), averageHeaders);
 }

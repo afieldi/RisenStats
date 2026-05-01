@@ -1,11 +1,19 @@
-import { ALL_RISEN_GAMES_ID, ensureConnection } from './dbConnect';
+import { ALL_RISEN_GAMES_ID, ALL_TOURNAMENT_GAMES_ID, ensureConnection } from './dbConnect';
 import { GameRoles } from '../../../Common/Interface/General/gameEnums';
-import { FindManyOptions } from 'typeorm';
+import { FindManyOptions, IsNull, Not } from 'typeorm';
 import AggregatedPlayerStatModel from '../../../Common/models/aggregatedplayerstat.model';
 
-export async function GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid: string, teamId?: number, championId?: number, seasonId?: number, roleId?: GameRoles): Promise<AggregatedPlayerStatModel[]> {
+export async function GetDbAggregatedPlayerStatsByPlayerPuuid(playerPuuid: string, teamId?: number, championId?: number, seasonId?: number, roleId?: GameRoles, risenOnly?: boolean): Promise<AggregatedPlayerStatModel[]> {
   await ensureConnection();
   const searchFilter: FindManyOptions<AggregatedPlayerStatModel> = { where: { playerPuuid: playerPuuid, seasonId: ALL_RISEN_GAMES_ID } };
+
+  if (!risenOnly) {
+    searchFilter['where'] = {
+      ...searchFilter['where'],
+      seasonId: ALL_TOURNAMENT_GAMES_ID,
+    };
+  }
+  
   if (championId) {
     searchFilter['where'] = {
       ...searchFilter['where'],

@@ -7,3 +7,5 @@ node_modules
 .idea/codeStyles
 .idea
 .vercel
+.hermes
+.DS_Store
