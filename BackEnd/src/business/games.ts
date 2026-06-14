@@ -57,7 +57,11 @@ export async function SaveDataByMatchId(matchId: string): Promise<GameModel> {
 
   let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(seasonId);
   if (seasonId && !recentlyBuiltRisenTeams) {
-    await buildRisenTeams(seasonId);
+    try {
+      await buildRisenTeams(seasonId);
+    } catch (error) {
+      logger.error(`Failed to build risen teams for season ${seasonId}: ${error.message}`);
+    }
   }
 
   return await SaveSingleMatchById(matchId, gameData, seasonId);
@@ -218,7 +222,11 @@ async function saveMatchForGameAlreadyInDb(matchId: string) {
   // If its a game for a risen season then update the teams.
   let recentlyBuiltRisenTeams = await hasRecentlyBuiltRisenTeams(existingObj.seasonId);
   if (existingObj.seasonId && !recentlyBuiltRisenTeams) {
-    await buildRisenTeams(existingObj.seasonId);
+    try {
+      await buildRisenTeams(existingObj.seasonId);
+    } catch (error) {
+      logger.error(`Failed to build risen teams for season ${existingObj.seasonId}: ${error.message}`);
+    }
   }
 
   const playerGames = await GetDbPlayerGamesByGameId(ToGameId(matchId));

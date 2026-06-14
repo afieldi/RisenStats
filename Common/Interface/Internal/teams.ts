@@ -24,3 +24,11 @@ export interface GetTeamRosterRequest {
 export interface GetTeamRosterResponse {
     roster: PlayerTeamModel[]
 }
+
+export interface BuildRisenTeamsRequest {
+    seasonId: number;
+}
+
+export interface BuildRisenTeamsResponse {
+    success: boolean;
+}
