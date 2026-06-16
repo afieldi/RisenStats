@@ -36,12 +36,14 @@ export async function GetTeamRosterByTeamIdAndSeason(teamId: number, seasonId: n
 export async function buildRisenTeams(seasonId: number) {
   let sheetName = 'Teams and Standings';
   let seasonsWithSheet = await GetDbActiveSeasonWithSheets(seasonId);
+  if (!seasonsWithSheet) {
+    throw new Error(`Season with ID ${seasonId} not found or not configured with Google Sheets`);
+  }
   let sheet = await GetGoogleSheet(seasonsWithSheet.googleSheetId, sheetName);
   let parser: RisenSheetParser = parsers.get(seasonsWithSheet.googleSheetParserType);
 
   if(!parser) {
-    logger.error(`Parser was not configured correctly for the ${seasonsWithSheet.searchname} season`);
-    return;
+    throw new Error(`Parser was not configured correctly for the ${seasonsWithSheet.searchname} season`);
   }
   await buildTeamsForLeague(parser, sheet, seasonsWithSheet.id);
   await SetDBLastTimeActiveSeasonRisenTeamWasBuilt(new Date(), seasonsWithSheet);

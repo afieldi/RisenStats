@@ -13,10 +13,15 @@ export interface GetSeasonResponse {
   season: SeasonModel;
 }
 
-export interface GetSeasonResponse {
-  season: SeasonModel;
-}
-
 export interface GetSeasonRequest {
   searchName: string;
+}
+
+export interface UpdateSeasonGoogleSheetIdRequest {
+  seasonId: number;
+  googleSheetId: string;
+}
+
+export interface UpdateSeasonGoogleSheetIdResponse {
+  success: boolean;
 }

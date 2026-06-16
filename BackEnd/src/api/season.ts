@@ -4,19 +4,45 @@ import {
   CreateSeasonRequest,
   GetSeasonRequest,
   GetSeasonResponse,
-  GetSeasonsResponse
+  GetSeasonsResponse,
+  UpdateSeasonGoogleSheetIdRequest,
+  UpdateSeasonGoogleSheetIdResponse
 } from '../../../Common/Interface/Internal/season';
 import {
   CreateSeason,
   GetSeasonBySearchName,
   GetSeasons,
-  GetActiveSeasonThatPlayerHasParticiaptedInByPuuid
+  GetActiveSeasonThatPlayerHasParticiaptedInByPuuid,
+  UpdateSeasonGoogleSheetId
 } from '../business/season';
 import logger from '../../logger';
 import { number } from 'yargs';
 import { GetPlayerStatsRequest } from '../../../Common/Interface/Internal/playerstats';
+import { DocumentNotFound, InvalidRequestError } from '../../../Common/errors';
 
 const router: Router = express.Router();
+
+router.post('/update/google-sheet-id', async(req: TypedRequest<UpdateSeasonGoogleSheetIdRequest>, res: TypedResponse<UpdateSeasonGoogleSheetIdResponse>) => {
+  logger.debug(`Season update google sheet id ${JSON.stringify(req.body)}`);
+
+  try {
+    const { seasonId } = req.body;
+    const googleSheetId = req.body.googleSheetId?.trim();
+    await UpdateSeasonGoogleSheetId(seasonId, googleSheetId);
+    res.json({
+      success: true
+    });
+  } catch (error) {
+    logger.error(error);
+    if (error instanceof InvalidRequestError) {
+      res.status(400).send(error.message);
+    } else if (error instanceof DocumentNotFound) {
+      res.status(404).send(error.message);
+    } else {
+      res.status(500).send('Something went wrong');
+    }
+  }
+});
 
 router.post('/get/all', async(req: Request, res: TypedResponse<GetSeasonsResponse>) => {
   logger.debug('Season get all');

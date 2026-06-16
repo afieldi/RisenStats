@@ -2,14 +2,43 @@ import express, { Router } from 'express';
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
 import logger from '../../logger';
 import {
+  BuildRisenTeamsRequest,
+  BuildRisenTeamsResponse,
   GetTeamAbbreviationResponse,
   GetTeamByAbbreviationRequest, GetTeamRosterRequest, GetTeamRosterResponse,
   GetTeamsRequest,
   GetTeamsResponse
 } from '../../../Common/Interface/Internal/teams';
-import { GetTeamRosterByTeamIdAndSeason, GetTeamsBySeasonId, GetTeamsByTeamAbbreviation } from '../business/teams';
+import {
+  buildRisenTeams,
+  GetTeamRosterByTeamIdAndSeason,
+  GetTeamsBySeasonId,
+  GetTeamsByTeamAbbreviation
+} from '../business/teams';
+import { InvalidRequestError } from '../../../Common/errors';
 
 const router: Router = express.Router();
+
+router.post('/build', async(req: TypedRequest<BuildRisenTeamsRequest>, res: TypedResponse<BuildRisenTeamsResponse>) => {
+  try {
+    const seasonId = Number(req.body.seasonId);
+    if (isNaN(seasonId)) {
+      throw new InvalidRequestError('Invalid seasonId');
+    }
+    logger.info(`Building teams for seasonId: ${seasonId}`);
+    await buildRisenTeams(seasonId);
+    res.json({
+      success: true
+    });
+  } catch (error) {
+    logger.error(error);
+    if (error instanceof InvalidRequestError) {
+      res.status(400).send(error.message);
+    } else {
+      res.status(500).send(error.message || 'Something went wrong');
+    }
+  }
+});
 
 router.post('/by-seasonId/:seasonId', async(req: TypedRequest<GetTeamsRequest>, res: TypedResponse<GetTeamsResponse>) => {
   try {

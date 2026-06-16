@@ -67,3 +67,10 @@ export async function GetDbActiveSeasonsBySeasonIds(seasonIds: number[]): Promis
   await ensureConnection();
   return await SeasonModel.find({ where: { active: true, id: In(seasonIds) } });
 }
+
+export async function UpdateDbSeasonGoogleSheetId(seasonId: number, googleSheetId: string): Promise<SeasonModel> {
+  await ensureConnection();
+  const season = await GetDbSeasonById(seasonId);
+  season.googleSheetId = googleSheetId;
+  return await season.save();
+}
