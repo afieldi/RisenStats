@@ -16,6 +16,7 @@ import SeasonModel from '../../../../Common/models/season.model';
 import { GenerateCodes } from '../../api/codes';
 import { createSeason, GetActiveSeasons } from '../../api/season';
 import RisenSeasonSelector from '../../components/selectors/risen-season-selector';
+import SeasonSheetSync from './SeasonSheetSync';
 
 export default function AdminCodes() {
   const theme = useTheme();
@@ -158,6 +159,7 @@ export default function AdminCodes() {
           </Typography>
         )}
       </Box>
+      <SeasonSheetSync />
     </Container>
   );
 };

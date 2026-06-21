@@ -2,7 +2,9 @@ import {
   CreateSeasonRequest,
   GetSeasonRequest,
   GetSeasonResponse,
-  GetSeasonsResponse
+  GetSeasonsResponse,
+  UpdateSeasonGoogleSheetIdRequest,
+  UpdateSeasonGoogleSheetIdResponse
 } from '../../../Common/Interface/Internal/season';
 import { MakeBackendCall } from './_call';
 
@@ -31,4 +33,11 @@ export async function createSeason(seasonName: String): Promise<GetSeasonRespons
     seasonName: seasonName,
     providerId: 13013,
   } as CreateSeasonRequest ) as GetSeasonResponse;
+}
+
+export async function updateSeasonGoogleSheetId(seasonId: number, googleSheetId: string): Promise<UpdateSeasonGoogleSheetIdResponse> {
+  return await MakeBackendCall('/api/season/update/google-sheet-id', 'POST', {
+    seasonId,
+    googleSheetId,
+  } as UpdateSeasonGoogleSheetIdRequest) as UpdateSeasonGoogleSheetIdResponse;
 }
