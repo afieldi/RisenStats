@@ -42,7 +42,7 @@ export async function DoAuth(code: string, host: string): Promise<AuthUser> {
     scope: 'identify guilds',
     redirectUri
   }).then(async userAuth => {
-    logger.info(`Received userAuth from discord ${JSON.stringify(userAuth)}`);
+    logger.info('Received Discord authorization');
     const roleMap: { [key: string]: number } = {
       '293099704785305600': 1, // Sr, Admin
       '980589721904361592': 1, // Admin
@@ -65,6 +65,7 @@ export async function DoAuth(code: string, host: string): Promise<AuthUser> {
           if (roleVal < priv) priv = roleVal;
         }
       }
+      logger.info(`Assigned permission level ${priv} to Discord user ${user.id} in guild ${process.env.DISCORD_SERVER_ID}; roles: ${JSON.stringify(guildMember.roles)}`);
       return {
         user: user.id,
         auth: uuidv4(),

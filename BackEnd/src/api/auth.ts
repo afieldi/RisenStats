@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import { DoAuth, userCache } from '../business/auth';
+import { AuthUser, DoAuth, userCache } from '../business/auth';
 import logger from '../../logger';
 
 const router: Router = express.Router();
@@ -42,9 +42,9 @@ router.get('/redirect', (req: Request, res: Response) => {
 router.get('/verify', (req, res) => {
   const code = req.cookies.auth.toString() ?? req.query.auth.toString();
   logger.info(`Checking if code ${code} is valid`);
-  const user = userCache.get(code);
+  const user = userCache.get<AuthUser>(code);
   if (user) {
-    logger.info(`Found user ${user.toString()}`);
+    logger.info(`Found user ${user.user} (${user.name}) with permission level ${user.level}`);
     res.send(user);
   } else {
     logger.info('No user found');
@@ -55,9 +55,9 @@ router.get('/verify', (req, res) => {
 router.post('/verify', (req, res) => {
   const code = req.cookies?.auth?.toString() ?? req.query?.auth?.toString();
   logger.info(`Checking if code ${code} is valid: `);
-  const user = userCache.get(code);
+  const user = userCache.get<AuthUser>(code);
   if (user) {
-    logger.info(`Found user ${user.toString()}`);
+    logger.info(`Found user ${user.user} (${user.name}) with permission level ${user.level}`);
     res.send(user);
   } else {
     logger.info('No user found');
