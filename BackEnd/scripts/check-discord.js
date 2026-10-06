@@ -47,6 +47,8 @@ async function checkDiscord() {
     const data = await member.json();
     if (!Array.isArray(data.roles)) throw new Error('Guild member response did not contain roles');
     console.log(JSON.stringify({ userId, roles: data.roles }));
+  } else {
+    console.log('Member lookup skipped: pass --user=<Discord user ID> to inspect permission roles');
   }
 }
 
