@@ -14,13 +14,29 @@ export interface AuthUser {
   name: string
 }
 
-async function getGuildUser(userId: string): Promise<any> {
-  return await fetch(`https://discord.com/api/guilds/${process.env.DISCORD_SERVER_ID}/members/${userId}`, {
+async function getGuildUser(userId: string): Promise<{ roles: string[] }> {
+  const guildId = process.env.DISCORD_SERVER_ID?.trim();
+  const botToken = process.env.DISCORD_TOKEN?.trim();
+  if (!guildId || !botToken) {
+    throw new Error('Discord role lookup requires DISCORD_SERVER_ID and DISCORD_TOKEN');
+  }
+  const response = await fetch(`https://discord.com/api/guilds/${guildId}/members/${userId}`, {
     method: 'GET',
     headers: {
-      Authorization: `Bot ${process.env.DISCORD_TOKEN}`
+      Authorization: `Bot ${botToken}`
     }
-  }).then(async data => await data.json());
+  });
+  if (!response.ok) {
+    const detail = response.status === 401
+      ? '; set DISCORD_TOKEN to a valid bot token from the Discord Developer Portal Bot page (without a Bot or Bearer prefix)'
+      : '';
+    throw new Error(`Discord guild member lookup failed (HTTP ${response.status})${detail}`);
+  }
+  const member = await response.json();
+  if (!Array.isArray(member.roles) || !member.roles.every((role: unknown) => typeof role === 'string')) {
+    throw new Error('Discord guild member lookup returned invalid roles');
+  }
+  return member;
 }
 
 export function getAuthUser(auth: string): AuthUser | undefined {
