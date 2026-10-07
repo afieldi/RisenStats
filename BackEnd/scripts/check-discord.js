@@ -2,25 +2,82 @@ const dotenv = require('dotenv');
 const fetch = require('node-fetch');
 const { resolve } = require('path');
 
-// Run from the same working directory and with the same mode as the backend.
-// This checks this command's environment; PM2 startup logs show its environment.
-const envFile = process.argv.includes('--prod') ? '.env.production'
-  : process.argv.includes('--stg') ? '.env.staging' : '.env.development';
-const inheritedToken = process.env.DISCORD_TOKEN !== undefined;
-const result = dotenv.config({ path: envFile });
-const fileToken = result.parsed?.DISCORD_TOKEN;
-const token = process.env.DISCORD_TOKEN?.trim();
-const guildId = process.env.DISCORD_SERVER_ID?.trim();
+const argument = name => process.argv.find(arg => arg.startsWith(`--${name}=`))?.slice(name.length + 3);
 
-console.log(JSON.stringify({
-  envFile: resolve(envFile),
-  envFileLoaded: !result.error,
-  tokenSource: inheritedToken ? 'process environment' : (fileToken !== undefined ? 'env file' : 'missing'),
-  tokenMatchesEnvFile: fileToken !== undefined ? process.env.DISCORD_TOKEN === fileToken : null,
-  guildId
-}));
+function loadConfiguration() {
+  const pm2App = argument('pm2');
+  if (pm2App) {
+    const { spawnSync } = require('child_process');
+    const snapshot = spawnSync('pm2', ['jlist'], { encoding: 'utf8', timeout: 10000, maxBuffer: 10 * 1024 * 1024 });
+    if (snapshot.error || snapshot.status !== 0) {
+      throw new Error('Unable to read PM2 process settings; run as the same user that manages the backend');
+    }
+    // Never print jlist: it contains credentials for all managed apps.
+    let apps;
+    try { apps = JSON.parse(snapshot.stdout); }
+    catch { throw new Error('PM2 did not return valid JSON process settings'); }
+    const matches = apps.filter(app => app.name === pm2App);
+    if (matches.length !== 1) throw new Error(`Expected one PM2 process named ${pm2App}; found ${matches.length}`);
+    const app = matches[0];
+    if (app.pm2_env.status !== 'online') throw new Error(`PM2 process ${pm2App} is not online`);
+    const settings = { ...app.pm2_env.env, ...app.pm2_env };
+    console.log(JSON.stringify({
+      app: pm2App,
+      pid: app.pid,
+      script: app.pm2_env.pm_exec_path,
+      cwd: app.pm2_env.pm_cwd,
+      tokenSource: settings.DISCORD_TOKEN !== undefined ? 'PM2 registered environment' : 'missing',
+      guildId: settings.DISCORD_SERVER_ID
+    }));
+    return settings;
+  }
+
+  const ecosystemFile = argument('ecosystem');
+  if (ecosystemFile) {
+    // Inspect the saved ecosystem settings, not the live PM2 process.
+    // Skip dotenv so a development file cannot mask missing ecosystem values.
+    const config = require(resolve(ecosystemFile));
+    const appName = argument('app') || 'backend';
+    const app = config.apps?.find(candidate => candidate.name === appName);
+    if (!app) throw new Error(`No app named ${appName} in the ecosystem file`);
+    const environment = argument('env');
+    const environmentKey = environment ? `env_${environment}` : undefined;
+    if (environmentKey && !app[environmentKey]) {
+      throw new Error(`App ${appName} has no ${environmentKey} section`);
+    }
+    const appEnv = { ...app.env, ...(environmentKey ? app[environmentKey] : {}) };
+    const settings = { ...process.env, ...appEnv };
+    console.log(JSON.stringify({
+      ecosystemFile: resolve(ecosystemFile),
+      app: appName,
+      selectedEnvironment: environment || 'env',
+      tokenSource: appEnv.DISCORD_TOKEN !== undefined ? 'ecosystem file'
+        : (process.env.DISCORD_TOKEN !== undefined ? 'process environment' : 'missing'),
+      guildId: settings.DISCORD_SERVER_ID
+    }));
+    return settings;
+  }
+
+  // Run from the same working directory and with the same mode as the backend.
+  const envFile = process.argv.includes('--prod') ? '.env.production'
+    : process.argv.includes('--stg') ? '.env.staging' : '.env.development';
+  const inheritedToken = process.env.DISCORD_TOKEN !== undefined;
+  const result = dotenv.config({ path: envFile });
+  const fileToken = result.parsed?.DISCORD_TOKEN;
+  console.log(JSON.stringify({
+    envFile: resolve(envFile),
+    envFileLoaded: !result.error,
+    tokenSource: inheritedToken ? 'process environment' : (fileToken !== undefined ? 'env file' : 'missing'),
+    tokenMatchesEnvFile: fileToken !== undefined ? process.env.DISCORD_TOKEN === fileToken : null,
+    guildId: process.env.DISCORD_SERVER_ID
+  }));
+  return process.env;
+}
 
 async function checkDiscord() {
+  const settings = loadConfiguration();
+  const token = settings.DISCORD_TOKEN?.trim();
+  const guildId = settings.DISCORD_SERVER_ID?.trim();
   if (!token || !guildId) throw new Error('DISCORD_TOKEN and DISCORD_SERVER_ID are required');
   if (/^(Bot|Bearer)\s/i.test(token)) {
     throw new Error('DISCORD_TOKEN contains an authorization prefix; store only the raw bot token');
