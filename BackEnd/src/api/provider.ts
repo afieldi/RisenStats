@@ -3,10 +3,11 @@ import { CreateProviderRequest, CreateProviderResponse, GetProvidersResponse } f
 import { TypedResponse, TypedRequest } from '../../../Common/Interface/Internal/responseUtil';
 import { CreateTournamentProvider, GetTournamentProviders } from '../business/provider';
 import logger from '../../logger';
+import { ADMIN_LEVEL, requireAuthLevel } from '../business/auth';
 
 const router: Router = express.Router();
 
-router.post('/get/all', async(req: Request, res: TypedResponse<GetProvidersResponse>) => {
+router.post('/get/all', requireAuthLevel(ADMIN_LEVEL), async(req: Request, res: TypedResponse<GetProvidersResponse>) => {
   try {
     logger.info('Touranment provider get all');
     const providers = await GetTournamentProviders();
@@ -19,7 +20,7 @@ router.post('/get/all', async(req: Request, res: TypedResponse<GetProvidersRespo
   }
 });
 
-router.post('/create', async(req: TypedRequest<CreateProviderRequest>, res: TypedResponse<CreateProviderResponse>) => {
+router.post('/create', requireAuthLevel(ADMIN_LEVEL), async(req: TypedRequest<CreateProviderRequest>, res: TypedResponse<CreateProviderResponse>) => {
   const body = req.body;
   logger.debug(`Create provider ${JSON.stringify(body)}`);
   try {

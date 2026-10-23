@@ -6,6 +6,7 @@ import { DraftingSocketClientToServer, DraftingSocketServerToClient } from '../C
 import logger from './logger';
 import cookieParser from 'cookie-parser';
 import yargs from 'yargs/yargs';
+import { resolve } from 'path';
 
 interface Argv {
   prod?: boolean;
@@ -26,7 +27,16 @@ else if (argv.stg) {
 else {
   process.env.NODE_ENV = 'development';
 }
-dotenv.config({ path: envFile });
+const inheritedDiscordToken = process.env.DISCORD_TOKEN !== undefined;
+const envResult = dotenv.config({ path: envFile });
+const fileDiscordToken = envResult.parsed?.DISCORD_TOKEN;
+logger.info(`Discord configuration: ${JSON.stringify({
+  envFile: resolve(envFile),
+  envFileLoaded: !envResult.error,
+  tokenSource: inheritedDiscordToken ? 'process environment' : (fileDiscordToken !== undefined ? 'env file' : 'missing'),
+  tokenMatchesEnvFile: fileDiscordToken !== undefined ? process.env.DISCORD_TOKEN === fileDiscordToken : null,
+  guildId: process.env.DISCORD_SERVER_ID
+})}`);
 
 const app = express();
 const port = process.env.PORT || 3000;

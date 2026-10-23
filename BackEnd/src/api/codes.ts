@@ -3,10 +3,11 @@ import { CreateCodesRequest, GetCodesResponse } from '../../../Common/Interface/
 import { TypedRequest, TypedResponse } from '../../../Common/Interface/Internal/responseUtil';
 import { CreateCodes, GetAllCodes, GetCodesBySeasonId } from '../business/codes';
 import logger from '../../logger';
+import { CODE_MANAGER_LEVEL, requireAuthLevel } from '../business/auth';
 
 const router: Router = express.Router();
 
-router.post('/get/all', async(req: Request, res: TypedResponse<GetCodesResponse>) => {
+router.post('/get/all', requireAuthLevel(CODE_MANAGER_LEVEL), async(req: Request, res: TypedResponse<GetCodesResponse>) => {
   // This function should be pretty simple. Heavy lifing should be done in the
   // business logic file with the same name.
   // Use a try catch to ensure a respone is always sent.
@@ -24,7 +25,7 @@ router.post('/get/all', async(req: Request, res: TypedResponse<GetCodesResponse>
   }
 });
 
-router.post('/create', async(req: TypedRequest<CreateCodesRequest>, res: TypedResponse<GetCodesResponse>) => {
+router.post('/create', requireAuthLevel(CODE_MANAGER_LEVEL), async(req: TypedRequest<CreateCodesRequest>, res: TypedResponse<GetCodesResponse>) => {
   const body = req.body;
   logger.info(`Create codes ${JSON.stringify(body)}`);
 
@@ -39,7 +40,7 @@ router.post('/create', async(req: TypedRequest<CreateCodesRequest>, res: TypedRe
   }
 });
 
-router.post('/get/by-season/:seasonId', async(req: Request, res: TypedResponse<GetCodesResponse>) => {
+router.post('/get/by-season/:seasonId', requireAuthLevel(CODE_MANAGER_LEVEL), async(req: Request, res: TypedResponse<GetCodesResponse>) => {
   const seasonId = Number(req.params.seasonId);
   logger.info(`Codes get by season ${seasonId}`);
   try {

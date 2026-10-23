@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "check:discord": "node scripts/check-discord.js",
     "dev": "nodemon --exec npx ts-node index.ts",
     "deploy": "npm run build && gcloud app deploy",
     "start": "node ./dist/BackEnd/index.js --prod",

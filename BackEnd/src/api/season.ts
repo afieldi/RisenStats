@@ -16,6 +16,7 @@ import {
   UpdateSeasonGoogleSheetId
 } from '../business/season';
 import logger from '../../logger';
+import { CODE_MANAGER_LEVEL, requireAuthLevel } from '../business/auth';
 import { number } from 'yargs';
 import { GetPlayerStatsRequest } from '../../../Common/Interface/Internal/playerstats';
 import { DocumentNotFound, InvalidRequestError } from '../../../Common/errors';
@@ -107,7 +108,7 @@ router.post('/get', async(req: TypedRequest<GetSeasonRequest>, res: TypedRespons
 });
 
 
-router.post('/create', async(req: TypedRequest<CreateSeasonRequest>, res: TypedResponse<GetSeasonResponse>) => {
+router.post('/create', requireAuthLevel(CODE_MANAGER_LEVEL), async(req: TypedRequest<CreateSeasonRequest>, res: TypedResponse<GetSeasonResponse>) => {
   logger.debug(`Season create ${JSON.stringify(req.body)}`);
 
   try {

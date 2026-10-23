@@ -1,3 +1,5 @@
+import Cookies from 'universal-cookie';
+import { AUTH_COOKIE_KEY } from '../common/constants';
 
 export class ApiError extends Error {
   status: number;
@@ -12,11 +14,16 @@ export class ApiError extends Error {
 
 export async function MakeBackendCall<T>(url: string, method: string, body: T, json: boolean = true): Promise<{}> {
   url = process.env.REACT_APP_BACKEND_URL + url;
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json'
+  };
+  const authToken = new Cookies().get(AUTH_COOKIE_KEY);
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
+  }
   let data = await fetch(url, {
     method,
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify(body)
   });
 

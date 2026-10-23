@@ -11,6 +11,7 @@ import {
 import {
   GetOrCreatePlayerOverviewByGameNameAndTagline,
   GetPlayerDetailedGames,
+  GetPlayerOverviewByPuuid,
   GetPlayerSeasons,
   UpdateGamesByPlayerPuuid
 } from '../business/player';
@@ -24,12 +25,38 @@ import { CreatePlayerStatsByPuuid } from '../business/playerstats';
 
 const router: Router = express.Router();
 
+// Each update can make hundreds of Riot calls, so limit how often and how many can run.
+const PLAYER_UPDATE_COOLDOWN_MS = 5 * 60 * 1000;
+const MAX_CONCURRENT_PLAYER_UPDATES = 2;
+const inFlightPlayerUpdates = new Map<string, Promise<UpdatePlayerGamesResponse>>();
+
+async function runPlayerUpdate(playerPuuid: string): Promise<UpdatePlayerGamesResponse> {
+  const updatedGames = await UpdateGamesByPlayerPuuid(playerPuuid);
+  await CreatePlayerStatsByPuuid(playerPuuid);
+  return updatedGames;
+}
+
 router.post('/update/by-puuid/:playerPuuid', async(req: Request, res: TypedResponse<UpdatePlayerGamesResponse>) => {
-  logger.info(`Player update by puuid ${req.params.playerPuuid}`);
+  const playerPuuid = req.params.playerPuuid;
+  logger.info(`Player update by puuid ${playerPuuid}`);
   try {
-    const updatedGames = await UpdateGamesByPlayerPuuid(req.params.playerPuuid);
-    await CreatePlayerStatsByPuuid(req.params.playerPuuid);
-    res.json(updatedGames);
+    let update = inFlightPlayerUpdates.get(playerPuuid);
+    if (!update) {
+      const player = await GetPlayerOverviewByPuuid(playerPuuid);
+      const msSinceRefresh = Date.now() - Number(player.refreshedAt);
+      if (msSinceRefresh < PLAYER_UPDATE_COOLDOWN_MS) {
+        const minutesLeft = Math.ceil((PLAYER_UPDATE_COOLDOWN_MS - msSinceRefresh) / 60000);
+        res.status(429).send(`Player was updated recently, try again in ${minutesLeft} minute(s)`);
+        return;
+      }
+      if (inFlightPlayerUpdates.size >= MAX_CONCURRENT_PLAYER_UPDATES) {
+        res.status(503).send('Too many player updates running, try again shortly');
+        return;
+      }
+      update = runPlayerUpdate(playerPuuid).finally(() => inFlightPlayerUpdates.delete(playerPuuid));
+      inFlightPlayerUpdates.set(playerPuuid, update);
+    }
+    res.json(await update);
   } catch (error) {
     logger.error(error);
 
