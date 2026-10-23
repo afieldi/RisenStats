@@ -66,6 +66,9 @@ export async function UpdatePlayer(playerPuuid: string): Promise<UpdatePlayerGam
   const data = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/player/update/by-puuid/${playerPuuid}`, {
     method: 'POST'
   });
+  if (!data.ok) {
+    throw new Error(await data.text());
+  }
   return (await data.json()) as UpdatePlayerGamesResponse;
 }
 

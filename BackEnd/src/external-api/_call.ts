@@ -12,7 +12,15 @@ export class ApiError extends Error {
   }
 }
 
-async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise<T> {
+const MAX_RATE_LIMIT_RETRIES = 5;
+const DEFAULT_RETRY_AFTER_MS = 2000;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function _MakeAPICall<T>(url: string, method: string, body?: any, attempt: number = 0): Promise<T> {
+  // Never log or embed these headers in errors, they contain the API key.
   const headers = {
     'Content-Type': 'application/json',
     'X-Riot-Token': process.env.RIOT_API_KEY
@@ -27,15 +35,20 @@ async function _MakeAPICall<T>(url: string, method: string, body?: any): Promise
   }).then(async(response: any) => {
     if (response.ok) {
       return response.json();
-    } else if (response.status === 429) {
-      logger.debug('Rate limited, waiting 2s');
-      await setTimeout(() => {
-      }, 2000);
-      return await _MakeAPICall(url, method, body);
+    } else if (response.status === 429 && attempt < MAX_RATE_LIMIT_RETRIES) {
+      const retryAfterSeconds = Number(response.headers.get('retry-after'));
+      const waitMs = retryAfterSeconds > 0 ? retryAfterSeconds * 1000 : DEFAULT_RETRY_AFTER_MS * (attempt + 1);
+      logger.debug(`Rate limited, waiting ${waitMs}ms (attempt ${attempt + 1}/${MAX_RATE_LIMIT_RETRIES})`);
+      await sleep(waitMs);
+      return await _MakeAPICall<T>(url, method, body, attempt + 1);
     } else {
-      const responseText = await response.json();
-      logger.error(`API call failed. Code: ${response.status} Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)}`);
-      throw new ApiError(`API call failed. Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)} Headers: ${JSON.stringify(headers)}`, response.status, responseText);
+      const rawText = await response.text();
+      let responseText: any = rawText;
+      try {
+        responseText = JSON.parse(rawText);
+      } catch (e) {}
+      logger.error(`API call failed. Code: ${response.status} Url: ${url} Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)}`);
+      throw new ApiError(`API call failed. Code: ${response.status} Url: ${url} Input: ${JSON.stringify(body)} Output: ${JSON.stringify(responseText)}`, response.status, responseText);
     }
   }, (err: any) => {
     throw new Error(err);

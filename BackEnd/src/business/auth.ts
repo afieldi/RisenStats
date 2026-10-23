@@ -1,4 +1,5 @@
 import DiscordOauth2 from 'discord-oauth2';
+import { NextFunction, Request, Response } from 'express';
 import NodeCache from 'node-cache';
 import logger from '../../logger';
 import fetch from 'node-fetch';
@@ -47,12 +48,45 @@ export function getAuthUser(auth: string): AuthUser | undefined {
   return undefined;
 }
 
+// Lower level means more privilege, matching the roleMap in DoAuth.
+export const ADMIN_LEVEL = 1;
+export const CODE_MANAGER_LEVEL = 4;
+
+function getAuthTokenFromRequest(req: Request): string | undefined {
+  const header = req.get('authorization');
+  if (header?.startsWith('Bearer ')) {
+    return header.slice('Bearer '.length).trim();
+  }
+  return req.cookies?.auth?.toString() ?? req.body?.auth?.toString();
+}
+
+export function requireAuthLevel(maxLevel: number) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const token = getAuthTokenFromRequest(req);
+    const user = token ? getAuthUser(token) : undefined;
+    if (!user) {
+      res.status(401).send('Not logged in');
+      return;
+    }
+    if (user.level > maxLevel) {
+      logger.info(`Denied ${req.method} ${req.originalUrl} for user ${user.user} with level ${user.level}`);
+      res.status(403).send('Forbidden');
+      return;
+    }
+    next();
+  };
+}
+
 export async function DoAuth(code: string, host: string): Promise<AuthUser> {
   const redirectUri = (process.env.NODE_ENV === 'production' ? `https://${host}` : 'http://localhost:4000') + '/api/auth/callback';
   logger.info(`Redirect URI: ${redirectUri}`);
+  const clientSecret = process.env.DISCORD_CLIENT_SECRET?.trim();
+  if (!clientSecret) {
+    throw new Error('Discord login requires DISCORD_CLIENT_SECRET');
+  }
   return await oauth.tokenRequest({
     clientId: '737851599778742405',
-    clientSecret: 'UqS3MmEvL97P91GfH6RJV0UUNyuUkLjZ',
+    clientSecret,
     code,
     grantType: 'authorization_code',
     scope: 'identify guilds',
